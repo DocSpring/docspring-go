@@ -12,6 +12,7 @@ package docspring
 type CombinedSubmissionData struct {
 	ExpiresIn int32 `json:"expires_in,omitempty"`
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
+	Password string `json:"password,omitempty"`
 	SubmissionIds []string `json:"submission_ids"`
 	Test bool `json:"test,omitempty"`
 }

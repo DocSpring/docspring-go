@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 **DeleteCustomFiles** | **bool** |  | [optional] 
 **ExpiresIn** | **int32** |  | [optional] 
 **Metadata** | [**map[string]interface{}**](map[string]interface{}.md) |  | [optional] 
+**Password** | **string** |  | [optional] 
 **SourcePdfs** | [**[]map[string]interface{}**](map[string]interface{}.md) |  | 
 **Test** | **bool** |  | [optional] 
 

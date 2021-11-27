@@ -22,12 +22,15 @@ Method | HTTP request | Description
 [**GeneratePDF**](PDFApi.md#GeneratePDF) | **Post** /templates/{template_id}/submissions | Generates a new PDF
 [**GetCombinedSubmission**](PDFApi.md#GetCombinedSubmission) | **Get** /combined_submissions/{combined_submission_id} | Check the status of a combined submission (merged PDFs)
 [**GetDataRequest**](PDFApi.md#GetDataRequest) | **Get** /data_requests/{data_request_id} | Look up a submission data request
+[**GetFullTemplate**](PDFApi.md#GetFullTemplate) | **Get** /templates/{template_id}?full&#x3D;true | Fetch the full template attributes
 [**GetPresignUrl**](PDFApi.md#GetPresignUrl) | **Get** /uploads/presign | Get a presigned URL so that you can upload a file to our AWS S3 bucket
 [**GetSubmission**](PDFApi.md#GetSubmission) | **Get** /submissions/{submission_id} | Check the status of a PDF
 [**GetSubmissionBatch**](PDFApi.md#GetSubmissionBatch) | **Get** /submissions/batches/{submission_batch_id} | Check the status of a submission batch job
-[**GetTemplate**](PDFApi.md#GetTemplate) | **Get** /templates/{template_id} | Get a single template
+[**GetTemplate**](PDFApi.md#GetTemplate) | **Get** /templates/{template_id} | Check the status of an uploaded template
 [**GetTemplateSchema**](PDFApi.md#GetTemplateSchema) | **Get** /templates/{template_id}/schema | Fetch the JSON schema for a template
 [**ListFolders**](PDFApi.md#ListFolders) | **Get** /folders/ | Get a list of all folders
+[**ListSubmissions**](PDFApi.md#ListSubmissions) | **Get** /submissions | List all submissions
+[**ListSubmissions_0**](PDFApi.md#ListSubmissions_0) | **Get** /templates/{template_id}/submissions | List all submissions for a given template
 [**ListTemplates**](PDFApi.md#ListTemplates) | **Get** /templates | Get a list of all templates
 [**MoveFolderToFolder**](PDFApi.md#MoveFolderToFolder) | **Post** /folders/{folder_id}/move | Move a folder
 [**MoveTemplateToFolder**](PDFApi.md#MoveTemplateToFolder) | **Post** /templates/{template_id}/move | Move Template to folder
@@ -520,6 +523,32 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **GetFullTemplate**
+> Template1 GetFullTemplate(ctx, templateId)
+Fetch the full template attributes
+
+### Required Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+  **templateId** | **string**|  | 
+
+### Return type
+
+[**Template1**](template_1.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **GetPresignUrl**
 > map[string]map[string]interface{} GetPresignUrl(ctx, )
 Get a presigned URL so that you can upload a file to our AWS S3 bucket
@@ -614,7 +643,7 @@ Name | Type | Description  | Notes
 
 # **GetTemplate**
 > Template GetTemplate(ctx, templateId)
-Get a single template
+Check the status of an uploaded template
 
 ### Required Parameters
 
@@ -685,6 +714,84 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**[]Folder**](folder.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **ListSubmissions**
+> ListSubmissionsResponse ListSubmissions(ctx, optional)
+List all submissions
+
+### Required Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***ListSubmissionsOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+Optional parameters are passed through a pointer to a ListSubmissionsOpts struct
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **cursor** | **optional.String**|  | 
+ **limit** | **optional.Float32**|  | 
+ **createdAfter** | **optional.String**|  | 
+ **createdBefore** | **optional.String**|  | 
+ **type_** | **optional.String**|  | 
+ **includeData** | **optional.Bool**|  | 
+
+### Return type
+
+[**ListSubmissionsResponse**](list_submissions_response.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **ListSubmissions_0**
+> ListSubmissionsResponse ListSubmissions_0(ctx, templateId, optional)
+List all submissions for a given template
+
+### Required Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+  **templateId** | **string**|  | 
+ **optional** | ***ListSubmissions_1Opts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+Optional parameters are passed through a pointer to a ListSubmissions_1Opts struct
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **cursor** | **optional.String**|  | 
+ **limit** | **optional.Float32**|  | 
+ **createdAfter** | **optional.String**|  | 
+ **createdBefore** | **optional.String**|  | 
+ **type_** | **optional.String**|  | 
+ **includeData** | **optional.Bool**|  | 
+
+### Return type
+
+[**ListSubmissionsResponse**](list_submissions_response.md)
 
 ### Authorization
 

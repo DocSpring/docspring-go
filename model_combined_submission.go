@@ -11,6 +11,7 @@ package docspring
 
 type CombinedSubmission struct {
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
+	Password string `json:"password,omitempty"`
 	Expired bool `json:"expired,omitempty"`
 	ExpiresAt string `json:"expires_at,omitempty"`
 	SourcePdfs []map[string]interface{} `json:"source_pdfs,omitempty"`

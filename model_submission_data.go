@@ -16,5 +16,6 @@ type SubmissionData struct {
 	FieldOverrides map[string]interface{} `json:"field_overrides,omitempty"`
 	Html string `json:"html,omitempty"`
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
+	Password string `json:"password,omitempty"`
 	Test bool `json:"test,omitempty"`
 }

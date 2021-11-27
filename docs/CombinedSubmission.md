@@ -4,6 +4,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Metadata** | [**map[string]interface{}**](map[string]interface{}.md) |  | [optional] 
+**Password** | **string** |  | [optional] 
 **Expired** | **bool** |  | [optional] 
 **ExpiresAt** | **string** |  | [optional] 
 **SourcePdfs** | [**[]map[string]interface{}**](map[string]interface{}.md) |  | [optional] 

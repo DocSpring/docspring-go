@@ -13,6 +13,7 @@ type CombinePdfsData struct {
 	DeleteCustomFiles bool `json:"delete_custom_files,omitempty"`
 	ExpiresIn int32 `json:"expires_in,omitempty"`
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
+	Password string `json:"password,omitempty"`
 	SourcePdfs []map[string]interface{} `json:"source_pdfs"`
 	Test bool `json:"test,omitempty"`
 }

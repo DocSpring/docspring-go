@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **FieldOverrides** | [**map[string]interface{}**](map[string]interface{}.md) |  | [optional] 
 **Html** | **string** |  | [optional] 
 **Metadata** | [**map[string]interface{}**](map[string]interface{}.md) |  | [optional] 
+**Password** | **string** |  | [optional] 
 **Test** | **bool** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
