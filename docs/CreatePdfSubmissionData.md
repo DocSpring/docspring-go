@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Data** | **map[string]interface{}** |  | 
 **DataRequests** | Pointer to [**[]CreateSubmissionDataRequestData**](CreateSubmissionDataRequestData.md) |  | [optional] 
+**Editable** | Pointer to **bool** |  | [optional] 
 **ExpiresIn** | Pointer to **int32** |  | [optional] 
 **FieldOverrides** | Pointer to **map[string]interface{}** |  | [optional] 
 **Metadata** | Pointer to **map[string]interface{}** |  | [optional] 
@@ -75,6 +76,31 @@ SetDataRequests sets DataRequests field to given value.
 `func (o *CreatePdfSubmissionData) HasDataRequests() bool`
 
 HasDataRequests returns a boolean if a field has been set.
+
+### GetEditable
+
+`func (o *CreatePdfSubmissionData) GetEditable() bool`
+
+GetEditable returns the Editable field if non-nil, zero value otherwise.
+
+### GetEditableOk
+
+`func (o *CreatePdfSubmissionData) GetEditableOk() (*bool, bool)`
+
+GetEditableOk returns a tuple with the Editable field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetEditable
+
+`func (o *CreatePdfSubmissionData) SetEditable(v bool)`
+
+SetEditable sets Editable field to given value.
+
+### HasEditable
+
+`func (o *CreatePdfSubmissionData) HasEditable() bool`
+
+HasEditable returns a boolean if a field has been set.
 
 ### GetExpiresIn
 

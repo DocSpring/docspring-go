@@ -23,6 +23,7 @@ var _ MappedNullable = &CreatePdfSubmissionData{}
 type CreatePdfSubmissionData struct {
 	Data map[string]interface{} `json:"data"`
 	DataRequests []CreateSubmissionDataRequestData `json:"data_requests,omitempty"`
+	Editable *bool `json:"editable,omitempty"`
 	ExpiresIn *int32 `json:"expires_in,omitempty"`
 	FieldOverrides map[string]interface{} `json:"field_overrides,omitempty"`
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
@@ -104,6 +105,38 @@ func (o *CreatePdfSubmissionData) HasDataRequests() bool {
 // SetDataRequests gets a reference to the given []CreateSubmissionDataRequestData and assigns it to the DataRequests field.
 func (o *CreatePdfSubmissionData) SetDataRequests(v []CreateSubmissionDataRequestData) {
 	o.DataRequests = v
+}
+
+// GetEditable returns the Editable field value if set, zero value otherwise.
+func (o *CreatePdfSubmissionData) GetEditable() bool {
+	if o == nil || IsNil(o.Editable) {
+		var ret bool
+		return ret
+	}
+	return *o.Editable
+}
+
+// GetEditableOk returns a tuple with the Editable field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreatePdfSubmissionData) GetEditableOk() (*bool, bool) {
+	if o == nil || IsNil(o.Editable) {
+		return nil, false
+	}
+	return o.Editable, true
+}
+
+// HasEditable returns a boolean if a field has been set.
+func (o *CreatePdfSubmissionData) HasEditable() bool {
+	if o != nil && !IsNil(o.Editable) {
+		return true
+	}
+
+	return false
+}
+
+// SetEditable gets a reference to the given bool and assigns it to the Editable field.
+func (o *CreatePdfSubmissionData) SetEditable(v bool) {
+	o.Editable = &v
 }
 
 // GetExpiresIn returns the ExpiresIn field value if set, zero value otherwise.
@@ -279,6 +312,9 @@ func (o CreatePdfSubmissionData) ToMap() (map[string]interface{}, error) {
 	toSerialize["data"] = o.Data
 	if !IsNil(o.DataRequests) {
 		toSerialize["data_requests"] = o.DataRequests
+	}
+	if !IsNil(o.Editable) {
+		toSerialize["editable"] = o.Editable
 	}
 	if !IsNil(o.ExpiresIn) {
 		toSerialize["expires_in"] = o.ExpiresIn

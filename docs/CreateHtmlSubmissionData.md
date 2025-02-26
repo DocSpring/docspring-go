@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Css** | Pointer to **string** |  | [optional] 
 **Data** | Pointer to **map[string]interface{}** |  | [optional] 
+**Editable** | Pointer to **bool** |  | [optional] 
 **ExpiresIn** | Pointer to **int32** |  | [optional] 
 **FieldOverrides** | Pointer to **map[string]interface{}** |  | [optional] 
 **Html** | Pointer to **string** |  | [optional] 
@@ -81,6 +82,31 @@ SetData sets Data field to given value.
 `func (o *CreateHtmlSubmissionData) HasData() bool`
 
 HasData returns a boolean if a field has been set.
+
+### GetEditable
+
+`func (o *CreateHtmlSubmissionData) GetEditable() bool`
+
+GetEditable returns the Editable field if non-nil, zero value otherwise.
+
+### GetEditableOk
+
+`func (o *CreateHtmlSubmissionData) GetEditableOk() (*bool, bool)`
+
+GetEditableOk returns a tuple with the Editable field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetEditable
+
+`func (o *CreateHtmlSubmissionData) SetEditable(v bool)`
+
+SetEditable sets Editable field to given value.
+
+### HasEditable
+
+`func (o *CreateHtmlSubmissionData) HasEditable() bool`
+
+HasEditable returns a boolean if a field has been set.
 
 ### GetExpiresIn
 

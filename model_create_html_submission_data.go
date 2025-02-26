@@ -21,6 +21,7 @@ var _ MappedNullable = &CreateHtmlSubmissionData{}
 type CreateHtmlSubmissionData struct {
 	Css *string `json:"css,omitempty"`
 	Data map[string]interface{} `json:"data,omitempty"`
+	Editable *bool `json:"editable,omitempty"`
 	ExpiresIn *int32 `json:"expires_in,omitempty"`
 	FieldOverrides map[string]interface{} `json:"field_overrides,omitempty"`
 	Html *string `json:"html,omitempty"`
@@ -108,6 +109,38 @@ func (o *CreateHtmlSubmissionData) HasData() bool {
 // SetData gets a reference to the given map[string]interface{} and assigns it to the Data field.
 func (o *CreateHtmlSubmissionData) SetData(v map[string]interface{}) {
 	o.Data = v
+}
+
+// GetEditable returns the Editable field value if set, zero value otherwise.
+func (o *CreateHtmlSubmissionData) GetEditable() bool {
+	if o == nil || IsNil(o.Editable) {
+		var ret bool
+		return ret
+	}
+	return *o.Editable
+}
+
+// GetEditableOk returns a tuple with the Editable field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateHtmlSubmissionData) GetEditableOk() (*bool, bool) {
+	if o == nil || IsNil(o.Editable) {
+		return nil, false
+	}
+	return o.Editable, true
+}
+
+// HasEditable returns a boolean if a field has been set.
+func (o *CreateHtmlSubmissionData) HasEditable() bool {
+	if o != nil && !IsNil(o.Editable) {
+		return true
+	}
+
+	return false
+}
+
+// SetEditable gets a reference to the given bool and assigns it to the Editable field.
+func (o *CreateHtmlSubmissionData) SetEditable(v bool) {
+	o.Editable = &v
 }
 
 // GetExpiresIn returns the ExpiresIn field value if set, zero value otherwise.
@@ -317,6 +350,9 @@ func (o CreateHtmlSubmissionData) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Data) {
 		toSerialize["data"] = o.Data
+	}
+	if !IsNil(o.Editable) {
+		toSerialize["editable"] = o.Editable
 	}
 	if !IsNil(o.ExpiresIn) {
 		toSerialize["expires_in"] = o.ExpiresIn
