@@ -5,14 +5,14 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Submissions** | [**[]Submission**](Submission.md) |  | 
-**Limit** | **float32** |  | 
+**Limit** | **int32** |  | 
 **NextCursor** | **NullableString** |  | 
 
 ## Methods
 
 ### NewListSubmissionsResponse
 
-`func NewListSubmissionsResponse(submissions []Submission, limit float32, nextCursor NullableString, ) *ListSubmissionsResponse`
+`func NewListSubmissionsResponse(submissions []Submission, limit int32, nextCursor NullableString, ) *ListSubmissionsResponse`
 
 NewListSubmissionsResponse instantiates a new ListSubmissionsResponse object
 This constructor will assign default values to properties that have it defined,
@@ -49,20 +49,20 @@ SetSubmissions sets Submissions field to given value.
 
 ### GetLimit
 
-`func (o *ListSubmissionsResponse) GetLimit() float32`
+`func (o *ListSubmissionsResponse) GetLimit() int32`
 
 GetLimit returns the Limit field if non-nil, zero value otherwise.
 
 ### GetLimitOk
 
-`func (o *ListSubmissionsResponse) GetLimitOk() (*float32, bool)`
+`func (o *ListSubmissionsResponse) GetLimitOk() (*int32, bool)`
 
 GetLimitOk returns a tuple with the Limit field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetLimit
 
-`func (o *ListSubmissionsResponse) SetLimit(v float32)`
+`func (o *ListSubmissionsResponse) SetLimit(v int32)`
 
 SetLimit sets Limit field to given value.
 

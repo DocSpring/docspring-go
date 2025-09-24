@@ -1,7 +1,7 @@
 /*
 DocSpring API
 
-DocSpring provides an API that helps you fill out and sign PDF templates.
+Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
 
 API version: v1
 */
@@ -24,7 +24,7 @@ type CombinedSubmissionAction struct {
 	Id NullableString `json:"id"`
 	IntegrationId NullableString `json:"integration_id"`
 	State string `json:"state"`
-	ActionType string `json:"action_type"`
+	ActionType NullableString `json:"action_type"`
 	ActionCategory string `json:"action_category"`
 	ResultData map[string]interface{} `json:"result_data"`
 }
@@ -35,7 +35,7 @@ type _CombinedSubmissionAction CombinedSubmissionAction
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCombinedSubmissionAction(id NullableString, integrationId NullableString, state string, actionType string, actionCategory string, resultData map[string]interface{}) *CombinedSubmissionAction {
+func NewCombinedSubmissionAction(id NullableString, integrationId NullableString, state string, actionType NullableString, actionCategory string, resultData map[string]interface{}) *CombinedSubmissionAction {
 	this := CombinedSubmissionAction{}
 	this.Id = id
 	this.IntegrationId = integrationId
@@ -131,27 +131,29 @@ func (o *CombinedSubmissionAction) SetState(v string) {
 }
 
 // GetActionType returns the ActionType field value
+// If the value is explicit nil, the zero value for string will be returned
 func (o *CombinedSubmissionAction) GetActionType() string {
-	if o == nil {
+	if o == nil || o.ActionType.Get() == nil {
 		var ret string
 		return ret
 	}
 
-	return o.ActionType
+	return *o.ActionType.Get()
 }
 
 // GetActionTypeOk returns a tuple with the ActionType field value
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *CombinedSubmissionAction) GetActionTypeOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return &o.ActionType, true
+	return o.ActionType.Get(), o.ActionType.IsSet()
 }
 
 // SetActionType sets field value
 func (o *CombinedSubmissionAction) SetActionType(v string) {
-	o.ActionType = v
+	o.ActionType.Set(&v)
 }
 
 // GetActionCategory returns the ActionCategory field value
@@ -215,7 +217,7 @@ func (o CombinedSubmissionAction) ToMap() (map[string]interface{}, error) {
 	toSerialize["id"] = o.Id.Get()
 	toSerialize["integration_id"] = o.IntegrationId.Get()
 	toSerialize["state"] = o.State
-	toSerialize["action_type"] = o.ActionType
+	toSerialize["action_type"] = o.ActionType.Get()
 	toSerialize["action_category"] = o.ActionCategory
 	toSerialize["result_data"] = o.ResultData
 	return toSerialize, nil

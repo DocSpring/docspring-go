@@ -1,7 +1,7 @@
 /*
 DocSpring API
 
-DocSpring provides an API that helps you fill out and sign PDF templates.
+Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
 
 API version: v1
 */
@@ -23,6 +23,8 @@ var _ MappedNullable = &SubmissionBatchData{}
 type SubmissionBatchData struct {
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
 	Submissions []map[string]interface{} `json:"submissions"`
+	TemplateId NullableString `json:"template_id,omitempty"`
+	TemplateVersion NullableString `json:"template_version,omitempty"`
 	Test *bool `json:"test,omitempty"`
 }
 
@@ -102,6 +104,90 @@ func (o *SubmissionBatchData) SetSubmissions(v []map[string]interface{}) {
 	o.Submissions = v
 }
 
+// GetTemplateId returns the TemplateId field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *SubmissionBatchData) GetTemplateId() string {
+	if o == nil || IsNil(o.TemplateId.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.TemplateId.Get()
+}
+
+// GetTemplateIdOk returns a tuple with the TemplateId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *SubmissionBatchData) GetTemplateIdOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.TemplateId.Get(), o.TemplateId.IsSet()
+}
+
+// HasTemplateId returns a boolean if a field has been set.
+func (o *SubmissionBatchData) HasTemplateId() bool {
+	if o != nil && o.TemplateId.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetTemplateId gets a reference to the given NullableString and assigns it to the TemplateId field.
+func (o *SubmissionBatchData) SetTemplateId(v string) {
+	o.TemplateId.Set(&v)
+}
+// SetTemplateIdNil sets the value for TemplateId to be an explicit nil
+func (o *SubmissionBatchData) SetTemplateIdNil() {
+	o.TemplateId.Set(nil)
+}
+
+// UnsetTemplateId ensures that no value is present for TemplateId, not even an explicit nil
+func (o *SubmissionBatchData) UnsetTemplateId() {
+	o.TemplateId.Unset()
+}
+
+// GetTemplateVersion returns the TemplateVersion field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *SubmissionBatchData) GetTemplateVersion() string {
+	if o == nil || IsNil(o.TemplateVersion.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.TemplateVersion.Get()
+}
+
+// GetTemplateVersionOk returns a tuple with the TemplateVersion field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *SubmissionBatchData) GetTemplateVersionOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.TemplateVersion.Get(), o.TemplateVersion.IsSet()
+}
+
+// HasTemplateVersion returns a boolean if a field has been set.
+func (o *SubmissionBatchData) HasTemplateVersion() bool {
+	if o != nil && o.TemplateVersion.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetTemplateVersion gets a reference to the given NullableString and assigns it to the TemplateVersion field.
+func (o *SubmissionBatchData) SetTemplateVersion(v string) {
+	o.TemplateVersion.Set(&v)
+}
+// SetTemplateVersionNil sets the value for TemplateVersion to be an explicit nil
+func (o *SubmissionBatchData) SetTemplateVersionNil() {
+	o.TemplateVersion.Set(nil)
+}
+
+// UnsetTemplateVersion ensures that no value is present for TemplateVersion, not even an explicit nil
+func (o *SubmissionBatchData) UnsetTemplateVersion() {
+	o.TemplateVersion.Unset()
+}
+
 // GetTest returns the Test field value if set, zero value otherwise.
 func (o *SubmissionBatchData) GetTest() bool {
 	if o == nil || IsNil(o.Test) {
@@ -148,6 +234,12 @@ func (o SubmissionBatchData) ToMap() (map[string]interface{}, error) {
 		toSerialize["metadata"] = o.Metadata
 	}
 	toSerialize["submissions"] = o.Submissions
+	if o.TemplateId.IsSet() {
+		toSerialize["template_id"] = o.TemplateId.Get()
+	}
+	if o.TemplateVersion.IsSet() {
+		toSerialize["template_version"] = o.TemplateVersion.Get()
+	}
 	if !IsNil(o.Test) {
 		toSerialize["test"] = o.Test
 	}

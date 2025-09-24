@@ -1,7 +1,7 @@
 /*
 DocSpring API
 
-DocSpring provides an API that helps you fill out and sign PDF templates.
+Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
 
 API version: v1
 */
@@ -22,7 +22,7 @@ var _ MappedNullable = &ListSubmissionsResponse{}
 // ListSubmissionsResponse struct for ListSubmissionsResponse
 type ListSubmissionsResponse struct {
 	Submissions []Submission `json:"submissions"`
-	Limit float32 `json:"limit"`
+	Limit int32 `json:"limit"`
 	NextCursor NullableString `json:"next_cursor"`
 }
 
@@ -32,7 +32,7 @@ type _ListSubmissionsResponse ListSubmissionsResponse
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewListSubmissionsResponse(submissions []Submission, limit float32, nextCursor NullableString) *ListSubmissionsResponse {
+func NewListSubmissionsResponse(submissions []Submission, limit int32, nextCursor NullableString) *ListSubmissionsResponse {
 	this := ListSubmissionsResponse{}
 	this.Submissions = submissions
 	this.Limit = limit
@@ -73,9 +73,9 @@ func (o *ListSubmissionsResponse) SetSubmissions(v []Submission) {
 }
 
 // GetLimit returns the Limit field value
-func (o *ListSubmissionsResponse) GetLimit() float32 {
+func (o *ListSubmissionsResponse) GetLimit() int32 {
 	if o == nil {
-		var ret float32
+		var ret int32
 		return ret
 	}
 
@@ -84,7 +84,7 @@ func (o *ListSubmissionsResponse) GetLimit() float32 {
 
 // GetLimitOk returns a tuple with the Limit field value
 // and a boolean to check if the value has been set.
-func (o *ListSubmissionsResponse) GetLimitOk() (*float32, bool) {
+func (o *ListSubmissionsResponse) GetLimitOk() (*int32, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -92,7 +92,7 @@ func (o *ListSubmissionsResponse) GetLimitOk() (*float32, bool) {
 }
 
 // SetLimit sets field value
-func (o *ListSubmissionsResponse) SetLimit(v float32) {
+func (o *ListSubmissionsResponse) SetLimit(v int32) {
 	o.Limit = v
 }
 

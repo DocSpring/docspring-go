@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 **Id** | **NullableString** |  | 
 **IntegrationId** | **NullableString** |  | 
 **State** | **string** |  | 
-**ActionType** | **string** |  | 
+**ActionType** | **NullableString** |  | 
 **ActionCategory** | **string** |  | 
 **ResultData** | **map[string]interface{}** |  | 
 
@@ -15,7 +15,7 @@ Name | Type | Description | Notes
 
 ### NewCombinedSubmissionAction
 
-`func NewCombinedSubmissionAction(id NullableString, integrationId NullableString, state string, actionType string, actionCategory string, resultData map[string]interface{}, ) *CombinedSubmissionAction`
+`func NewCombinedSubmissionAction(id NullableString, integrationId NullableString, state string, actionType NullableString, actionCategory string, resultData map[string]interface{}, ) *CombinedSubmissionAction`
 
 NewCombinedSubmissionAction instantiates a new CombinedSubmissionAction object
 This constructor will assign default values to properties that have it defined,
@@ -130,6 +130,16 @@ and a boolean to check if the value has been set.
 SetActionType sets ActionType field to given value.
 
 
+### SetActionTypeNil
+
+`func (o *CombinedSubmissionAction) SetActionTypeNil(b bool)`
+
+ SetActionTypeNil sets the value for ActionType to be an explicit nil
+
+### UnsetActionType
+`func (o *CombinedSubmissionAction) UnsetActionType()`
+
+UnsetActionType ensures that no value is present for ActionType, not even an explicit nil
 ### GetActionCategory
 
 `func (o *CombinedSubmissionAction) GetActionCategory() string`

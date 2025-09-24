@@ -1,7 +1,7 @@
 /*
 DocSpring API
 
-DocSpring provides an API that helps you fill out and sign PDF templates.
+Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
 
 API version: v1
 */
@@ -89,7 +89,7 @@ type Configuration struct {
 func NewConfiguration() *Configuration {
 	cfg := &Configuration{
 		DefaultHeader:    make(map[string]string),
-		UserAgent:        "docspring-go-2.0.1",
+		UserAgent:        "docspring-go-3.0.0",
 		Debug:            false,
 		Servers:          ServerConfigurations{
 			{

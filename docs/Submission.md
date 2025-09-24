@@ -16,6 +16,8 @@ Name | Type | Description | Notes
 **ProcessedAt** | **NullableString** |  | 
 **State** | **string** |  | 
 **TemplateId** | **NullableString** |  | 
+**TemplateType** | **string** |  | 
+**TemplateVersion** | **NullableString** |  | 
 **Test** | **bool** |  | 
 **TruncatedText** | **map[string]interface{}** |  | 
 **PdfHash** | **NullableString** |  | 
@@ -33,7 +35,7 @@ Name | Type | Description | Notes
 
 ### NewSubmission
 
-`func NewSubmission(batchId NullableString, dataRequests []SubmissionDataRequest, editable NullableBool, expired bool, expiresAt NullableString, id NullableString, jsonSchemaErrors []string, metadata map[string]interface{}, password NullableString, processedAt NullableString, state string, templateId NullableString, test bool, truncatedText map[string]interface{}, pdfHash NullableString, downloadUrl NullableString, permanentDownloadUrl NullableString, previewDownloadUrl NullableString, previewGeneratedAt NullableString, auditTrailDownloadUrl NullableString, actions []SubmissionAction, source string, referrer NullableString, data map[string]interface{}, ) *Submission`
+`func NewSubmission(batchId NullableString, dataRequests []SubmissionDataRequest, editable NullableBool, expired bool, expiresAt NullableString, id NullableString, jsonSchemaErrors []string, metadata map[string]interface{}, password NullableString, processedAt NullableString, state string, templateId NullableString, templateType string, templateVersion NullableString, test bool, truncatedText map[string]interface{}, pdfHash NullableString, downloadUrl NullableString, permanentDownloadUrl NullableString, previewDownloadUrl NullableString, previewGeneratedAt NullableString, auditTrailDownloadUrl NullableString, actions []SubmissionAction, source string, referrer NullableString, data map[string]interface{}, ) *Submission`
 
 NewSubmission instantiates a new Submission object
 This constructor will assign default values to properties that have it defined,
@@ -368,6 +370,56 @@ SetTemplateId sets TemplateId field to given value.
 `func (o *Submission) UnsetTemplateId()`
 
 UnsetTemplateId ensures that no value is present for TemplateId, not even an explicit nil
+### GetTemplateType
+
+`func (o *Submission) GetTemplateType() string`
+
+GetTemplateType returns the TemplateType field if non-nil, zero value otherwise.
+
+### GetTemplateTypeOk
+
+`func (o *Submission) GetTemplateTypeOk() (*string, bool)`
+
+GetTemplateTypeOk returns a tuple with the TemplateType field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetTemplateType
+
+`func (o *Submission) SetTemplateType(v string)`
+
+SetTemplateType sets TemplateType field to given value.
+
+
+### GetTemplateVersion
+
+`func (o *Submission) GetTemplateVersion() string`
+
+GetTemplateVersion returns the TemplateVersion field if non-nil, zero value otherwise.
+
+### GetTemplateVersionOk
+
+`func (o *Submission) GetTemplateVersionOk() (*string, bool)`
+
+GetTemplateVersionOk returns a tuple with the TemplateVersion field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetTemplateVersion
+
+`func (o *Submission) SetTemplateVersion(v string)`
+
+SetTemplateVersion sets TemplateVersion field to given value.
+
+
+### SetTemplateVersionNil
+
+`func (o *Submission) SetTemplateVersionNil(b bool)`
+
+ SetTemplateVersionNil sets the value for TemplateVersion to be an explicit nil
+
+### UnsetTemplateVersion
+`func (o *Submission) UnsetTemplateVersion()`
+
+UnsetTemplateVersion ensures that no value is present for TemplateVersion, not even an explicit nil
 ### GetTest
 
 `func (o *Submission) GetTest() bool`

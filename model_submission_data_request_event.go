@@ -1,7 +1,7 @@
 /*
 DocSpring API
 
-DocSpring provides an API that helps you fill out and sign PDF templates.
+Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
 
 API version: v1
 */
@@ -25,7 +25,7 @@ type SubmissionDataRequestEvent struct {
 	SubmissionId NullableString `json:"submission_id"`
 	SubmissionDataRequestId NullableString `json:"submission_data_request_id"`
 	EventType string `json:"event_type"`
-	MessageType string `json:"message_type"`
+	MessageType NullableString `json:"message_type"`
 	MessageRecipient NullableString `json:"message_recipient"`
 	OccurredAt NullableString `json:"occurred_at"`
 }
@@ -36,7 +36,7 @@ type _SubmissionDataRequestEvent SubmissionDataRequestEvent
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewSubmissionDataRequestEvent(id NullableString, submissionId NullableString, submissionDataRequestId NullableString, eventType string, messageType string, messageRecipient NullableString, occurredAt NullableString) *SubmissionDataRequestEvent {
+func NewSubmissionDataRequestEvent(id NullableString, submissionId NullableString, submissionDataRequestId NullableString, eventType string, messageType NullableString, messageRecipient NullableString, occurredAt NullableString) *SubmissionDataRequestEvent {
 	this := SubmissionDataRequestEvent{}
 	this.Id = id
 	this.SubmissionId = submissionId
@@ -159,27 +159,29 @@ func (o *SubmissionDataRequestEvent) SetEventType(v string) {
 }
 
 // GetMessageType returns the MessageType field value
+// If the value is explicit nil, the zero value for string will be returned
 func (o *SubmissionDataRequestEvent) GetMessageType() string {
-	if o == nil {
+	if o == nil || o.MessageType.Get() == nil {
 		var ret string
 		return ret
 	}
 
-	return o.MessageType
+	return *o.MessageType.Get()
 }
 
 // GetMessageTypeOk returns a tuple with the MessageType field value
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *SubmissionDataRequestEvent) GetMessageTypeOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return &o.MessageType, true
+	return o.MessageType.Get(), o.MessageType.IsSet()
 }
 
 // SetMessageType sets field value
 func (o *SubmissionDataRequestEvent) SetMessageType(v string) {
-	o.MessageType = v
+	o.MessageType.Set(&v)
 }
 
 // GetMessageRecipient returns the MessageRecipient field value
@@ -248,7 +250,7 @@ func (o SubmissionDataRequestEvent) ToMap() (map[string]interface{}, error) {
 	toSerialize["submission_id"] = o.SubmissionId.Get()
 	toSerialize["submission_data_request_id"] = o.SubmissionDataRequestId.Get()
 	toSerialize["event_type"] = o.EventType
-	toSerialize["message_type"] = o.MessageType
+	toSerialize["message_type"] = o.MessageType.Get()
 	toSerialize["message_recipient"] = o.MessageRecipient.Get()
 	toSerialize["occurred_at"] = o.OccurredAt.Get()
 	return toSerialize, nil

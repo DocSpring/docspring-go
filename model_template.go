@@ -1,7 +1,7 @@
 /*
 DocSpring API
 
-DocSpring provides an API that helps you fill out and sign PDF templates.
+Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
 
 API version: v1
 */
@@ -55,8 +55,14 @@ type Template struct {
 	SlackWebhookUrl NullableString `json:"slack_webhook_url"`
 	TemplateType string `json:"template_type"`
 	UpdatedAt NullableString `json:"updated_at"`
+	VersionPublishedAt NullableString `json:"version_published_at"`
+	Version NullableString `json:"version"`
 	WebhookUrl NullableString `json:"webhook_url"`
 	Demo bool `json:"demo"`
+	LatestVersion NullableString `json:"latest_version"`
+	LastChangedAt NullableString `json:"last_changed_at"`
+	LastChangedByType NullableString `json:"last_changed_by_type"`
+	LastChangedById NullableString `json:"last_changed_by_id"`
 	Defaults map[string]interface{} `json:"defaults"`
 	FieldOrder [][]float32 `json:"field_order"`
 	Fields map[string]interface{} `json:"fields"`
@@ -67,6 +73,7 @@ type Template struct {
 	PredefinedFields []map[string]interface{} `json:"predefined_fields"`
 	Scss NullableString `json:"scss"`
 	SharedFieldData map[string]interface{} `json:"shared_field_data"`
+	Versions []map[string]interface{} `json:"versions"`
 }
 
 type _Template Template
@@ -75,7 +82,7 @@ type _Template Template
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewTemplate(addDataRequestSubmissionIdFooters bool, allowAdditionalProperties bool, description NullableString, documentFilename NullableString, documentMd5 NullableString, documentParseError bool, documentProcessed bool, documentState string, documentUrl NullableString, editableSubmissions bool, embedDomains NullableString, encryptPdfsPassword NullableString, encryptPdfs bool, expirationInterval string, expireAfter int32, expireSubmissions bool, externalPredefinedFieldsTemplateId NullableString, externalPredefinedFieldsTemplateName NullableString, firstTemplate bool, id NullableString, locked bool, mergeAuditTrailPdf bool, name NullableString, pageCount int32, pageDimensions [][]float32, parentFolderId NullableString, path NullableString, permanentDocumentUrl NullableString, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, slackWebhookUrl NullableString, templateType string, updatedAt NullableString, webhookUrl NullableString, demo bool, defaults map[string]interface{}, fieldOrder [][]float32, fields map[string]interface{}, footerHtml NullableString, headerHtml NullableString, htmlEngineOptions map[string]interface{}, html NullableString, predefinedFields []map[string]interface{}, scss NullableString, sharedFieldData map[string]interface{}) *Template {
+func NewTemplate(addDataRequestSubmissionIdFooters bool, allowAdditionalProperties bool, description NullableString, documentFilename NullableString, documentMd5 NullableString, documentParseError bool, documentProcessed bool, documentState string, documentUrl NullableString, editableSubmissions bool, embedDomains NullableString, encryptPdfsPassword NullableString, encryptPdfs bool, expirationInterval string, expireAfter int32, expireSubmissions bool, externalPredefinedFieldsTemplateId NullableString, externalPredefinedFieldsTemplateName NullableString, firstTemplate bool, id NullableString, locked bool, mergeAuditTrailPdf bool, name NullableString, pageCount int32, pageDimensions [][]float32, parentFolderId NullableString, path NullableString, permanentDocumentUrl NullableString, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, slackWebhookUrl NullableString, templateType string, updatedAt NullableString, versionPublishedAt NullableString, version NullableString, webhookUrl NullableString, demo bool, latestVersion NullableString, lastChangedAt NullableString, lastChangedByType NullableString, lastChangedById NullableString, defaults map[string]interface{}, fieldOrder [][]float32, fields map[string]interface{}, footerHtml NullableString, headerHtml NullableString, htmlEngineOptions map[string]interface{}, html NullableString, predefinedFields []map[string]interface{}, scss NullableString, sharedFieldData map[string]interface{}, versions []map[string]interface{}) *Template {
 	this := Template{}
 	this.AddDataRequestSubmissionIdFooters = addDataRequestSubmissionIdFooters
 	this.AllowAdditionalProperties = allowAdditionalProperties
@@ -111,8 +118,14 @@ func NewTemplate(addDataRequestSubmissionIdFooters bool, allowAdditionalProperti
 	this.SlackWebhookUrl = slackWebhookUrl
 	this.TemplateType = templateType
 	this.UpdatedAt = updatedAt
+	this.VersionPublishedAt = versionPublishedAt
+	this.Version = version
 	this.WebhookUrl = webhookUrl
 	this.Demo = demo
+	this.LatestVersion = latestVersion
+	this.LastChangedAt = lastChangedAt
+	this.LastChangedByType = lastChangedByType
+	this.LastChangedById = lastChangedById
 	this.Defaults = defaults
 	this.FieldOrder = fieldOrder
 	this.Fields = fields
@@ -123,6 +136,7 @@ func NewTemplate(addDataRequestSubmissionIdFooters bool, allowAdditionalProperti
 	this.PredefinedFields = predefinedFields
 	this.Scss = scss
 	this.SharedFieldData = sharedFieldData
+	this.Versions = versions
 	return &this
 }
 
@@ -984,6 +998,58 @@ func (o *Template) SetUpdatedAt(v string) {
 	o.UpdatedAt.Set(&v)
 }
 
+// GetVersionPublishedAt returns the VersionPublishedAt field value
+// If the value is explicit nil, the zero value for string will be returned
+func (o *Template) GetVersionPublishedAt() string {
+	if o == nil || o.VersionPublishedAt.Get() == nil {
+		var ret string
+		return ret
+	}
+
+	return *o.VersionPublishedAt.Get()
+}
+
+// GetVersionPublishedAtOk returns a tuple with the VersionPublishedAt field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *Template) GetVersionPublishedAtOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.VersionPublishedAt.Get(), o.VersionPublishedAt.IsSet()
+}
+
+// SetVersionPublishedAt sets field value
+func (o *Template) SetVersionPublishedAt(v string) {
+	o.VersionPublishedAt.Set(&v)
+}
+
+// GetVersion returns the Version field value
+// If the value is explicit nil, the zero value for string will be returned
+func (o *Template) GetVersion() string {
+	if o == nil || o.Version.Get() == nil {
+		var ret string
+		return ret
+	}
+
+	return *o.Version.Get()
+}
+
+// GetVersionOk returns a tuple with the Version field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *Template) GetVersionOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Version.Get(), o.Version.IsSet()
+}
+
+// SetVersion sets field value
+func (o *Template) SetVersion(v string) {
+	o.Version.Set(&v)
+}
+
 // GetWebhookUrl returns the WebhookUrl field value
 // If the value is explicit nil, the zero value for string will be returned
 func (o *Template) GetWebhookUrl() string {
@@ -1032,6 +1098,110 @@ func (o *Template) GetDemoOk() (*bool, bool) {
 // SetDemo sets field value
 func (o *Template) SetDemo(v bool) {
 	o.Demo = v
+}
+
+// GetLatestVersion returns the LatestVersion field value
+// If the value is explicit nil, the zero value for string will be returned
+func (o *Template) GetLatestVersion() string {
+	if o == nil || o.LatestVersion.Get() == nil {
+		var ret string
+		return ret
+	}
+
+	return *o.LatestVersion.Get()
+}
+
+// GetLatestVersionOk returns a tuple with the LatestVersion field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *Template) GetLatestVersionOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.LatestVersion.Get(), o.LatestVersion.IsSet()
+}
+
+// SetLatestVersion sets field value
+func (o *Template) SetLatestVersion(v string) {
+	o.LatestVersion.Set(&v)
+}
+
+// GetLastChangedAt returns the LastChangedAt field value
+// If the value is explicit nil, the zero value for string will be returned
+func (o *Template) GetLastChangedAt() string {
+	if o == nil || o.LastChangedAt.Get() == nil {
+		var ret string
+		return ret
+	}
+
+	return *o.LastChangedAt.Get()
+}
+
+// GetLastChangedAtOk returns a tuple with the LastChangedAt field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *Template) GetLastChangedAtOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.LastChangedAt.Get(), o.LastChangedAt.IsSet()
+}
+
+// SetLastChangedAt sets field value
+func (o *Template) SetLastChangedAt(v string) {
+	o.LastChangedAt.Set(&v)
+}
+
+// GetLastChangedByType returns the LastChangedByType field value
+// If the value is explicit nil, the zero value for string will be returned
+func (o *Template) GetLastChangedByType() string {
+	if o == nil || o.LastChangedByType.Get() == nil {
+		var ret string
+		return ret
+	}
+
+	return *o.LastChangedByType.Get()
+}
+
+// GetLastChangedByTypeOk returns a tuple with the LastChangedByType field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *Template) GetLastChangedByTypeOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.LastChangedByType.Get(), o.LastChangedByType.IsSet()
+}
+
+// SetLastChangedByType sets field value
+func (o *Template) SetLastChangedByType(v string) {
+	o.LastChangedByType.Set(&v)
+}
+
+// GetLastChangedById returns the LastChangedById field value
+// If the value is explicit nil, the zero value for string will be returned
+func (o *Template) GetLastChangedById() string {
+	if o == nil || o.LastChangedById.Get() == nil {
+		var ret string
+		return ret
+	}
+
+	return *o.LastChangedById.Get()
+}
+
+// GetLastChangedByIdOk returns a tuple with the LastChangedById field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *Template) GetLastChangedByIdOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.LastChangedById.Get(), o.LastChangedById.IsSet()
+}
+
+// SetLastChangedById sets field value
+func (o *Template) SetLastChangedById(v string) {
+	o.LastChangedById.Set(&v)
 }
 
 // GetDefaults returns the Defaults field value
@@ -1282,6 +1452,30 @@ func (o *Template) SetSharedFieldData(v map[string]interface{}) {
 	o.SharedFieldData = v
 }
 
+// GetVersions returns the Versions field value
+func (o *Template) GetVersions() []map[string]interface{} {
+	if o == nil {
+		var ret []map[string]interface{}
+		return ret
+	}
+
+	return o.Versions
+}
+
+// GetVersionsOk returns a tuple with the Versions field value
+// and a boolean to check if the value has been set.
+func (o *Template) GetVersionsOk() ([]map[string]interface{}, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Versions, true
+}
+
+// SetVersions sets field value
+func (o *Template) SetVersions(v []map[string]interface{}) {
+	o.Versions = v
+}
+
 func (o Template) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -1328,8 +1522,14 @@ func (o Template) ToMap() (map[string]interface{}, error) {
 	toSerialize["slack_webhook_url"] = o.SlackWebhookUrl.Get()
 	toSerialize["template_type"] = o.TemplateType
 	toSerialize["updated_at"] = o.UpdatedAt.Get()
+	toSerialize["version_published_at"] = o.VersionPublishedAt.Get()
+	toSerialize["version"] = o.Version.Get()
 	toSerialize["webhook_url"] = o.WebhookUrl.Get()
 	toSerialize["demo"] = o.Demo
+	toSerialize["latest_version"] = o.LatestVersion.Get()
+	toSerialize["last_changed_at"] = o.LastChangedAt.Get()
+	toSerialize["last_changed_by_type"] = o.LastChangedByType.Get()
+	toSerialize["last_changed_by_id"] = o.LastChangedById.Get()
 	toSerialize["defaults"] = o.Defaults
 	toSerialize["field_order"] = o.FieldOrder
 	toSerialize["fields"] = o.Fields
@@ -1340,6 +1540,7 @@ func (o Template) ToMap() (map[string]interface{}, error) {
 	toSerialize["predefined_fields"] = o.PredefinedFields
 	toSerialize["scss"] = o.Scss.Get()
 	toSerialize["shared_field_data"] = o.SharedFieldData
+	toSerialize["versions"] = o.Versions
 	return toSerialize, nil
 }
 
@@ -1382,8 +1583,14 @@ func (o *Template) UnmarshalJSON(data []byte) (err error) {
 		"slack_webhook_url",
 		"template_type",
 		"updated_at",
+		"version_published_at",
+		"version",
 		"webhook_url",
 		"demo",
+		"latest_version",
+		"last_changed_at",
+		"last_changed_by_type",
+		"last_changed_by_id",
 		"defaults",
 		"field_order",
 		"fields",
@@ -1394,6 +1601,7 @@ func (o *Template) UnmarshalJSON(data []byte) (err error) {
 		"predefined_fields",
 		"scss",
 		"shared_field_data",
+		"versions",
 	}
 
 	allProperties := make(map[string]interface{})

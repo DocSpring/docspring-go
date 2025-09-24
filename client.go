@@ -1,7 +1,7 @@
 /*
 DocSpring API
 
-DocSpring provides an API that helps you fill out and sign PDF templates.
+Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
 
 API version: v1
 */
@@ -11,6 +11,7 @@ API version: v1
 package docspring
 
 import (
+	"encoding/base64"
 	"bytes"
 	"context"
 	"encoding/json"
@@ -49,7 +50,7 @@ type APIClient struct {
 
 	// API Services
 
-	PDFAPI *PDFAPIService
+	ClientAPI *ClientAPIService
 }
 
 type service struct {
@@ -58,6 +59,90 @@ type service struct {
 
 // NewAPIClient creates a new API client. Requires a userAgent string describing your application.
 // optionally a custom http.Client to allow for advanced features such as caching.
+// NewClient creates a new ClientAPI service with environment variable fallback
+func NewClient(apiTokenID, apiTokenSecret string) *ClientAPIService {
+    return NewClientWithBaseURL(apiTokenID, apiTokenSecret, nil)
+}
+
+// NewClientWithBaseURL creates a new ClientAPI service targeting an optional baseURL
+// If baseURL is nil or empty, the default server configuration is used.
+func NewClientWithBaseURL(apiTokenID, apiTokenSecret string, baseURL *string) *ClientAPIService {
+    // Use environment variables if not provided
+    if apiTokenID == "" {
+        apiTokenID = os.Getenv("DOCSPRING_TOKEN_ID")
+    }
+    if apiTokenSecret == "" {
+        apiTokenSecret = os.Getenv("DOCSPRING_TOKEN_SECRET")
+    }
+
+    cfg := NewConfiguration()
+
+    // Set up Basic Authentication if at least one credential is provided
+    if apiTokenID != "" || apiTokenSecret != "" {
+        auth := apiTokenID + ":" + apiTokenSecret
+        encoded := base64.StdEncoding.EncodeToString([]byte(auth))
+        cfg.AddDefaultHeader("Authorization", "Basic " + encoded)
+    }
+
+    // Resolve host/region from environment or parameter
+    // Precedence: explicit baseURL param > DOCSPRING_HOST > DOCSPRING_REGION
+    if baseURL != nil && *baseURL != "" {
+        cfg.Servers = ServerConfigurations{{URL: *baseURL, Description: "Custom server"}}
+    } else {
+        envHost := os.Getenv("DOCSPRING_HOST")
+        if envHost == "" {
+            // Region mapping
+            region := os.Getenv("DOCSPRING_REGION")
+            if strings.TrimSpace(region) != "" {
+                if regionHost := mapRegionToHost(region); regionHost != "" {
+                    envHost = regionHost
+                } else {
+                    panic(region + " is not a valid region. Valid regions: US, EU")
+                }
+            }
+        }
+        if envHost != "" {
+            // Ensure scheme and path
+            url := envHost
+            if !strings.HasPrefix(url, "http://") && !strings.HasPrefix(url, "https://") {
+                url = "https://" + url
+            }
+            if !strings.HasSuffix(url, "/api/v1") {
+                url = strings.TrimRight(url, "/") + "/api/v1"
+            }
+            cfg.Servers = ServerConfigurations{{URL: url, Description: "Configured server"}}
+        }
+    }
+
+    api := NewAPIClient(cfg)
+    return api.ClientAPI
+}
+
+// NewClientWithRegion creates a new ClientAPI for a given region (e.g., "US", "EU", "Staging")
+func NewClientWithRegion(apiTokenID, apiTokenSecret, region string) *ClientAPIService {
+    host := mapRegionToHost(region)
+    if strings.TrimSpace(region) != "" && host == "" {
+        panic(region + " is not a valid region. Valid regions: US, EU")
+    }
+    if host == "" {
+        return NewClient(apiTokenID, apiTokenSecret)
+    }
+    url := "https://" + host + "/api/v1"
+    return NewClientWithBaseURL(apiTokenID, apiTokenSecret, &url)
+}
+
+func mapRegionToHost(region string) string {
+    switch strings.ToUpper(strings.TrimSpace(region)) {
+    case "US":
+        return "sync.api.docspring.com"
+    case "EU":
+        return "sync.api-eu.docspring.com"
+    default:
+        return ""
+    }
+}
+
+
 func NewAPIClient(cfg *Configuration) *APIClient {
 	if cfg.HTTPClient == nil {
 		cfg.HTTPClient = http.DefaultClient
@@ -68,7 +153,7 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.common.client = c
 
 	// API Services
-	c.PDFAPI = (*PDFAPIService)(&c.common)
+	c.ClientAPI = (*ClientAPIService)(&c.common)
 
 	return c
 }
@@ -127,6 +212,10 @@ func typeCheckParameter(obj interface{}, expected string, name string) error {
 
 func parameterValueToString( obj interface{}, key string ) string {
 	if reflect.TypeOf(obj).Kind() != reflect.Ptr {
+		if actualObj, ok := obj.(interface{ GetActualInstanceValue() interface{} }); ok {
+			return fmt.Sprintf("%v", actualObj.GetActualInstanceValue())
+		}
+
 		return fmt.Sprintf("%v", obj)
 	}
 	var param,ok = obj.(MappedNullable)

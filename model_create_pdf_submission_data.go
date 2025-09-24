@@ -1,7 +1,7 @@
 /*
 DocSpring API
 
-DocSpring provides an API that helps you fill out and sign PDF templates.
+Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
 
 API version: v1
 */
@@ -29,6 +29,7 @@ type CreatePdfSubmissionData struct {
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
 	Password *string `json:"password,omitempty"`
 	Test *bool `json:"test,omitempty"`
+	Version *string `json:"version,omitempty"`
 }
 
 type _CreatePdfSubmissionData CreatePdfSubmissionData
@@ -299,6 +300,38 @@ func (o *CreatePdfSubmissionData) SetTest(v bool) {
 	o.Test = &v
 }
 
+// GetVersion returns the Version field value if set, zero value otherwise.
+func (o *CreatePdfSubmissionData) GetVersion() string {
+	if o == nil || IsNil(o.Version) {
+		var ret string
+		return ret
+	}
+	return *o.Version
+}
+
+// GetVersionOk returns a tuple with the Version field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreatePdfSubmissionData) GetVersionOk() (*string, bool) {
+	if o == nil || IsNil(o.Version) {
+		return nil, false
+	}
+	return o.Version, true
+}
+
+// HasVersion returns a boolean if a field has been set.
+func (o *CreatePdfSubmissionData) HasVersion() bool {
+	if o != nil && !IsNil(o.Version) {
+		return true
+	}
+
+	return false
+}
+
+// SetVersion gets a reference to the given string and assigns it to the Version field.
+func (o *CreatePdfSubmissionData) SetVersion(v string) {
+	o.Version = &v
+}
+
 func (o CreatePdfSubmissionData) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -330,6 +363,9 @@ func (o CreatePdfSubmissionData) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Test) {
 		toSerialize["test"] = o.Test
+	}
+	if !IsNil(o.Version) {
+		toSerialize["version"] = o.Version
 	}
 	return toSerialize, nil
 }

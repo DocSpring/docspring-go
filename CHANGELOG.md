@@ -1,3 +1,14 @@
+### 3.0.0 [September 24, 2025]
+
+- All our API clients are now 100% end-to-end tested against our real server.
+
+### 2.1.0 [March 22, 2025]
+
+- Added support for Template Versioning parameters:
+  - Optional version parameter in submission requests (e.g., 1.2.3, draft, latest)
+  - New API methods: publish_template_version, restore_template_version
+  - Updated copy_template and delete_template methods to accept template version strings
+
 ### 2.0.1 [February 26, 2025]
 
 - Fixed User-Agent header: docspring-go-x.x.x

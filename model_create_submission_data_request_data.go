@@ -1,7 +1,7 @@
 /*
 DocSpring API
 
-DocSpring provides an API that helps you fill out and sign PDF templates.
+Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
 
 API version: v1
 */
@@ -19,11 +19,20 @@ var _ MappedNullable = &CreateSubmissionDataRequestData{}
 
 // CreateSubmissionDataRequestData struct for CreateSubmissionDataRequestData
 type CreateSubmissionDataRequestData struct {
+	AuthPhoneNumberHash NullableString `json:"auth_phone_number_hash,omitempty"`
+	AuthProvider NullableString `json:"auth_provider,omitempty"`
 	AuthSecondFactorType *string `json:"auth_second_factor_type,omitempty"`
+	AuthSessionIdHash NullableString `json:"auth_session_id_hash,omitempty"`
+	AuthSessionStartedAt NullableString `json:"auth_session_started_at,omitempty"`
 	AuthType *string `json:"auth_type,omitempty"`
-	Fields []string `json:"fields,omitempty"`
+	AuthUserIdHash NullableString `json:"auth_user_id_hash,omitempty"`
+	AuthUsernameHash NullableString `json:"auth_username_hash,omitempty"`
+	Email NullableString `json:"email,omitempty"`
+	Fields []*string `json:"fields,omitempty"`
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
+	Name NullableString `json:"name,omitempty"`
 	Order *int32 `json:"order,omitempty"`
+	Skipped NullableBool `json:"skipped,omitempty"`
 }
 
 // NewCreateSubmissionDataRequestData instantiates a new CreateSubmissionDataRequestData object
@@ -41,6 +50,90 @@ func NewCreateSubmissionDataRequestData() *CreateSubmissionDataRequestData {
 func NewCreateSubmissionDataRequestDataWithDefaults() *CreateSubmissionDataRequestData {
 	this := CreateSubmissionDataRequestData{}
 	return &this
+}
+
+// GetAuthPhoneNumberHash returns the AuthPhoneNumberHash field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *CreateSubmissionDataRequestData) GetAuthPhoneNumberHash() string {
+	if o == nil || IsNil(o.AuthPhoneNumberHash.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.AuthPhoneNumberHash.Get()
+}
+
+// GetAuthPhoneNumberHashOk returns a tuple with the AuthPhoneNumberHash field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *CreateSubmissionDataRequestData) GetAuthPhoneNumberHashOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.AuthPhoneNumberHash.Get(), o.AuthPhoneNumberHash.IsSet()
+}
+
+// HasAuthPhoneNumberHash returns a boolean if a field has been set.
+func (o *CreateSubmissionDataRequestData) HasAuthPhoneNumberHash() bool {
+	if o != nil && o.AuthPhoneNumberHash.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetAuthPhoneNumberHash gets a reference to the given NullableString and assigns it to the AuthPhoneNumberHash field.
+func (o *CreateSubmissionDataRequestData) SetAuthPhoneNumberHash(v string) {
+	o.AuthPhoneNumberHash.Set(&v)
+}
+// SetAuthPhoneNumberHashNil sets the value for AuthPhoneNumberHash to be an explicit nil
+func (o *CreateSubmissionDataRequestData) SetAuthPhoneNumberHashNil() {
+	o.AuthPhoneNumberHash.Set(nil)
+}
+
+// UnsetAuthPhoneNumberHash ensures that no value is present for AuthPhoneNumberHash, not even an explicit nil
+func (o *CreateSubmissionDataRequestData) UnsetAuthPhoneNumberHash() {
+	o.AuthPhoneNumberHash.Unset()
+}
+
+// GetAuthProvider returns the AuthProvider field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *CreateSubmissionDataRequestData) GetAuthProvider() string {
+	if o == nil || IsNil(o.AuthProvider.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.AuthProvider.Get()
+}
+
+// GetAuthProviderOk returns a tuple with the AuthProvider field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *CreateSubmissionDataRequestData) GetAuthProviderOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.AuthProvider.Get(), o.AuthProvider.IsSet()
+}
+
+// HasAuthProvider returns a boolean if a field has been set.
+func (o *CreateSubmissionDataRequestData) HasAuthProvider() bool {
+	if o != nil && o.AuthProvider.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetAuthProvider gets a reference to the given NullableString and assigns it to the AuthProvider field.
+func (o *CreateSubmissionDataRequestData) SetAuthProvider(v string) {
+	o.AuthProvider.Set(&v)
+}
+// SetAuthProviderNil sets the value for AuthProvider to be an explicit nil
+func (o *CreateSubmissionDataRequestData) SetAuthProviderNil() {
+	o.AuthProvider.Set(nil)
+}
+
+// UnsetAuthProvider ensures that no value is present for AuthProvider, not even an explicit nil
+func (o *CreateSubmissionDataRequestData) UnsetAuthProvider() {
+	o.AuthProvider.Unset()
 }
 
 // GetAuthSecondFactorType returns the AuthSecondFactorType field value if set, zero value otherwise.
@@ -75,6 +168,90 @@ func (o *CreateSubmissionDataRequestData) SetAuthSecondFactorType(v string) {
 	o.AuthSecondFactorType = &v
 }
 
+// GetAuthSessionIdHash returns the AuthSessionIdHash field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *CreateSubmissionDataRequestData) GetAuthSessionIdHash() string {
+	if o == nil || IsNil(o.AuthSessionIdHash.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.AuthSessionIdHash.Get()
+}
+
+// GetAuthSessionIdHashOk returns a tuple with the AuthSessionIdHash field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *CreateSubmissionDataRequestData) GetAuthSessionIdHashOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.AuthSessionIdHash.Get(), o.AuthSessionIdHash.IsSet()
+}
+
+// HasAuthSessionIdHash returns a boolean if a field has been set.
+func (o *CreateSubmissionDataRequestData) HasAuthSessionIdHash() bool {
+	if o != nil && o.AuthSessionIdHash.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetAuthSessionIdHash gets a reference to the given NullableString and assigns it to the AuthSessionIdHash field.
+func (o *CreateSubmissionDataRequestData) SetAuthSessionIdHash(v string) {
+	o.AuthSessionIdHash.Set(&v)
+}
+// SetAuthSessionIdHashNil sets the value for AuthSessionIdHash to be an explicit nil
+func (o *CreateSubmissionDataRequestData) SetAuthSessionIdHashNil() {
+	o.AuthSessionIdHash.Set(nil)
+}
+
+// UnsetAuthSessionIdHash ensures that no value is present for AuthSessionIdHash, not even an explicit nil
+func (o *CreateSubmissionDataRequestData) UnsetAuthSessionIdHash() {
+	o.AuthSessionIdHash.Unset()
+}
+
+// GetAuthSessionStartedAt returns the AuthSessionStartedAt field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *CreateSubmissionDataRequestData) GetAuthSessionStartedAt() string {
+	if o == nil || IsNil(o.AuthSessionStartedAt.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.AuthSessionStartedAt.Get()
+}
+
+// GetAuthSessionStartedAtOk returns a tuple with the AuthSessionStartedAt field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *CreateSubmissionDataRequestData) GetAuthSessionStartedAtOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.AuthSessionStartedAt.Get(), o.AuthSessionStartedAt.IsSet()
+}
+
+// HasAuthSessionStartedAt returns a boolean if a field has been set.
+func (o *CreateSubmissionDataRequestData) HasAuthSessionStartedAt() bool {
+	if o != nil && o.AuthSessionStartedAt.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetAuthSessionStartedAt gets a reference to the given NullableString and assigns it to the AuthSessionStartedAt field.
+func (o *CreateSubmissionDataRequestData) SetAuthSessionStartedAt(v string) {
+	o.AuthSessionStartedAt.Set(&v)
+}
+// SetAuthSessionStartedAtNil sets the value for AuthSessionStartedAt to be an explicit nil
+func (o *CreateSubmissionDataRequestData) SetAuthSessionStartedAtNil() {
+	o.AuthSessionStartedAt.Set(nil)
+}
+
+// UnsetAuthSessionStartedAt ensures that no value is present for AuthSessionStartedAt, not even an explicit nil
+func (o *CreateSubmissionDataRequestData) UnsetAuthSessionStartedAt() {
+	o.AuthSessionStartedAt.Unset()
+}
+
 // GetAuthType returns the AuthType field value if set, zero value otherwise.
 func (o *CreateSubmissionDataRequestData) GetAuthType() string {
 	if o == nil || IsNil(o.AuthType) {
@@ -107,10 +284,136 @@ func (o *CreateSubmissionDataRequestData) SetAuthType(v string) {
 	o.AuthType = &v
 }
 
+// GetAuthUserIdHash returns the AuthUserIdHash field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *CreateSubmissionDataRequestData) GetAuthUserIdHash() string {
+	if o == nil || IsNil(o.AuthUserIdHash.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.AuthUserIdHash.Get()
+}
+
+// GetAuthUserIdHashOk returns a tuple with the AuthUserIdHash field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *CreateSubmissionDataRequestData) GetAuthUserIdHashOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.AuthUserIdHash.Get(), o.AuthUserIdHash.IsSet()
+}
+
+// HasAuthUserIdHash returns a boolean if a field has been set.
+func (o *CreateSubmissionDataRequestData) HasAuthUserIdHash() bool {
+	if o != nil && o.AuthUserIdHash.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetAuthUserIdHash gets a reference to the given NullableString and assigns it to the AuthUserIdHash field.
+func (o *CreateSubmissionDataRequestData) SetAuthUserIdHash(v string) {
+	o.AuthUserIdHash.Set(&v)
+}
+// SetAuthUserIdHashNil sets the value for AuthUserIdHash to be an explicit nil
+func (o *CreateSubmissionDataRequestData) SetAuthUserIdHashNil() {
+	o.AuthUserIdHash.Set(nil)
+}
+
+// UnsetAuthUserIdHash ensures that no value is present for AuthUserIdHash, not even an explicit nil
+func (o *CreateSubmissionDataRequestData) UnsetAuthUserIdHash() {
+	o.AuthUserIdHash.Unset()
+}
+
+// GetAuthUsernameHash returns the AuthUsernameHash field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *CreateSubmissionDataRequestData) GetAuthUsernameHash() string {
+	if o == nil || IsNil(o.AuthUsernameHash.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.AuthUsernameHash.Get()
+}
+
+// GetAuthUsernameHashOk returns a tuple with the AuthUsernameHash field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *CreateSubmissionDataRequestData) GetAuthUsernameHashOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.AuthUsernameHash.Get(), o.AuthUsernameHash.IsSet()
+}
+
+// HasAuthUsernameHash returns a boolean if a field has been set.
+func (o *CreateSubmissionDataRequestData) HasAuthUsernameHash() bool {
+	if o != nil && o.AuthUsernameHash.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetAuthUsernameHash gets a reference to the given NullableString and assigns it to the AuthUsernameHash field.
+func (o *CreateSubmissionDataRequestData) SetAuthUsernameHash(v string) {
+	o.AuthUsernameHash.Set(&v)
+}
+// SetAuthUsernameHashNil sets the value for AuthUsernameHash to be an explicit nil
+func (o *CreateSubmissionDataRequestData) SetAuthUsernameHashNil() {
+	o.AuthUsernameHash.Set(nil)
+}
+
+// UnsetAuthUsernameHash ensures that no value is present for AuthUsernameHash, not even an explicit nil
+func (o *CreateSubmissionDataRequestData) UnsetAuthUsernameHash() {
+	o.AuthUsernameHash.Unset()
+}
+
+// GetEmail returns the Email field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *CreateSubmissionDataRequestData) GetEmail() string {
+	if o == nil || IsNil(o.Email.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.Email.Get()
+}
+
+// GetEmailOk returns a tuple with the Email field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *CreateSubmissionDataRequestData) GetEmailOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Email.Get(), o.Email.IsSet()
+}
+
+// HasEmail returns a boolean if a field has been set.
+func (o *CreateSubmissionDataRequestData) HasEmail() bool {
+	if o != nil && o.Email.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetEmail gets a reference to the given NullableString and assigns it to the Email field.
+func (o *CreateSubmissionDataRequestData) SetEmail(v string) {
+	o.Email.Set(&v)
+}
+// SetEmailNil sets the value for Email to be an explicit nil
+func (o *CreateSubmissionDataRequestData) SetEmailNil() {
+	o.Email.Set(nil)
+}
+
+// UnsetEmail ensures that no value is present for Email, not even an explicit nil
+func (o *CreateSubmissionDataRequestData) UnsetEmail() {
+	o.Email.Unset()
+}
+
 // GetFields returns the Fields field value if set, zero value otherwise.
-func (o *CreateSubmissionDataRequestData) GetFields() []string {
+func (o *CreateSubmissionDataRequestData) GetFields() []*string {
 	if o == nil || IsNil(o.Fields) {
-		var ret []string
+		var ret []*string
 		return ret
 	}
 	return o.Fields
@@ -118,7 +421,7 @@ func (o *CreateSubmissionDataRequestData) GetFields() []string {
 
 // GetFieldsOk returns a tuple with the Fields field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *CreateSubmissionDataRequestData) GetFieldsOk() ([]string, bool) {
+func (o *CreateSubmissionDataRequestData) GetFieldsOk() ([]*string, bool) {
 	if o == nil || IsNil(o.Fields) {
 		return nil, false
 	}
@@ -134,8 +437,8 @@ func (o *CreateSubmissionDataRequestData) HasFields() bool {
 	return false
 }
 
-// SetFields gets a reference to the given []string and assigns it to the Fields field.
-func (o *CreateSubmissionDataRequestData) SetFields(v []string) {
+// SetFields gets a reference to the given []*string and assigns it to the Fields field.
+func (o *CreateSubmissionDataRequestData) SetFields(v []*string) {
 	o.Fields = v
 }
 
@@ -171,6 +474,48 @@ func (o *CreateSubmissionDataRequestData) SetMetadata(v map[string]interface{}) 
 	o.Metadata = v
 }
 
+// GetName returns the Name field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *CreateSubmissionDataRequestData) GetName() string {
+	if o == nil || IsNil(o.Name.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.Name.Get()
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *CreateSubmissionDataRequestData) GetNameOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Name.Get(), o.Name.IsSet()
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *CreateSubmissionDataRequestData) HasName() bool {
+	if o != nil && o.Name.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given NullableString and assigns it to the Name field.
+func (o *CreateSubmissionDataRequestData) SetName(v string) {
+	o.Name.Set(&v)
+}
+// SetNameNil sets the value for Name to be an explicit nil
+func (o *CreateSubmissionDataRequestData) SetNameNil() {
+	o.Name.Set(nil)
+}
+
+// UnsetName ensures that no value is present for Name, not even an explicit nil
+func (o *CreateSubmissionDataRequestData) UnsetName() {
+	o.Name.Unset()
+}
+
 // GetOrder returns the Order field value if set, zero value otherwise.
 func (o *CreateSubmissionDataRequestData) GetOrder() int32 {
 	if o == nil || IsNil(o.Order) {
@@ -203,6 +548,48 @@ func (o *CreateSubmissionDataRequestData) SetOrder(v int32) {
 	o.Order = &v
 }
 
+// GetSkipped returns the Skipped field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *CreateSubmissionDataRequestData) GetSkipped() bool {
+	if o == nil || IsNil(o.Skipped.Get()) {
+		var ret bool
+		return ret
+	}
+	return *o.Skipped.Get()
+}
+
+// GetSkippedOk returns a tuple with the Skipped field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *CreateSubmissionDataRequestData) GetSkippedOk() (*bool, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Skipped.Get(), o.Skipped.IsSet()
+}
+
+// HasSkipped returns a boolean if a field has been set.
+func (o *CreateSubmissionDataRequestData) HasSkipped() bool {
+	if o != nil && o.Skipped.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetSkipped gets a reference to the given NullableBool and assigns it to the Skipped field.
+func (o *CreateSubmissionDataRequestData) SetSkipped(v bool) {
+	o.Skipped.Set(&v)
+}
+// SetSkippedNil sets the value for Skipped to be an explicit nil
+func (o *CreateSubmissionDataRequestData) SetSkippedNil() {
+	o.Skipped.Set(nil)
+}
+
+// UnsetSkipped ensures that no value is present for Skipped, not even an explicit nil
+func (o *CreateSubmissionDataRequestData) UnsetSkipped() {
+	o.Skipped.Unset()
+}
+
 func (o CreateSubmissionDataRequestData) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -213,11 +600,32 @@ func (o CreateSubmissionDataRequestData) MarshalJSON() ([]byte, error) {
 
 func (o CreateSubmissionDataRequestData) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if o.AuthPhoneNumberHash.IsSet() {
+		toSerialize["auth_phone_number_hash"] = o.AuthPhoneNumberHash.Get()
+	}
+	if o.AuthProvider.IsSet() {
+		toSerialize["auth_provider"] = o.AuthProvider.Get()
+	}
 	if !IsNil(o.AuthSecondFactorType) {
 		toSerialize["auth_second_factor_type"] = o.AuthSecondFactorType
 	}
+	if o.AuthSessionIdHash.IsSet() {
+		toSerialize["auth_session_id_hash"] = o.AuthSessionIdHash.Get()
+	}
+	if o.AuthSessionStartedAt.IsSet() {
+		toSerialize["auth_session_started_at"] = o.AuthSessionStartedAt.Get()
+	}
 	if !IsNil(o.AuthType) {
 		toSerialize["auth_type"] = o.AuthType
+	}
+	if o.AuthUserIdHash.IsSet() {
+		toSerialize["auth_user_id_hash"] = o.AuthUserIdHash.Get()
+	}
+	if o.AuthUsernameHash.IsSet() {
+		toSerialize["auth_username_hash"] = o.AuthUsernameHash.Get()
+	}
+	if o.Email.IsSet() {
+		toSerialize["email"] = o.Email.Get()
 	}
 	if !IsNil(o.Fields) {
 		toSerialize["fields"] = o.Fields
@@ -225,8 +633,14 @@ func (o CreateSubmissionDataRequestData) ToMap() (map[string]interface{}, error)
 	if !IsNil(o.Metadata) {
 		toSerialize["metadata"] = o.Metadata
 	}
+	if o.Name.IsSet() {
+		toSerialize["name"] = o.Name.Get()
+	}
 	if !IsNil(o.Order) {
 		toSerialize["order"] = o.Order
+	}
+	if o.Skipped.IsSet() {
+		toSerialize["skipped"] = o.Skipped.Get()
 	}
 	return toSerialize, nil
 }

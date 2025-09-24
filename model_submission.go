@@ -1,7 +1,7 @@
 /*
 DocSpring API
 
-DocSpring provides an API that helps you fill out and sign PDF templates.
+Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
 
 API version: v1
 */
@@ -33,6 +33,8 @@ type Submission struct {
 	ProcessedAt NullableString `json:"processed_at"`
 	State string `json:"state"`
 	TemplateId NullableString `json:"template_id"`
+	TemplateType string `json:"template_type"`
+	TemplateVersion NullableString `json:"template_version"`
 	Test bool `json:"test"`
 	TruncatedText map[string]interface{} `json:"truncated_text"`
 	PdfHash NullableString `json:"pdf_hash"`
@@ -53,7 +55,7 @@ type _Submission Submission
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewSubmission(batchId NullableString, dataRequests []SubmissionDataRequest, editable NullableBool, expired bool, expiresAt NullableString, id NullableString, jsonSchemaErrors []string, metadata map[string]interface{}, password NullableString, processedAt NullableString, state string, templateId NullableString, test bool, truncatedText map[string]interface{}, pdfHash NullableString, downloadUrl NullableString, permanentDownloadUrl NullableString, previewDownloadUrl NullableString, previewGeneratedAt NullableString, auditTrailDownloadUrl NullableString, actions []SubmissionAction, source string, referrer NullableString, data map[string]interface{}) *Submission {
+func NewSubmission(batchId NullableString, dataRequests []SubmissionDataRequest, editable NullableBool, expired bool, expiresAt NullableString, id NullableString, jsonSchemaErrors []string, metadata map[string]interface{}, password NullableString, processedAt NullableString, state string, templateId NullableString, templateType string, templateVersion NullableString, test bool, truncatedText map[string]interface{}, pdfHash NullableString, downloadUrl NullableString, permanentDownloadUrl NullableString, previewDownloadUrl NullableString, previewGeneratedAt NullableString, auditTrailDownloadUrl NullableString, actions []SubmissionAction, source string, referrer NullableString, data map[string]interface{}) *Submission {
 	this := Submission{}
 	this.BatchId = batchId
 	this.DataRequests = dataRequests
@@ -67,6 +69,8 @@ func NewSubmission(batchId NullableString, dataRequests []SubmissionDataRequest,
 	this.ProcessedAt = processedAt
 	this.State = state
 	this.TemplateId = templateId
+	this.TemplateType = templateType
+	this.TemplateVersion = templateVersion
 	this.Test = test
 	this.TruncatedText = truncatedText
 	this.PdfHash = pdfHash
@@ -392,6 +396,56 @@ func (o *Submission) GetTemplateIdOk() (*string, bool) {
 // SetTemplateId sets field value
 func (o *Submission) SetTemplateId(v string) {
 	o.TemplateId.Set(&v)
+}
+
+// GetTemplateType returns the TemplateType field value
+func (o *Submission) GetTemplateType() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.TemplateType
+}
+
+// GetTemplateTypeOk returns a tuple with the TemplateType field value
+// and a boolean to check if the value has been set.
+func (o *Submission) GetTemplateTypeOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.TemplateType, true
+}
+
+// SetTemplateType sets field value
+func (o *Submission) SetTemplateType(v string) {
+	o.TemplateType = v
+}
+
+// GetTemplateVersion returns the TemplateVersion field value
+// If the value is explicit nil, the zero value for string will be returned
+func (o *Submission) GetTemplateVersion() string {
+	if o == nil || o.TemplateVersion.Get() == nil {
+		var ret string
+		return ret
+	}
+
+	return *o.TemplateVersion.Get()
+}
+
+// GetTemplateVersionOk returns a tuple with the TemplateVersion field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *Submission) GetTemplateVersionOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.TemplateVersion.Get(), o.TemplateVersion.IsSet()
+}
+
+// SetTemplateVersion sets field value
+func (o *Submission) SetTemplateVersion(v string) {
+	o.TemplateVersion.Set(&v)
 }
 
 // GetTest returns the Test field value
@@ -724,6 +778,8 @@ func (o Submission) ToMap() (map[string]interface{}, error) {
 	toSerialize["processed_at"] = o.ProcessedAt.Get()
 	toSerialize["state"] = o.State
 	toSerialize["template_id"] = o.TemplateId.Get()
+	toSerialize["template_type"] = o.TemplateType
+	toSerialize["template_version"] = o.TemplateVersion.Get()
 	toSerialize["test"] = o.Test
 	if o.TruncatedText != nil {
 		toSerialize["truncated_text"] = o.TruncatedText
@@ -760,6 +816,8 @@ func (o *Submission) UnmarshalJSON(data []byte) (err error) {
 		"processed_at",
 		"state",
 		"template_id",
+		"template_type",
+		"template_version",
 		"test",
 		"truncated_text",
 		"pdf_hash",

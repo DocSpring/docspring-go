@@ -1,7 +1,7 @@
 /*
 DocSpring API
 
-DocSpring provides an API that helps you fill out and sign PDF templates.
+Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
 
 API version: v1
 */
@@ -21,12 +21,12 @@ import (
 )
 
 
-// PDFAPIService PDFAPI service
-type PDFAPIService service
+// ClientAPIService ClientAPI service
+type ClientAPIService service
 
 type ApiAddFieldsToTemplateRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	templateId string
 	data *AddFieldsData
 }
@@ -43,11 +43,15 @@ func (r ApiAddFieldsToTemplateRequest) Execute() (*TemplateAddFieldsResponse, *h
 /*
 AddFieldsToTemplate Add new fields to a Template
 
+Adds fields to a PDF template. Configure field types, positions,
+defaults, and formatting options.
+
+
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param templateId
  @return ApiAddFieldsToTemplateRequest
 */
-func (a *PDFAPIService) AddFieldsToTemplate(ctx context.Context, templateId string) ApiAddFieldsToTemplateRequest {
+func (a *ClientAPIService) AddFieldsToTemplate(ctx context.Context, templateId string) ApiAddFieldsToTemplateRequest {
 	return ApiAddFieldsToTemplateRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -57,7 +61,7 @@ func (a *PDFAPIService) AddFieldsToTemplate(ctx context.Context, templateId stri
 
 // Execute executes the request
 //  @return TemplateAddFieldsResponse
-func (a *PDFAPIService) AddFieldsToTemplateExecute(r ApiAddFieldsToTemplateRequest) (*TemplateAddFieldsResponse, *http.Response, error) {
+func (a *ClientAPIService) AddFieldsToTemplateExecute(r ApiAddFieldsToTemplateRequest) (*TemplateAddFieldsResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPut
 		localVarPostBody     interface{}
@@ -65,7 +69,7 @@ func (a *PDFAPIService) AddFieldsToTemplateExecute(r ApiAddFieldsToTemplateReque
 		localVarReturnValue  *TemplateAddFieldsResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.AddFieldsToTemplate")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.AddFieldsToTemplate")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -148,7 +152,7 @@ func (a *PDFAPIService) AddFieldsToTemplateExecute(r ApiAddFieldsToTemplateReque
 
 type ApiBatchGeneratePdfsRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	data *SubmissionBatchData
 	wait *bool
 }
@@ -169,12 +173,20 @@ func (r ApiBatchGeneratePdfsRequest) Execute() (*BatchGeneratePdfs201Response, *
 }
 
 /*
-BatchGeneratePdfs Generates multiple PDFs
+BatchGeneratePdfs Generate multiple PDFs
+
+Generates up to 50 PDFs in a single request. Each submission can use a different template
+and data. Supports both synchronous (wait for all PDFs) and asynchronous processing. More
+efficient than individual requests when creating multiple PDFs.
+
+See also:
+- [Batch and Combine PDFs](https://docspring.com/docs/api-guide/generate-pdfs/batch-generate-pdfs/) - Generate and merge PDFs in one request
+
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @return ApiBatchGeneratePdfsRequest
 */
-func (a *PDFAPIService) BatchGeneratePdfs(ctx context.Context) ApiBatchGeneratePdfsRequest {
+func (a *ClientAPIService) BatchGeneratePdfs(ctx context.Context) ApiBatchGeneratePdfsRequest {
 	return ApiBatchGeneratePdfsRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -183,7 +195,7 @@ func (a *PDFAPIService) BatchGeneratePdfs(ctx context.Context) ApiBatchGenerateP
 
 // Execute executes the request
 //  @return BatchGeneratePdfs201Response
-func (a *PDFAPIService) BatchGeneratePdfsExecute(r ApiBatchGeneratePdfsRequest) (*BatchGeneratePdfs201Response, *http.Response, error) {
+func (a *ClientAPIService) BatchGeneratePdfsExecute(r ApiBatchGeneratePdfsRequest) (*BatchGeneratePdfs201Response, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
@@ -191,7 +203,7 @@ func (a *PDFAPIService) BatchGeneratePdfsExecute(r ApiBatchGeneratePdfsRequest) 
 		localVarReturnValue  *BatchGeneratePdfs201Response
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.BatchGeneratePdfs")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.BatchGeneratePdfs")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -264,7 +276,7 @@ func (a *PDFAPIService) BatchGeneratePdfsExecute(r ApiBatchGeneratePdfsRequest) 
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 422 {
-			var v MultipleErrorsResponse
+			var v ErrorOrMultipleErrorsResponse
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -301,7 +313,7 @@ func (a *PDFAPIService) BatchGeneratePdfsExecute(r ApiBatchGeneratePdfsRequest) 
 
 type ApiCombinePdfsRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	data *CombinePdfsData
 }
 
@@ -317,10 +329,15 @@ func (r ApiCombinePdfsRequest) Execute() (*CreateCombinedSubmissionResponse, *ht
 /*
 CombinePdfs Merge submission PDFs, template PDFs, or custom files
 
+Combines multiple PDFs from various sources into a single PDF file. Supports merging
+submission PDFs, template PDFs, custom files, other merged PDFs,
+and PDFs from URLs. Merges the PDFs in the order provided.
+
+
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @return ApiCombinePdfsRequest
 */
-func (a *PDFAPIService) CombinePdfs(ctx context.Context) ApiCombinePdfsRequest {
+func (a *ClientAPIService) CombinePdfs(ctx context.Context) ApiCombinePdfsRequest {
 	return ApiCombinePdfsRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -329,7 +346,7 @@ func (a *PDFAPIService) CombinePdfs(ctx context.Context) ApiCombinePdfsRequest {
 
 // Execute executes the request
 //  @return CreateCombinedSubmissionResponse
-func (a *PDFAPIService) CombinePdfsExecute(r ApiCombinePdfsRequest) (*CreateCombinedSubmissionResponse, *http.Response, error) {
+func (a *ClientAPIService) CombinePdfsExecute(r ApiCombinePdfsRequest) (*CreateCombinedSubmissionResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
@@ -337,154 +354,7 @@ func (a *PDFAPIService) CombinePdfsExecute(r ApiCombinePdfsRequest) (*CreateComb
 		localVarReturnValue  *CreateCombinedSubmissionResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.CombinePdfs")
-	if err != nil {
-		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/combined_submissions?v=2"
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-	if r.data == nil {
-		return localVarReturnValue, nil, reportError("data is required and must be specified")
-	}
-
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{"application/json"}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		if localVarHTTPResponse.StatusCode == 422 {
-			var v MultipleErrorsResponse
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 400 {
-			var v ErrorResponse
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 401 {
-			var v ErrorResponse
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
-type ApiCombineSubmissionsRequest struct {
-	ctx context.Context
-	ApiService *PDFAPIService
-	data *CombinedSubmissionData
-	wait *bool
-}
-
-func (r ApiCombineSubmissionsRequest) Data(data CombinedSubmissionData) ApiCombineSubmissionsRequest {
-	r.data = &data
-	return r
-}
-
-// Wait for combined submission to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain)
-func (r ApiCombineSubmissionsRequest) Wait(wait bool) ApiCombineSubmissionsRequest {
-	r.wait = &wait
-	return r
-}
-
-func (r ApiCombineSubmissionsRequest) Execute() (*CreateCombinedSubmissionResponse, *http.Response, error) {
-	return r.ApiService.CombineSubmissionsExecute(r)
-}
-
-/*
-CombineSubmissions Merge generated PDFs together
-
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCombineSubmissionsRequest
-*/
-func (a *PDFAPIService) CombineSubmissions(ctx context.Context) ApiCombineSubmissionsRequest {
-	return ApiCombineSubmissionsRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-// Execute executes the request
-//  @return CreateCombinedSubmissionResponse
-func (a *PDFAPIService) CombineSubmissionsExecute(r ApiCombineSubmissionsRequest) (*CreateCombinedSubmissionResponse, *http.Response, error) {
-	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *CreateCombinedSubmissionResponse
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.CombineSubmissions")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.CombinePdfs")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -498,12 +368,6 @@ func (a *PDFAPIService) CombineSubmissionsExecute(r ApiCombineSubmissionsRequest
 		return localVarReturnValue, nil, reportError("data is required and must be specified")
 	}
 
-	if r.wait != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "wait", r.wait, "", "")
-	} else {
-		var defaultValue bool = true
-		r.wait = &defaultValue
-	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -594,7 +458,7 @@ func (a *PDFAPIService) CombineSubmissionsExecute(r ApiCombineSubmissionsRequest
 
 type ApiCopyTemplateRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	templateId string
 	options *CopyTemplateOptions
 }
@@ -609,13 +473,18 @@ func (r ApiCopyTemplateRequest) Execute() (*TemplatePreview, *http.Response, err
 }
 
 /*
-CopyTemplate Copy a Template
+CopyTemplate Copy a template
+
+Creates a copy of an existing template with all its fields and configuration.
+Optionally specify a new name and target folder. The copied template starts as a new
+draft that can be modified independently of the original.
+
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param templateId
  @return ApiCopyTemplateRequest
 */
-func (a *PDFAPIService) CopyTemplate(ctx context.Context, templateId string) ApiCopyTemplateRequest {
+func (a *ClientAPIService) CopyTemplate(ctx context.Context, templateId string) ApiCopyTemplateRequest {
 	return ApiCopyTemplateRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -625,7 +494,7 @@ func (a *PDFAPIService) CopyTemplate(ctx context.Context, templateId string) Api
 
 // Execute executes the request
 //  @return TemplatePreview
-func (a *PDFAPIService) CopyTemplateExecute(r ApiCopyTemplateRequest) (*TemplatePreview, *http.Response, error) {
+func (a *ClientAPIService) CopyTemplateExecute(r ApiCopyTemplateRequest) (*TemplatePreview, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
@@ -633,7 +502,7 @@ func (a *PDFAPIService) CopyTemplateExecute(r ApiCopyTemplateRequest) (*Template
 		localVarReturnValue  *TemplatePreview
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.CopyTemplate")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.CopyTemplate")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -713,7 +582,7 @@ func (a *PDFAPIService) CopyTemplateExecute(r ApiCopyTemplateRequest) (*Template
 
 type ApiCreateCustomFileFromUploadRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	data *CreateCustomFileData
 }
 
@@ -727,12 +596,17 @@ func (r ApiCreateCustomFileFromUploadRequest) Execute() (*CreateCustomFileRespon
 }
 
 /*
-CreateCustomFileFromUpload Create a new custom file from a cached presign upload
+CreateCustomFileFromUpload Create a new custom file from a cached S3 upload
+
+The Custom Files API endpoint allows you to upload PDFs to DocSpring and then
+merge them with other PDFs. First upload your file using the presigned URL endpoint,
+then use the returned cache_id to create the custom file.
+
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @return ApiCreateCustomFileFromUploadRequest
 */
-func (a *PDFAPIService) CreateCustomFileFromUpload(ctx context.Context) ApiCreateCustomFileFromUploadRequest {
+func (a *ClientAPIService) CreateCustomFileFromUpload(ctx context.Context) ApiCreateCustomFileFromUploadRequest {
 	return ApiCreateCustomFileFromUploadRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -741,7 +615,7 @@ func (a *PDFAPIService) CreateCustomFileFromUpload(ctx context.Context) ApiCreat
 
 // Execute executes the request
 //  @return CreateCustomFileResponse
-func (a *PDFAPIService) CreateCustomFileFromUploadExecute(r ApiCreateCustomFileFromUploadRequest) (*CreateCustomFileResponse, *http.Response, error) {
+func (a *ClientAPIService) CreateCustomFileFromUploadExecute(r ApiCreateCustomFileFromUploadRequest) (*CreateCustomFileResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
@@ -749,7 +623,7 @@ func (a *PDFAPIService) CreateCustomFileFromUploadExecute(r ApiCreateCustomFileF
 		localVarReturnValue  *CreateCustomFileResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.CreateCustomFileFromUpload")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.CreateCustomFileFromUpload")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -831,7 +705,7 @@ func (a *PDFAPIService) CreateCustomFileFromUploadExecute(r ApiCreateCustomFileF
 
 type ApiCreateDataRequestEventRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	dataRequestId string
 	event *CreateSubmissionDataRequestEventRequest
 }
@@ -846,13 +720,21 @@ func (r ApiCreateDataRequestEventRequest) Execute() (*CreateSubmissionDataReques
 }
 
 /*
-CreateDataRequestEvent Creates a new event for emailing a signee a request for signature
+CreateDataRequestEvent Create a new event for emailing a signee a request for signature
+
+Records user notification events for data requests. Use this to create an audit trail
+showing when and how users were notified about data request forms. Supports email, SMS,
+and other notification types. Records the notification time for compliance tracking.
+
+See also:
+- [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) - User notification workflow
+
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param dataRequestId
  @return ApiCreateDataRequestEventRequest
 */
-func (a *PDFAPIService) CreateDataRequestEvent(ctx context.Context, dataRequestId string) ApiCreateDataRequestEventRequest {
+func (a *ClientAPIService) CreateDataRequestEvent(ctx context.Context, dataRequestId string) ApiCreateDataRequestEventRequest {
 	return ApiCreateDataRequestEventRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -862,7 +744,7 @@ func (a *PDFAPIService) CreateDataRequestEvent(ctx context.Context, dataRequestI
 
 // Execute executes the request
 //  @return CreateSubmissionDataRequestEventResponse
-func (a *PDFAPIService) CreateDataRequestEventExecute(r ApiCreateDataRequestEventRequest) (*CreateSubmissionDataRequestEventResponse, *http.Response, error) {
+func (a *ClientAPIService) CreateDataRequestEventExecute(r ApiCreateDataRequestEventRequest) (*CreateSubmissionDataRequestEventResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
@@ -870,7 +752,7 @@ func (a *PDFAPIService) CreateDataRequestEventExecute(r ApiCreateDataRequestEven
 		localVarReturnValue  *CreateSubmissionDataRequestEventResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.CreateDataRequestEvent")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.CreateDataRequestEvent")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -964,7 +846,7 @@ func (a *PDFAPIService) CreateDataRequestEventExecute(r ApiCreateDataRequestEven
 
 type ApiCreateDataRequestTokenRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	dataRequestId string
 	type_ *string
 }
@@ -979,13 +861,21 @@ func (r ApiCreateDataRequestTokenRequest) Execute() (*CreateSubmissionDataReques
 }
 
 /*
-CreateDataRequestToken Creates a new data request token for form authentication
+CreateDataRequestToken Create a new data request token for form authentication
+
+Creates an authentication token for accessing a data request form. Tokens can be created
+for API access (1 hour expiration) or email links (30 day expiration). Returns a token
+and a pre-authenticated URL for the data request form.
+
+See also:
+- [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/)
+
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param dataRequestId
  @return ApiCreateDataRequestTokenRequest
 */
-func (a *PDFAPIService) CreateDataRequestToken(ctx context.Context, dataRequestId string) ApiCreateDataRequestTokenRequest {
+func (a *ClientAPIService) CreateDataRequestToken(ctx context.Context, dataRequestId string) ApiCreateDataRequestTokenRequest {
 	return ApiCreateDataRequestTokenRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -995,7 +885,7 @@ func (a *PDFAPIService) CreateDataRequestToken(ctx context.Context, dataRequestI
 
 // Execute executes the request
 //  @return CreateSubmissionDataRequestTokenResponse
-func (a *PDFAPIService) CreateDataRequestTokenExecute(r ApiCreateDataRequestTokenRequest) (*CreateSubmissionDataRequestTokenResponse, *http.Response, error) {
+func (a *ClientAPIService) CreateDataRequestTokenExecute(r ApiCreateDataRequestTokenRequest) (*CreateSubmissionDataRequestTokenResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
@@ -1003,7 +893,7 @@ func (a *PDFAPIService) CreateDataRequestTokenExecute(r ApiCreateDataRequestToke
 		localVarReturnValue  *CreateSubmissionDataRequestTokenResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.CreateDataRequestToken")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.CreateDataRequestToken")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -1095,7 +985,7 @@ func (a *PDFAPIService) CreateDataRequestTokenExecute(r ApiCreateDataRequestToke
 
 type ApiCreateFolderRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	data *CreateFolderData
 }
 
@@ -1111,10 +1001,14 @@ func (r ApiCreateFolderRequest) Execute() (*Folder, *http.Response, error) {
 /*
 CreateFolder Create a folder
 
+Creates a new folder for organizing templates. Folders can be nested within other folders
+by providing a `parent_folder_id`. Folder names must be unique within the same parent.
+
+
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @return ApiCreateFolderRequest
 */
-func (a *PDFAPIService) CreateFolder(ctx context.Context) ApiCreateFolderRequest {
+func (a *ClientAPIService) CreateFolder(ctx context.Context) ApiCreateFolderRequest {
 	return ApiCreateFolderRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -1123,7 +1017,7 @@ func (a *PDFAPIService) CreateFolder(ctx context.Context) ApiCreateFolderRequest
 
 // Execute executes the request
 //  @return Folder
-func (a *PDFAPIService) CreateFolderExecute(r ApiCreateFolderRequest) (*Folder, *http.Response, error) {
+func (a *ClientAPIService) CreateFolderExecute(r ApiCreateFolderRequest) (*Folder, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
@@ -1131,7 +1025,7 @@ func (a *PDFAPIService) CreateFolderExecute(r ApiCreateFolderRequest) (*Folder, 
 		localVarReturnValue  *Folder
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.CreateFolder")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.CreateFolder")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -1233,29 +1127,34 @@ func (a *PDFAPIService) CreateFolderExecute(r ApiCreateFolderRequest) (*Folder, 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiCreateHTMLTemplateRequest struct {
+type ApiCreateHtmlTemplateRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	data *CreateHtmlTemplate
 }
 
-func (r ApiCreateHTMLTemplateRequest) Data(data CreateHtmlTemplate) ApiCreateHTMLTemplateRequest {
+func (r ApiCreateHtmlTemplateRequest) Data(data CreateHtmlTemplate) ApiCreateHtmlTemplateRequest {
 	r.data = &data
 	return r
 }
 
-func (r ApiCreateHTMLTemplateRequest) Execute() (*TemplatePreview, *http.Response, error) {
-	return r.ApiService.CreateHTMLTemplateExecute(r)
+func (r ApiCreateHtmlTemplateRequest) Execute() (*TemplatePreview, *http.Response, error) {
+	return r.ApiService.CreateHtmlTemplateExecute(r)
 }
 
 /*
-CreateHTMLTemplate Create a new HTML template
+CreateHtmlTemplate Create a new HTML template
+
+Creates a new HTML template using HTML, CSS/SCSS, and Liquid templating. Allows complete
+control over PDF layout and styling. Supports headers, footers, and dynamic content using
+Liquid syntax for field values, conditions, loops, and filters.
+
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCreateHTMLTemplateRequest
+ @return ApiCreateHtmlTemplateRequest
 */
-func (a *PDFAPIService) CreateHTMLTemplate(ctx context.Context) ApiCreateHTMLTemplateRequest {
-	return ApiCreateHTMLTemplateRequest{
+func (a *ClientAPIService) CreateHtmlTemplate(ctx context.Context) ApiCreateHtmlTemplateRequest {
+	return ApiCreateHtmlTemplateRequest{
 		ApiService: a,
 		ctx: ctx,
 	}
@@ -1263,7 +1162,7 @@ func (a *PDFAPIService) CreateHTMLTemplate(ctx context.Context) ApiCreateHTMLTem
 
 // Execute executes the request
 //  @return TemplatePreview
-func (a *PDFAPIService) CreateHTMLTemplateExecute(r ApiCreateHTMLTemplateRequest) (*TemplatePreview, *http.Response, error) {
+func (a *ClientAPIService) CreateHtmlTemplateExecute(r ApiCreateHtmlTemplateRequest) (*TemplatePreview, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
@@ -1271,12 +1170,12 @@ func (a *PDFAPIService) CreateHTMLTemplateExecute(r ApiCreateHTMLTemplateRequest
 		localVarReturnValue  *TemplatePreview
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.CreateHTMLTemplate")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.CreateHtmlTemplate")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/templates?endpoint_description=html"
+	localVarPath := localBasePath + "/templates?endpoint_variant=create_html_template"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -1351,9 +1250,9 @@ func (a *PDFAPIService) CreateHTMLTemplateExecute(r ApiCreateHTMLTemplateRequest
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiCreatePDFTemplateRequest struct {
+type ApiCreatePdfTemplateRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	templateDocument *os.File
 	templateName *string
 	wait *bool
@@ -1361,44 +1260,49 @@ type ApiCreatePDFTemplateRequest struct {
 	templateParentFolderId *string
 }
 
-func (r ApiCreatePDFTemplateRequest) TemplateDocument(templateDocument *os.File) ApiCreatePDFTemplateRequest {
+func (r ApiCreatePdfTemplateRequest) TemplateDocument(templateDocument *os.File) ApiCreatePdfTemplateRequest {
 	r.templateDocument = templateDocument
 	return r
 }
 
-func (r ApiCreatePDFTemplateRequest) TemplateName(templateName string) ApiCreatePDFTemplateRequest {
+func (r ApiCreatePdfTemplateRequest) TemplateName(templateName string) ApiCreatePdfTemplateRequest {
 	r.templateName = &templateName
 	return r
 }
 
 // Wait for template document to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain)
-func (r ApiCreatePDFTemplateRequest) Wait(wait bool) ApiCreatePDFTemplateRequest {
+func (r ApiCreatePdfTemplateRequest) Wait(wait bool) ApiCreatePdfTemplateRequest {
 	r.wait = &wait
 	return r
 }
 
-func (r ApiCreatePDFTemplateRequest) TemplateDescription(templateDescription string) ApiCreatePDFTemplateRequest {
+func (r ApiCreatePdfTemplateRequest) TemplateDescription(templateDescription string) ApiCreatePdfTemplateRequest {
 	r.templateDescription = &templateDescription
 	return r
 }
 
-func (r ApiCreatePDFTemplateRequest) TemplateParentFolderId(templateParentFolderId string) ApiCreatePDFTemplateRequest {
+func (r ApiCreatePdfTemplateRequest) TemplateParentFolderId(templateParentFolderId string) ApiCreatePdfTemplateRequest {
 	r.templateParentFolderId = &templateParentFolderId
 	return r
 }
 
-func (r ApiCreatePDFTemplateRequest) Execute() (*TemplatePreview, *http.Response, error) {
-	return r.ApiService.CreatePDFTemplateExecute(r)
+func (r ApiCreatePdfTemplateRequest) Execute() (*TemplatePreview, *http.Response, error) {
+	return r.ApiService.CreatePdfTemplateExecute(r)
 }
 
 /*
-CreatePDFTemplate Create a new PDF template with a form POST file upload
+CreatePdfTemplate Create a new PDF template with a form POST file upload
+
+Creates a new PDF template by uploading a PDF file. The uploaded PDF becomes the foundation
+for your template, and you can then add fillable fields using the template editor. Use the
+wait parameter to control whether the request waits for document processing to complete.
+
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCreatePDFTemplateRequest
+ @return ApiCreatePdfTemplateRequest
 */
-func (a *PDFAPIService) CreatePDFTemplate(ctx context.Context) ApiCreatePDFTemplateRequest {
-	return ApiCreatePDFTemplateRequest{
+func (a *ClientAPIService) CreatePdfTemplate(ctx context.Context) ApiCreatePdfTemplateRequest {
+	return ApiCreatePdfTemplateRequest{
 		ApiService: a,
 		ctx: ctx,
 	}
@@ -1406,7 +1310,7 @@ func (a *PDFAPIService) CreatePDFTemplate(ctx context.Context) ApiCreatePDFTempl
 
 // Execute executes the request
 //  @return TemplatePreview
-func (a *PDFAPIService) CreatePDFTemplateExecute(r ApiCreatePDFTemplateRequest) (*TemplatePreview, *http.Response, error) {
+func (a *ClientAPIService) CreatePdfTemplateExecute(r ApiCreatePdfTemplateRequest) (*TemplatePreview, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
@@ -1414,7 +1318,7 @@ func (a *PDFAPIService) CreatePDFTemplateExecute(r ApiCreatePDFTemplateRequest) 
 		localVarReturnValue  *TemplatePreview
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.CreatePDFTemplate")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.CreatePdfTemplate")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -1523,29 +1427,34 @@ func (a *PDFAPIService) CreatePDFTemplateExecute(r ApiCreatePDFTemplateRequest) 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiCreatePDFTemplateFromUploadRequest struct {
+type ApiCreatePdfTemplateFromUploadRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	data *CreatePdfTemplate
 }
 
-func (r ApiCreatePDFTemplateFromUploadRequest) Data(data CreatePdfTemplate) ApiCreatePDFTemplateFromUploadRequest {
+func (r ApiCreatePdfTemplateFromUploadRequest) Data(data CreatePdfTemplate) ApiCreatePdfTemplateFromUploadRequest {
 	r.data = &data
 	return r
 }
 
-func (r ApiCreatePDFTemplateFromUploadRequest) Execute() (*TemplatePreview, *http.Response, error) {
-	return r.ApiService.CreatePDFTemplateFromUploadExecute(r)
+func (r ApiCreatePdfTemplateFromUploadRequest) Execute() (*TemplatePreview, *http.Response, error) {
+	return r.ApiService.CreatePdfTemplateFromUploadExecute(r)
 }
 
 /*
-CreatePDFTemplateFromUpload Create a new PDF template from a cached presign upload
+CreatePdfTemplateFromUpload Create a new PDF template from a cached S3 file upload
+
+Creates a new PDF template from a file previously uploaded to S3 using a presigned URL.
+This two-step process allows for more reliable large file uploads by first uploading
+the file to S3, then creating the template using the cached upload ID.
+
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCreatePDFTemplateFromUploadRequest
+ @return ApiCreatePdfTemplateFromUploadRequest
 */
-func (a *PDFAPIService) CreatePDFTemplateFromUpload(ctx context.Context) ApiCreatePDFTemplateFromUploadRequest {
-	return ApiCreatePDFTemplateFromUploadRequest{
+func (a *ClientAPIService) CreatePdfTemplateFromUpload(ctx context.Context) ApiCreatePdfTemplateFromUploadRequest {
+	return ApiCreatePdfTemplateFromUploadRequest{
 		ApiService: a,
 		ctx: ctx,
 	}
@@ -1553,7 +1462,7 @@ func (a *PDFAPIService) CreatePDFTemplateFromUpload(ctx context.Context) ApiCrea
 
 // Execute executes the request
 //  @return TemplatePreview
-func (a *PDFAPIService) CreatePDFTemplateFromUploadExecute(r ApiCreatePDFTemplateFromUploadRequest) (*TemplatePreview, *http.Response, error) {
+func (a *ClientAPIService) CreatePdfTemplateFromUploadExecute(r ApiCreatePdfTemplateFromUploadRequest) (*TemplatePreview, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
@@ -1561,12 +1470,12 @@ func (a *PDFAPIService) CreatePDFTemplateFromUploadExecute(r ApiCreatePDFTemplat
 		localVarReturnValue  *TemplatePreview
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.CreatePDFTemplateFromUpload")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.CreatePdfTemplateFromUpload")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/templates?endpoint_description=cached_upload"
+	localVarPath := localBasePath + "/templates?endpoint_variant=create_template_from_cached_upload"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -1643,7 +1552,7 @@ func (a *PDFAPIService) CreatePDFTemplateFromUploadExecute(r ApiCreatePDFTemplat
 
 type ApiDeleteFolderRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	folderId string
 }
 
@@ -1654,11 +1563,15 @@ func (r ApiDeleteFolderRequest) Execute() (*Folder, *http.Response, error) {
 /*
 DeleteFolder Delete a folder
 
+Deletes an empty folder. The folder must not contain any templates or subfolders.
+Move or delete all contents before attempting to delete the folder.
+
+
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param folderId
  @return ApiDeleteFolderRequest
 */
-func (a *PDFAPIService) DeleteFolder(ctx context.Context, folderId string) ApiDeleteFolderRequest {
+func (a *ClientAPIService) DeleteFolder(ctx context.Context, folderId string) ApiDeleteFolderRequest {
 	return ApiDeleteFolderRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -1668,7 +1581,7 @@ func (a *PDFAPIService) DeleteFolder(ctx context.Context, folderId string) ApiDe
 
 // Execute executes the request
 //  @return Folder
-func (a *PDFAPIService) DeleteFolderExecute(r ApiDeleteFolderRequest) (*Folder, *http.Response, error) {
+func (a *ClientAPIService) DeleteFolderExecute(r ApiDeleteFolderRequest) (*Folder, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodDelete
 		localVarPostBody     interface{}
@@ -1676,7 +1589,7 @@ func (a *PDFAPIService) DeleteFolderExecute(r ApiDeleteFolderRequest) (*Folder, 
 		localVarReturnValue  *Folder
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.DeleteFolder")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.DeleteFolder")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -1776,22 +1689,33 @@ func (a *PDFAPIService) DeleteFolderExecute(r ApiDeleteFolderRequest) (*Folder, 
 
 type ApiDeleteTemplateRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	templateId string
+	version *string
 }
 
-func (r ApiDeleteTemplateRequest) Execute() (*SuccessMultipleErrorsResponse, *http.Response, error) {
+func (r ApiDeleteTemplateRequest) Version(version string) ApiDeleteTemplateRequest {
+	r.version = &version
+	return r
+}
+
+func (r ApiDeleteTemplateRequest) Execute() (*TemplateDeleteResponse, *http.Response, error) {
 	return r.ApiService.DeleteTemplateExecute(r)
 }
 
 /*
 DeleteTemplate Delete a template
 
+Deletes a template or a specific template version. When no version is specified, deletes
+the entire template including all versions. When a version is specified, deletes only
+that version while preserving others. Returns remaining version information.
+
+
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param templateId
  @return ApiDeleteTemplateRequest
 */
-func (a *PDFAPIService) DeleteTemplate(ctx context.Context, templateId string) ApiDeleteTemplateRequest {
+func (a *ClientAPIService) DeleteTemplate(ctx context.Context, templateId string) ApiDeleteTemplateRequest {
 	return ApiDeleteTemplateRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -1800,16 +1724,16 @@ func (a *PDFAPIService) DeleteTemplate(ctx context.Context, templateId string) A
 }
 
 // Execute executes the request
-//  @return SuccessMultipleErrorsResponse
-func (a *PDFAPIService) DeleteTemplateExecute(r ApiDeleteTemplateRequest) (*SuccessMultipleErrorsResponse, *http.Response, error) {
+//  @return TemplateDeleteResponse
+func (a *ClientAPIService) DeleteTemplateExecute(r ApiDeleteTemplateRequest) (*TemplateDeleteResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodDelete
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  *SuccessMultipleErrorsResponse
+		localVarReturnValue  *TemplateDeleteResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.DeleteTemplate")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.DeleteTemplate")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -1821,6 +1745,9 @@ func (a *PDFAPIService) DeleteTemplateExecute(r ApiDeleteTemplateRequest) (*Succ
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 
+	if r.version != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "version", r.version, "", "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -1898,7 +1825,7 @@ func (a *PDFAPIService) DeleteTemplateExecute(r ApiDeleteTemplateRequest) (*Succ
 
 type ApiExpireCombinedSubmissionRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	combinedSubmissionId string
 }
 
@@ -1909,11 +1836,15 @@ func (r ApiExpireCombinedSubmissionRequest) Execute() (*CombinedSubmission, *htt
 /*
 ExpireCombinedSubmission Expire a combined submission
 
+Expiring a combined submission deletes the PDF from our system.
+This is useful for invalidating sensitive documents.
+
+
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param combinedSubmissionId
  @return ApiExpireCombinedSubmissionRequest
 */
-func (a *PDFAPIService) ExpireCombinedSubmission(ctx context.Context, combinedSubmissionId string) ApiExpireCombinedSubmissionRequest {
+func (a *ClientAPIService) ExpireCombinedSubmission(ctx context.Context, combinedSubmissionId string) ApiExpireCombinedSubmissionRequest {
 	return ApiExpireCombinedSubmissionRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -1923,7 +1854,7 @@ func (a *PDFAPIService) ExpireCombinedSubmission(ctx context.Context, combinedSu
 
 // Execute executes the request
 //  @return CombinedSubmission
-func (a *PDFAPIService) ExpireCombinedSubmissionExecute(r ApiExpireCombinedSubmissionRequest) (*CombinedSubmission, *http.Response, error) {
+func (a *ClientAPIService) ExpireCombinedSubmissionExecute(r ApiExpireCombinedSubmissionRequest) (*CombinedSubmission, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodDelete
 		localVarPostBody     interface{}
@@ -1931,7 +1862,7 @@ func (a *PDFAPIService) ExpireCombinedSubmissionExecute(r ApiExpireCombinedSubmi
 		localVarReturnValue  *CombinedSubmission
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.ExpireCombinedSubmission")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.ExpireCombinedSubmission")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -2031,7 +1962,7 @@ func (a *PDFAPIService) ExpireCombinedSubmissionExecute(r ApiExpireCombinedSubmi
 
 type ApiExpireSubmissionRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	submissionId string
 }
 
@@ -2042,11 +1973,17 @@ func (r ApiExpireSubmissionRequest) Execute() (*SubmissionPreview, *http.Respons
 /*
 ExpireSubmission Expire a PDF submission
 
+Expiring a PDF submission deletes the PDF and removes the data from our database.
+This is useful for invalidating sensitive documents after they've been downloaded.
+You can also [configure a data retention policy for your submissions](https://docspring.com/docs/template-editor/settings/#expire-submissions)
+so that they automatically expire.
+
+
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param submissionId
  @return ApiExpireSubmissionRequest
 */
-func (a *PDFAPIService) ExpireSubmission(ctx context.Context, submissionId string) ApiExpireSubmissionRequest {
+func (a *ClientAPIService) ExpireSubmission(ctx context.Context, submissionId string) ApiExpireSubmissionRequest {
 	return ApiExpireSubmissionRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -2056,7 +1993,7 @@ func (a *PDFAPIService) ExpireSubmission(ctx context.Context, submissionId strin
 
 // Execute executes the request
 //  @return SubmissionPreview
-func (a *PDFAPIService) ExpireSubmissionExecute(r ApiExpireSubmissionRequest) (*SubmissionPreview, *http.Response, error) {
+func (a *ClientAPIService) ExpireSubmissionExecute(r ApiExpireSubmissionRequest) (*SubmissionPreview, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodDelete
 		localVarPostBody     interface{}
@@ -2064,7 +2001,7 @@ func (a *PDFAPIService) ExpireSubmissionExecute(r ApiExpireSubmissionRequest) (*
 		localVarReturnValue  *SubmissionPreview
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.ExpireSubmission")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.ExpireSubmission")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -2164,7 +2101,7 @@ func (a *PDFAPIService) ExpireSubmissionExecute(r ApiExpireSubmissionRequest) (*
 
 type ApiGeneratePdfRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	templateId string
 	submission *CreatePdfSubmissionData
 	wait *bool
@@ -2186,13 +2123,21 @@ func (r ApiGeneratePdfRequest) Execute() (*CreateSubmissionResponse, *http.Respo
 }
 
 /*
-GeneratePdf Generates a new PDF
+GeneratePdf Generate a PDF
+
+Creates a PDF submission by filling in a template with data. Supports both synchronous (default) and
+asynchronous processing. Set `wait: false` to return immediately.
+
+See also:
+- [Customize the PDF Title and Filename](https://docspring.com/docs/api-guide/generate-pdfs/customize-pdf-title-and-filename/) - Set custom metadata
+- [Handling Truncated Text](https://docspring.com/docs/api-guide/generate-pdfs/handle-truncated-text/) - Handle text that doesn't fit in fields
+
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param templateId
  @return ApiGeneratePdfRequest
 */
-func (a *PDFAPIService) GeneratePdf(ctx context.Context, templateId string) ApiGeneratePdfRequest {
+func (a *ClientAPIService) GeneratePdf(ctx context.Context, templateId string) ApiGeneratePdfRequest {
 	return ApiGeneratePdfRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -2202,7 +2147,7 @@ func (a *PDFAPIService) GeneratePdf(ctx context.Context, templateId string) ApiG
 
 // Execute executes the request
 //  @return CreateSubmissionResponse
-func (a *PDFAPIService) GeneratePdfExecute(r ApiGeneratePdfRequest) (*CreateSubmissionResponse, *http.Response, error) {
+func (a *ClientAPIService) GeneratePdfExecute(r ApiGeneratePdfRequest) (*CreateSubmissionResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
@@ -2210,7 +2155,7 @@ func (a *PDFAPIService) GeneratePdfExecute(r ApiGeneratePdfRequest) (*CreateSubm
 		localVarReturnValue  *CreateSubmissionResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.GeneratePdf")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.GeneratePdf")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -2273,7 +2218,7 @@ func (a *PDFAPIService) GeneratePdfExecute(r ApiGeneratePdfRequest) (*CreateSubm
 			error: localVarHTTPResponse.Status,
 		}
 		if localVarHTTPResponse.StatusCode == 422 {
-			var v ErrorResponse
+			var v Submission422Response
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -2308,134 +2253,9 @@ func (a *PDFAPIService) GeneratePdfExecute(r ApiGeneratePdfRequest) (*CreateSubm
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiGeneratePdfForHtmlTemplateRequest struct {
-	ctx context.Context
-	ApiService *PDFAPIService
-	templateId string
-	submission *CreateHtmlSubmissionData
-	wait *bool
-}
-
-func (r ApiGeneratePdfForHtmlTemplateRequest) Submission(submission CreateHtmlSubmissionData) ApiGeneratePdfForHtmlTemplateRequest {
-	r.submission = &submission
-	return r
-}
-
-// Wait for submission to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain)
-func (r ApiGeneratePdfForHtmlTemplateRequest) Wait(wait bool) ApiGeneratePdfForHtmlTemplateRequest {
-	r.wait = &wait
-	return r
-}
-
-func (r ApiGeneratePdfForHtmlTemplateRequest) Execute() (*CreateSubmissionResponse, *http.Response, error) {
-	return r.ApiService.GeneratePdfForHtmlTemplateExecute(r)
-}
-
-/*
-GeneratePdfForHtmlTemplate Generates a new PDF for an HTML template
-
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param templateId
- @return ApiGeneratePdfForHtmlTemplateRequest
-*/
-func (a *PDFAPIService) GeneratePdfForHtmlTemplate(ctx context.Context, templateId string) ApiGeneratePdfForHtmlTemplateRequest {
-	return ApiGeneratePdfForHtmlTemplateRequest{
-		ApiService: a,
-		ctx: ctx,
-		templateId: templateId,
-	}
-}
-
-// Execute executes the request
-//  @return CreateSubmissionResponse
-func (a *PDFAPIService) GeneratePdfForHtmlTemplateExecute(r ApiGeneratePdfForHtmlTemplateRequest) (*CreateSubmissionResponse, *http.Response, error) {
-	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *CreateSubmissionResponse
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.GeneratePdfForHtmlTemplate")
-	if err != nil {
-		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/templates/{template_id}/submissions?endpoint_description=html_templates"
-	localVarPath = strings.Replace(localVarPath, "{"+"template_id"+"}", url.PathEscape(parameterValueToString(r.templateId, "templateId")), -1)
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-	if r.submission == nil {
-		return localVarReturnValue, nil, reportError("submission is required and must be specified")
-	}
-
-	if r.wait != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "wait", r.wait, "", "")
-	} else {
-		var defaultValue bool = true
-		r.wait = &defaultValue
-	}
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{"application/json"}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	// body params
-	localVarPostBody = r.submission
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
 type ApiGeneratePreviewRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	submissionId string
 }
 
@@ -2444,13 +2264,18 @@ func (r ApiGeneratePreviewRequest) Execute() (*SuccessErrorResponse, *http.Respo
 }
 
 /*
-GeneratePreview Generated a preview PDF for partially completed data requests
+GeneratePreview Generate a preview PDF for partially completed data requests
+
+Generates a preview PDF for a submission with partially completed data requests. Useful
+for showing users what the final document will look like before all signatures or data
+have been collected. The preview includes any data collected so far.
+
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param submissionId
  @return ApiGeneratePreviewRequest
 */
-func (a *PDFAPIService) GeneratePreview(ctx context.Context, submissionId string) ApiGeneratePreviewRequest {
+func (a *ClientAPIService) GeneratePreview(ctx context.Context, submissionId string) ApiGeneratePreviewRequest {
 	return ApiGeneratePreviewRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -2460,7 +2285,7 @@ func (a *PDFAPIService) GeneratePreview(ctx context.Context, submissionId string
 
 // Execute executes the request
 //  @return SuccessErrorResponse
-func (a *PDFAPIService) GeneratePreviewExecute(r ApiGeneratePreviewRequest) (*SuccessErrorResponse, *http.Response, error) {
+func (a *ClientAPIService) GeneratePreviewExecute(r ApiGeneratePreviewRequest) (*SuccessErrorResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
@@ -2468,7 +2293,7 @@ func (a *PDFAPIService) GeneratePreviewExecute(r ApiGeneratePreviewRequest) (*Su
 		localVarReturnValue  *SuccessErrorResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.GeneratePreview")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.GeneratePreview")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -2557,7 +2382,7 @@ func (a *PDFAPIService) GeneratePreviewExecute(r ApiGeneratePreviewRequest) (*Su
 
 type ApiGetCombinedSubmissionRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	combinedSubmissionId string
 }
 
@@ -2568,11 +2393,16 @@ func (r ApiGetCombinedSubmissionRequest) Execute() (*CombinedSubmission, *http.R
 /*
 GetCombinedSubmission Check the status of a combined submission (merged PDFs)
 
+Retrieves the details and status of a combined submission. Returns processing state,
+download URL (if processed), metadata, and information about any integrated actions
+(e.g., S3 uploads).
+
+
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param combinedSubmissionId
  @return ApiGetCombinedSubmissionRequest
 */
-func (a *PDFAPIService) GetCombinedSubmission(ctx context.Context, combinedSubmissionId string) ApiGetCombinedSubmissionRequest {
+func (a *ClientAPIService) GetCombinedSubmission(ctx context.Context, combinedSubmissionId string) ApiGetCombinedSubmissionRequest {
 	return ApiGetCombinedSubmissionRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -2582,7 +2412,7 @@ func (a *PDFAPIService) GetCombinedSubmission(ctx context.Context, combinedSubmi
 
 // Execute executes the request
 //  @return CombinedSubmission
-func (a *PDFAPIService) GetCombinedSubmissionExecute(r ApiGetCombinedSubmissionRequest) (*CombinedSubmission, *http.Response, error) {
+func (a *ClientAPIService) GetCombinedSubmissionExecute(r ApiGetCombinedSubmissionRequest) (*CombinedSubmission, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
@@ -2590,7 +2420,7 @@ func (a *PDFAPIService) GetCombinedSubmissionExecute(r ApiGetCombinedSubmissionR
 		localVarReturnValue  *CombinedSubmission
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.GetCombinedSubmission")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.GetCombinedSubmission")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -2679,7 +2509,7 @@ func (a *PDFAPIService) GetCombinedSubmissionExecute(r ApiGetCombinedSubmissionR
 
 type ApiGetDataRequestRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	dataRequestId string
 }
 
@@ -2690,11 +2520,19 @@ func (r ApiGetDataRequestRequest) Execute() (*SubmissionDataRequestShow, *http.R
 /*
 GetDataRequest Look up a submission data request
 
+Retrieves the details and status of a data request. Returns information about the request
+state (pending, viewed, completed), authentication details, and metadata.
+Includes audit information like IP address, browseruser agent, and timestamps.
+
+See also:
+- [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) - Complete guide to data request workflow
+
+
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param dataRequestId
  @return ApiGetDataRequestRequest
 */
-func (a *PDFAPIService) GetDataRequest(ctx context.Context, dataRequestId string) ApiGetDataRequestRequest {
+func (a *ClientAPIService) GetDataRequest(ctx context.Context, dataRequestId string) ApiGetDataRequestRequest {
 	return ApiGetDataRequestRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -2704,7 +2542,7 @@ func (a *PDFAPIService) GetDataRequest(ctx context.Context, dataRequestId string
 
 // Execute executes the request
 //  @return SubmissionDataRequestShow
-func (a *PDFAPIService) GetDataRequestExecute(r ApiGetDataRequestRequest) (*SubmissionDataRequestShow, *http.Response, error) {
+func (a *ClientAPIService) GetDataRequestExecute(r ApiGetDataRequestRequest) (*SubmissionDataRequestShow, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
@@ -2712,7 +2550,7 @@ func (a *PDFAPIService) GetDataRequestExecute(r ApiGetDataRequestRequest) (*Subm
 		localVarReturnValue  *SubmissionDataRequestShow
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.GetDataRequest")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.GetDataRequest")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -2801,7 +2639,7 @@ func (a *PDFAPIService) GetDataRequestExecute(r ApiGetDataRequestRequest) (*Subm
 
 type ApiGetFullTemplateRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	templateId string
 }
 
@@ -2810,13 +2648,18 @@ func (r ApiGetFullTemplateRequest) Execute() (*Template, *http.Response, error) 
 }
 
 /*
-GetFullTemplate Fetch the full template attributes
+GetFullTemplate Fetch the full attributes for a PDF template
+
+Retrieves complete template information including fields, defaults, settings, and HTML/SCSS content.
+Use this to get all template data needed for automated updates or analysis.
+Returns more detailed information than the basic `getTemplate` endpoint.
+
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param templateId
  @return ApiGetFullTemplateRequest
 */
-func (a *PDFAPIService) GetFullTemplate(ctx context.Context, templateId string) ApiGetFullTemplateRequest {
+func (a *ClientAPIService) GetFullTemplate(ctx context.Context, templateId string) ApiGetFullTemplateRequest {
 	return ApiGetFullTemplateRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -2826,7 +2669,7 @@ func (a *PDFAPIService) GetFullTemplate(ctx context.Context, templateId string) 
 
 // Execute executes the request
 //  @return Template
-func (a *PDFAPIService) GetFullTemplateExecute(r ApiGetFullTemplateRequest) (*Template, *http.Response, error) {
+func (a *ClientAPIService) GetFullTemplateExecute(r ApiGetFullTemplateRequest) (*Template, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
@@ -2834,7 +2677,7 @@ func (a *PDFAPIService) GetFullTemplateExecute(r ApiGetFullTemplateRequest) (*Te
 		localVarReturnValue  *Template
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.GetFullTemplate")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.GetFullTemplate")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -2923,7 +2766,7 @@ func (a *PDFAPIService) GetFullTemplateExecute(r ApiGetFullTemplateRequest) (*Te
 
 type ApiGetPresignUrlRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 }
 
 func (r ApiGetPresignUrlRequest) Execute() (*UploadPresignResponse, *http.Response, error) {
@@ -2931,12 +2774,22 @@ func (r ApiGetPresignUrlRequest) Execute() (*UploadPresignResponse, *http.Respon
 }
 
 /*
-GetPresignUrl Get a presigned URL so that you can upload a file to our AWS S3 bucket
+GetPresignUrl Get a presigned S3 URL for direct file upload
+
+Returns a presigned S3 URL for uploading files directly to our S3 bucket. Use this
+endpoint to upload large files before creating templates or custom files. S3 will
+respond with a JSON object that you can include in your DocSpring API request.
+
+Uploaded files can be used to:
+- [Create templates](https://docspring.com/docs/api/#tag/templates/post/templates?endpoint_variant=create_template_from_cached_upload)
+- [Update templates](https://docspring.com/docs/api/#tag/templates/put/templates/{template_id}?endpoint_variant=update_template_pdf_with_cached_upload)
+- [Create custom files](https://docspring.com/docs/api/#tag/custom-files/post/custom_files) and then [merge them with other PDFs](https://docspring.com/docs/api/#tag/combine-pdfs/post/combined_submissions)
+
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @return ApiGetPresignUrlRequest
 */
-func (a *PDFAPIService) GetPresignUrl(ctx context.Context) ApiGetPresignUrlRequest {
+func (a *ClientAPIService) GetPresignUrl(ctx context.Context) ApiGetPresignUrlRequest {
 	return ApiGetPresignUrlRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -2945,7 +2798,7 @@ func (a *PDFAPIService) GetPresignUrl(ctx context.Context) ApiGetPresignUrlReque
 
 // Execute executes the request
 //  @return UploadPresignResponse
-func (a *PDFAPIService) GetPresignUrlExecute(r ApiGetPresignUrlRequest) (*UploadPresignResponse, *http.Response, error) {
+func (a *ClientAPIService) GetPresignUrlExecute(r ApiGetPresignUrlRequest) (*UploadPresignResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
@@ -2953,7 +2806,7 @@ func (a *PDFAPIService) GetPresignUrlExecute(r ApiGetPresignUrlRequest) (*Upload
 		localVarReturnValue  *UploadPresignResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.GetPresignUrl")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.GetPresignUrl")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -3030,7 +2883,7 @@ func (a *PDFAPIService) GetPresignUrlExecute(r ApiGetPresignUrlRequest) (*Upload
 
 type ApiGetSubmissionRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	submissionId string
 	includeData *bool
 }
@@ -3047,11 +2900,16 @@ func (r ApiGetSubmissionRequest) Execute() (*Submission, *http.Response, error) 
 /*
 GetSubmission Check the status of a PDF
 
+Retrieves the details and status of a PDF submission. Returns processing state, download
+URL (if processed), metadata, submission data (optional), and information about any
+integrated actions. Use this to poll for completion when using asynchronous processing.
+
+
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param submissionId
  @return ApiGetSubmissionRequest
 */
-func (a *PDFAPIService) GetSubmission(ctx context.Context, submissionId string) ApiGetSubmissionRequest {
+func (a *ClientAPIService) GetSubmission(ctx context.Context, submissionId string) ApiGetSubmissionRequest {
 	return ApiGetSubmissionRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -3061,7 +2919,7 @@ func (a *PDFAPIService) GetSubmission(ctx context.Context, submissionId string) 
 
 // Execute executes the request
 //  @return Submission
-func (a *PDFAPIService) GetSubmissionExecute(r ApiGetSubmissionRequest) (*Submission, *http.Response, error) {
+func (a *ClientAPIService) GetSubmissionExecute(r ApiGetSubmissionRequest) (*Submission, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
@@ -3069,7 +2927,7 @@ func (a *PDFAPIService) GetSubmissionExecute(r ApiGetSubmissionRequest) (*Submis
 		localVarReturnValue  *Submission
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.GetSubmission")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.GetSubmission")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -3161,7 +3019,7 @@ func (a *PDFAPIService) GetSubmissionExecute(r ApiGetSubmissionRequest) (*Submis
 
 type ApiGetSubmissionBatchRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	submissionBatchId string
 	includeSubmissions *bool
 }
@@ -3178,11 +3036,16 @@ func (r ApiGetSubmissionBatchRequest) Execute() (*SubmissionBatchWithSubmissions
 /*
 GetSubmissionBatch Check the status of a submission batch job
 
+Retrieves the status and results of a batch PDF generation job. Returns processing state,
+completion statistics, and optionally includes all individual submission details. Use this
+to poll for completion when using asynchronous batch processing.
+
+
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param submissionBatchId
  @return ApiGetSubmissionBatchRequest
 */
-func (a *PDFAPIService) GetSubmissionBatch(ctx context.Context, submissionBatchId string) ApiGetSubmissionBatchRequest {
+func (a *ClientAPIService) GetSubmissionBatch(ctx context.Context, submissionBatchId string) ApiGetSubmissionBatchRequest {
 	return ApiGetSubmissionBatchRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -3192,7 +3055,7 @@ func (a *PDFAPIService) GetSubmissionBatch(ctx context.Context, submissionBatchI
 
 // Execute executes the request
 //  @return SubmissionBatchWithSubmissions
-func (a *PDFAPIService) GetSubmissionBatchExecute(r ApiGetSubmissionBatchRequest) (*SubmissionBatchWithSubmissions, *http.Response, error) {
+func (a *ClientAPIService) GetSubmissionBatchExecute(r ApiGetSubmissionBatchRequest) (*SubmissionBatchWithSubmissions, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
@@ -3200,7 +3063,7 @@ func (a *PDFAPIService) GetSubmissionBatchExecute(r ApiGetSubmissionBatchRequest
 		localVarReturnValue  *SubmissionBatchWithSubmissions
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.GetSubmissionBatch")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.GetSubmissionBatch")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -3292,7 +3155,7 @@ func (a *PDFAPIService) GetSubmissionBatchExecute(r ApiGetSubmissionBatchRequest
 
 type ApiGetTemplateRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	templateId string
 }
 
@@ -3303,11 +3166,15 @@ func (r ApiGetTemplateRequest) Execute() (*TemplatePreview, *http.Response, erro
 /*
 GetTemplate Check the status of an uploaded template
 
+Retrieves information about a template including processing status and document URL.
+Use this to check if template is ready to view in the template editor or generate PDFs.
+
+
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param templateId
  @return ApiGetTemplateRequest
 */
-func (a *PDFAPIService) GetTemplate(ctx context.Context, templateId string) ApiGetTemplateRequest {
+func (a *ClientAPIService) GetTemplate(ctx context.Context, templateId string) ApiGetTemplateRequest {
 	return ApiGetTemplateRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -3317,7 +3184,7 @@ func (a *PDFAPIService) GetTemplate(ctx context.Context, templateId string) ApiG
 
 // Execute executes the request
 //  @return TemplatePreview
-func (a *PDFAPIService) GetTemplateExecute(r ApiGetTemplateRequest) (*TemplatePreview, *http.Response, error) {
+func (a *ClientAPIService) GetTemplateExecute(r ApiGetTemplateRequest) (*TemplatePreview, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
@@ -3325,7 +3192,7 @@ func (a *PDFAPIService) GetTemplateExecute(r ApiGetTemplateRequest) (*TemplatePr
 		localVarReturnValue  *TemplatePreview
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.GetTemplate")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.GetTemplate")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -3414,7 +3281,7 @@ func (a *PDFAPIService) GetTemplateExecute(r ApiGetTemplateRequest) (*TemplatePr
 
 type ApiGetTemplateSchemaRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	templateId string
 }
 
@@ -3425,11 +3292,19 @@ func (r ApiGetTemplateSchemaRequest) Execute() (*JsonSchema, *http.Response, err
 /*
 GetTemplateSchema Fetch the JSON schema for a template
 
+Retrieves the JSON Schema definition for a template's fields. Use this to validate
+data before submitting it for PDF generation, or to build dynamic forms that match
+the template's field structure and validation requirements.
+
+See also:
+- [Generate PDFs Guide](https://docspring.com/docs/api-guide/generate-pdfs/generate-pdfs-via-api/) - Use schema to validate submission data
+
+
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param templateId
  @return ApiGetTemplateSchemaRequest
 */
-func (a *PDFAPIService) GetTemplateSchema(ctx context.Context, templateId string) ApiGetTemplateSchemaRequest {
+func (a *ClientAPIService) GetTemplateSchema(ctx context.Context, templateId string) ApiGetTemplateSchemaRequest {
 	return ApiGetTemplateSchemaRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -3439,7 +3314,7 @@ func (a *PDFAPIService) GetTemplateSchema(ctx context.Context, templateId string
 
 // Execute executes the request
 //  @return JsonSchema
-func (a *PDFAPIService) GetTemplateSchemaExecute(r ApiGetTemplateSchemaRequest) (*JsonSchema, *http.Response, error) {
+func (a *ClientAPIService) GetTemplateSchemaExecute(r ApiGetTemplateSchemaRequest) (*JsonSchema, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
@@ -3447,7 +3322,7 @@ func (a *PDFAPIService) GetTemplateSchemaExecute(r ApiGetTemplateSchemaRequest) 
 		localVarReturnValue  *JsonSchema
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.GetTemplateSchema")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.GetTemplateSchema")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -3536,7 +3411,7 @@ func (a *PDFAPIService) GetTemplateSchemaExecute(r ApiGetTemplateSchemaRequest) 
 
 type ApiListCombinedSubmissionsRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	page *int32
 	perPage *int32
 }
@@ -3560,10 +3435,14 @@ func (r ApiListCombinedSubmissionsRequest) Execute() ([]CombinedSubmission, *htt
 /*
 ListCombinedSubmissions Get a list of all combined submissions
 
+Returns a paginated list of combined submissions (merged PDFs) for your account.
+Includes processing status, expiration details, and download URLs for processed PDFs.
+
+
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @return ApiListCombinedSubmissionsRequest
 */
-func (a *PDFAPIService) ListCombinedSubmissions(ctx context.Context) ApiListCombinedSubmissionsRequest {
+func (a *ClientAPIService) ListCombinedSubmissions(ctx context.Context) ApiListCombinedSubmissionsRequest {
 	return ApiListCombinedSubmissionsRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -3572,7 +3451,7 @@ func (a *PDFAPIService) ListCombinedSubmissions(ctx context.Context) ApiListComb
 
 // Execute executes the request
 //  @return []CombinedSubmission
-func (a *PDFAPIService) ListCombinedSubmissionsExecute(r ApiListCombinedSubmissionsRequest) ([]CombinedSubmission, *http.Response, error) {
+func (a *ClientAPIService) ListCombinedSubmissionsExecute(r ApiListCombinedSubmissionsRequest) ([]CombinedSubmission, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
@@ -3580,7 +3459,7 @@ func (a *PDFAPIService) ListCombinedSubmissionsExecute(r ApiListCombinedSubmissi
 		localVarReturnValue  []CombinedSubmission
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.ListCombinedSubmissions")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.ListCombinedSubmissions")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -3663,7 +3542,7 @@ func (a *PDFAPIService) ListCombinedSubmissionsExecute(r ApiListCombinedSubmissi
 
 type ApiListFoldersRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	parentFolderId *string
 }
 
@@ -3680,10 +3559,14 @@ func (r ApiListFoldersRequest) Execute() ([]Folder, *http.Response, error) {
 /*
 ListFolders Get a list of all folders
 
+Returns a list of folders in your account. Can be filtered by parent folder ID to retrieve
+subfolders. Folders help organize templates and maintain a hierarchical structure.
+
+
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @return ApiListFoldersRequest
 */
-func (a *PDFAPIService) ListFolders(ctx context.Context) ApiListFoldersRequest {
+func (a *ClientAPIService) ListFolders(ctx context.Context) ApiListFoldersRequest {
 	return ApiListFoldersRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -3692,7 +3575,7 @@ func (a *PDFAPIService) ListFolders(ctx context.Context) ApiListFoldersRequest {
 
 // Execute executes the request
 //  @return []Folder
-func (a *PDFAPIService) ListFoldersExecute(r ApiListFoldersRequest) ([]Folder, *http.Response, error) {
+func (a *ClientAPIService) ListFoldersExecute(r ApiListFoldersRequest) ([]Folder, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
@@ -3700,7 +3583,7 @@ func (a *PDFAPIService) ListFoldersExecute(r ApiListFoldersRequest) ([]Folder, *
 		localVarReturnValue  []Folder
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.ListFolders")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.ListFolders")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -3780,9 +3663,9 @@ func (a *PDFAPIService) ListFoldersExecute(r ApiListFoldersRequest) ([]Folder, *
 
 type ApiListSubmissionsRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	cursor *string
-	limit *float32
+	limit *int32
 	createdAfter *string
 	createdBefore *string
 	type_ *string
@@ -3794,7 +3677,7 @@ func (r ApiListSubmissionsRequest) Cursor(cursor string) ApiListSubmissionsReque
 	return r
 }
 
-func (r ApiListSubmissionsRequest) Limit(limit float32) ApiListSubmissionsRequest {
+func (r ApiListSubmissionsRequest) Limit(limit int32) ApiListSubmissionsRequest {
 	r.limit = &limit
 	return r
 }
@@ -3826,10 +3709,15 @@ func (r ApiListSubmissionsRequest) Execute() (*ListSubmissionsResponse, *http.Re
 /*
 ListSubmissions List all submissions
 
+Returns a paginated list of all PDF submissions across all templates in your account.
+Can be filtered by date range and submission type (test/live). Supports cursor-based
+pagination and optionally includes submission data for each result.
+
+
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @return ApiListSubmissionsRequest
 */
-func (a *PDFAPIService) ListSubmissions(ctx context.Context) ApiListSubmissionsRequest {
+func (a *ClientAPIService) ListSubmissions(ctx context.Context) ApiListSubmissionsRequest {
 	return ApiListSubmissionsRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -3838,7 +3726,7 @@ func (a *PDFAPIService) ListSubmissions(ctx context.Context) ApiListSubmissionsR
 
 // Execute executes the request
 //  @return ListSubmissionsResponse
-func (a *PDFAPIService) ListSubmissionsExecute(r ApiListSubmissionsRequest) (*ListSubmissionsResponse, *http.Response, error) {
+func (a *ClientAPIService) ListSubmissionsExecute(r ApiListSubmissionsRequest) (*ListSubmissionsResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
@@ -3846,7 +3734,7 @@ func (a *PDFAPIService) ListSubmissionsExecute(r ApiListSubmissionsRequest) (*Li
 		localVarReturnValue  *ListSubmissionsResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.ListSubmissions")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.ListSubmissions")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -3952,10 +3840,10 @@ func (a *PDFAPIService) ListSubmissionsExecute(r ApiListSubmissionsRequest) (*Li
 
 type ApiListTemplateSubmissionsRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	templateId string
 	cursor *string
-	limit *float32
+	limit *int32
 	createdAfter *string
 	createdBefore *string
 	type_ *string
@@ -3967,7 +3855,7 @@ func (r ApiListTemplateSubmissionsRequest) Cursor(cursor string) ApiListTemplate
 	return r
 }
 
-func (r ApiListTemplateSubmissionsRequest) Limit(limit float32) ApiListTemplateSubmissionsRequest {
+func (r ApiListTemplateSubmissionsRequest) Limit(limit int32) ApiListTemplateSubmissionsRequest {
 	r.limit = &limit
 	return r
 }
@@ -3999,11 +3887,16 @@ func (r ApiListTemplateSubmissionsRequest) Execute() (*ListSubmissionsResponse, 
 /*
 ListTemplateSubmissions List all submissions for a given template
 
+Returns a paginated list of all submissions for a specific template. Can be filtered by
+date range, submission type (test/live), and optionally include submission data. Supports
+cursor-based pagination for efficient retrieval of large result sets.
+
+
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param templateId
  @return ApiListTemplateSubmissionsRequest
 */
-func (a *PDFAPIService) ListTemplateSubmissions(ctx context.Context, templateId string) ApiListTemplateSubmissionsRequest {
+func (a *ClientAPIService) ListTemplateSubmissions(ctx context.Context, templateId string) ApiListTemplateSubmissionsRequest {
 	return ApiListTemplateSubmissionsRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -4013,7 +3906,7 @@ func (a *PDFAPIService) ListTemplateSubmissions(ctx context.Context, templateId 
 
 // Execute executes the request
 //  @return ListSubmissionsResponse
-func (a *PDFAPIService) ListTemplateSubmissionsExecute(r ApiListTemplateSubmissionsRequest) (*ListSubmissionsResponse, *http.Response, error) {
+func (a *ClientAPIService) ListTemplateSubmissionsExecute(r ApiListTemplateSubmissionsRequest) (*ListSubmissionsResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
@@ -4021,7 +3914,7 @@ func (a *PDFAPIService) ListTemplateSubmissionsExecute(r ApiListTemplateSubmissi
 		localVarReturnValue  *ListSubmissionsResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.ListTemplateSubmissions")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.ListTemplateSubmissions")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -4117,7 +4010,7 @@ func (a *PDFAPIService) ListTemplateSubmissionsExecute(r ApiListTemplateSubmissi
 
 type ApiListTemplatesRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	query *string
 	parentFolderId *string
 	page *int32
@@ -4155,10 +4048,15 @@ func (r ApiListTemplatesRequest) Execute() ([]TemplatePreview, *http.Response, e
 /*
 ListTemplates Get a list of all templates
 
+Retrieves a list of your templates with search, filtering, and pagination options. Returns
+basic template information including ID, name, type (PDF or HTML), and folder location.
+Supports text search by name and filtering by parent folder.
+
+
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @return ApiListTemplatesRequest
 */
-func (a *PDFAPIService) ListTemplates(ctx context.Context) ApiListTemplatesRequest {
+func (a *ClientAPIService) ListTemplates(ctx context.Context) ApiListTemplatesRequest {
 	return ApiListTemplatesRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -4167,7 +4065,7 @@ func (a *PDFAPIService) ListTemplates(ctx context.Context) ApiListTemplatesReque
 
 // Execute executes the request
 //  @return []TemplatePreview
-func (a *PDFAPIService) ListTemplatesExecute(r ApiListTemplatesRequest) ([]TemplatePreview, *http.Response, error) {
+func (a *ClientAPIService) ListTemplatesExecute(r ApiListTemplatesRequest) ([]TemplatePreview, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
@@ -4175,7 +4073,7 @@ func (a *PDFAPIService) ListTemplatesExecute(r ApiListTemplatesRequest) ([]Templ
 		localVarReturnValue  []TemplatePreview
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.ListTemplates")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.ListTemplates")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -4275,7 +4173,7 @@ func (a *PDFAPIService) ListTemplatesExecute(r ApiListTemplatesRequest) ([]Templ
 
 type ApiMoveFolderToFolderRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	folderId string
 	data *MoveFolderData
 }
@@ -4292,11 +4190,15 @@ func (r ApiMoveFolderToFolderRequest) Execute() (*Folder, *http.Response, error)
 /*
 MoveFolderToFolder Move a folder
 
+Moves a folder to a new parent folder or to the root level. All templates and subfolders
+within the folder are moved together. Cannot move a folder into one of its own subfolders.
+
+
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param folderId
  @return ApiMoveFolderToFolderRequest
 */
-func (a *PDFAPIService) MoveFolderToFolder(ctx context.Context, folderId string) ApiMoveFolderToFolderRequest {
+func (a *ClientAPIService) MoveFolderToFolder(ctx context.Context, folderId string) ApiMoveFolderToFolderRequest {
 	return ApiMoveFolderToFolderRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -4306,7 +4208,7 @@ func (a *PDFAPIService) MoveFolderToFolder(ctx context.Context, folderId string)
 
 // Execute executes the request
 //  @return Folder
-func (a *PDFAPIService) MoveFolderToFolderExecute(r ApiMoveFolderToFolderRequest) (*Folder, *http.Response, error) {
+func (a *ClientAPIService) MoveFolderToFolderExecute(r ApiMoveFolderToFolderRequest) (*Folder, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
@@ -4314,7 +4216,7 @@ func (a *PDFAPIService) MoveFolderToFolderExecute(r ApiMoveFolderToFolderRequest
 		localVarReturnValue  *Folder
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.MoveFolderToFolder")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.MoveFolderToFolder")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -4408,7 +4310,7 @@ func (a *PDFAPIService) MoveFolderToFolderExecute(r ApiMoveFolderToFolderRequest
 
 type ApiMoveTemplateToFolderRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	templateId string
 	data *MoveTemplateData
 }
@@ -4425,11 +4327,16 @@ func (r ApiMoveTemplateToFolderRequest) Execute() (*TemplatePreview, *http.Respo
 /*
 MoveTemplateToFolder Move Template to folder
 
+Moves a template to a different folder or to the root level. Use this to organize
+templates within your folders. Provide a folder ID to move to a specific
+folder, or `null` to move to the root level.
+
+
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param templateId
  @return ApiMoveTemplateToFolderRequest
 */
-func (a *PDFAPIService) MoveTemplateToFolder(ctx context.Context, templateId string) ApiMoveTemplateToFolderRequest {
+func (a *ClientAPIService) MoveTemplateToFolder(ctx context.Context, templateId string) ApiMoveTemplateToFolderRequest {
 	return ApiMoveTemplateToFolderRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -4439,7 +4346,7 @@ func (a *PDFAPIService) MoveTemplateToFolder(ctx context.Context, templateId str
 
 // Execute executes the request
 //  @return TemplatePreview
-func (a *PDFAPIService) MoveTemplateToFolderExecute(r ApiMoveTemplateToFolderRequest) (*TemplatePreview, *http.Response, error) {
+func (a *ClientAPIService) MoveTemplateToFolderExecute(r ApiMoveTemplateToFolderRequest) (*TemplatePreview, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
@@ -4447,7 +4354,7 @@ func (a *PDFAPIService) MoveTemplateToFolderExecute(r ApiMoveTemplateToFolderReq
 		localVarReturnValue  *TemplatePreview
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.MoveTemplateToFolder")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.MoveTemplateToFolder")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -4528,9 +4435,157 @@ func (a *PDFAPIService) MoveTemplateToFolderExecute(r ApiMoveTemplateToFolderReq
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiPublishTemplateVersionRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	templateId string
+	data *PublishVersionData
+}
+
+func (r ApiPublishTemplateVersionRequest) Data(data PublishVersionData) ApiPublishTemplateVersionRequest {
+	r.data = &data
+	return r
+}
+
+func (r ApiPublishTemplateVersionRequest) Execute() (*TemplatePublishVersionResponse, *http.Response, error) {
+	return r.ApiService.PublishTemplateVersionExecute(r)
+}
+
+/*
+PublishTemplateVersion Publish a template version
+
+Publishes the current draft version of a template and creates a new immutable version
+with semantic versioning (major.minor.patch).
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param templateId
+ @return ApiPublishTemplateVersionRequest
+*/
+func (a *ClientAPIService) PublishTemplateVersion(ctx context.Context, templateId string) ApiPublishTemplateVersionRequest {
+	return ApiPublishTemplateVersionRequest{
+		ApiService: a,
+		ctx: ctx,
+		templateId: templateId,
+	}
+}
+
+// Execute executes the request
+//  @return TemplatePublishVersionResponse
+func (a *ClientAPIService) PublishTemplateVersionExecute(r ApiPublishTemplateVersionRequest) (*TemplatePublishVersionResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *TemplatePublishVersionResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.PublishTemplateVersion")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/templates/{template_id}/publish_version"
+	localVarPath = strings.Replace(localVarPath, "{"+"template_id"+"}", url.PathEscape(parameterValueToString(r.templateId, "templateId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.data == nil {
+		return localVarReturnValue, nil, reportError("data is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	localVarPostBody = r.data
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 422 {
+			var v SuccessMultipleErrorsResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiRenameFolderRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	folderId string
 	data *RenameFolderData
 }
@@ -4547,11 +4602,15 @@ func (r ApiRenameFolderRequest) Execute() (*Folder, *http.Response, error) {
 /*
 RenameFolder Rename a folder
 
+Renames an existing folder. The new name must be unique within the same parent folder.
+This operation only changes the folder name, not its location or contents.
+
+
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param folderId
  @return ApiRenameFolderRequest
 */
-func (a *PDFAPIService) RenameFolder(ctx context.Context, folderId string) ApiRenameFolderRequest {
+func (a *ClientAPIService) RenameFolder(ctx context.Context, folderId string) ApiRenameFolderRequest {
 	return ApiRenameFolderRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -4561,7 +4620,7 @@ func (a *PDFAPIService) RenameFolder(ctx context.Context, folderId string) ApiRe
 
 // Execute executes the request
 //  @return Folder
-func (a *PDFAPIService) RenameFolderExecute(r ApiRenameFolderRequest) (*Folder, *http.Response, error) {
+func (a *ClientAPIService) RenameFolderExecute(r ApiRenameFolderRequest) (*Folder, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
@@ -4569,7 +4628,7 @@ func (a *PDFAPIService) RenameFolderExecute(r ApiRenameFolderRequest) (*Folder, 
 		localVarReturnValue  *Folder
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.RenameFolder")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.RenameFolder")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -4672,9 +4731,158 @@ func (a *PDFAPIService) RenameFolderExecute(r ApiRenameFolderRequest) (*Folder, 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiRestoreTemplateVersionRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	templateId string
+	data *RestoreVersionData
+}
+
+func (r ApiRestoreTemplateVersionRequest) Data(data RestoreVersionData) ApiRestoreTemplateVersionRequest {
+	r.data = &data
+	return r
+}
+
+func (r ApiRestoreTemplateVersionRequest) Execute() (*SuccessErrorResponse, *http.Response, error) {
+	return r.ApiService.RestoreTemplateVersionExecute(r)
+}
+
+/*
+RestoreTemplateVersion Restore a template version
+
+Restores your template to a previously published version, copying that version's content
+and configuration to the current draft. Use this to revert changes or recover from
+an unwanted modification.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param templateId
+ @return ApiRestoreTemplateVersionRequest
+*/
+func (a *ClientAPIService) RestoreTemplateVersion(ctx context.Context, templateId string) ApiRestoreTemplateVersionRequest {
+	return ApiRestoreTemplateVersionRequest{
+		ApiService: a,
+		ctx: ctx,
+		templateId: templateId,
+	}
+}
+
+// Execute executes the request
+//  @return SuccessErrorResponse
+func (a *ClientAPIService) RestoreTemplateVersionExecute(r ApiRestoreTemplateVersionRequest) (*SuccessErrorResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *SuccessErrorResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.RestoreTemplateVersion")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/templates/{template_id}/restore_version"
+	localVarPath = strings.Replace(localVarPath, "{"+"template_id"+"}", url.PathEscape(parameterValueToString(r.templateId, "templateId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.data == nil {
+		return localVarReturnValue, nil, reportError("data is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	localVarPostBody = r.data
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 422 {
+			var v SuccessMultipleErrorsResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v SuccessMultipleErrorsResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiTestAuthenticationRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 }
 
 func (r ApiTestAuthenticationRequest) Execute() (*SuccessErrorResponse, *http.Response, error) {
@@ -4682,12 +4890,17 @@ func (r ApiTestAuthenticationRequest) Execute() (*SuccessErrorResponse, *http.Re
 }
 
 /*
-TestAuthentication Test Authentication
+TestAuthentication Test authentication
+
+Checks whether your API token is valid by making an authenticated request.
+Returns a success response if authentication passes. This endpoint is useful for
+verifying credentials during setup or troubleshooting issues.
+
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @return ApiTestAuthenticationRequest
 */
-func (a *PDFAPIService) TestAuthentication(ctx context.Context) ApiTestAuthenticationRequest {
+func (a *ClientAPIService) TestAuthentication(ctx context.Context) ApiTestAuthenticationRequest {
 	return ApiTestAuthenticationRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -4696,7 +4909,7 @@ func (a *PDFAPIService) TestAuthentication(ctx context.Context) ApiTestAuthentic
 
 // Execute executes the request
 //  @return SuccessErrorResponse
-func (a *PDFAPIService) TestAuthenticationExecute(r ApiTestAuthenticationRequest) (*SuccessErrorResponse, *http.Response, error) {
+func (a *ClientAPIService) TestAuthenticationExecute(r ApiTestAuthenticationRequest) (*SuccessErrorResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
@@ -4704,7 +4917,7 @@ func (a *PDFAPIService) TestAuthenticationExecute(r ApiTestAuthenticationRequest
 		localVarReturnValue  *SuccessErrorResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.TestAuthentication")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.TestAuthentication")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -4781,7 +4994,7 @@ func (a *PDFAPIService) TestAuthenticationExecute(r ApiTestAuthenticationRequest
 
 type ApiUpdateDataRequestRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	dataRequestId string
 	data *UpdateSubmissionDataRequestData
 }
@@ -4798,11 +5011,16 @@ func (r ApiUpdateDataRequestRequest) Execute() (*CreateSubmissionDataRequestResp
 /*
 UpdateDataRequest Update a submission data request
 
+Updates authentication details for a data request. Use this when a user logs in to record
+their authentication method, provider, session information, and hashed identifiers. Updates
+metadata and tracks authentication state changes for auditing and compliance.
+
+
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param dataRequestId
  @return ApiUpdateDataRequestRequest
 */
-func (a *PDFAPIService) UpdateDataRequest(ctx context.Context, dataRequestId string) ApiUpdateDataRequestRequest {
+func (a *ClientAPIService) UpdateDataRequest(ctx context.Context, dataRequestId string) ApiUpdateDataRequestRequest {
 	return ApiUpdateDataRequestRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -4812,7 +5030,7 @@ func (a *PDFAPIService) UpdateDataRequest(ctx context.Context, dataRequestId str
 
 // Execute executes the request
 //  @return CreateSubmissionDataRequestResponse
-func (a *PDFAPIService) UpdateDataRequestExecute(r ApiUpdateDataRequestRequest) (*CreateSubmissionDataRequestResponse, *http.Response, error) {
+func (a *ClientAPIService) UpdateDataRequestExecute(r ApiUpdateDataRequestRequest) (*CreateSubmissionDataRequestResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPut
 		localVarPostBody     interface{}
@@ -4820,7 +5038,7 @@ func (a *PDFAPIService) UpdateDataRequestExecute(r ApiUpdateDataRequestRequest) 
 		localVarReturnValue  *CreateSubmissionDataRequestResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.UpdateDataRequest")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.UpdateDataRequest")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -4925,7 +5143,7 @@ func (a *PDFAPIService) UpdateDataRequestExecute(r ApiUpdateDataRequestRequest) 
 
 type ApiUpdateTemplateRequest struct {
 	ctx context.Context
-	ApiService *PDFAPIService
+	ApiService *ClientAPIService
 	templateId string
 	data *UpdateHtmlTemplate
 }
@@ -4942,11 +5160,16 @@ func (r ApiUpdateTemplateRequest) Execute() (*SuccessMultipleErrorsResponse, *ht
 /*
 UpdateTemplate Update a Template
 
+Updates template content and properties. For HTML templates, you can modify the HTML,
+SCSS, headers, footers, name, and description. Changes are applied to your draft
+template and do not affect published template versions.
+
+
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param templateId
  @return ApiUpdateTemplateRequest
 */
-func (a *PDFAPIService) UpdateTemplate(ctx context.Context, templateId string) ApiUpdateTemplateRequest {
+func (a *ClientAPIService) UpdateTemplate(ctx context.Context, templateId string) ApiUpdateTemplateRequest {
 	return ApiUpdateTemplateRequest{
 		ApiService: a,
 		ctx: ctx,
@@ -4956,7 +5179,7 @@ func (a *PDFAPIService) UpdateTemplate(ctx context.Context, templateId string) A
 
 // Execute executes the request
 //  @return SuccessMultipleErrorsResponse
-func (a *PDFAPIService) UpdateTemplateExecute(r ApiUpdateTemplateRequest) (*SuccessMultipleErrorsResponse, *http.Response, error) {
+func (a *ClientAPIService) UpdateTemplateExecute(r ApiUpdateTemplateRequest) (*SuccessMultipleErrorsResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPut
 		localVarPostBody     interface{}
@@ -4964,7 +5187,7 @@ func (a *PDFAPIService) UpdateTemplateExecute(r ApiUpdateTemplateRequest) (*Succ
 		localVarReturnValue  *SuccessMultipleErrorsResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PDFAPIService.UpdateTemplate")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.UpdateTemplate")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -5019,6 +5242,283 @@ func (a *PDFAPIService) UpdateTemplateExecute(r ApiUpdateTemplateRequest) (*Succ
 		newErr := &GenericOpenAPIError{
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiUpdateTemplateDocumentRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	templateId string
+	templateDocument *os.File
+	templateName *string
+}
+
+func (r ApiUpdateTemplateDocumentRequest) TemplateDocument(templateDocument *os.File) ApiUpdateTemplateDocumentRequest {
+	r.templateDocument = templateDocument
+	return r
+}
+
+func (r ApiUpdateTemplateDocumentRequest) TemplateName(templateName string) ApiUpdateTemplateDocumentRequest {
+	r.templateName = &templateName
+	return r
+}
+
+func (r ApiUpdateTemplateDocumentRequest) Execute() (*SuccessMultipleErrorsResponse, *http.Response, error) {
+	return r.ApiService.UpdateTemplateDocumentExecute(r)
+}
+
+/*
+UpdateTemplateDocument Update a template's document with a form POST file upload
+
+Upload a new PDF file to update a PDF template's document. This replaces the
+template's PDF while preserving all of the existing fields. If you upload a PDF with
+fewer pages than the current document, any fields on the removed pages will be deleted.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param templateId
+ @return ApiUpdateTemplateDocumentRequest
+*/
+func (a *ClientAPIService) UpdateTemplateDocument(ctx context.Context, templateId string) ApiUpdateTemplateDocumentRequest {
+	return ApiUpdateTemplateDocumentRequest{
+		ApiService: a,
+		ctx: ctx,
+		templateId: templateId,
+	}
+}
+
+// Execute executes the request
+//  @return SuccessMultipleErrorsResponse
+func (a *ClientAPIService) UpdateTemplateDocumentExecute(r ApiUpdateTemplateDocumentRequest) (*SuccessMultipleErrorsResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPut
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *SuccessMultipleErrorsResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.UpdateTemplateDocument")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/templates/{template_id}?endpoint_variant=update_template_pdf_with_form_post"
+	localVarPath = strings.Replace(localVarPath, "{"+"template_id"+"}", url.PathEscape(parameterValueToString(r.templateId, "templateId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.templateDocument == nil {
+		return localVarReturnValue, nil, reportError("templateDocument is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"multipart/form-data"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	var templateDocumentLocalVarFormFileName string
+	var templateDocumentLocalVarFileName     string
+	var templateDocumentLocalVarFileBytes    []byte
+
+	templateDocumentLocalVarFormFileName = "template[document]"
+	templateDocumentLocalVarFile := r.templateDocument
+
+	if templateDocumentLocalVarFile != nil {
+		fbs, _ := io.ReadAll(templateDocumentLocalVarFile)
+
+		templateDocumentLocalVarFileBytes = fbs
+		templateDocumentLocalVarFileName = templateDocumentLocalVarFile.Name()
+		templateDocumentLocalVarFile.Close()
+		formFiles = append(formFiles, formFile{fileBytes: templateDocumentLocalVarFileBytes, fileName: templateDocumentLocalVarFileName, formFileName: templateDocumentLocalVarFormFileName})
+	}
+	if r.templateName != nil {
+		parameterAddToHeaderOrQuery(localVarFormParams, "template[name]", r.templateName, "", "")
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiUpdateTemplateDocumentFromUploadRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	templateId string
+	data *UpdatePdfTemplate
+}
+
+func (r ApiUpdateTemplateDocumentFromUploadRequest) Data(data UpdatePdfTemplate) ApiUpdateTemplateDocumentFromUploadRequest {
+	r.data = &data
+	return r
+}
+
+func (r ApiUpdateTemplateDocumentFromUploadRequest) Execute() (*SuccessMultipleErrorsResponse, *http.Response, error) {
+	return r.ApiService.UpdateTemplateDocumentFromUploadExecute(r)
+}
+
+/*
+UpdateTemplateDocumentFromUpload Update a template's document with a cached S3 file upload
+
+Updates a PDF template's document using a cached file upload. This is a three-step process:
+First, request a presigned URL to upload your PDF file to our S3 bucket. Then, use that URL to
+upload your PDF file. Finally, submit the ID of the uploaded file to replace the template's
+document.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param templateId
+ @return ApiUpdateTemplateDocumentFromUploadRequest
+*/
+func (a *ClientAPIService) UpdateTemplateDocumentFromUpload(ctx context.Context, templateId string) ApiUpdateTemplateDocumentFromUploadRequest {
+	return ApiUpdateTemplateDocumentFromUploadRequest{
+		ApiService: a,
+		ctx: ctx,
+		templateId: templateId,
+	}
+}
+
+// Execute executes the request
+//  @return SuccessMultipleErrorsResponse
+func (a *ClientAPIService) UpdateTemplateDocumentFromUploadExecute(r ApiUpdateTemplateDocumentFromUploadRequest) (*SuccessMultipleErrorsResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPut
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *SuccessMultipleErrorsResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.UpdateTemplateDocumentFromUpload")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/templates/{template_id}?endpoint_variant=update_template_pdf_with_cached_upload"
+	localVarPath = strings.Replace(localVarPath, "{"+"template_id"+"}", url.PathEscape(parameterValueToString(r.templateId, "templateId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.data == nil {
+		return localVarReturnValue, nil, reportError("data is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	localVarPostBody = r.data
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}

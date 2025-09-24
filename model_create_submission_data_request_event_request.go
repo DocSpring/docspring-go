@@ -1,7 +1,7 @@
 /*
 DocSpring API
 
-DocSpring provides an API that helps you fill out and sign PDF templates.
+Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
 
 API version: v1
 */
@@ -22,7 +22,9 @@ var _ MappedNullable = &CreateSubmissionDataRequestEventRequest{}
 // CreateSubmissionDataRequestEventRequest struct for CreateSubmissionDataRequestEventRequest
 type CreateSubmissionDataRequestEventRequest struct {
 	EventType string `json:"event_type"`
+	MessageRecipient NullableString `json:"message_recipient,omitempty"`
 	MessageType NullableString `json:"message_type,omitempty"`
+	OccurredAt NullableString `json:"occurred_at,omitempty"`
 }
 
 type _CreateSubmissionDataRequestEventRequest CreateSubmissionDataRequestEventRequest
@@ -69,6 +71,48 @@ func (o *CreateSubmissionDataRequestEventRequest) SetEventType(v string) {
 	o.EventType = v
 }
 
+// GetMessageRecipient returns the MessageRecipient field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *CreateSubmissionDataRequestEventRequest) GetMessageRecipient() string {
+	if o == nil || IsNil(o.MessageRecipient.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.MessageRecipient.Get()
+}
+
+// GetMessageRecipientOk returns a tuple with the MessageRecipient field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *CreateSubmissionDataRequestEventRequest) GetMessageRecipientOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.MessageRecipient.Get(), o.MessageRecipient.IsSet()
+}
+
+// HasMessageRecipient returns a boolean if a field has been set.
+func (o *CreateSubmissionDataRequestEventRequest) HasMessageRecipient() bool {
+	if o != nil && o.MessageRecipient.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetMessageRecipient gets a reference to the given NullableString and assigns it to the MessageRecipient field.
+func (o *CreateSubmissionDataRequestEventRequest) SetMessageRecipient(v string) {
+	o.MessageRecipient.Set(&v)
+}
+// SetMessageRecipientNil sets the value for MessageRecipient to be an explicit nil
+func (o *CreateSubmissionDataRequestEventRequest) SetMessageRecipientNil() {
+	o.MessageRecipient.Set(nil)
+}
+
+// UnsetMessageRecipient ensures that no value is present for MessageRecipient, not even an explicit nil
+func (o *CreateSubmissionDataRequestEventRequest) UnsetMessageRecipient() {
+	o.MessageRecipient.Unset()
+}
+
 // GetMessageType returns the MessageType field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *CreateSubmissionDataRequestEventRequest) GetMessageType() string {
 	if o == nil || IsNil(o.MessageType.Get()) {
@@ -111,6 +155,48 @@ func (o *CreateSubmissionDataRequestEventRequest) UnsetMessageType() {
 	o.MessageType.Unset()
 }
 
+// GetOccurredAt returns the OccurredAt field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *CreateSubmissionDataRequestEventRequest) GetOccurredAt() string {
+	if o == nil || IsNil(o.OccurredAt.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.OccurredAt.Get()
+}
+
+// GetOccurredAtOk returns a tuple with the OccurredAt field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *CreateSubmissionDataRequestEventRequest) GetOccurredAtOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.OccurredAt.Get(), o.OccurredAt.IsSet()
+}
+
+// HasOccurredAt returns a boolean if a field has been set.
+func (o *CreateSubmissionDataRequestEventRequest) HasOccurredAt() bool {
+	if o != nil && o.OccurredAt.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetOccurredAt gets a reference to the given NullableString and assigns it to the OccurredAt field.
+func (o *CreateSubmissionDataRequestEventRequest) SetOccurredAt(v string) {
+	o.OccurredAt.Set(&v)
+}
+// SetOccurredAtNil sets the value for OccurredAt to be an explicit nil
+func (o *CreateSubmissionDataRequestEventRequest) SetOccurredAtNil() {
+	o.OccurredAt.Set(nil)
+}
+
+// UnsetOccurredAt ensures that no value is present for OccurredAt, not even an explicit nil
+func (o *CreateSubmissionDataRequestEventRequest) UnsetOccurredAt() {
+	o.OccurredAt.Unset()
+}
+
 func (o CreateSubmissionDataRequestEventRequest) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -122,8 +208,14 @@ func (o CreateSubmissionDataRequestEventRequest) MarshalJSON() ([]byte, error) {
 func (o CreateSubmissionDataRequestEventRequest) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["event_type"] = o.EventType
+	if o.MessageRecipient.IsSet() {
+		toSerialize["message_recipient"] = o.MessageRecipient.Get()
+	}
 	if o.MessageType.IsSet() {
 		toSerialize["message_type"] = o.MessageType.Get()
+	}
+	if o.OccurredAt.IsSet() {
+		toSerialize["occurred_at"] = o.OccurredAt.Get()
 	}
 	return toSerialize, nil
 }

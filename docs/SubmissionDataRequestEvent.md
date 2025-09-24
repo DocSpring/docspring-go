@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **SubmissionId** | **NullableString** |  | 
 **SubmissionDataRequestId** | **NullableString** |  | 
 **EventType** | **string** |  | 
-**MessageType** | **string** |  | 
+**MessageType** | **NullableString** |  | 
 **MessageRecipient** | **NullableString** |  | 
 **OccurredAt** | **NullableString** |  | 
 
@@ -16,7 +16,7 @@ Name | Type | Description | Notes
 
 ### NewSubmissionDataRequestEvent
 
-`func NewSubmissionDataRequestEvent(id NullableString, submissionId NullableString, submissionDataRequestId NullableString, eventType string, messageType string, messageRecipient NullableString, occurredAt NullableString, ) *SubmissionDataRequestEvent`
+`func NewSubmissionDataRequestEvent(id NullableString, submissionId NullableString, submissionDataRequestId NullableString, eventType string, messageType NullableString, messageRecipient NullableString, occurredAt NullableString, ) *SubmissionDataRequestEvent`
 
 NewSubmissionDataRequestEvent instantiates a new SubmissionDataRequestEvent object
 This constructor will assign default values to properties that have it defined,
@@ -161,6 +161,16 @@ and a boolean to check if the value has been set.
 SetMessageType sets MessageType field to given value.
 
 
+### SetMessageTypeNil
+
+`func (o *SubmissionDataRequestEvent) SetMessageTypeNil(b bool)`
+
+ SetMessageTypeNil sets the value for MessageType to be an explicit nil
+
+### UnsetMessageType
+`func (o *SubmissionDataRequestEvent) UnsetMessageType()`
+
+UnsetMessageType ensures that no value is present for MessageType, not even an explicit nil
 ### GetMessageRecipient
 
 `func (o *SubmissionDataRequestEvent) GetMessageRecipient() string`

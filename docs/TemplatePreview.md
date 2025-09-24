@@ -38,14 +38,20 @@ Name | Type | Description | Notes
 **SlackWebhookUrl** | **NullableString** |  | 
 **TemplateType** | **string** |  | 
 **UpdatedAt** | **NullableString** |  | 
+**VersionPublishedAt** | **NullableString** |  | 
+**Version** | **NullableString** |  | 
 **WebhookUrl** | **NullableString** |  | 
 **Demo** | **bool** |  | 
+**LatestVersion** | **NullableString** |  | 
+**LastChangedAt** | **NullableString** |  | 
+**LastChangedByType** | **NullableString** |  | 
+**LastChangedById** | **NullableString** |  | 
 
 ## Methods
 
 ### NewTemplatePreview
 
-`func NewTemplatePreview(addDataRequestSubmissionIdFooters bool, allowAdditionalProperties bool, description NullableString, documentFilename NullableString, documentMd5 NullableString, documentParseError bool, documentProcessed bool, documentState string, documentUrl NullableString, editableSubmissions bool, embedDomains NullableString, encryptPdfsPassword NullableString, encryptPdfs bool, expirationInterval string, expireAfter int32, expireSubmissions bool, externalPredefinedFieldsTemplateId NullableString, externalPredefinedFieldsTemplateName NullableString, firstTemplate bool, id NullableString, locked bool, mergeAuditTrailPdf bool, name NullableString, pageCount int32, pageDimensions [][]float32, parentFolderId NullableString, path NullableString, permanentDocumentUrl NullableString, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, slackWebhookUrl NullableString, templateType string, updatedAt NullableString, webhookUrl NullableString, demo bool, ) *TemplatePreview`
+`func NewTemplatePreview(addDataRequestSubmissionIdFooters bool, allowAdditionalProperties bool, description NullableString, documentFilename NullableString, documentMd5 NullableString, documentParseError bool, documentProcessed bool, documentState string, documentUrl NullableString, editableSubmissions bool, embedDomains NullableString, encryptPdfsPassword NullableString, encryptPdfs bool, expirationInterval string, expireAfter int32, expireSubmissions bool, externalPredefinedFieldsTemplateId NullableString, externalPredefinedFieldsTemplateName NullableString, firstTemplate bool, id NullableString, locked bool, mergeAuditTrailPdf bool, name NullableString, pageCount int32, pageDimensions [][]float32, parentFolderId NullableString, path NullableString, permanentDocumentUrl NullableString, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, slackWebhookUrl NullableString, templateType string, updatedAt NullableString, versionPublishedAt NullableString, version NullableString, webhookUrl NullableString, demo bool, latestVersion NullableString, lastChangedAt NullableString, lastChangedByType NullableString, lastChangedById NullableString, ) *TemplatePreview`
 
 NewTemplatePreview instantiates a new TemplatePreview object
 This constructor will assign default values to properties that have it defined,
@@ -910,6 +916,66 @@ SetUpdatedAt sets UpdatedAt field to given value.
 `func (o *TemplatePreview) UnsetUpdatedAt()`
 
 UnsetUpdatedAt ensures that no value is present for UpdatedAt, not even an explicit nil
+### GetVersionPublishedAt
+
+`func (o *TemplatePreview) GetVersionPublishedAt() string`
+
+GetVersionPublishedAt returns the VersionPublishedAt field if non-nil, zero value otherwise.
+
+### GetVersionPublishedAtOk
+
+`func (o *TemplatePreview) GetVersionPublishedAtOk() (*string, bool)`
+
+GetVersionPublishedAtOk returns a tuple with the VersionPublishedAt field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetVersionPublishedAt
+
+`func (o *TemplatePreview) SetVersionPublishedAt(v string)`
+
+SetVersionPublishedAt sets VersionPublishedAt field to given value.
+
+
+### SetVersionPublishedAtNil
+
+`func (o *TemplatePreview) SetVersionPublishedAtNil(b bool)`
+
+ SetVersionPublishedAtNil sets the value for VersionPublishedAt to be an explicit nil
+
+### UnsetVersionPublishedAt
+`func (o *TemplatePreview) UnsetVersionPublishedAt()`
+
+UnsetVersionPublishedAt ensures that no value is present for VersionPublishedAt, not even an explicit nil
+### GetVersion
+
+`func (o *TemplatePreview) GetVersion() string`
+
+GetVersion returns the Version field if non-nil, zero value otherwise.
+
+### GetVersionOk
+
+`func (o *TemplatePreview) GetVersionOk() (*string, bool)`
+
+GetVersionOk returns a tuple with the Version field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetVersion
+
+`func (o *TemplatePreview) SetVersion(v string)`
+
+SetVersion sets Version field to given value.
+
+
+### SetVersionNil
+
+`func (o *TemplatePreview) SetVersionNil(b bool)`
+
+ SetVersionNil sets the value for Version to be an explicit nil
+
+### UnsetVersion
+`func (o *TemplatePreview) UnsetVersion()`
+
+UnsetVersion ensures that no value is present for Version, not even an explicit nil
 ### GetWebhookUrl
 
 `func (o *TemplatePreview) GetWebhookUrl() string`
@@ -960,6 +1026,126 @@ and a boolean to check if the value has been set.
 SetDemo sets Demo field to given value.
 
 
+### GetLatestVersion
+
+`func (o *TemplatePreview) GetLatestVersion() string`
+
+GetLatestVersion returns the LatestVersion field if non-nil, zero value otherwise.
+
+### GetLatestVersionOk
+
+`func (o *TemplatePreview) GetLatestVersionOk() (*string, bool)`
+
+GetLatestVersionOk returns a tuple with the LatestVersion field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetLatestVersion
+
+`func (o *TemplatePreview) SetLatestVersion(v string)`
+
+SetLatestVersion sets LatestVersion field to given value.
+
+
+### SetLatestVersionNil
+
+`func (o *TemplatePreview) SetLatestVersionNil(b bool)`
+
+ SetLatestVersionNil sets the value for LatestVersion to be an explicit nil
+
+### UnsetLatestVersion
+`func (o *TemplatePreview) UnsetLatestVersion()`
+
+UnsetLatestVersion ensures that no value is present for LatestVersion, not even an explicit nil
+### GetLastChangedAt
+
+`func (o *TemplatePreview) GetLastChangedAt() string`
+
+GetLastChangedAt returns the LastChangedAt field if non-nil, zero value otherwise.
+
+### GetLastChangedAtOk
+
+`func (o *TemplatePreview) GetLastChangedAtOk() (*string, bool)`
+
+GetLastChangedAtOk returns a tuple with the LastChangedAt field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetLastChangedAt
+
+`func (o *TemplatePreview) SetLastChangedAt(v string)`
+
+SetLastChangedAt sets LastChangedAt field to given value.
+
+
+### SetLastChangedAtNil
+
+`func (o *TemplatePreview) SetLastChangedAtNil(b bool)`
+
+ SetLastChangedAtNil sets the value for LastChangedAt to be an explicit nil
+
+### UnsetLastChangedAt
+`func (o *TemplatePreview) UnsetLastChangedAt()`
+
+UnsetLastChangedAt ensures that no value is present for LastChangedAt, not even an explicit nil
+### GetLastChangedByType
+
+`func (o *TemplatePreview) GetLastChangedByType() string`
+
+GetLastChangedByType returns the LastChangedByType field if non-nil, zero value otherwise.
+
+### GetLastChangedByTypeOk
+
+`func (o *TemplatePreview) GetLastChangedByTypeOk() (*string, bool)`
+
+GetLastChangedByTypeOk returns a tuple with the LastChangedByType field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetLastChangedByType
+
+`func (o *TemplatePreview) SetLastChangedByType(v string)`
+
+SetLastChangedByType sets LastChangedByType field to given value.
+
+
+### SetLastChangedByTypeNil
+
+`func (o *TemplatePreview) SetLastChangedByTypeNil(b bool)`
+
+ SetLastChangedByTypeNil sets the value for LastChangedByType to be an explicit nil
+
+### UnsetLastChangedByType
+`func (o *TemplatePreview) UnsetLastChangedByType()`
+
+UnsetLastChangedByType ensures that no value is present for LastChangedByType, not even an explicit nil
+### GetLastChangedById
+
+`func (o *TemplatePreview) GetLastChangedById() string`
+
+GetLastChangedById returns the LastChangedById field if non-nil, zero value otherwise.
+
+### GetLastChangedByIdOk
+
+`func (o *TemplatePreview) GetLastChangedByIdOk() (*string, bool)`
+
+GetLastChangedByIdOk returns a tuple with the LastChangedById field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetLastChangedById
+
+`func (o *TemplatePreview) SetLastChangedById(v string)`
+
+SetLastChangedById sets LastChangedById field to given value.
+
+
+### SetLastChangedByIdNil
+
+`func (o *TemplatePreview) SetLastChangedByIdNil(b bool)`
+
+ SetLastChangedByIdNil sets the value for LastChangedById to be an explicit nil
+
+### UnsetLastChangedById
+`func (o *TemplatePreview) UnsetLastChangedById()`
+
+UnsetLastChangedById ensures that no value is present for LastChangedById, not even an explicit nil
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

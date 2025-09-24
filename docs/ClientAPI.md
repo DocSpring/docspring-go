@@ -1,47 +1,49 @@
-# \PDFAPI
+# \ClientAPI
 
 All URIs are relative to *https://sync.api.docspring.com/api/v1*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**AddFieldsToTemplate**](PDFAPI.md#AddFieldsToTemplate) | **Put** /templates/{template_id}/add_fields | Add new fields to a Template
-[**BatchGeneratePdfs**](PDFAPI.md#BatchGeneratePdfs) | **Post** /submissions/batches | Generates multiple PDFs
-[**CombinePdfs**](PDFAPI.md#CombinePdfs) | **Post** /combined_submissions?v&#x3D;2 | Merge submission PDFs, template PDFs, or custom files
-[**CombineSubmissions**](PDFAPI.md#CombineSubmissions) | **Post** /combined_submissions | Merge generated PDFs together
-[**CopyTemplate**](PDFAPI.md#CopyTemplate) | **Post** /templates/{template_id}/copy | Copy a Template
-[**CreateCustomFileFromUpload**](PDFAPI.md#CreateCustomFileFromUpload) | **Post** /custom_files | Create a new custom file from a cached presign upload
-[**CreateDataRequestEvent**](PDFAPI.md#CreateDataRequestEvent) | **Post** /data_requests/{data_request_id}/events | Creates a new event for emailing a signee a request for signature
-[**CreateDataRequestToken**](PDFAPI.md#CreateDataRequestToken) | **Post** /data_requests/{data_request_id}/tokens | Creates a new data request token for form authentication
-[**CreateFolder**](PDFAPI.md#CreateFolder) | **Post** /folders/ | Create a folder
-[**CreateHTMLTemplate**](PDFAPI.md#CreateHTMLTemplate) | **Post** /templates?endpoint_description&#x3D;html | Create a new HTML template
-[**CreatePDFTemplate**](PDFAPI.md#CreatePDFTemplate) | **Post** /templates | Create a new PDF template with a form POST file upload
-[**CreatePDFTemplateFromUpload**](PDFAPI.md#CreatePDFTemplateFromUpload) | **Post** /templates?endpoint_description&#x3D;cached_upload | Create a new PDF template from a cached presign upload
-[**DeleteFolder**](PDFAPI.md#DeleteFolder) | **Delete** /folders/{folder_id} | Delete a folder
-[**DeleteTemplate**](PDFAPI.md#DeleteTemplate) | **Delete** /templates/{template_id} | Delete a template
-[**ExpireCombinedSubmission**](PDFAPI.md#ExpireCombinedSubmission) | **Delete** /combined_submissions/{combined_submission_id} | Expire a combined submission
-[**ExpireSubmission**](PDFAPI.md#ExpireSubmission) | **Delete** /submissions/{submission_id} | Expire a PDF submission
-[**GeneratePdf**](PDFAPI.md#GeneratePdf) | **Post** /templates/{template_id}/submissions | Generates a new PDF
-[**GeneratePdfForHtmlTemplate**](PDFAPI.md#GeneratePdfForHtmlTemplate) | **Post** /templates/{template_id}/submissions?endpoint_description&#x3D;html_templates | Generates a new PDF for an HTML template
-[**GeneratePreview**](PDFAPI.md#GeneratePreview) | **Post** /submissions/{submission_id}/generate_preview | Generated a preview PDF for partially completed data requests
-[**GetCombinedSubmission**](PDFAPI.md#GetCombinedSubmission) | **Get** /combined_submissions/{combined_submission_id} | Check the status of a combined submission (merged PDFs)
-[**GetDataRequest**](PDFAPI.md#GetDataRequest) | **Get** /data_requests/{data_request_id} | Look up a submission data request
-[**GetFullTemplate**](PDFAPI.md#GetFullTemplate) | **Get** /templates/{template_id}?full&#x3D;true | Fetch the full template attributes
-[**GetPresignUrl**](PDFAPI.md#GetPresignUrl) | **Get** /uploads/presign | Get a presigned URL so that you can upload a file to our AWS S3 bucket
-[**GetSubmission**](PDFAPI.md#GetSubmission) | **Get** /submissions/{submission_id} | Check the status of a PDF
-[**GetSubmissionBatch**](PDFAPI.md#GetSubmissionBatch) | **Get** /submissions/batches/{submission_batch_id} | Check the status of a submission batch job
-[**GetTemplate**](PDFAPI.md#GetTemplate) | **Get** /templates/{template_id} | Check the status of an uploaded template
-[**GetTemplateSchema**](PDFAPI.md#GetTemplateSchema) | **Get** /templates/{template_id}/schema | Fetch the JSON schema for a template
-[**ListCombinedSubmissions**](PDFAPI.md#ListCombinedSubmissions) | **Get** /combined_submissions | Get a list of all combined submissions
-[**ListFolders**](PDFAPI.md#ListFolders) | **Get** /folders/ | Get a list of all folders
-[**ListSubmissions**](PDFAPI.md#ListSubmissions) | **Get** /submissions | List all submissions
-[**ListTemplateSubmissions**](PDFAPI.md#ListTemplateSubmissions) | **Get** /templates/{template_id}/submissions | List all submissions for a given template
-[**ListTemplates**](PDFAPI.md#ListTemplates) | **Get** /templates | Get a list of all templates
-[**MoveFolderToFolder**](PDFAPI.md#MoveFolderToFolder) | **Post** /folders/{folder_id}/move | Move a folder
-[**MoveTemplateToFolder**](PDFAPI.md#MoveTemplateToFolder) | **Post** /templates/{template_id}/move | Move Template to folder
-[**RenameFolder**](PDFAPI.md#RenameFolder) | **Post** /folders/{folder_id}/rename | Rename a folder
-[**TestAuthentication**](PDFAPI.md#TestAuthentication) | **Get** /authentication | Test Authentication
-[**UpdateDataRequest**](PDFAPI.md#UpdateDataRequest) | **Put** /data_requests/{data_request_id} | Update a submission data request
-[**UpdateTemplate**](PDFAPI.md#UpdateTemplate) | **Put** /templates/{template_id} | Update a Template
+[**AddFieldsToTemplate**](ClientAPI.md#AddFieldsToTemplate) | **Put** /templates/{template_id}/add_fields | Add new fields to a Template
+[**BatchGeneratePdfs**](ClientAPI.md#BatchGeneratePdfs) | **Post** /submissions/batches | Generate multiple PDFs
+[**CombinePdfs**](ClientAPI.md#CombinePdfs) | **Post** /combined_submissions | Merge submission PDFs, template PDFs, or custom files
+[**CopyTemplate**](ClientAPI.md#CopyTemplate) | **Post** /templates/{template_id}/copy | Copy a template
+[**CreateCustomFileFromUpload**](ClientAPI.md#CreateCustomFileFromUpload) | **Post** /custom_files | Create a new custom file from a cached S3 upload
+[**CreateDataRequestEvent**](ClientAPI.md#CreateDataRequestEvent) | **Post** /data_requests/{data_request_id}/events | Create a new event for emailing a signee a request for signature
+[**CreateDataRequestToken**](ClientAPI.md#CreateDataRequestToken) | **Post** /data_requests/{data_request_id}/tokens | Create a new data request token for form authentication
+[**CreateFolder**](ClientAPI.md#CreateFolder) | **Post** /folders/ | Create a folder
+[**CreateHtmlTemplate**](ClientAPI.md#CreateHtmlTemplate) | **Post** /templates?endpoint_variant&#x3D;create_html_template | Create a new HTML template
+[**CreatePdfTemplate**](ClientAPI.md#CreatePdfTemplate) | **Post** /templates | Create a new PDF template with a form POST file upload
+[**CreatePdfTemplateFromUpload**](ClientAPI.md#CreatePdfTemplateFromUpload) | **Post** /templates?endpoint_variant&#x3D;create_template_from_cached_upload | Create a new PDF template from a cached S3 file upload
+[**DeleteFolder**](ClientAPI.md#DeleteFolder) | **Delete** /folders/{folder_id} | Delete a folder
+[**DeleteTemplate**](ClientAPI.md#DeleteTemplate) | **Delete** /templates/{template_id} | Delete a template
+[**ExpireCombinedSubmission**](ClientAPI.md#ExpireCombinedSubmission) | **Delete** /combined_submissions/{combined_submission_id} | Expire a combined submission
+[**ExpireSubmission**](ClientAPI.md#ExpireSubmission) | **Delete** /submissions/{submission_id} | Expire a PDF submission
+[**GeneratePdf**](ClientAPI.md#GeneratePdf) | **Post** /templates/{template_id}/submissions | Generate a PDF
+[**GeneratePreview**](ClientAPI.md#GeneratePreview) | **Post** /submissions/{submission_id}/generate_preview | Generate a preview PDF for partially completed data requests
+[**GetCombinedSubmission**](ClientAPI.md#GetCombinedSubmission) | **Get** /combined_submissions/{combined_submission_id} | Check the status of a combined submission (merged PDFs)
+[**GetDataRequest**](ClientAPI.md#GetDataRequest) | **Get** /data_requests/{data_request_id} | Look up a submission data request
+[**GetFullTemplate**](ClientAPI.md#GetFullTemplate) | **Get** /templates/{template_id}?full&#x3D;true | Fetch the full attributes for a PDF template
+[**GetPresignUrl**](ClientAPI.md#GetPresignUrl) | **Get** /uploads/presign | Get a presigned S3 URL for direct file upload
+[**GetSubmission**](ClientAPI.md#GetSubmission) | **Get** /submissions/{submission_id} | Check the status of a PDF
+[**GetSubmissionBatch**](ClientAPI.md#GetSubmissionBatch) | **Get** /submissions/batches/{submission_batch_id} | Check the status of a submission batch job
+[**GetTemplate**](ClientAPI.md#GetTemplate) | **Get** /templates/{template_id} | Check the status of an uploaded template
+[**GetTemplateSchema**](ClientAPI.md#GetTemplateSchema) | **Get** /templates/{template_id}/schema | Fetch the JSON schema for a template
+[**ListCombinedSubmissions**](ClientAPI.md#ListCombinedSubmissions) | **Get** /combined_submissions | Get a list of all combined submissions
+[**ListFolders**](ClientAPI.md#ListFolders) | **Get** /folders/ | Get a list of all folders
+[**ListSubmissions**](ClientAPI.md#ListSubmissions) | **Get** /submissions | List all submissions
+[**ListTemplateSubmissions**](ClientAPI.md#ListTemplateSubmissions) | **Get** /templates/{template_id}/submissions | List all submissions for a given template
+[**ListTemplates**](ClientAPI.md#ListTemplates) | **Get** /templates | Get a list of all templates
+[**MoveFolderToFolder**](ClientAPI.md#MoveFolderToFolder) | **Post** /folders/{folder_id}/move | Move a folder
+[**MoveTemplateToFolder**](ClientAPI.md#MoveTemplateToFolder) | **Post** /templates/{template_id}/move | Move Template to folder
+[**PublishTemplateVersion**](ClientAPI.md#PublishTemplateVersion) | **Post** /templates/{template_id}/publish_version | Publish a template version
+[**RenameFolder**](ClientAPI.md#RenameFolder) | **Post** /folders/{folder_id}/rename | Rename a folder
+[**RestoreTemplateVersion**](ClientAPI.md#RestoreTemplateVersion) | **Post** /templates/{template_id}/restore_version | Restore a template version
+[**TestAuthentication**](ClientAPI.md#TestAuthentication) | **Get** /authentication | Test authentication
+[**UpdateDataRequest**](ClientAPI.md#UpdateDataRequest) | **Put** /data_requests/{data_request_id} | Update a submission data request
+[**UpdateTemplate**](ClientAPI.md#UpdateTemplate) | **Put** /templates/{template_id} | Update a Template
+[**UpdateTemplateDocument**](ClientAPI.md#UpdateTemplateDocument) | **Put** /templates/{template_id}?endpoint_variant&#x3D;update_template_pdf_with_form_post | Update a template&#39;s document with a form POST file upload
+[**UpdateTemplateDocumentFromUpload**](ClientAPI.md#UpdateTemplateDocumentFromUpload) | **Put** /templates/{template_id}?endpoint_variant&#x3D;update_template_pdf_with_cached_upload | Update a template&#39;s document with a cached S3 file upload
 
 
 
@@ -50,6 +52,8 @@ Method | HTTP request | Description
 > TemplateAddFieldsResponse AddFieldsToTemplate(ctx, templateId).Data(data).Execute()
 
 Add new fields to a Template
+
+
 
 ### Example
 
@@ -69,13 +73,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.AddFieldsToTemplate(context.Background(), templateId).Data(data).Execute()
+	resp, r, err := apiClient.ClientAPI.AddFieldsToTemplate(context.Background(), templateId).Data(data).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.AddFieldsToTemplate``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.AddFieldsToTemplate``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `AddFieldsToTemplate`: TemplateAddFieldsResponse
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.AddFieldsToTemplate`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.AddFieldsToTemplate`: %v\n", resp)
 }
 ```
 
@@ -119,7 +123,9 @@ Name | Type | Description  | Notes
 
 > BatchGeneratePdfs201Response BatchGeneratePdfs(ctx).Data(data).Wait(wait).Execute()
 
-Generates multiple PDFs
+Generate multiple PDFs
+
+
 
 ### Example
 
@@ -139,13 +145,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.BatchGeneratePdfs(context.Background()).Data(data).Wait(wait).Execute()
+	resp, r, err := apiClient.ClientAPI.BatchGeneratePdfs(context.Background()).Data(data).Wait(wait).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.BatchGeneratePdfs``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.BatchGeneratePdfs``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `BatchGeneratePdfs`: BatchGeneratePdfs201Response
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.BatchGeneratePdfs`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.BatchGeneratePdfs`: %v\n", resp)
 }
 ```
 
@@ -187,6 +193,8 @@ Name | Type | Description  | Notes
 
 Merge submission PDFs, template PDFs, or custom files
 
+
+
 ### Example
 
 ```go
@@ -204,13 +212,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.CombinePdfs(context.Background()).Data(data).Execute()
+	resp, r, err := apiClient.ClientAPI.CombinePdfs(context.Background()).Data(data).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.CombinePdfs``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CombinePdfs``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `CombinePdfs`: CreateCombinedSubmissionResponse
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.CombinePdfs`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.CombinePdfs`: %v\n", resp)
 }
 ```
 
@@ -245,77 +253,13 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## CombineSubmissions
-
-> CreateCombinedSubmissionResponse CombineSubmissions(ctx).Data(data).Wait(wait).Execute()
-
-Merge generated PDFs together
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
-)
-
-func main() {
-	data := *openapiclient.NewCombinedSubmissionData([]string{"SubmissionIds_example"}) // CombinedSubmissionData | 
-	wait := true // bool | Wait for combined submission to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain) (optional) (default to true)
-
-	configuration := openapiclient.NewConfiguration()
-	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.CombineSubmissions(context.Background()).Data(data).Wait(wait).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.CombineSubmissions``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `CombineSubmissions`: CreateCombinedSubmissionResponse
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.CombineSubmissions`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiCombineSubmissionsRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **data** | [**CombinedSubmissionData**](CombinedSubmissionData.md) |  | 
- **wait** | **bool** | Wait for combined submission to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain) | [default to true]
-
-### Return type
-
-[**CreateCombinedSubmissionResponse**](CreateCombinedSubmissionResponse.md)
-
-### Authorization
-
-[api_token_basic](../README.md#api_token_basic)
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
 ## CopyTemplate
 
 > TemplatePreview CopyTemplate(ctx, templateId).Options(options).Execute()
 
-Copy a Template
+Copy a template
+
+
 
 ### Example
 
@@ -335,13 +279,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.CopyTemplate(context.Background(), templateId).Options(options).Execute()
+	resp, r, err := apiClient.ClientAPI.CopyTemplate(context.Background(), templateId).Options(options).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.CopyTemplate``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CopyTemplate``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `CopyTemplate`: TemplatePreview
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.CopyTemplate`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.CopyTemplate`: %v\n", resp)
 }
 ```
 
@@ -385,7 +329,9 @@ Name | Type | Description  | Notes
 
 > CreateCustomFileResponse CreateCustomFileFromUpload(ctx).Data(data).Execute()
 
-Create a new custom file from a cached presign upload
+Create a new custom file from a cached S3 upload
+
+
 
 ### Example
 
@@ -404,13 +350,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.CreateCustomFileFromUpload(context.Background()).Data(data).Execute()
+	resp, r, err := apiClient.ClientAPI.CreateCustomFileFromUpload(context.Background()).Data(data).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.CreateCustomFileFromUpload``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateCustomFileFromUpload``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `CreateCustomFileFromUpload`: CreateCustomFileResponse
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.CreateCustomFileFromUpload`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.CreateCustomFileFromUpload`: %v\n", resp)
 }
 ```
 
@@ -449,7 +395,9 @@ Name | Type | Description  | Notes
 
 > CreateSubmissionDataRequestEventResponse CreateDataRequestEvent(ctx, dataRequestId).Event(event).Execute()
 
-Creates a new event for emailing a signee a request for signature
+Create a new event for emailing a signee a request for signature
+
+
 
 ### Example
 
@@ -469,13 +417,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.CreateDataRequestEvent(context.Background(), dataRequestId).Event(event).Execute()
+	resp, r, err := apiClient.ClientAPI.CreateDataRequestEvent(context.Background(), dataRequestId).Event(event).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.CreateDataRequestEvent``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateDataRequestEvent``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `CreateDataRequestEvent`: CreateSubmissionDataRequestEventResponse
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.CreateDataRequestEvent`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.CreateDataRequestEvent`: %v\n", resp)
 }
 ```
 
@@ -519,7 +467,9 @@ Name | Type | Description  | Notes
 
 > CreateSubmissionDataRequestTokenResponse CreateDataRequestToken(ctx, dataRequestId).Type_(type_).Execute()
 
-Creates a new data request token for form authentication
+Create a new data request token for form authentication
+
+
 
 ### Example
 
@@ -539,13 +489,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.CreateDataRequestToken(context.Background(), dataRequestId).Type_(type_).Execute()
+	resp, r, err := apiClient.ClientAPI.CreateDataRequestToken(context.Background(), dataRequestId).Type_(type_).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.CreateDataRequestToken``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateDataRequestToken``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `CreateDataRequestToken`: CreateSubmissionDataRequestTokenResponse
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.CreateDataRequestToken`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.CreateDataRequestToken`: %v\n", resp)
 }
 ```
 
@@ -591,6 +541,8 @@ Name | Type | Description  | Notes
 
 Create a folder
 
+
+
 ### Example
 
 ```go
@@ -608,13 +560,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.CreateFolder(context.Background()).Data(data).Execute()
+	resp, r, err := apiClient.ClientAPI.CreateFolder(context.Background()).Data(data).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.CreateFolder``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateFolder``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `CreateFolder`: Folder
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.CreateFolder`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.CreateFolder`: %v\n", resp)
 }
 ```
 
@@ -649,11 +601,13 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## CreateHTMLTemplate
+## CreateHtmlTemplate
 
-> TemplatePreview CreateHTMLTemplate(ctx).Data(data).Execute()
+> TemplatePreview CreateHtmlTemplate(ctx).Data(data).Execute()
 
 Create a new HTML template
+
+
 
 ### Example
 
@@ -672,13 +626,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.CreateHTMLTemplate(context.Background()).Data(data).Execute()
+	resp, r, err := apiClient.ClientAPI.CreateHtmlTemplate(context.Background()).Data(data).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.CreateHTMLTemplate``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateHtmlTemplate``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `CreateHTMLTemplate`: TemplatePreview
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.CreateHTMLTemplate`: %v\n", resp)
+	// response from `CreateHtmlTemplate`: TemplatePreview
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.CreateHtmlTemplate`: %v\n", resp)
 }
 ```
 
@@ -688,7 +642,7 @@ func main() {
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiCreateHTMLTemplateRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiCreateHtmlTemplateRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -713,11 +667,13 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## CreatePDFTemplate
+## CreatePdfTemplate
 
-> TemplatePreview CreatePDFTemplate(ctx).TemplateDocument(templateDocument).TemplateName(templateName).Wait(wait).TemplateDescription(templateDescription).TemplateParentFolderId(templateParentFolderId).Execute()
+> TemplatePreview CreatePdfTemplate(ctx).TemplateDocument(templateDocument).TemplateName(templateName).Wait(wait).TemplateDescription(templateDescription).TemplateParentFolderId(templateParentFolderId).Execute()
 
 Create a new PDF template with a form POST file upload
+
+
 
 ### Example
 
@@ -740,13 +696,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.CreatePDFTemplate(context.Background()).TemplateDocument(templateDocument).TemplateName(templateName).Wait(wait).TemplateDescription(templateDescription).TemplateParentFolderId(templateParentFolderId).Execute()
+	resp, r, err := apiClient.ClientAPI.CreatePdfTemplate(context.Background()).TemplateDocument(templateDocument).TemplateName(templateName).Wait(wait).TemplateDescription(templateDescription).TemplateParentFolderId(templateParentFolderId).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.CreatePDFTemplate``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreatePdfTemplate``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `CreatePDFTemplate`: TemplatePreview
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.CreatePDFTemplate`: %v\n", resp)
+	// response from `CreatePdfTemplate`: TemplatePreview
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.CreatePdfTemplate`: %v\n", resp)
 }
 ```
 
@@ -756,7 +712,7 @@ func main() {
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiCreatePDFTemplateRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiCreatePdfTemplateRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -785,11 +741,13 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## CreatePDFTemplateFromUpload
+## CreatePdfTemplateFromUpload
 
-> TemplatePreview CreatePDFTemplateFromUpload(ctx).Data(data).Execute()
+> TemplatePreview CreatePdfTemplateFromUpload(ctx).Data(data).Execute()
 
-Create a new PDF template from a cached presign upload
+Create a new PDF template from a cached S3 file upload
+
+
 
 ### Example
 
@@ -808,13 +766,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.CreatePDFTemplateFromUpload(context.Background()).Data(data).Execute()
+	resp, r, err := apiClient.ClientAPI.CreatePdfTemplateFromUpload(context.Background()).Data(data).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.CreatePDFTemplateFromUpload``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreatePdfTemplateFromUpload``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `CreatePDFTemplateFromUpload`: TemplatePreview
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.CreatePDFTemplateFromUpload`: %v\n", resp)
+	// response from `CreatePdfTemplateFromUpload`: TemplatePreview
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.CreatePdfTemplateFromUpload`: %v\n", resp)
 }
 ```
 
@@ -824,7 +782,7 @@ func main() {
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiCreatePDFTemplateFromUploadRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiCreatePdfTemplateFromUploadRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -855,6 +813,8 @@ Name | Type | Description  | Notes
 
 Delete a folder
 
+
+
 ### Example
 
 ```go
@@ -872,13 +832,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.DeleteFolder(context.Background(), folderId).Execute()
+	resp, r, err := apiClient.ClientAPI.DeleteFolder(context.Background(), folderId).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.DeleteFolder``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.DeleteFolder``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `DeleteFolder`: Folder
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.DeleteFolder`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.DeleteFolder`: %v\n", resp)
 }
 ```
 
@@ -919,9 +879,11 @@ Name | Type | Description  | Notes
 
 ## DeleteTemplate
 
-> SuccessMultipleErrorsResponse DeleteTemplate(ctx, templateId).Execute()
+> TemplateDeleteResponse DeleteTemplate(ctx, templateId).Version(version).Execute()
 
 Delete a template
+
+
 
 ### Example
 
@@ -937,16 +899,17 @@ import (
 
 func main() {
 	templateId := "tpl_1234567890abcdef01" // string | 
+	version := "0.1.0" // string |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.DeleteTemplate(context.Background(), templateId).Execute()
+	resp, r, err := apiClient.ClientAPI.DeleteTemplate(context.Background(), templateId).Version(version).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.DeleteTemplate``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.DeleteTemplate``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `DeleteTemplate`: SuccessMultipleErrorsResponse
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.DeleteTemplate`: %v\n", resp)
+	// response from `DeleteTemplate`: TemplateDeleteResponse
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.DeleteTemplate`: %v\n", resp)
 }
 ```
 
@@ -966,10 +929,11 @@ Other parameters are passed through a pointer to a apiDeleteTemplateRequest stru
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
+ **version** | **string** |  | 
 
 ### Return type
 
-[**SuccessMultipleErrorsResponse**](SuccessMultipleErrorsResponse.md)
+[**TemplateDeleteResponse**](TemplateDeleteResponse.md)
 
 ### Authorization
 
@@ -991,6 +955,8 @@ Name | Type | Description  | Notes
 
 Expire a combined submission
 
+
+
 ### Example
 
 ```go
@@ -1008,13 +974,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.ExpireCombinedSubmission(context.Background(), combinedSubmissionId).Execute()
+	resp, r, err := apiClient.ClientAPI.ExpireCombinedSubmission(context.Background(), combinedSubmissionId).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.ExpireCombinedSubmission``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ExpireCombinedSubmission``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `ExpireCombinedSubmission`: CombinedSubmission
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.ExpireCombinedSubmission`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.ExpireCombinedSubmission`: %v\n", resp)
 }
 ```
 
@@ -1059,6 +1025,8 @@ Name | Type | Description  | Notes
 
 Expire a PDF submission
 
+
+
 ### Example
 
 ```go
@@ -1076,13 +1044,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.ExpireSubmission(context.Background(), submissionId).Execute()
+	resp, r, err := apiClient.ClientAPI.ExpireSubmission(context.Background(), submissionId).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.ExpireSubmission``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ExpireSubmission``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `ExpireSubmission`: SubmissionPreview
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.ExpireSubmission`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.ExpireSubmission`: %v\n", resp)
 }
 ```
 
@@ -1125,7 +1093,9 @@ Name | Type | Description  | Notes
 
 > CreateSubmissionResponse GeneratePdf(ctx, templateId).Submission(submission).Wait(wait).Execute()
 
-Generates a new PDF
+Generate a PDF
+
+
 
 ### Example
 
@@ -1146,13 +1116,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.GeneratePdf(context.Background(), templateId).Submission(submission).Wait(wait).Execute()
+	resp, r, err := apiClient.ClientAPI.GeneratePdf(context.Background(), templateId).Submission(submission).Wait(wait).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.GeneratePdf``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GeneratePdf``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `GeneratePdf`: CreateSubmissionResponse
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.GeneratePdf`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GeneratePdf`: %v\n", resp)
 }
 ```
 
@@ -1193,83 +1163,13 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## GeneratePdfForHtmlTemplate
-
-> CreateSubmissionResponse GeneratePdfForHtmlTemplate(ctx, templateId).Submission(submission).Wait(wait).Execute()
-
-Generates a new PDF for an HTML template
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
-)
-
-func main() {
-	templateId := "tpl_HTML567890abcdef01" // string | 
-	submission := *openapiclient.NewCreateHtmlSubmissionData() // CreateHtmlSubmissionData | 
-	wait := true // bool | Wait for submission to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain) (optional) (default to true)
-
-	configuration := openapiclient.NewConfiguration()
-	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.GeneratePdfForHtmlTemplate(context.Background(), templateId).Submission(submission).Wait(wait).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.GeneratePdfForHtmlTemplate``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `GeneratePdfForHtmlTemplate`: CreateSubmissionResponse
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.GeneratePdfForHtmlTemplate`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**templateId** | **string** |  | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiGeneratePdfForHtmlTemplateRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
- **submission** | [**CreateHtmlSubmissionData**](CreateHtmlSubmissionData.md) |  | 
- **wait** | **bool** | Wait for submission to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain) | [default to true]
-
-### Return type
-
-[**CreateSubmissionResponse**](CreateSubmissionResponse.md)
-
-### Authorization
-
-[api_token_basic](../README.md#api_token_basic)
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
 ## GeneratePreview
 
 > SuccessErrorResponse GeneratePreview(ctx, submissionId).Execute()
 
-Generated a preview PDF for partially completed data requests
+Generate a preview PDF for partially completed data requests
+
+
 
 ### Example
 
@@ -1288,13 +1188,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.GeneratePreview(context.Background(), submissionId).Execute()
+	resp, r, err := apiClient.ClientAPI.GeneratePreview(context.Background(), submissionId).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.GeneratePreview``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GeneratePreview``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `GeneratePreview`: SuccessErrorResponse
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.GeneratePreview`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GeneratePreview`: %v\n", resp)
 }
 ```
 
@@ -1339,6 +1239,8 @@ Name | Type | Description  | Notes
 
 Check the status of a combined submission (merged PDFs)
 
+
+
 ### Example
 
 ```go
@@ -1356,13 +1258,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.GetCombinedSubmission(context.Background(), combinedSubmissionId).Execute()
+	resp, r, err := apiClient.ClientAPI.GetCombinedSubmission(context.Background(), combinedSubmissionId).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.GetCombinedSubmission``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetCombinedSubmission``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `GetCombinedSubmission`: CombinedSubmission
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.GetCombinedSubmission`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetCombinedSubmission`: %v\n", resp)
 }
 ```
 
@@ -1407,6 +1309,8 @@ Name | Type | Description  | Notes
 
 Look up a submission data request
 
+
+
 ### Example
 
 ```go
@@ -1424,13 +1328,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.GetDataRequest(context.Background(), dataRequestId).Execute()
+	resp, r, err := apiClient.ClientAPI.GetDataRequest(context.Background(), dataRequestId).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.GetDataRequest``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetDataRequest``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `GetDataRequest`: SubmissionDataRequestShow
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.GetDataRequest`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetDataRequest`: %v\n", resp)
 }
 ```
 
@@ -1473,7 +1377,9 @@ Name | Type | Description  | Notes
 
 > Template GetFullTemplate(ctx, templateId).Execute()
 
-Fetch the full template attributes
+Fetch the full attributes for a PDF template
+
+
 
 ### Example
 
@@ -1492,13 +1398,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.GetFullTemplate(context.Background(), templateId).Execute()
+	resp, r, err := apiClient.ClientAPI.GetFullTemplate(context.Background(), templateId).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.GetFullTemplate``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetFullTemplate``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `GetFullTemplate`: Template
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.GetFullTemplate`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetFullTemplate`: %v\n", resp)
 }
 ```
 
@@ -1541,7 +1447,9 @@ Name | Type | Description  | Notes
 
 > UploadPresignResponse GetPresignUrl(ctx).Execute()
 
-Get a presigned URL so that you can upload a file to our AWS S3 bucket
+Get a presigned S3 URL for direct file upload
+
+
 
 ### Example
 
@@ -1559,13 +1467,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.GetPresignUrl(context.Background()).Execute()
+	resp, r, err := apiClient.ClientAPI.GetPresignUrl(context.Background()).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.GetPresignUrl``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetPresignUrl``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `GetPresignUrl`: UploadPresignResponse
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.GetPresignUrl`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetPresignUrl`: %v\n", resp)
 }
 ```
 
@@ -1602,6 +1510,8 @@ Other parameters are passed through a pointer to a apiGetPresignUrlRequest struc
 
 Check the status of a PDF
 
+
+
 ### Example
 
 ```go
@@ -1620,13 +1530,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.GetSubmission(context.Background(), submissionId).IncludeData(includeData).Execute()
+	resp, r, err := apiClient.ClientAPI.GetSubmission(context.Background(), submissionId).IncludeData(includeData).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.GetSubmission``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetSubmission``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `GetSubmission`: Submission
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.GetSubmission`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetSubmission`: %v\n", resp)
 }
 ```
 
@@ -1672,6 +1582,8 @@ Name | Type | Description  | Notes
 
 Check the status of a submission batch job
 
+
+
 ### Example
 
 ```go
@@ -1690,13 +1602,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.GetSubmissionBatch(context.Background(), submissionBatchId).IncludeSubmissions(includeSubmissions).Execute()
+	resp, r, err := apiClient.ClientAPI.GetSubmissionBatch(context.Background(), submissionBatchId).IncludeSubmissions(includeSubmissions).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.GetSubmissionBatch``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetSubmissionBatch``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `GetSubmissionBatch`: SubmissionBatchWithSubmissions
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.GetSubmissionBatch`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetSubmissionBatch`: %v\n", resp)
 }
 ```
 
@@ -1742,6 +1654,8 @@ Name | Type | Description  | Notes
 
 Check the status of an uploaded template
 
+
+
 ### Example
 
 ```go
@@ -1759,13 +1673,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.GetTemplate(context.Background(), templateId).Execute()
+	resp, r, err := apiClient.ClientAPI.GetTemplate(context.Background(), templateId).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.GetTemplate``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetTemplate``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `GetTemplate`: TemplatePreview
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.GetTemplate`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetTemplate`: %v\n", resp)
 }
 ```
 
@@ -1810,6 +1724,8 @@ Name | Type | Description  | Notes
 
 Fetch the JSON schema for a template
 
+
+
 ### Example
 
 ```go
@@ -1827,13 +1743,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.GetTemplateSchema(context.Background(), templateId).Execute()
+	resp, r, err := apiClient.ClientAPI.GetTemplateSchema(context.Background(), templateId).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.GetTemplateSchema``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetTemplateSchema``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `GetTemplateSchema`: JsonSchema
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.GetTemplateSchema`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetTemplateSchema`: %v\n", resp)
 }
 ```
 
@@ -1878,6 +1794,8 @@ Name | Type | Description  | Notes
 
 Get a list of all combined submissions
 
+
+
 ### Example
 
 ```go
@@ -1891,18 +1809,18 @@ import (
 )
 
 func main() {
-	page := int32(2) // int32 | Default: 1 (optional)
+	page := int32(3) // int32 | Default: 1 (optional)
 	perPage := int32(1) // int32 | Default: 50 (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.ListCombinedSubmissions(context.Background()).Page(page).PerPage(perPage).Execute()
+	resp, r, err := apiClient.ClientAPI.ListCombinedSubmissions(context.Background()).Page(page).PerPage(perPage).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.ListCombinedSubmissions``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ListCombinedSubmissions``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `ListCombinedSubmissions`: []CombinedSubmission
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.ListCombinedSubmissions`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.ListCombinedSubmissions`: %v\n", resp)
 }
 ```
 
@@ -1944,6 +1862,8 @@ Name | Type | Description  | Notes
 
 Get a list of all folders
 
+
+
 ### Example
 
 ```go
@@ -1961,13 +1881,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.ListFolders(context.Background()).ParentFolderId(parentFolderId).Execute()
+	resp, r, err := apiClient.ClientAPI.ListFolders(context.Background()).ParentFolderId(parentFolderId).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.ListFolders``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ListFolders``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `ListFolders`: []Folder
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.ListFolders`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.ListFolders`: %v\n", resp)
 }
 ```
 
@@ -2008,6 +1928,8 @@ Name | Type | Description  | Notes
 
 List all submissions
 
+
+
 ### Example
 
 ```go
@@ -2022,7 +1944,7 @@ import (
 
 func main() {
 	cursor := "sub_1234567890abcdef12" // string |  (optional)
-	limit := float32(3) // float32 |  (optional)
+	limit := int32(3) // int32 |  (optional)
 	createdAfter := "2019-01-01T09:00:00-05:00" // string |  (optional)
 	createdBefore := "2020-01-01T09:00:00.000+0200" // string |  (optional)
 	type_ := "test" // string |  (optional)
@@ -2030,13 +1952,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.ListSubmissions(context.Background()).Cursor(cursor).Limit(limit).CreatedAfter(createdAfter).CreatedBefore(createdBefore).Type_(type_).IncludeData(includeData).Execute()
+	resp, r, err := apiClient.ClientAPI.ListSubmissions(context.Background()).Cursor(cursor).Limit(limit).CreatedAfter(createdAfter).CreatedBefore(createdBefore).Type_(type_).IncludeData(includeData).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.ListSubmissions``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ListSubmissions``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `ListSubmissions`: ListSubmissionsResponse
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.ListSubmissions`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.ListSubmissions`: %v\n", resp)
 }
 ```
 
@@ -2052,7 +1974,7 @@ Other parameters are passed through a pointer to a apiListSubmissionsRequest str
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **cursor** | **string** |  | 
- **limit** | **float32** |  | 
+ **limit** | **int32** |  | 
  **createdAfter** | **string** |  | 
  **createdBefore** | **string** |  | 
  **type_** | **string** |  | 
@@ -2082,6 +2004,8 @@ Name | Type | Description  | Notes
 
 List all submissions for a given template
 
+
+
 ### Example
 
 ```go
@@ -2097,7 +2021,7 @@ import (
 func main() {
 	templateId := "tpl_1234567890abcdef02" // string | 
 	cursor := "cursor_example" // string |  (optional)
-	limit := float32(8.14) // float32 |  (optional)
+	limit := int32(56) // int32 |  (optional)
 	createdAfter := "createdAfter_example" // string |  (optional)
 	createdBefore := "createdBefore_example" // string |  (optional)
 	type_ := "type__example" // string |  (optional)
@@ -2105,13 +2029,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.ListTemplateSubmissions(context.Background(), templateId).Cursor(cursor).Limit(limit).CreatedAfter(createdAfter).CreatedBefore(createdBefore).Type_(type_).IncludeData(includeData).Execute()
+	resp, r, err := apiClient.ClientAPI.ListTemplateSubmissions(context.Background(), templateId).Cursor(cursor).Limit(limit).CreatedAfter(createdAfter).CreatedBefore(createdBefore).Type_(type_).IncludeData(includeData).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.ListTemplateSubmissions``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ListTemplateSubmissions``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `ListTemplateSubmissions`: ListSubmissionsResponse
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.ListTemplateSubmissions`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.ListTemplateSubmissions`: %v\n", resp)
 }
 ```
 
@@ -2132,7 +2056,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **cursor** | **string** |  | 
- **limit** | **float32** |  | 
+ **limit** | **int32** |  | 
  **createdAfter** | **string** |  | 
  **createdBefore** | **string** |  | 
  **type_** | **string** |  | 
@@ -2162,6 +2086,8 @@ Name | Type | Description  | Notes
 
 Get a list of all templates
 
+
+
 ### Example
 
 ```go
@@ -2182,13 +2108,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.ListTemplates(context.Background()).Query(query).ParentFolderId(parentFolderId).Page(page).PerPage(perPage).Execute()
+	resp, r, err := apiClient.ClientAPI.ListTemplates(context.Background()).Query(query).ParentFolderId(parentFolderId).Page(page).PerPage(perPage).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.ListTemplates``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ListTemplates``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `ListTemplates`: []TemplatePreview
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.ListTemplates`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.ListTemplates`: %v\n", resp)
 }
 ```
 
@@ -2232,6 +2158,8 @@ Name | Type | Description  | Notes
 
 Move a folder
 
+
+
 ### Example
 
 ```go
@@ -2250,13 +2178,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.MoveFolderToFolder(context.Background(), folderId).Data(data).Execute()
+	resp, r, err := apiClient.ClientAPI.MoveFolderToFolder(context.Background(), folderId).Data(data).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.MoveFolderToFolder``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.MoveFolderToFolder``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `MoveFolderToFolder`: Folder
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.MoveFolderToFolder`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.MoveFolderToFolder`: %v\n", resp)
 }
 ```
 
@@ -2302,6 +2230,8 @@ Name | Type | Description  | Notes
 
 Move Template to folder
 
+
+
 ### Example
 
 ```go
@@ -2320,13 +2250,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.MoveTemplateToFolder(context.Background(), templateId).Data(data).Execute()
+	resp, r, err := apiClient.ClientAPI.MoveTemplateToFolder(context.Background(), templateId).Data(data).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.MoveTemplateToFolder``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.MoveTemplateToFolder``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `MoveTemplateToFolder`: TemplatePreview
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.MoveTemplateToFolder`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.MoveTemplateToFolder`: %v\n", resp)
 }
 ```
 
@@ -2366,11 +2296,85 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
+## PublishTemplateVersion
+
+> TemplatePublishVersionResponse PublishTemplateVersion(ctx, templateId).Data(data).Execute()
+
+Publish a template version
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+)
+
+func main() {
+	templateId := "tpl_1234567890abcdef01" // string | 
+	data := *openapiclient.NewPublishVersionData("VersionType_example") // PublishVersionData | 
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.PublishTemplateVersion(context.Background(), templateId).Data(data).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.PublishTemplateVersion``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `PublishTemplateVersion`: TemplatePublishVersionResponse
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.PublishTemplateVersion`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**templateId** | **string** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiPublishTemplateVersionRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **data** | [**PublishVersionData**](PublishVersionData.md) |  | 
+
+### Return type
+
+[**TemplatePublishVersionResponse**](TemplatePublishVersionResponse.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## RenameFolder
 
 > Folder RenameFolder(ctx, folderId).Data(data).Execute()
 
 Rename a folder
+
+
 
 ### Example
 
@@ -2390,13 +2394,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.RenameFolder(context.Background(), folderId).Data(data).Execute()
+	resp, r, err := apiClient.ClientAPI.RenameFolder(context.Background(), folderId).Data(data).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.RenameFolder``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.RenameFolder``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `RenameFolder`: Folder
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.RenameFolder`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.RenameFolder`: %v\n", resp)
 }
 ```
 
@@ -2436,11 +2440,85 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
+## RestoreTemplateVersion
+
+> SuccessErrorResponse RestoreTemplateVersion(ctx, templateId).Data(data).Execute()
+
+Restore a template version
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+)
+
+func main() {
+	templateId := "tpl_1234567890abcdef01" // string | 
+	data := *openapiclient.NewRestoreVersionData("Version_example") // RestoreVersionData | 
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.RestoreTemplateVersion(context.Background(), templateId).Data(data).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.RestoreTemplateVersion``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `RestoreTemplateVersion`: SuccessErrorResponse
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.RestoreTemplateVersion`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**templateId** | **string** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiRestoreTemplateVersionRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **data** | [**RestoreVersionData**](RestoreVersionData.md) |  | 
+
+### Return type
+
+[**SuccessErrorResponse**](SuccessErrorResponse.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## TestAuthentication
 
 > SuccessErrorResponse TestAuthentication(ctx).Execute()
 
-Test Authentication
+Test authentication
+
+
 
 ### Example
 
@@ -2458,13 +2536,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.TestAuthentication(context.Background()).Execute()
+	resp, r, err := apiClient.ClientAPI.TestAuthentication(context.Background()).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.TestAuthentication``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.TestAuthentication``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `TestAuthentication`: SuccessErrorResponse
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.TestAuthentication`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.TestAuthentication`: %v\n", resp)
 }
 ```
 
@@ -2501,6 +2579,8 @@ Other parameters are passed through a pointer to a apiTestAuthenticationRequest 
 
 Update a submission data request
 
+
+
 ### Example
 
 ```go
@@ -2519,13 +2599,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.UpdateDataRequest(context.Background(), dataRequestId).Data(data).Execute()
+	resp, r, err := apiClient.ClientAPI.UpdateDataRequest(context.Background(), dataRequestId).Data(data).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.UpdateDataRequest``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.UpdateDataRequest``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `UpdateDataRequest`: CreateSubmissionDataRequestResponse
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.UpdateDataRequest`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.UpdateDataRequest`: %v\n", resp)
 }
 ```
 
@@ -2571,6 +2651,8 @@ Name | Type | Description  | Notes
 
 Update a Template
 
+
+
 ### Example
 
 ```go
@@ -2589,13 +2671,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.PDFAPI.UpdateTemplate(context.Background(), templateId).Data(data).Execute()
+	resp, r, err := apiClient.ClientAPI.UpdateTemplate(context.Background(), templateId).Data(data).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PDFAPI.UpdateTemplate``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.UpdateTemplate``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
 	// response from `UpdateTemplate`: SuccessMultipleErrorsResponse
-	fmt.Fprintf(os.Stdout, "Response from `PDFAPI.UpdateTemplate`: %v\n", resp)
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.UpdateTemplate`: %v\n", resp)
 }
 ```
 
@@ -2616,6 +2698,152 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **data** | [**UpdateHtmlTemplate**](UpdateHtmlTemplate.md) |  | 
+
+### Return type
+
+[**SuccessMultipleErrorsResponse**](SuccessMultipleErrorsResponse.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## UpdateTemplateDocument
+
+> SuccessMultipleErrorsResponse UpdateTemplateDocument(ctx, templateId).TemplateDocument(templateDocument).TemplateName(templateName).Execute()
+
+Update a template's document with a form POST file upload
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+)
+
+func main() {
+	templateId := "tpl_1234567890abcdef01" // string | 
+	templateDocument := os.NewFile(1234, "some_file") // *os.File | 
+	templateName := "templateName_example" // string |  (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.UpdateTemplateDocument(context.Background(), templateId).TemplateDocument(templateDocument).TemplateName(templateName).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.UpdateTemplateDocument``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `UpdateTemplateDocument`: SuccessMultipleErrorsResponse
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.UpdateTemplateDocument`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**templateId** | **string** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpdateTemplateDocumentRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **templateDocument** | ***os.File** |  | 
+ **templateName** | **string** |  | 
+
+### Return type
+
+[**SuccessMultipleErrorsResponse**](SuccessMultipleErrorsResponse.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+- **Content-Type**: multipart/form-data
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## UpdateTemplateDocumentFromUpload
+
+> SuccessMultipleErrorsResponse UpdateTemplateDocumentFromUpload(ctx, templateId).Data(data).Execute()
+
+Update a template's document with a cached S3 file upload
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+)
+
+func main() {
+	templateId := "tpl_1234567890abcdef01" // string | 
+	data := *openapiclient.NewUpdatePdfTemplate(map[string]interface{}(123)) // UpdatePdfTemplate | 
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.UpdateTemplateDocumentFromUpload(context.Background(), templateId).Data(data).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.UpdateTemplateDocumentFromUpload``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `UpdateTemplateDocumentFromUpload`: SuccessMultipleErrorsResponse
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.UpdateTemplateDocumentFromUpload`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**templateId** | **string** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpdateTemplateDocumentFromUploadRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **data** | [**UpdatePdfTemplate**](UpdatePdfTemplate.md) |  | 
 
 ### Return type
 

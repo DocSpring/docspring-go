@@ -38,8 +38,14 @@ Name | Type | Description | Notes
 **SlackWebhookUrl** | **NullableString** |  | 
 **TemplateType** | **string** |  | 
 **UpdatedAt** | **NullableString** |  | 
+**VersionPublishedAt** | **NullableString** |  | 
+**Version** | **NullableString** |  | 
 **WebhookUrl** | **NullableString** |  | 
 **Demo** | **bool** |  | 
+**LatestVersion** | **NullableString** |  | 
+**LastChangedAt** | **NullableString** |  | 
+**LastChangedByType** | **NullableString** |  | 
+**LastChangedById** | **NullableString** |  | 
 **Defaults** | **map[string]interface{}** |  | 
 **FieldOrder** | **[][]float32** |  | 
 **Fields** | **map[string]interface{}** |  | 
@@ -50,12 +56,13 @@ Name | Type | Description | Notes
 **PredefinedFields** | **[]map[string]interface{}** |  | 
 **Scss** | **NullableString** |  | 
 **SharedFieldData** | **map[string]interface{}** |  | 
+**Versions** | **[]map[string]interface{}** |  | 
 
 ## Methods
 
 ### NewTemplate
 
-`func NewTemplate(addDataRequestSubmissionIdFooters bool, allowAdditionalProperties bool, description NullableString, documentFilename NullableString, documentMd5 NullableString, documentParseError bool, documentProcessed bool, documentState string, documentUrl NullableString, editableSubmissions bool, embedDomains NullableString, encryptPdfsPassword NullableString, encryptPdfs bool, expirationInterval string, expireAfter int32, expireSubmissions bool, externalPredefinedFieldsTemplateId NullableString, externalPredefinedFieldsTemplateName NullableString, firstTemplate bool, id NullableString, locked bool, mergeAuditTrailPdf bool, name NullableString, pageCount int32, pageDimensions [][]float32, parentFolderId NullableString, path NullableString, permanentDocumentUrl NullableString, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, slackWebhookUrl NullableString, templateType string, updatedAt NullableString, webhookUrl NullableString, demo bool, defaults map[string]interface{}, fieldOrder [][]float32, fields map[string]interface{}, footerHtml NullableString, headerHtml NullableString, htmlEngineOptions map[string]interface{}, html NullableString, predefinedFields []map[string]interface{}, scss NullableString, sharedFieldData map[string]interface{}, ) *Template`
+`func NewTemplate(addDataRequestSubmissionIdFooters bool, allowAdditionalProperties bool, description NullableString, documentFilename NullableString, documentMd5 NullableString, documentParseError bool, documentProcessed bool, documentState string, documentUrl NullableString, editableSubmissions bool, embedDomains NullableString, encryptPdfsPassword NullableString, encryptPdfs bool, expirationInterval string, expireAfter int32, expireSubmissions bool, externalPredefinedFieldsTemplateId NullableString, externalPredefinedFieldsTemplateName NullableString, firstTemplate bool, id NullableString, locked bool, mergeAuditTrailPdf bool, name NullableString, pageCount int32, pageDimensions [][]float32, parentFolderId NullableString, path NullableString, permanentDocumentUrl NullableString, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, slackWebhookUrl NullableString, templateType string, updatedAt NullableString, versionPublishedAt NullableString, version NullableString, webhookUrl NullableString, demo bool, latestVersion NullableString, lastChangedAt NullableString, lastChangedByType NullableString, lastChangedById NullableString, defaults map[string]interface{}, fieldOrder [][]float32, fields map[string]interface{}, footerHtml NullableString, headerHtml NullableString, htmlEngineOptions map[string]interface{}, html NullableString, predefinedFields []map[string]interface{}, scss NullableString, sharedFieldData map[string]interface{}, versions []map[string]interface{}, ) *Template`
 
 NewTemplate instantiates a new Template object
 This constructor will assign default values to properties that have it defined,
@@ -920,6 +927,66 @@ SetUpdatedAt sets UpdatedAt field to given value.
 `func (o *Template) UnsetUpdatedAt()`
 
 UnsetUpdatedAt ensures that no value is present for UpdatedAt, not even an explicit nil
+### GetVersionPublishedAt
+
+`func (o *Template) GetVersionPublishedAt() string`
+
+GetVersionPublishedAt returns the VersionPublishedAt field if non-nil, zero value otherwise.
+
+### GetVersionPublishedAtOk
+
+`func (o *Template) GetVersionPublishedAtOk() (*string, bool)`
+
+GetVersionPublishedAtOk returns a tuple with the VersionPublishedAt field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetVersionPublishedAt
+
+`func (o *Template) SetVersionPublishedAt(v string)`
+
+SetVersionPublishedAt sets VersionPublishedAt field to given value.
+
+
+### SetVersionPublishedAtNil
+
+`func (o *Template) SetVersionPublishedAtNil(b bool)`
+
+ SetVersionPublishedAtNil sets the value for VersionPublishedAt to be an explicit nil
+
+### UnsetVersionPublishedAt
+`func (o *Template) UnsetVersionPublishedAt()`
+
+UnsetVersionPublishedAt ensures that no value is present for VersionPublishedAt, not even an explicit nil
+### GetVersion
+
+`func (o *Template) GetVersion() string`
+
+GetVersion returns the Version field if non-nil, zero value otherwise.
+
+### GetVersionOk
+
+`func (o *Template) GetVersionOk() (*string, bool)`
+
+GetVersionOk returns a tuple with the Version field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetVersion
+
+`func (o *Template) SetVersion(v string)`
+
+SetVersion sets Version field to given value.
+
+
+### SetVersionNil
+
+`func (o *Template) SetVersionNil(b bool)`
+
+ SetVersionNil sets the value for Version to be an explicit nil
+
+### UnsetVersion
+`func (o *Template) UnsetVersion()`
+
+UnsetVersion ensures that no value is present for Version, not even an explicit nil
 ### GetWebhookUrl
 
 `func (o *Template) GetWebhookUrl() string`
@@ -970,6 +1037,126 @@ and a boolean to check if the value has been set.
 SetDemo sets Demo field to given value.
 
 
+### GetLatestVersion
+
+`func (o *Template) GetLatestVersion() string`
+
+GetLatestVersion returns the LatestVersion field if non-nil, zero value otherwise.
+
+### GetLatestVersionOk
+
+`func (o *Template) GetLatestVersionOk() (*string, bool)`
+
+GetLatestVersionOk returns a tuple with the LatestVersion field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetLatestVersion
+
+`func (o *Template) SetLatestVersion(v string)`
+
+SetLatestVersion sets LatestVersion field to given value.
+
+
+### SetLatestVersionNil
+
+`func (o *Template) SetLatestVersionNil(b bool)`
+
+ SetLatestVersionNil sets the value for LatestVersion to be an explicit nil
+
+### UnsetLatestVersion
+`func (o *Template) UnsetLatestVersion()`
+
+UnsetLatestVersion ensures that no value is present for LatestVersion, not even an explicit nil
+### GetLastChangedAt
+
+`func (o *Template) GetLastChangedAt() string`
+
+GetLastChangedAt returns the LastChangedAt field if non-nil, zero value otherwise.
+
+### GetLastChangedAtOk
+
+`func (o *Template) GetLastChangedAtOk() (*string, bool)`
+
+GetLastChangedAtOk returns a tuple with the LastChangedAt field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetLastChangedAt
+
+`func (o *Template) SetLastChangedAt(v string)`
+
+SetLastChangedAt sets LastChangedAt field to given value.
+
+
+### SetLastChangedAtNil
+
+`func (o *Template) SetLastChangedAtNil(b bool)`
+
+ SetLastChangedAtNil sets the value for LastChangedAt to be an explicit nil
+
+### UnsetLastChangedAt
+`func (o *Template) UnsetLastChangedAt()`
+
+UnsetLastChangedAt ensures that no value is present for LastChangedAt, not even an explicit nil
+### GetLastChangedByType
+
+`func (o *Template) GetLastChangedByType() string`
+
+GetLastChangedByType returns the LastChangedByType field if non-nil, zero value otherwise.
+
+### GetLastChangedByTypeOk
+
+`func (o *Template) GetLastChangedByTypeOk() (*string, bool)`
+
+GetLastChangedByTypeOk returns a tuple with the LastChangedByType field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetLastChangedByType
+
+`func (o *Template) SetLastChangedByType(v string)`
+
+SetLastChangedByType sets LastChangedByType field to given value.
+
+
+### SetLastChangedByTypeNil
+
+`func (o *Template) SetLastChangedByTypeNil(b bool)`
+
+ SetLastChangedByTypeNil sets the value for LastChangedByType to be an explicit nil
+
+### UnsetLastChangedByType
+`func (o *Template) UnsetLastChangedByType()`
+
+UnsetLastChangedByType ensures that no value is present for LastChangedByType, not even an explicit nil
+### GetLastChangedById
+
+`func (o *Template) GetLastChangedById() string`
+
+GetLastChangedById returns the LastChangedById field if non-nil, zero value otherwise.
+
+### GetLastChangedByIdOk
+
+`func (o *Template) GetLastChangedByIdOk() (*string, bool)`
+
+GetLastChangedByIdOk returns a tuple with the LastChangedById field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetLastChangedById
+
+`func (o *Template) SetLastChangedById(v string)`
+
+SetLastChangedById sets LastChangedById field to given value.
+
+
+### SetLastChangedByIdNil
+
+`func (o *Template) SetLastChangedByIdNil(b bool)`
+
+ SetLastChangedByIdNil sets the value for LastChangedById to be an explicit nil
+
+### UnsetLastChangedById
+`func (o *Template) UnsetLastChangedById()`
+
+UnsetLastChangedById ensures that no value is present for LastChangedById, not even an explicit nil
 ### GetDefaults
 
 `func (o *Template) GetDefaults() map[string]interface{}`
@@ -1208,6 +1395,26 @@ and a boolean to check if the value has been set.
 `func (o *Template) SetSharedFieldData(v map[string]interface{})`
 
 SetSharedFieldData sets SharedFieldData field to given value.
+
+
+### GetVersions
+
+`func (o *Template) GetVersions() []map[string]interface{}`
+
+GetVersions returns the Versions field if non-nil, zero value otherwise.
+
+### GetVersionsOk
+
+`func (o *Template) GetVersionsOk() (*[]map[string]interface{}, bool)`
+
+GetVersionsOk returns a tuple with the Versions field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetVersions
+
+`func (o *Template) SetVersions(v []map[string]interface{})`
+
+SetVersions sets Versions field to given value.
 
 
 
