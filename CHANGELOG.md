@@ -1,3 +1,7 @@
+### 3.0.1 [December 4, 2025]
+
+- Fixed go.mod module path so the package can be indexed by the Go module proxy
+
 ### 3.0.0 [September 24, 2025]
 
 - All our API clients are now 100% end-to-end tested against our real server.

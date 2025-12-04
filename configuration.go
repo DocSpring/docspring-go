@@ -89,7 +89,7 @@ type Configuration struct {
 func NewConfiguration() *Configuration {
 	cfg := &Configuration{
 		DefaultHeader:    make(map[string]string),
-		UserAgent:        "docspring-go-3.0.0",
+		UserAgent:        "docspring-go-3.0.1",
 		Debug:            false,
 		Servers:          ServerConfigurations{
 			{
