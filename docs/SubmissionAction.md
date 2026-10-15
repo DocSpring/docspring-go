@@ -10,12 +10,13 @@ Name | Type | Description | Notes
 **ActionType** | **string** |  | 
 **ActionCategory** | **string** |  | 
 **ResultData** | **map[string]interface{}** |  | 
+**ErrorMessage** | **NullableString** |  | 
 
 ## Methods
 
 ### NewSubmissionAction
 
-`func NewSubmissionAction(id NullableString, integrationId NullableString, state string, actionType string, actionCategory string, resultData map[string]interface{}, ) *SubmissionAction`
+`func NewSubmissionAction(id NullableString, integrationId NullableString, state string, actionType string, actionCategory string, resultData map[string]interface{}, errorMessage NullableString, ) *SubmissionAction`
 
 NewSubmissionAction instantiates a new SubmissionAction object
 This constructor will assign default values to properties that have it defined,
@@ -170,6 +171,36 @@ and a boolean to check if the value has been set.
 SetResultData sets ResultData field to given value.
 
 
+### GetErrorMessage
+
+`func (o *SubmissionAction) GetErrorMessage() string`
+
+GetErrorMessage returns the ErrorMessage field if non-nil, zero value otherwise.
+
+### GetErrorMessageOk
+
+`func (o *SubmissionAction) GetErrorMessageOk() (*string, bool)`
+
+GetErrorMessageOk returns a tuple with the ErrorMessage field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetErrorMessage
+
+`func (o *SubmissionAction) SetErrorMessage(v string)`
+
+SetErrorMessage sets ErrorMessage field to given value.
+
+
+### SetErrorMessageNil
+
+`func (o *SubmissionAction) SetErrorMessageNil(b bool)`
+
+ SetErrorMessageNil sets the value for ErrorMessage to be an explicit nil
+
+### UnsetErrorMessage
+`func (o *SubmissionAction) UnsetErrorMessage()`
+
+UnsetErrorMessage ensures that no value is present for ErrorMessage, not even an explicit nil
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

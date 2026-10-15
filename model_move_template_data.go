@@ -21,7 +21,8 @@ var _ MappedNullable = &MoveTemplateData{}
 
 // MoveTemplateData struct for MoveTemplateData
 type MoveTemplateData struct {
-	ParentFolderId string `json:"parent_folder_id"`
+	ParentFolderId NullableString `json:"parent_folder_id"`
+	Version *string `json:"version,omitempty"`
 }
 
 type _MoveTemplateData MoveTemplateData
@@ -30,7 +31,7 @@ type _MoveTemplateData MoveTemplateData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewMoveTemplateData(parentFolderId string) *MoveTemplateData {
+func NewMoveTemplateData(parentFolderId NullableString) *MoveTemplateData {
 	this := MoveTemplateData{}
 	this.ParentFolderId = parentFolderId
 	return &this
@@ -45,27 +46,61 @@ func NewMoveTemplateDataWithDefaults() *MoveTemplateData {
 }
 
 // GetParentFolderId returns the ParentFolderId field value
+// If the value is explicit nil, the zero value for string will be returned
 func (o *MoveTemplateData) GetParentFolderId() string {
-	if o == nil {
+	if o == nil || o.ParentFolderId.Get() == nil {
 		var ret string
 		return ret
 	}
 
-	return o.ParentFolderId
+	return *o.ParentFolderId.Get()
 }
 
 // GetParentFolderIdOk returns a tuple with the ParentFolderId field value
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *MoveTemplateData) GetParentFolderIdOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return &o.ParentFolderId, true
+	return o.ParentFolderId.Get(), o.ParentFolderId.IsSet()
 }
 
 // SetParentFolderId sets field value
 func (o *MoveTemplateData) SetParentFolderId(v string) {
-	o.ParentFolderId = v
+	o.ParentFolderId.Set(&v)
+}
+
+// GetVersion returns the Version field value if set, zero value otherwise.
+func (o *MoveTemplateData) GetVersion() string {
+	if o == nil || IsNil(o.Version) {
+		var ret string
+		return ret
+	}
+	return *o.Version
+}
+
+// GetVersionOk returns a tuple with the Version field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *MoveTemplateData) GetVersionOk() (*string, bool) {
+	if o == nil || IsNil(o.Version) {
+		return nil, false
+	}
+	return o.Version, true
+}
+
+// HasVersion returns a boolean if a field has been set.
+func (o *MoveTemplateData) HasVersion() bool {
+	if o != nil && !IsNil(o.Version) {
+		return true
+	}
+
+	return false
+}
+
+// SetVersion gets a reference to the given string and assigns it to the Version field.
+func (o *MoveTemplateData) SetVersion(v string) {
+	o.Version = &v
 }
 
 func (o MoveTemplateData) MarshalJSON() ([]byte, error) {
@@ -78,7 +113,10 @@ func (o MoveTemplateData) MarshalJSON() ([]byte, error) {
 
 func (o MoveTemplateData) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["parent_folder_id"] = o.ParentFolderId
+	toSerialize["parent_folder_id"] = o.ParentFolderId.Get()
+	if !IsNil(o.Version) {
+		toSerialize["version"] = o.Version
+	}
 	return toSerialize, nil
 }
 

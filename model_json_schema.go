@@ -21,6 +21,7 @@ var _ MappedNullable = &JsonSchema{}
 type JsonSchema struct {
 	Schema *string `json:"$schema,omitempty"`
 	Id *string `json:"id,omitempty"`
+	SchemaId *string `json:"$id,omitempty"`
 	Title *string `json:"title,omitempty"`
 	Description *string `json:"description,omitempty"`
 	Definitions map[string]interface{} `json:"definitions,omitempty"`
@@ -28,6 +29,8 @@ type JsonSchema struct {
 	Properties map[string]interface{} `json:"properties,omitempty"`
 	AdditionalPropertiesField *bool `json:"additionalProperties,omitempty"`
 	Required []string `json:"required,omitempty"`
+	Dependencies map[string]interface{} `json:"dependencies,omitempty"`
+	AllOf []map[string]interface{} `json:"allOf,omitempty"`
 }
 
 // NewJsonSchema instantiates a new JsonSchema object
@@ -109,6 +112,38 @@ func (o *JsonSchema) HasId() bool {
 // SetId gets a reference to the given string and assigns it to the Id field.
 func (o *JsonSchema) SetId(v string) {
 	o.Id = &v
+}
+
+// GetSchemaId returns the SchemaId field value if set, zero value otherwise.
+func (o *JsonSchema) GetSchemaId() string {
+	if o == nil || IsNil(o.SchemaId) {
+		var ret string
+		return ret
+	}
+	return *o.SchemaId
+}
+
+// GetSchemaIdOk returns a tuple with the SchemaId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *JsonSchema) GetSchemaIdOk() (*string, bool) {
+	if o == nil || IsNil(o.SchemaId) {
+		return nil, false
+	}
+	return o.SchemaId, true
+}
+
+// HasSchemaId returns a boolean if a field has been set.
+func (o *JsonSchema) HasSchemaId() bool {
+	if o != nil && !IsNil(o.SchemaId) {
+		return true
+	}
+
+	return false
+}
+
+// SetSchemaId gets a reference to the given string and assigns it to the SchemaId field.
+func (o *JsonSchema) SetSchemaId(v string) {
+	o.SchemaId = &v
 }
 
 // GetTitle returns the Title field value if set, zero value otherwise.
@@ -335,6 +370,70 @@ func (o *JsonSchema) SetRequired(v []string) {
 	o.Required = v
 }
 
+// GetDependencies returns the Dependencies field value if set, zero value otherwise.
+func (o *JsonSchema) GetDependencies() map[string]interface{} {
+	if o == nil || IsNil(o.Dependencies) {
+		var ret map[string]interface{}
+		return ret
+	}
+	return o.Dependencies
+}
+
+// GetDependenciesOk returns a tuple with the Dependencies field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *JsonSchema) GetDependenciesOk() (map[string]interface{}, bool) {
+	if o == nil || IsNil(o.Dependencies) {
+		return map[string]interface{}{}, false
+	}
+	return o.Dependencies, true
+}
+
+// HasDependencies returns a boolean if a field has been set.
+func (o *JsonSchema) HasDependencies() bool {
+	if o != nil && !IsNil(o.Dependencies) {
+		return true
+	}
+
+	return false
+}
+
+// SetDependencies gets a reference to the given map[string]interface{} and assigns it to the Dependencies field.
+func (o *JsonSchema) SetDependencies(v map[string]interface{}) {
+	o.Dependencies = v
+}
+
+// GetAllOf returns the AllOf field value if set, zero value otherwise.
+func (o *JsonSchema) GetAllOf() []map[string]interface{} {
+	if o == nil || IsNil(o.AllOf) {
+		var ret []map[string]interface{}
+		return ret
+	}
+	return o.AllOf
+}
+
+// GetAllOfOk returns a tuple with the AllOf field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *JsonSchema) GetAllOfOk() ([]map[string]interface{}, bool) {
+	if o == nil || IsNil(o.AllOf) {
+		return nil, false
+	}
+	return o.AllOf, true
+}
+
+// HasAllOf returns a boolean if a field has been set.
+func (o *JsonSchema) HasAllOf() bool {
+	if o != nil && !IsNil(o.AllOf) {
+		return true
+	}
+
+	return false
+}
+
+// SetAllOf gets a reference to the given []map[string]interface{} and assigns it to the AllOf field.
+func (o *JsonSchema) SetAllOf(v []map[string]interface{}) {
+	o.AllOf = v
+}
+
 func (o JsonSchema) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -350,6 +449,9 @@ func (o JsonSchema) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Id) {
 		toSerialize["id"] = o.Id
+	}
+	if !IsNil(o.SchemaId) {
+		toSerialize["$id"] = o.SchemaId
 	}
 	if !IsNil(o.Title) {
 		toSerialize["title"] = o.Title
@@ -371,6 +473,12 @@ func (o JsonSchema) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Required) {
 		toSerialize["required"] = o.Required
+	}
+	if !IsNil(o.Dependencies) {
+		toSerialize["dependencies"] = o.Dependencies
+	}
+	if !IsNil(o.AllOf) {
+		toSerialize["allOf"] = o.AllOf
 	}
 	return toSerialize, nil
 }

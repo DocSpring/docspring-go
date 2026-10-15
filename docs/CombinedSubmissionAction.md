@@ -10,12 +10,13 @@ Name | Type | Description | Notes
 **ActionType** | **NullableString** |  | 
 **ActionCategory** | **string** |  | 
 **ResultData** | **map[string]interface{}** |  | 
+**ErrorMessage** | **NullableString** |  | 
 
 ## Methods
 
 ### NewCombinedSubmissionAction
 
-`func NewCombinedSubmissionAction(id NullableString, integrationId NullableString, state string, actionType NullableString, actionCategory string, resultData map[string]interface{}, ) *CombinedSubmissionAction`
+`func NewCombinedSubmissionAction(id NullableString, integrationId NullableString, state string, actionType NullableString, actionCategory string, resultData map[string]interface{}, errorMessage NullableString, ) *CombinedSubmissionAction`
 
 NewCombinedSubmissionAction instantiates a new CombinedSubmissionAction object
 This constructor will assign default values to properties that have it defined,
@@ -180,6 +181,36 @@ and a boolean to check if the value has been set.
 SetResultData sets ResultData field to given value.
 
 
+### GetErrorMessage
+
+`func (o *CombinedSubmissionAction) GetErrorMessage() string`
+
+GetErrorMessage returns the ErrorMessage field if non-nil, zero value otherwise.
+
+### GetErrorMessageOk
+
+`func (o *CombinedSubmissionAction) GetErrorMessageOk() (*string, bool)`
+
+GetErrorMessageOk returns a tuple with the ErrorMessage field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetErrorMessage
+
+`func (o *CombinedSubmissionAction) SetErrorMessage(v string)`
+
+SetErrorMessage sets ErrorMessage field to given value.
+
+
+### SetErrorMessageNil
+
+`func (o *CombinedSubmissionAction) SetErrorMessageNil(b bool)`
+
+ SetErrorMessageNil sets the value for ErrorMessage to be an explicit nil
+
+### UnsetErrorMessage
+`func (o *CombinedSubmissionAction) UnsetErrorMessage()`
+
+UnsetErrorMessage ensures that no value is present for ErrorMessage, not even an explicit nil
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

@@ -24,6 +24,7 @@ type SubmissionPreview struct {
 	BatchId NullableString `json:"batch_id"`
 	DataRequests []SubmissionDataRequest `json:"data_requests"`
 	Editable NullableBool `json:"editable"`
+	ErrorMessage NullableString `json:"error_message"`
 	Expired bool `json:"expired"`
 	ExpiresAt NullableString `json:"expires_at"`
 	Id NullableString `json:"id"`
@@ -52,11 +53,12 @@ type _SubmissionPreview SubmissionPreview
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewSubmissionPreview(batchId NullableString, dataRequests []SubmissionDataRequest, editable NullableBool, expired bool, expiresAt NullableString, id NullableString, jsonSchemaErrors []string, metadata map[string]interface{}, password NullableString, processedAt NullableString, state string, templateId NullableString, templateType string, templateVersion NullableString, test bool, truncatedText map[string]interface{}, pdfHash NullableString, downloadUrl NullableString, permanentDownloadUrl NullableString, previewDownloadUrl NullableString, previewGeneratedAt NullableString, auditTrailDownloadUrl NullableString, actions []SubmissionAction) *SubmissionPreview {
+func NewSubmissionPreview(batchId NullableString, dataRequests []SubmissionDataRequest, editable NullableBool, errorMessage NullableString, expired bool, expiresAt NullableString, id NullableString, jsonSchemaErrors []string, metadata map[string]interface{}, password NullableString, processedAt NullableString, state string, templateId NullableString, templateType string, templateVersion NullableString, test bool, truncatedText map[string]interface{}, pdfHash NullableString, downloadUrl NullableString, permanentDownloadUrl NullableString, previewDownloadUrl NullableString, previewGeneratedAt NullableString, auditTrailDownloadUrl NullableString, actions []SubmissionAction) *SubmissionPreview {
 	this := SubmissionPreview{}
 	this.BatchId = batchId
 	this.DataRequests = dataRequests
 	this.Editable = editable
+	this.ErrorMessage = errorMessage
 	this.Expired = expired
 	this.ExpiresAt = expiresAt
 	this.Id = id
@@ -162,6 +164,32 @@ func (o *SubmissionPreview) GetEditableOk() (*bool, bool) {
 // SetEditable sets field value
 func (o *SubmissionPreview) SetEditable(v bool) {
 	o.Editable.Set(&v)
+}
+
+// GetErrorMessage returns the ErrorMessage field value
+// If the value is explicit nil, the zero value for string will be returned
+func (o *SubmissionPreview) GetErrorMessage() string {
+	if o == nil || o.ErrorMessage.Get() == nil {
+		var ret string
+		return ret
+	}
+
+	return *o.ErrorMessage.Get()
+}
+
+// GetErrorMessageOk returns a tuple with the ErrorMessage field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *SubmissionPreview) GetErrorMessageOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.ErrorMessage.Get(), o.ErrorMessage.IsSet()
+}
+
+// SetErrorMessage sets field value
+func (o *SubmissionPreview) SetErrorMessage(v string) {
+	o.ErrorMessage.Set(&v)
 }
 
 // GetExpired returns the Expired field value
@@ -685,6 +713,7 @@ func (o SubmissionPreview) ToMap() (map[string]interface{}, error) {
 	toSerialize["batch_id"] = o.BatchId.Get()
 	toSerialize["data_requests"] = o.DataRequests
 	toSerialize["editable"] = o.Editable.Get()
+	toSerialize["error_message"] = o.ErrorMessage.Get()
 	toSerialize["expired"] = o.Expired
 	toSerialize["expires_at"] = o.ExpiresAt.Get()
 	toSerialize["id"] = o.Id.Get()
@@ -720,6 +749,7 @@ func (o *SubmissionPreview) UnmarshalJSON(data []byte) (err error) {
 		"batch_id",
 		"data_requests",
 		"editable",
+		"error_message",
 		"expired",
 		"expires_at",
 		"id",

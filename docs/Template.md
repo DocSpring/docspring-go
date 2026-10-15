@@ -15,6 +15,9 @@ Name | Type | Description | Notes
 **DocumentUrl** | **NullableString** |  | 
 **EditableSubmissions** | **bool** |  | 
 **EmbedDomains** | **NullableString** |  | 
+**EmbedEditAllowSettings** | **bool** |  | 
+**EmbedEditAllowVersioning** | **bool** |  | 
+**EmbedEditAllowDocumentReplacement** | **bool** |  | 
 **EncryptPdfsPassword** | **NullableString** |  | 
 **EncryptPdfs** | **bool** |  | 
 **ExpirationInterval** | **string** |  | 
@@ -30,7 +33,7 @@ Name | Type | Description | Notes
 **PageCount** | **int32** |  | 
 **PageDimensions** | **[][]float32** |  | 
 **ParentFolderId** | **NullableString** |  | 
-**Path** | **NullableString** |  | 
+**Path** | **string** |  | 
 **PermanentDocumentUrl** | **NullableString** |  | 
 **PublicSubmissions** | **bool** |  | 
 **PublicWebForm** | **bool** |  | 
@@ -41,12 +44,17 @@ Name | Type | Description | Notes
 **VersionPublishedAt** | **NullableString** |  | 
 **Version** | **NullableString** |  | 
 **WebhookUrl** | **NullableString** |  | 
+**EmbedEditToken** | Pointer to **NullableString** |  | [optional] 
 **Demo** | **bool** |  | 
 **LatestVersion** | **NullableString** |  | 
 **LastChangedAt** | **NullableString** |  | 
 **LastChangedByType** | **NullableString** |  | 
 **LastChangedById** | **NullableString** |  | 
+**LastChangedByExternalName** | **NullableString** |  | 
+**LastChangedByExternalEmail** | **NullableString** |  | 
+**LastChangedByExternalId** | **NullableString** |  | 
 **Defaults** | **map[string]interface{}** |  | 
+**FieldDependencies** | **[]map[string]interface{}** |  | 
 **FieldOrder** | **[][]float32** |  | 
 **Fields** | **map[string]interface{}** |  | 
 **FooterHtml** | **NullableString** |  | 
@@ -56,13 +64,14 @@ Name | Type | Description | Notes
 **PredefinedFields** | **[]map[string]interface{}** |  | 
 **Scss** | **NullableString** |  | 
 **SharedFieldData** | **map[string]interface{}** |  | 
+**TemplateSchemaVersion** | **int32** |  | 
 **Versions** | **[]map[string]interface{}** |  | 
 
 ## Methods
 
 ### NewTemplate
 
-`func NewTemplate(addDataRequestSubmissionIdFooters bool, allowAdditionalProperties bool, description NullableString, documentFilename NullableString, documentMd5 NullableString, documentParseError bool, documentProcessed bool, documentState string, documentUrl NullableString, editableSubmissions bool, embedDomains NullableString, encryptPdfsPassword NullableString, encryptPdfs bool, expirationInterval string, expireAfter int32, expireSubmissions bool, externalPredefinedFieldsTemplateId NullableString, externalPredefinedFieldsTemplateName NullableString, firstTemplate bool, id NullableString, locked bool, mergeAuditTrailPdf bool, name NullableString, pageCount int32, pageDimensions [][]float32, parentFolderId NullableString, path NullableString, permanentDocumentUrl NullableString, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, slackWebhookUrl NullableString, templateType string, updatedAt NullableString, versionPublishedAt NullableString, version NullableString, webhookUrl NullableString, demo bool, latestVersion NullableString, lastChangedAt NullableString, lastChangedByType NullableString, lastChangedById NullableString, defaults map[string]interface{}, fieldOrder [][]float32, fields map[string]interface{}, footerHtml NullableString, headerHtml NullableString, htmlEngineOptions map[string]interface{}, html NullableString, predefinedFields []map[string]interface{}, scss NullableString, sharedFieldData map[string]interface{}, versions []map[string]interface{}, ) *Template`
+`func NewTemplate(addDataRequestSubmissionIdFooters bool, allowAdditionalProperties bool, description NullableString, documentFilename NullableString, documentMd5 NullableString, documentParseError bool, documentProcessed bool, documentState string, documentUrl NullableString, editableSubmissions bool, embedDomains NullableString, embedEditAllowSettings bool, embedEditAllowVersioning bool, embedEditAllowDocumentReplacement bool, encryptPdfsPassword NullableString, encryptPdfs bool, expirationInterval string, expireAfter int32, expireSubmissions bool, externalPredefinedFieldsTemplateId NullableString, externalPredefinedFieldsTemplateName NullableString, firstTemplate bool, id NullableString, locked bool, mergeAuditTrailPdf bool, name NullableString, pageCount int32, pageDimensions [][]float32, parentFolderId NullableString, path string, permanentDocumentUrl NullableString, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, slackWebhookUrl NullableString, templateType string, updatedAt NullableString, versionPublishedAt NullableString, version NullableString, webhookUrl NullableString, demo bool, latestVersion NullableString, lastChangedAt NullableString, lastChangedByType NullableString, lastChangedById NullableString, lastChangedByExternalName NullableString, lastChangedByExternalEmail NullableString, lastChangedByExternalId NullableString, defaults map[string]interface{}, fieldDependencies []map[string]interface{}, fieldOrder [][]float32, fields map[string]interface{}, footerHtml NullableString, headerHtml NullableString, htmlEngineOptions map[string]interface{}, html NullableString, predefinedFields []map[string]interface{}, scss NullableString, sharedFieldData map[string]interface{}, templateSchemaVersion int32, versions []map[string]interface{}, ) *Template`
 
 NewTemplate instantiates a new Template object
 This constructor will assign default values to properties that have it defined,
@@ -347,6 +356,66 @@ SetEmbedDomains sets EmbedDomains field to given value.
 `func (o *Template) UnsetEmbedDomains()`
 
 UnsetEmbedDomains ensures that no value is present for EmbedDomains, not even an explicit nil
+### GetEmbedEditAllowSettings
+
+`func (o *Template) GetEmbedEditAllowSettings() bool`
+
+GetEmbedEditAllowSettings returns the EmbedEditAllowSettings field if non-nil, zero value otherwise.
+
+### GetEmbedEditAllowSettingsOk
+
+`func (o *Template) GetEmbedEditAllowSettingsOk() (*bool, bool)`
+
+GetEmbedEditAllowSettingsOk returns a tuple with the EmbedEditAllowSettings field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetEmbedEditAllowSettings
+
+`func (o *Template) SetEmbedEditAllowSettings(v bool)`
+
+SetEmbedEditAllowSettings sets EmbedEditAllowSettings field to given value.
+
+
+### GetEmbedEditAllowVersioning
+
+`func (o *Template) GetEmbedEditAllowVersioning() bool`
+
+GetEmbedEditAllowVersioning returns the EmbedEditAllowVersioning field if non-nil, zero value otherwise.
+
+### GetEmbedEditAllowVersioningOk
+
+`func (o *Template) GetEmbedEditAllowVersioningOk() (*bool, bool)`
+
+GetEmbedEditAllowVersioningOk returns a tuple with the EmbedEditAllowVersioning field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetEmbedEditAllowVersioning
+
+`func (o *Template) SetEmbedEditAllowVersioning(v bool)`
+
+SetEmbedEditAllowVersioning sets EmbedEditAllowVersioning field to given value.
+
+
+### GetEmbedEditAllowDocumentReplacement
+
+`func (o *Template) GetEmbedEditAllowDocumentReplacement() bool`
+
+GetEmbedEditAllowDocumentReplacement returns the EmbedEditAllowDocumentReplacement field if non-nil, zero value otherwise.
+
+### GetEmbedEditAllowDocumentReplacementOk
+
+`func (o *Template) GetEmbedEditAllowDocumentReplacementOk() (*bool, bool)`
+
+GetEmbedEditAllowDocumentReplacementOk returns a tuple with the EmbedEditAllowDocumentReplacement field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetEmbedEditAllowDocumentReplacement
+
+`func (o *Template) SetEmbedEditAllowDocumentReplacement(v bool)`
+
+SetEmbedEditAllowDocumentReplacement sets EmbedEditAllowDocumentReplacement field to given value.
+
+
 ### GetEncryptPdfsPassword
 
 `func (o *Template) GetEncryptPdfsPassword() string`
@@ -737,16 +806,6 @@ and a boolean to check if the value has been set.
 SetPath sets Path field to given value.
 
 
-### SetPathNil
-
-`func (o *Template) SetPathNil(b bool)`
-
- SetPathNil sets the value for Path to be an explicit nil
-
-### UnsetPath
-`func (o *Template) UnsetPath()`
-
-UnsetPath ensures that no value is present for Path, not even an explicit nil
 ### GetPermanentDocumentUrl
 
 `func (o *Template) GetPermanentDocumentUrl() string`
@@ -1017,6 +1076,41 @@ SetWebhookUrl sets WebhookUrl field to given value.
 `func (o *Template) UnsetWebhookUrl()`
 
 UnsetWebhookUrl ensures that no value is present for WebhookUrl, not even an explicit nil
+### GetEmbedEditToken
+
+`func (o *Template) GetEmbedEditToken() string`
+
+GetEmbedEditToken returns the EmbedEditToken field if non-nil, zero value otherwise.
+
+### GetEmbedEditTokenOk
+
+`func (o *Template) GetEmbedEditTokenOk() (*string, bool)`
+
+GetEmbedEditTokenOk returns a tuple with the EmbedEditToken field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetEmbedEditToken
+
+`func (o *Template) SetEmbedEditToken(v string)`
+
+SetEmbedEditToken sets EmbedEditToken field to given value.
+
+### HasEmbedEditToken
+
+`func (o *Template) HasEmbedEditToken() bool`
+
+HasEmbedEditToken returns a boolean if a field has been set.
+
+### SetEmbedEditTokenNil
+
+`func (o *Template) SetEmbedEditTokenNil(b bool)`
+
+ SetEmbedEditTokenNil sets the value for EmbedEditToken to be an explicit nil
+
+### UnsetEmbedEditToken
+`func (o *Template) UnsetEmbedEditToken()`
+
+UnsetEmbedEditToken ensures that no value is present for EmbedEditToken, not even an explicit nil
 ### GetDemo
 
 `func (o *Template) GetDemo() bool`
@@ -1157,6 +1251,96 @@ SetLastChangedById sets LastChangedById field to given value.
 `func (o *Template) UnsetLastChangedById()`
 
 UnsetLastChangedById ensures that no value is present for LastChangedById, not even an explicit nil
+### GetLastChangedByExternalName
+
+`func (o *Template) GetLastChangedByExternalName() string`
+
+GetLastChangedByExternalName returns the LastChangedByExternalName field if non-nil, zero value otherwise.
+
+### GetLastChangedByExternalNameOk
+
+`func (o *Template) GetLastChangedByExternalNameOk() (*string, bool)`
+
+GetLastChangedByExternalNameOk returns a tuple with the LastChangedByExternalName field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetLastChangedByExternalName
+
+`func (o *Template) SetLastChangedByExternalName(v string)`
+
+SetLastChangedByExternalName sets LastChangedByExternalName field to given value.
+
+
+### SetLastChangedByExternalNameNil
+
+`func (o *Template) SetLastChangedByExternalNameNil(b bool)`
+
+ SetLastChangedByExternalNameNil sets the value for LastChangedByExternalName to be an explicit nil
+
+### UnsetLastChangedByExternalName
+`func (o *Template) UnsetLastChangedByExternalName()`
+
+UnsetLastChangedByExternalName ensures that no value is present for LastChangedByExternalName, not even an explicit nil
+### GetLastChangedByExternalEmail
+
+`func (o *Template) GetLastChangedByExternalEmail() string`
+
+GetLastChangedByExternalEmail returns the LastChangedByExternalEmail field if non-nil, zero value otherwise.
+
+### GetLastChangedByExternalEmailOk
+
+`func (o *Template) GetLastChangedByExternalEmailOk() (*string, bool)`
+
+GetLastChangedByExternalEmailOk returns a tuple with the LastChangedByExternalEmail field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetLastChangedByExternalEmail
+
+`func (o *Template) SetLastChangedByExternalEmail(v string)`
+
+SetLastChangedByExternalEmail sets LastChangedByExternalEmail field to given value.
+
+
+### SetLastChangedByExternalEmailNil
+
+`func (o *Template) SetLastChangedByExternalEmailNil(b bool)`
+
+ SetLastChangedByExternalEmailNil sets the value for LastChangedByExternalEmail to be an explicit nil
+
+### UnsetLastChangedByExternalEmail
+`func (o *Template) UnsetLastChangedByExternalEmail()`
+
+UnsetLastChangedByExternalEmail ensures that no value is present for LastChangedByExternalEmail, not even an explicit nil
+### GetLastChangedByExternalId
+
+`func (o *Template) GetLastChangedByExternalId() string`
+
+GetLastChangedByExternalId returns the LastChangedByExternalId field if non-nil, zero value otherwise.
+
+### GetLastChangedByExternalIdOk
+
+`func (o *Template) GetLastChangedByExternalIdOk() (*string, bool)`
+
+GetLastChangedByExternalIdOk returns a tuple with the LastChangedByExternalId field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetLastChangedByExternalId
+
+`func (o *Template) SetLastChangedByExternalId(v string)`
+
+SetLastChangedByExternalId sets LastChangedByExternalId field to given value.
+
+
+### SetLastChangedByExternalIdNil
+
+`func (o *Template) SetLastChangedByExternalIdNil(b bool)`
+
+ SetLastChangedByExternalIdNil sets the value for LastChangedByExternalId to be an explicit nil
+
+### UnsetLastChangedByExternalId
+`func (o *Template) UnsetLastChangedByExternalId()`
+
+UnsetLastChangedByExternalId ensures that no value is present for LastChangedByExternalId, not even an explicit nil
 ### GetDefaults
 
 `func (o *Template) GetDefaults() map[string]interface{}`
@@ -1175,6 +1359,26 @@ and a boolean to check if the value has been set.
 `func (o *Template) SetDefaults(v map[string]interface{})`
 
 SetDefaults sets Defaults field to given value.
+
+
+### GetFieldDependencies
+
+`func (o *Template) GetFieldDependencies() []map[string]interface{}`
+
+GetFieldDependencies returns the FieldDependencies field if non-nil, zero value otherwise.
+
+### GetFieldDependenciesOk
+
+`func (o *Template) GetFieldDependenciesOk() (*[]map[string]interface{}, bool)`
+
+GetFieldDependenciesOk returns a tuple with the FieldDependencies field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetFieldDependencies
+
+`func (o *Template) SetFieldDependencies(v []map[string]interface{})`
+
+SetFieldDependencies sets FieldDependencies field to given value.
 
 
 ### GetFieldOrder
@@ -1395,6 +1599,26 @@ and a boolean to check if the value has been set.
 `func (o *Template) SetSharedFieldData(v map[string]interface{})`
 
 SetSharedFieldData sets SharedFieldData field to given value.
+
+
+### GetTemplateSchemaVersion
+
+`func (o *Template) GetTemplateSchemaVersion() int32`
+
+GetTemplateSchemaVersion returns the TemplateSchemaVersion field if non-nil, zero value otherwise.
+
+### GetTemplateSchemaVersionOk
+
+`func (o *Template) GetTemplateSchemaVersionOk() (*int32, bool)`
+
+GetTemplateSchemaVersionOk returns a tuple with the TemplateSchemaVersion field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetTemplateSchemaVersion
+
+`func (o *Template) SetTemplateSchemaVersion(v int32)`
+
+SetTemplateSchemaVersion sets TemplateSchemaVersion field to given value.
 
 
 ### GetVersions

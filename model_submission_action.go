@@ -27,6 +27,7 @@ type SubmissionAction struct {
 	ActionType string `json:"action_type"`
 	ActionCategory string `json:"action_category"`
 	ResultData map[string]interface{} `json:"result_data"`
+	ErrorMessage NullableString `json:"error_message"`
 }
 
 type _SubmissionAction SubmissionAction
@@ -35,7 +36,7 @@ type _SubmissionAction SubmissionAction
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewSubmissionAction(id NullableString, integrationId NullableString, state string, actionType string, actionCategory string, resultData map[string]interface{}) *SubmissionAction {
+func NewSubmissionAction(id NullableString, integrationId NullableString, state string, actionType string, actionCategory string, resultData map[string]interface{}, errorMessage NullableString) *SubmissionAction {
 	this := SubmissionAction{}
 	this.Id = id
 	this.IntegrationId = integrationId
@@ -43,6 +44,7 @@ func NewSubmissionAction(id NullableString, integrationId NullableString, state 
 	this.ActionType = actionType
 	this.ActionCategory = actionCategory
 	this.ResultData = resultData
+	this.ErrorMessage = errorMessage
 	return &this
 }
 
@@ -202,6 +204,32 @@ func (o *SubmissionAction) SetResultData(v map[string]interface{}) {
 	o.ResultData = v
 }
 
+// GetErrorMessage returns the ErrorMessage field value
+// If the value is explicit nil, the zero value for string will be returned
+func (o *SubmissionAction) GetErrorMessage() string {
+	if o == nil || o.ErrorMessage.Get() == nil {
+		var ret string
+		return ret
+	}
+
+	return *o.ErrorMessage.Get()
+}
+
+// GetErrorMessageOk returns a tuple with the ErrorMessage field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *SubmissionAction) GetErrorMessageOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.ErrorMessage.Get(), o.ErrorMessage.IsSet()
+}
+
+// SetErrorMessage sets field value
+func (o *SubmissionAction) SetErrorMessage(v string) {
+	o.ErrorMessage.Set(&v)
+}
+
 func (o SubmissionAction) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -218,6 +246,7 @@ func (o SubmissionAction) ToMap() (map[string]interface{}, error) {
 	toSerialize["action_type"] = o.ActionType
 	toSerialize["action_category"] = o.ActionCategory
 	toSerialize["result_data"] = o.ResultData
+	toSerialize["error_message"] = o.ErrorMessage.Get()
 	return toSerialize, nil
 }
 
@@ -232,6 +261,7 @@ func (o *SubmissionAction) UnmarshalJSON(data []byte) (err error) {
 		"action_type",
 		"action_category",
 		"result_data",
+		"error_message",
 	}
 
 	allProperties := make(map[string]interface{})

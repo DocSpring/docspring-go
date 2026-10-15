@@ -7,6 +7,7 @@ Name | Type | Description | Notes
 **BatchId** | **NullableString** |  | 
 **DataRequests** | [**[]SubmissionDataRequest**](SubmissionDataRequest.md) |  | 
 **Editable** | **NullableBool** |  | 
+**ErrorMessage** | **NullableString** |  | 
 **Expired** | **bool** |  | 
 **ExpiresAt** | **NullableString** |  | 
 **Id** | **NullableString** |  | 
@@ -32,7 +33,7 @@ Name | Type | Description | Notes
 
 ### NewSubmissionPreview
 
-`func NewSubmissionPreview(batchId NullableString, dataRequests []SubmissionDataRequest, editable NullableBool, expired bool, expiresAt NullableString, id NullableString, jsonSchemaErrors []string, metadata map[string]interface{}, password NullableString, processedAt NullableString, state string, templateId NullableString, templateType string, templateVersion NullableString, test bool, truncatedText map[string]interface{}, pdfHash NullableString, downloadUrl NullableString, permanentDownloadUrl NullableString, previewDownloadUrl NullableString, previewGeneratedAt NullableString, auditTrailDownloadUrl NullableString, actions []SubmissionAction, ) *SubmissionPreview`
+`func NewSubmissionPreview(batchId NullableString, dataRequests []SubmissionDataRequest, editable NullableBool, errorMessage NullableString, expired bool, expiresAt NullableString, id NullableString, jsonSchemaErrors []string, metadata map[string]interface{}, password NullableString, processedAt NullableString, state string, templateId NullableString, templateType string, templateVersion NullableString, test bool, truncatedText map[string]interface{}, pdfHash NullableString, downloadUrl NullableString, permanentDownloadUrl NullableString, previewDownloadUrl NullableString, previewGeneratedAt NullableString, auditTrailDownloadUrl NullableString, actions []SubmissionAction, ) *SubmissionPreview`
 
 NewSubmissionPreview instantiates a new SubmissionPreview object
 This constructor will assign default values to properties that have it defined,
@@ -127,6 +128,36 @@ SetEditable sets Editable field to given value.
 `func (o *SubmissionPreview) UnsetEditable()`
 
 UnsetEditable ensures that no value is present for Editable, not even an explicit nil
+### GetErrorMessage
+
+`func (o *SubmissionPreview) GetErrorMessage() string`
+
+GetErrorMessage returns the ErrorMessage field if non-nil, zero value otherwise.
+
+### GetErrorMessageOk
+
+`func (o *SubmissionPreview) GetErrorMessageOk() (*string, bool)`
+
+GetErrorMessageOk returns a tuple with the ErrorMessage field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetErrorMessage
+
+`func (o *SubmissionPreview) SetErrorMessage(v string)`
+
+SetErrorMessage sets ErrorMessage field to given value.
+
+
+### SetErrorMessageNil
+
+`func (o *SubmissionPreview) SetErrorMessageNil(b bool)`
+
+ SetErrorMessageNil sets the value for ErrorMessage to be an explicit nil
+
+### UnsetErrorMessage
+`func (o *SubmissionPreview) UnsetErrorMessage()`
+
+UnsetErrorMessage ensures that no value is present for ErrorMessage, not even an explicit nil
 ### GetExpired
 
 `func (o *SubmissionPreview) GetExpired() bool`

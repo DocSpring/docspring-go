@@ -32,6 +32,9 @@ type TemplatePreview struct {
 	DocumentUrl NullableString `json:"document_url"`
 	EditableSubmissions bool `json:"editable_submissions"`
 	EmbedDomains NullableString `json:"embed_domains"`
+	EmbedEditAllowSettings bool `json:"embed_edit_allow_settings"`
+	EmbedEditAllowVersioning bool `json:"embed_edit_allow_versioning"`
+	EmbedEditAllowDocumentReplacement bool `json:"embed_edit_allow_document_replacement"`
 	EncryptPdfsPassword NullableString `json:"encrypt_pdfs_password"`
 	EncryptPdfs bool `json:"encrypt_pdfs"`
 	ExpirationInterval string `json:"expiration_interval"`
@@ -47,7 +50,7 @@ type TemplatePreview struct {
 	PageCount int32 `json:"page_count"`
 	PageDimensions [][]float32 `json:"page_dimensions"`
 	ParentFolderId NullableString `json:"parent_folder_id"`
-	Path NullableString `json:"path"`
+	Path string `json:"path"`
 	PermanentDocumentUrl NullableString `json:"permanent_document_url"`
 	PublicSubmissions bool `json:"public_submissions"`
 	PublicWebForm bool `json:"public_web_form"`
@@ -58,11 +61,15 @@ type TemplatePreview struct {
 	VersionPublishedAt NullableString `json:"version_published_at"`
 	Version NullableString `json:"version"`
 	WebhookUrl NullableString `json:"webhook_url"`
+	EmbedEditToken NullableString `json:"embed_edit_token,omitempty"`
 	Demo bool `json:"demo"`
 	LatestVersion NullableString `json:"latest_version"`
 	LastChangedAt NullableString `json:"last_changed_at"`
 	LastChangedByType NullableString `json:"last_changed_by_type"`
 	LastChangedById NullableString `json:"last_changed_by_id"`
+	LastChangedByExternalName NullableString `json:"last_changed_by_external_name"`
+	LastChangedByExternalEmail NullableString `json:"last_changed_by_external_email"`
+	LastChangedByExternalId NullableString `json:"last_changed_by_external_id"`
 }
 
 type _TemplatePreview TemplatePreview
@@ -71,7 +78,7 @@ type _TemplatePreview TemplatePreview
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewTemplatePreview(addDataRequestSubmissionIdFooters bool, allowAdditionalProperties bool, description NullableString, documentFilename NullableString, documentMd5 NullableString, documentParseError bool, documentProcessed bool, documentState string, documentUrl NullableString, editableSubmissions bool, embedDomains NullableString, encryptPdfsPassword NullableString, encryptPdfs bool, expirationInterval string, expireAfter int32, expireSubmissions bool, externalPredefinedFieldsTemplateId NullableString, externalPredefinedFieldsTemplateName NullableString, firstTemplate bool, id NullableString, locked bool, mergeAuditTrailPdf bool, name NullableString, pageCount int32, pageDimensions [][]float32, parentFolderId NullableString, path NullableString, permanentDocumentUrl NullableString, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, slackWebhookUrl NullableString, templateType string, updatedAt NullableString, versionPublishedAt NullableString, version NullableString, webhookUrl NullableString, demo bool, latestVersion NullableString, lastChangedAt NullableString, lastChangedByType NullableString, lastChangedById NullableString) *TemplatePreview {
+func NewTemplatePreview(addDataRequestSubmissionIdFooters bool, allowAdditionalProperties bool, description NullableString, documentFilename NullableString, documentMd5 NullableString, documentParseError bool, documentProcessed bool, documentState string, documentUrl NullableString, editableSubmissions bool, embedDomains NullableString, embedEditAllowSettings bool, embedEditAllowVersioning bool, embedEditAllowDocumentReplacement bool, encryptPdfsPassword NullableString, encryptPdfs bool, expirationInterval string, expireAfter int32, expireSubmissions bool, externalPredefinedFieldsTemplateId NullableString, externalPredefinedFieldsTemplateName NullableString, firstTemplate bool, id NullableString, locked bool, mergeAuditTrailPdf bool, name NullableString, pageCount int32, pageDimensions [][]float32, parentFolderId NullableString, path string, permanentDocumentUrl NullableString, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, slackWebhookUrl NullableString, templateType string, updatedAt NullableString, versionPublishedAt NullableString, version NullableString, webhookUrl NullableString, demo bool, latestVersion NullableString, lastChangedAt NullableString, lastChangedByType NullableString, lastChangedById NullableString, lastChangedByExternalName NullableString, lastChangedByExternalEmail NullableString, lastChangedByExternalId NullableString) *TemplatePreview {
 	this := TemplatePreview{}
 	this.AddDataRequestSubmissionIdFooters = addDataRequestSubmissionIdFooters
 	this.AllowAdditionalProperties = allowAdditionalProperties
@@ -84,6 +91,9 @@ func NewTemplatePreview(addDataRequestSubmissionIdFooters bool, allowAdditionalP
 	this.DocumentUrl = documentUrl
 	this.EditableSubmissions = editableSubmissions
 	this.EmbedDomains = embedDomains
+	this.EmbedEditAllowSettings = embedEditAllowSettings
+	this.EmbedEditAllowVersioning = embedEditAllowVersioning
+	this.EmbedEditAllowDocumentReplacement = embedEditAllowDocumentReplacement
 	this.EncryptPdfsPassword = encryptPdfsPassword
 	this.EncryptPdfs = encryptPdfs
 	this.ExpirationInterval = expirationInterval
@@ -115,6 +125,9 @@ func NewTemplatePreview(addDataRequestSubmissionIdFooters bool, allowAdditionalP
 	this.LastChangedAt = lastChangedAt
 	this.LastChangedByType = lastChangedByType
 	this.LastChangedById = lastChangedById
+	this.LastChangedByExternalName = lastChangedByExternalName
+	this.LastChangedByExternalEmail = lastChangedByExternalEmail
+	this.LastChangedByExternalId = lastChangedByExternalId
 	return &this
 }
 
@@ -398,6 +411,78 @@ func (o *TemplatePreview) GetEmbedDomainsOk() (*string, bool) {
 // SetEmbedDomains sets field value
 func (o *TemplatePreview) SetEmbedDomains(v string) {
 	o.EmbedDomains.Set(&v)
+}
+
+// GetEmbedEditAllowSettings returns the EmbedEditAllowSettings field value
+func (o *TemplatePreview) GetEmbedEditAllowSettings() bool {
+	if o == nil {
+		var ret bool
+		return ret
+	}
+
+	return o.EmbedEditAllowSettings
+}
+
+// GetEmbedEditAllowSettingsOk returns a tuple with the EmbedEditAllowSettings field value
+// and a boolean to check if the value has been set.
+func (o *TemplatePreview) GetEmbedEditAllowSettingsOk() (*bool, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.EmbedEditAllowSettings, true
+}
+
+// SetEmbedEditAllowSettings sets field value
+func (o *TemplatePreview) SetEmbedEditAllowSettings(v bool) {
+	o.EmbedEditAllowSettings = v
+}
+
+// GetEmbedEditAllowVersioning returns the EmbedEditAllowVersioning field value
+func (o *TemplatePreview) GetEmbedEditAllowVersioning() bool {
+	if o == nil {
+		var ret bool
+		return ret
+	}
+
+	return o.EmbedEditAllowVersioning
+}
+
+// GetEmbedEditAllowVersioningOk returns a tuple with the EmbedEditAllowVersioning field value
+// and a boolean to check if the value has been set.
+func (o *TemplatePreview) GetEmbedEditAllowVersioningOk() (*bool, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.EmbedEditAllowVersioning, true
+}
+
+// SetEmbedEditAllowVersioning sets field value
+func (o *TemplatePreview) SetEmbedEditAllowVersioning(v bool) {
+	o.EmbedEditAllowVersioning = v
+}
+
+// GetEmbedEditAllowDocumentReplacement returns the EmbedEditAllowDocumentReplacement field value
+func (o *TemplatePreview) GetEmbedEditAllowDocumentReplacement() bool {
+	if o == nil {
+		var ret bool
+		return ret
+	}
+
+	return o.EmbedEditAllowDocumentReplacement
+}
+
+// GetEmbedEditAllowDocumentReplacementOk returns a tuple with the EmbedEditAllowDocumentReplacement field value
+// and a boolean to check if the value has been set.
+func (o *TemplatePreview) GetEmbedEditAllowDocumentReplacementOk() (*bool, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.EmbedEditAllowDocumentReplacement, true
+}
+
+// SetEmbedEditAllowDocumentReplacement sets field value
+func (o *TemplatePreview) SetEmbedEditAllowDocumentReplacement(v bool) {
+	o.EmbedEditAllowDocumentReplacement = v
 }
 
 // GetEncryptPdfsPassword returns the EncryptPdfsPassword field value
@@ -775,29 +860,27 @@ func (o *TemplatePreview) SetParentFolderId(v string) {
 }
 
 // GetPath returns the Path field value
-// If the value is explicit nil, the zero value for string will be returned
 func (o *TemplatePreview) GetPath() string {
-	if o == nil || o.Path.Get() == nil {
+	if o == nil {
 		var ret string
 		return ret
 	}
 
-	return *o.Path.Get()
+	return o.Path
 }
 
 // GetPathOk returns a tuple with the Path field value
 // and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *TemplatePreview) GetPathOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return o.Path.Get(), o.Path.IsSet()
+	return &o.Path, true
 }
 
 // SetPath sets field value
 func (o *TemplatePreview) SetPath(v string) {
-	o.Path.Set(&v)
+	o.Path = v
 }
 
 // GetPermanentDocumentUrl returns the PermanentDocumentUrl field value
@@ -1054,6 +1137,48 @@ func (o *TemplatePreview) SetWebhookUrl(v string) {
 	o.WebhookUrl.Set(&v)
 }
 
+// GetEmbedEditToken returns the EmbedEditToken field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *TemplatePreview) GetEmbedEditToken() string {
+	if o == nil || IsNil(o.EmbedEditToken.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.EmbedEditToken.Get()
+}
+
+// GetEmbedEditTokenOk returns a tuple with the EmbedEditToken field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *TemplatePreview) GetEmbedEditTokenOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.EmbedEditToken.Get(), o.EmbedEditToken.IsSet()
+}
+
+// HasEmbedEditToken returns a boolean if a field has been set.
+func (o *TemplatePreview) HasEmbedEditToken() bool {
+	if o != nil && o.EmbedEditToken.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetEmbedEditToken gets a reference to the given NullableString and assigns it to the EmbedEditToken field.
+func (o *TemplatePreview) SetEmbedEditToken(v string) {
+	o.EmbedEditToken.Set(&v)
+}
+// SetEmbedEditTokenNil sets the value for EmbedEditToken to be an explicit nil
+func (o *TemplatePreview) SetEmbedEditTokenNil() {
+	o.EmbedEditToken.Set(nil)
+}
+
+// UnsetEmbedEditToken ensures that no value is present for EmbedEditToken, not even an explicit nil
+func (o *TemplatePreview) UnsetEmbedEditToken() {
+	o.EmbedEditToken.Unset()
+}
+
 // GetDemo returns the Demo field value
 func (o *TemplatePreview) GetDemo() bool {
 	if o == nil {
@@ -1182,6 +1307,84 @@ func (o *TemplatePreview) SetLastChangedById(v string) {
 	o.LastChangedById.Set(&v)
 }
 
+// GetLastChangedByExternalName returns the LastChangedByExternalName field value
+// If the value is explicit nil, the zero value for string will be returned
+func (o *TemplatePreview) GetLastChangedByExternalName() string {
+	if o == nil || o.LastChangedByExternalName.Get() == nil {
+		var ret string
+		return ret
+	}
+
+	return *o.LastChangedByExternalName.Get()
+}
+
+// GetLastChangedByExternalNameOk returns a tuple with the LastChangedByExternalName field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *TemplatePreview) GetLastChangedByExternalNameOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.LastChangedByExternalName.Get(), o.LastChangedByExternalName.IsSet()
+}
+
+// SetLastChangedByExternalName sets field value
+func (o *TemplatePreview) SetLastChangedByExternalName(v string) {
+	o.LastChangedByExternalName.Set(&v)
+}
+
+// GetLastChangedByExternalEmail returns the LastChangedByExternalEmail field value
+// If the value is explicit nil, the zero value for string will be returned
+func (o *TemplatePreview) GetLastChangedByExternalEmail() string {
+	if o == nil || o.LastChangedByExternalEmail.Get() == nil {
+		var ret string
+		return ret
+	}
+
+	return *o.LastChangedByExternalEmail.Get()
+}
+
+// GetLastChangedByExternalEmailOk returns a tuple with the LastChangedByExternalEmail field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *TemplatePreview) GetLastChangedByExternalEmailOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.LastChangedByExternalEmail.Get(), o.LastChangedByExternalEmail.IsSet()
+}
+
+// SetLastChangedByExternalEmail sets field value
+func (o *TemplatePreview) SetLastChangedByExternalEmail(v string) {
+	o.LastChangedByExternalEmail.Set(&v)
+}
+
+// GetLastChangedByExternalId returns the LastChangedByExternalId field value
+// If the value is explicit nil, the zero value for string will be returned
+func (o *TemplatePreview) GetLastChangedByExternalId() string {
+	if o == nil || o.LastChangedByExternalId.Get() == nil {
+		var ret string
+		return ret
+	}
+
+	return *o.LastChangedByExternalId.Get()
+}
+
+// GetLastChangedByExternalIdOk returns a tuple with the LastChangedByExternalId field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *TemplatePreview) GetLastChangedByExternalIdOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.LastChangedByExternalId.Get(), o.LastChangedByExternalId.IsSet()
+}
+
+// SetLastChangedByExternalId sets field value
+func (o *TemplatePreview) SetLastChangedByExternalId(v string) {
+	o.LastChangedByExternalId.Set(&v)
+}
+
 func (o TemplatePreview) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -1203,6 +1406,9 @@ func (o TemplatePreview) ToMap() (map[string]interface{}, error) {
 	toSerialize["document_url"] = o.DocumentUrl.Get()
 	toSerialize["editable_submissions"] = o.EditableSubmissions
 	toSerialize["embed_domains"] = o.EmbedDomains.Get()
+	toSerialize["embed_edit_allow_settings"] = o.EmbedEditAllowSettings
+	toSerialize["embed_edit_allow_versioning"] = o.EmbedEditAllowVersioning
+	toSerialize["embed_edit_allow_document_replacement"] = o.EmbedEditAllowDocumentReplacement
 	toSerialize["encrypt_pdfs_password"] = o.EncryptPdfsPassword.Get()
 	toSerialize["encrypt_pdfs"] = o.EncryptPdfs
 	toSerialize["expiration_interval"] = o.ExpirationInterval
@@ -1220,7 +1426,7 @@ func (o TemplatePreview) ToMap() (map[string]interface{}, error) {
 		toSerialize["page_dimensions"] = o.PageDimensions
 	}
 	toSerialize["parent_folder_id"] = o.ParentFolderId.Get()
-	toSerialize["path"] = o.Path.Get()
+	toSerialize["path"] = o.Path
 	toSerialize["permanent_document_url"] = o.PermanentDocumentUrl.Get()
 	toSerialize["public_submissions"] = o.PublicSubmissions
 	toSerialize["public_web_form"] = o.PublicWebForm
@@ -1231,11 +1437,17 @@ func (o TemplatePreview) ToMap() (map[string]interface{}, error) {
 	toSerialize["version_published_at"] = o.VersionPublishedAt.Get()
 	toSerialize["version"] = o.Version.Get()
 	toSerialize["webhook_url"] = o.WebhookUrl.Get()
+	if o.EmbedEditToken.IsSet() {
+		toSerialize["embed_edit_token"] = o.EmbedEditToken.Get()
+	}
 	toSerialize["demo"] = o.Demo
 	toSerialize["latest_version"] = o.LatestVersion.Get()
 	toSerialize["last_changed_at"] = o.LastChangedAt.Get()
 	toSerialize["last_changed_by_type"] = o.LastChangedByType.Get()
 	toSerialize["last_changed_by_id"] = o.LastChangedById.Get()
+	toSerialize["last_changed_by_external_name"] = o.LastChangedByExternalName.Get()
+	toSerialize["last_changed_by_external_email"] = o.LastChangedByExternalEmail.Get()
+	toSerialize["last_changed_by_external_id"] = o.LastChangedByExternalId.Get()
 	return toSerialize, nil
 }
 
@@ -1255,6 +1467,9 @@ func (o *TemplatePreview) UnmarshalJSON(data []byte) (err error) {
 		"document_url",
 		"editable_submissions",
 		"embed_domains",
+		"embed_edit_allow_settings",
+		"embed_edit_allow_versioning",
+		"embed_edit_allow_document_replacement",
 		"encrypt_pdfs_password",
 		"encrypt_pdfs",
 		"expiration_interval",
@@ -1286,6 +1501,9 @@ func (o *TemplatePreview) UnmarshalJSON(data []byte) (err error) {
 		"last_changed_at",
 		"last_changed_by_type",
 		"last_changed_by_id",
+		"last_changed_by_external_name",
+		"last_changed_by_external_email",
+		"last_changed_by_external_id",
 	}
 
 	allProperties := make(map[string]interface{})

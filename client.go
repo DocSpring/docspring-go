@@ -89,7 +89,7 @@ func NewClientWithBaseURL(apiTokenID, apiTokenSecret string, baseURL *string) *C
     if baseURL != nil && *baseURL != "" {
         cfg.Servers = ServerConfigurations{{URL: *baseURL, Description: "Custom server"}}
     } else {
-        envHost := os.Getenv("DOCSPRING_HOST")
+        envHost := strings.TrimSpace(os.Getenv("DOCSPRING_HOST"))
         if envHost == "" {
             // Region mapping
             region := os.Getenv("DOCSPRING_REGION")
@@ -104,11 +104,13 @@ func NewClientWithBaseURL(apiTokenID, apiTokenSecret string, baseURL *string) *C
         if envHost != "" {
             // Ensure scheme and path
             url := envHost
-            if !strings.HasPrefix(url, "http://") && !strings.HasPrefix(url, "https://") {
+            lowerURL := strings.ToLower(url)
+            if !strings.HasPrefix(lowerURL, "http://") && !strings.HasPrefix(lowerURL, "https://") {
                 url = "https://" + url
             }
-            if !strings.HasSuffix(url, "/api/v1") {
-                url = strings.TrimRight(url, "/") + "/api/v1"
+            url = strings.TrimRight(url, "/")
+            if !strings.HasSuffix(strings.ToLower(url), "/api/v1") {
+                url = url + "/api/v1"
             }
             cfg.Servers = ServerConfigurations{{URL: url, Description: "Configured server"}}
         }

@@ -15,8 +15,10 @@ Method | HTTP request | Description
 [**CreateHtmlTemplate**](ClientAPI.md#CreateHtmlTemplate) | **Post** /templates?endpoint_variant&#x3D;create_html_template | Create a new HTML template
 [**CreatePdfTemplate**](ClientAPI.md#CreatePdfTemplate) | **Post** /templates | Create a new PDF template with a form POST file upload
 [**CreatePdfTemplateFromUpload**](ClientAPI.md#CreatePdfTemplateFromUpload) | **Post** /templates?endpoint_variant&#x3D;create_template_from_cached_upload | Create a new PDF template from a cached S3 file upload
+[**CreateWebhook**](ClientAPI.md#CreateWebhook) | **Post** /webhooks | Create a webhook
 [**DeleteFolder**](ClientAPI.md#DeleteFolder) | **Delete** /folders/{folder_id} | Delete a folder
 [**DeleteTemplate**](ClientAPI.md#DeleteTemplate) | **Delete** /templates/{template_id} | Delete a template
+[**DeleteWebhook**](ClientAPI.md#DeleteWebhook) | **Delete** /webhooks/{webhook_id} | Delete a webhook
 [**ExpireCombinedSubmission**](ClientAPI.md#ExpireCombinedSubmission) | **Delete** /combined_submissions/{combined_submission_id} | Expire a combined submission
 [**ExpireSubmission**](ClientAPI.md#ExpireSubmission) | **Delete** /submissions/{submission_id} | Expire a PDF submission
 [**GeneratePdf**](ClientAPI.md#GeneratePdf) | **Post** /templates/{template_id}/submissions | Generate a PDF
@@ -28,12 +30,15 @@ Method | HTTP request | Description
 [**GetSubmission**](ClientAPI.md#GetSubmission) | **Get** /submissions/{submission_id} | Check the status of a PDF
 [**GetSubmissionBatch**](ClientAPI.md#GetSubmissionBatch) | **Get** /submissions/batches/{submission_batch_id} | Check the status of a submission batch job
 [**GetTemplate**](ClientAPI.md#GetTemplate) | **Get** /templates/{template_id} | Check the status of an uploaded template
+[**GetTemplateModelCode**](ClientAPI.md#GetTemplateModelCode) | **Get** /templates/{template_id}/model_code | Generate typed model code for a template
 [**GetTemplateSchema**](ClientAPI.md#GetTemplateSchema) | **Get** /templates/{template_id}/schema | Fetch the JSON schema for a template
+[**GetWebhook**](ClientAPI.md#GetWebhook) | **Get** /webhooks/{webhook_id} | Get a webhook
 [**ListCombinedSubmissions**](ClientAPI.md#ListCombinedSubmissions) | **Get** /combined_submissions | Get a list of all combined submissions
 [**ListFolders**](ClientAPI.md#ListFolders) | **Get** /folders/ | Get a list of all folders
 [**ListSubmissions**](ClientAPI.md#ListSubmissions) | **Get** /submissions | List all submissions
 [**ListTemplateSubmissions**](ClientAPI.md#ListTemplateSubmissions) | **Get** /templates/{template_id}/submissions | List all submissions for a given template
 [**ListTemplates**](ClientAPI.md#ListTemplates) | **Get** /templates | Get a list of all templates
+[**ListWebhooks**](ClientAPI.md#ListWebhooks) | **Get** /webhooks | Get a list of all webhooks
 [**MoveFolderToFolder**](ClientAPI.md#MoveFolderToFolder) | **Post** /folders/{folder_id}/move | Move a folder
 [**MoveTemplateToFolder**](ClientAPI.md#MoveTemplateToFolder) | **Post** /templates/{template_id}/move | Move Template to folder
 [**PublishTemplateVersion**](ClientAPI.md#PublishTemplateVersion) | **Post** /templates/{template_id}/publish_version | Publish a template version
@@ -44,6 +49,7 @@ Method | HTTP request | Description
 [**UpdateTemplate**](ClientAPI.md#UpdateTemplate) | **Put** /templates/{template_id} | Update a Template
 [**UpdateTemplateDocument**](ClientAPI.md#UpdateTemplateDocument) | **Put** /templates/{template_id}?endpoint_variant&#x3D;update_template_pdf_with_form_post | Update a template&#39;s document with a form POST file upload
 [**UpdateTemplateDocumentFromUpload**](ClientAPI.md#UpdateTemplateDocumentFromUpload) | **Put** /templates/{template_id}?endpoint_variant&#x3D;update_template_pdf_with_cached_upload | Update a template&#39;s document with a cached S3 file upload
+[**UpdateWebhook**](ClientAPI.md#UpdateWebhook) | **Put** /webhooks/{webhook_id} | Update a webhook
 
 
 
@@ -275,7 +281,7 @@ import (
 
 func main() {
 	templateId := "tpl_1234567890abcdef01" // string | 
-	options := *openapiclient.NewCopyTemplateOptions("ParentFolderId_example") // CopyTemplateOptions |  (optional)
+	options := *openapiclient.NewCopyTemplateOptions() // CopyTemplateOptions |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -807,6 +813,72 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
+## CreateWebhook
+
+> Webhook CreateWebhook(ctx).Data(data).Execute()
+
+Create a webhook
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+)
+
+func main() {
+	data := *openapiclient.NewCreateWebhookData(map[string]interface{}(123)) // CreateWebhookData | 
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.CreateWebhook(context.Background()).Data(data).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateWebhook``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `CreateWebhook`: Webhook
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.CreateWebhook`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCreateWebhookRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **data** | [**CreateWebhookData**](CreateWebhookData.md) |  | 
+
+### Return type
+
+[**Webhook**](Webhook.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## DeleteFolder
 
 > Folder DeleteFolder(ctx, folderId).Execute()
@@ -934,6 +1006,76 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**TemplateDeleteResponse**](TemplateDeleteResponse.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## DeleteWebhook
+
+> Webhook DeleteWebhook(ctx, webhookId).Execute()
+
+Delete a webhook
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+)
+
+func main() {
+	webhookId := "whk_1234567890abcdef01" // string | 
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.DeleteWebhook(context.Background(), webhookId).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.DeleteWebhook``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `DeleteWebhook`: Webhook
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.DeleteWebhook`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**webhookId** | **string** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiDeleteWebhookRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+### Return type
+
+[**Webhook**](Webhook.md)
 
 ### Authorization
 
@@ -1718,6 +1860,78 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
+## GetTemplateModelCode
+
+> TemplateModelCodeResponse GetTemplateModelCode(ctx, templateId).Lang(lang).Execute()
+
+Generate typed model code for a template
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+)
+
+func main() {
+	templateId := "tpl_1234567890abcdef01" // string | 
+	lang := "typescript" // string | The language to generate code for
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.GetTemplateModelCode(context.Background(), templateId).Lang(lang).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetTemplateModelCode``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetTemplateModelCode`: TemplateModelCodeResponse
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetTemplateModelCode`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**templateId** | **string** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetTemplateModelCodeRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **lang** | **string** | The language to generate code for | 
+
+### Return type
+
+[**TemplateModelCodeResponse**](TemplateModelCodeResponse.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## GetTemplateSchema
 
 > JsonSchema GetTemplateSchema(ctx, templateId).Execute()
@@ -1773,6 +1987,76 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**JsonSchema**](JsonSchema.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## GetWebhook
+
+> Webhook GetWebhook(ctx, webhookId).Execute()
+
+Get a webhook
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+)
+
+func main() {
+	webhookId := "whk_1234567890abcdef01" // string | 
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.GetWebhook(context.Background(), webhookId).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetWebhook``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetWebhook`: Webhook
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetWebhook`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**webhookId** | **string** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetWebhookRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+### Return type
+
+[**Webhook**](Webhook.md)
 
 ### Authorization
 
@@ -2137,6 +2421,84 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**[]TemplatePreview**](TemplatePreview.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ListWebhooks
+
+> []Webhook ListWebhooks(ctx).Page(page).PerPage(perPage).EventType(eventType).Mode(mode).TemplateId(templateId).FolderId(folderId).ApiTokenId(apiTokenId).Execute()
+
+Get a list of all webhooks
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+)
+
+func main() {
+	page := int32(56) // int32 | Default: 1 (optional)
+	perPage := int32(56) // int32 | Default: 50 (optional)
+	eventType := "submission.processed" // string | Filter by a subscribed event type (optional)
+	mode := "live" // string | Filter by mode (test or live) (optional)
+	templateId := "tpl_1234567890abcdef01" // string | Filter by a scoped template ID (optional)
+	folderId := "folderId_example" // string | Filter by a scoped folder ID (optional)
+	apiTokenId := "apiTokenId_example" // string | Filter by a scoped API token ID (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.ListWebhooks(context.Background()).Page(page).PerPage(perPage).EventType(eventType).Mode(mode).TemplateId(templateId).FolderId(folderId).ApiTokenId(apiTokenId).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ListWebhooks``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ListWebhooks`: []Webhook
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.ListWebhooks`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiListWebhooksRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **page** | **int32** | Default: 1 | 
+ **perPage** | **int32** | Default: 50 | 
+ **eventType** | **string** | Filter by a subscribed event type | 
+ **mode** | **string** | Filter by mode (test or live) | 
+ **templateId** | **string** | Filter by a scoped template ID | 
+ **folderId** | **string** | Filter by a scoped folder ID | 
+ **apiTokenId** | **string** | Filter by a scoped API token ID | 
+
+### Return type
+
+[**[]Webhook**](Webhook.md)
 
 ### Authorization
 
@@ -2848,6 +3210,78 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**SuccessMultipleErrorsResponse**](SuccessMultipleErrorsResponse.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## UpdateWebhook
+
+> Webhook UpdateWebhook(ctx, webhookId).Data(data).Execute()
+
+Update a webhook
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+)
+
+func main() {
+	webhookId := "whk_1234567890abcdef01" // string | 
+	data := *openapiclient.NewUpdateWebhookData(map[string]interface{}(123)) // UpdateWebhookData | 
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.UpdateWebhook(context.Background(), webhookId).Data(data).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.UpdateWebhook``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `UpdateWebhook`: Webhook
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.UpdateWebhook`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**webhookId** | **string** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpdateWebhookRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **data** | [**UpdateWebhookData**](UpdateWebhookData.md) |  | 
+
+### Return type
+
+[**Webhook**](Webhook.md)
 
 ### Authorization
 

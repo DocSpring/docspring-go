@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**ParentFolderId** | Pointer to **string** |  | [optional] 
+**ParentFolderId** | Pointer to **NullableString** |  | [optional] 
 
 ## Methods
 
@@ -50,6 +50,16 @@ SetParentFolderId sets ParentFolderId field to given value.
 
 HasParentFolderId returns a boolean if a field has been set.
 
+### SetParentFolderIdNil
+
+`func (o *MoveFolderData) SetParentFolderIdNil(b bool)`
+
+ SetParentFolderIdNil sets the value for ParentFolderId to be an explicit nil
+
+### UnsetParentFolderId
+`func (o *MoveFolderData) UnsetParentFolderId()`
+
+UnsetParentFolderId ensures that no value is present for ParentFolderId, not even an explicit nil
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

@@ -7,6 +7,7 @@ Name | Type | Description | Notes
 **BatchId** | **NullableString** |  | 
 **DataRequests** | [**[]SubmissionDataRequest**](SubmissionDataRequest.md) |  | 
 **Editable** | **NullableBool** |  | 
+**ErrorMessage** | **NullableString** |  | 
 **Expired** | **bool** |  | 
 **ExpiresAt** | **NullableString** |  | 
 **Id** | **NullableString** |  | 
@@ -27,15 +28,15 @@ Name | Type | Description | Notes
 **PreviewGeneratedAt** | **NullableString** |  | 
 **AuditTrailDownloadUrl** | **NullableString** |  | 
 **Actions** | [**[]SubmissionAction**](SubmissionAction.md) |  | 
-**Source** | **string** |  | 
-**Referrer** | **NullableString** |  | 
-**Data** | **map[string]interface{}** |  | 
+**Source** | Pointer to **string** |  | [optional] 
+**Referrer** | Pointer to **NullableString** |  | [optional] 
+**Data** | Pointer to **map[string]interface{}** |  | [optional] 
 
 ## Methods
 
 ### NewSubmission
 
-`func NewSubmission(batchId NullableString, dataRequests []SubmissionDataRequest, editable NullableBool, expired bool, expiresAt NullableString, id NullableString, jsonSchemaErrors []string, metadata map[string]interface{}, password NullableString, processedAt NullableString, state string, templateId NullableString, templateType string, templateVersion NullableString, test bool, truncatedText map[string]interface{}, pdfHash NullableString, downloadUrl NullableString, permanentDownloadUrl NullableString, previewDownloadUrl NullableString, previewGeneratedAt NullableString, auditTrailDownloadUrl NullableString, actions []SubmissionAction, source string, referrer NullableString, data map[string]interface{}, ) *Submission`
+`func NewSubmission(batchId NullableString, dataRequests []SubmissionDataRequest, editable NullableBool, errorMessage NullableString, expired bool, expiresAt NullableString, id NullableString, jsonSchemaErrors []string, metadata map[string]interface{}, password NullableString, processedAt NullableString, state string, templateId NullableString, templateType string, templateVersion NullableString, test bool, truncatedText map[string]interface{}, pdfHash NullableString, downloadUrl NullableString, permanentDownloadUrl NullableString, previewDownloadUrl NullableString, previewGeneratedAt NullableString, auditTrailDownloadUrl NullableString, actions []SubmissionAction, ) *Submission`
 
 NewSubmission instantiates a new Submission object
 This constructor will assign default values to properties that have it defined,
@@ -130,6 +131,36 @@ SetEditable sets Editable field to given value.
 `func (o *Submission) UnsetEditable()`
 
 UnsetEditable ensures that no value is present for Editable, not even an explicit nil
+### GetErrorMessage
+
+`func (o *Submission) GetErrorMessage() string`
+
+GetErrorMessage returns the ErrorMessage field if non-nil, zero value otherwise.
+
+### GetErrorMessageOk
+
+`func (o *Submission) GetErrorMessageOk() (*string, bool)`
+
+GetErrorMessageOk returns a tuple with the ErrorMessage field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetErrorMessage
+
+`func (o *Submission) SetErrorMessage(v string)`
+
+SetErrorMessage sets ErrorMessage field to given value.
+
+
+### SetErrorMessageNil
+
+`func (o *Submission) SetErrorMessageNil(b bool)`
+
+ SetErrorMessageNil sets the value for ErrorMessage to be an explicit nil
+
+### UnsetErrorMessage
+`func (o *Submission) UnsetErrorMessage()`
+
+UnsetErrorMessage ensures that no value is present for ErrorMessage, not even an explicit nil
 ### GetExpired
 
 `func (o *Submission) GetExpired() bool`
@@ -689,6 +720,11 @@ and a boolean to check if the value has been set.
 
 SetSource sets Source field to given value.
 
+### HasSource
+
+`func (o *Submission) HasSource() bool`
+
+HasSource returns a boolean if a field has been set.
 
 ### GetReferrer
 
@@ -709,6 +745,11 @@ and a boolean to check if the value has been set.
 
 SetReferrer sets Referrer field to given value.
 
+### HasReferrer
+
+`func (o *Submission) HasReferrer() bool`
+
+HasReferrer returns a boolean if a field has been set.
 
 ### SetReferrerNil
 
@@ -739,6 +780,11 @@ and a boolean to check if the value has been set.
 
 SetData sets Data field to given value.
 
+### HasData
+
+`func (o *Submission) HasData() bool`
+
+HasData returns a boolean if a field has been set.
 
 ### SetDataNil
 

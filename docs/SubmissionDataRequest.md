@@ -14,6 +14,7 @@ Name | Type | Description | Notes
 **State** | **string** |  | 
 **ViewedAt** | **NullableString** |  | 
 **CompletedAt** | **NullableString** |  | 
+**DeclinedAt** | **NullableString** |  | 
 **Data** | **map[string]interface{}** |  | 
 **AuthType** | **string** |  | 
 **AuthSecondFactorType** | **string** |  | 
@@ -30,7 +31,7 @@ Name | Type | Description | Notes
 
 ### NewSubmissionDataRequest
 
-`func NewSubmissionDataRequest(id NullableString, email NullableString, name NullableString, order NullableInt32, sortOrder int32, fields []string, metadata map[string]interface{}, state string, viewedAt NullableString, completedAt NullableString, data map[string]interface{}, authType string, authSecondFactorType string, authProvider NullableString, authSessionStartedAt NullableString, authSessionIdHash NullableString, authUserIdHash NullableString, authUsernameHash NullableString, authPhoneNumberHash NullableString, ipAddress NullableString, userAgent NullableString, ) *SubmissionDataRequest`
+`func NewSubmissionDataRequest(id NullableString, email NullableString, name NullableString, order NullableInt32, sortOrder int32, fields []string, metadata map[string]interface{}, state string, viewedAt NullableString, completedAt NullableString, declinedAt NullableString, data map[string]interface{}, authType string, authSecondFactorType string, authProvider NullableString, authSessionStartedAt NullableString, authSessionIdHash NullableString, authUserIdHash NullableString, authUsernameHash NullableString, authPhoneNumberHash NullableString, ipAddress NullableString, userAgent NullableString, ) *SubmissionDataRequest`
 
 NewSubmissionDataRequest instantiates a new SubmissionDataRequest object
 This constructor will assign default values to properties that have it defined,
@@ -325,6 +326,36 @@ SetCompletedAt sets CompletedAt field to given value.
 `func (o *SubmissionDataRequest) UnsetCompletedAt()`
 
 UnsetCompletedAt ensures that no value is present for CompletedAt, not even an explicit nil
+### GetDeclinedAt
+
+`func (o *SubmissionDataRequest) GetDeclinedAt() string`
+
+GetDeclinedAt returns the DeclinedAt field if non-nil, zero value otherwise.
+
+### GetDeclinedAtOk
+
+`func (o *SubmissionDataRequest) GetDeclinedAtOk() (*string, bool)`
+
+GetDeclinedAtOk returns a tuple with the DeclinedAt field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDeclinedAt
+
+`func (o *SubmissionDataRequest) SetDeclinedAt(v string)`
+
+SetDeclinedAt sets DeclinedAt field to given value.
+
+
+### SetDeclinedAtNil
+
+`func (o *SubmissionDataRequest) SetDeclinedAtNil(b bool)`
+
+ SetDeclinedAtNil sets the value for DeclinedAt to be an explicit nil
+
+### UnsetDeclinedAt
+`func (o *SubmissionDataRequest) UnsetDeclinedAt()`
+
+UnsetDeclinedAt ensures that no value is present for DeclinedAt, not even an explicit nil
 ### GetData
 
 `func (o *SubmissionDataRequest) GetData() map[string]interface{}`

@@ -5,13 +5,14 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Name** | Pointer to **string** |  | [optional] 
-**ParentFolderId** | **string** |  | 
+**ParentFolderId** | Pointer to **string** |  | [optional] 
+**Version** | Pointer to **string** |  | [optional] 
 
 ## Methods
 
 ### NewCopyTemplateOptions
 
-`func NewCopyTemplateOptions(parentFolderId string, ) *CopyTemplateOptions`
+`func NewCopyTemplateOptions() *CopyTemplateOptions`
 
 NewCopyTemplateOptions instantiates a new CopyTemplateOptions object
 This constructor will assign default values to properties that have it defined,
@@ -70,6 +71,36 @@ and a boolean to check if the value has been set.
 
 SetParentFolderId sets ParentFolderId field to given value.
 
+### HasParentFolderId
+
+`func (o *CopyTemplateOptions) HasParentFolderId() bool`
+
+HasParentFolderId returns a boolean if a field has been set.
+
+### GetVersion
+
+`func (o *CopyTemplateOptions) GetVersion() string`
+
+GetVersion returns the Version field if non-nil, zero value otherwise.
+
+### GetVersionOk
+
+`func (o *CopyTemplateOptions) GetVersionOk() (*string, bool)`
+
+GetVersionOk returns a tuple with the Version field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetVersion
+
+`func (o *CopyTemplateOptions) SetVersion(v string)`
+
+SetVersion sets Version field to given value.
+
+### HasVersion
+
+`func (o *CopyTemplateOptions) HasVersion() bool`
+
+HasVersion returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

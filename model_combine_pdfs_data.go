@@ -21,11 +21,13 @@ var _ MappedNullable = &CombinePdfsData{}
 
 // CombinePdfsData struct for CombinePdfsData
 type CombinePdfsData struct {
+	// Delete the custom files in source_pdfs once the combined PDF has been processed (they're kept if it fails). Other combined submissions can't use them after that. A test API token can't delete custom files.
 	DeleteCustomFiles *bool `json:"delete_custom_files,omitempty"`
 	ExpiresIn *int32 `json:"expires_in,omitempty"`
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
 	Password *string `json:"password,omitempty"`
 	SourcePdfs []map[string]interface{} `json:"source_pdfs"`
+	// Deprecated, and has no effect. A combined PDF is a test or live document because of its source PDFs.
 	Test *bool `json:"test,omitempty"`
 }
 

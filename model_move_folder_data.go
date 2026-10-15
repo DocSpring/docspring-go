@@ -19,7 +19,7 @@ var _ MappedNullable = &MoveFolderData{}
 
 // MoveFolderData struct for MoveFolderData
 type MoveFolderData struct {
-	ParentFolderId *string `json:"parent_folder_id,omitempty"`
+	ParentFolderId NullableString `json:"parent_folder_id,omitempty"`
 }
 
 // NewMoveFolderData instantiates a new MoveFolderData object
@@ -39,36 +39,46 @@ func NewMoveFolderDataWithDefaults() *MoveFolderData {
 	return &this
 }
 
-// GetParentFolderId returns the ParentFolderId field value if set, zero value otherwise.
+// GetParentFolderId returns the ParentFolderId field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *MoveFolderData) GetParentFolderId() string {
-	if o == nil || IsNil(o.ParentFolderId) {
+	if o == nil || IsNil(o.ParentFolderId.Get()) {
 		var ret string
 		return ret
 	}
-	return *o.ParentFolderId
+	return *o.ParentFolderId.Get()
 }
 
 // GetParentFolderIdOk returns a tuple with the ParentFolderId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *MoveFolderData) GetParentFolderIdOk() (*string, bool) {
-	if o == nil || IsNil(o.ParentFolderId) {
+	if o == nil {
 		return nil, false
 	}
-	return o.ParentFolderId, true
+	return o.ParentFolderId.Get(), o.ParentFolderId.IsSet()
 }
 
 // HasParentFolderId returns a boolean if a field has been set.
 func (o *MoveFolderData) HasParentFolderId() bool {
-	if o != nil && !IsNil(o.ParentFolderId) {
+	if o != nil && o.ParentFolderId.IsSet() {
 		return true
 	}
 
 	return false
 }
 
-// SetParentFolderId gets a reference to the given string and assigns it to the ParentFolderId field.
+// SetParentFolderId gets a reference to the given NullableString and assigns it to the ParentFolderId field.
 func (o *MoveFolderData) SetParentFolderId(v string) {
-	o.ParentFolderId = &v
+	o.ParentFolderId.Set(&v)
+}
+// SetParentFolderIdNil sets the value for ParentFolderId to be an explicit nil
+func (o *MoveFolderData) SetParentFolderIdNil() {
+	o.ParentFolderId.Set(nil)
+}
+
+// UnsetParentFolderId ensures that no value is present for ParentFolderId, not even an explicit nil
+func (o *MoveFolderData) UnsetParentFolderId() {
+	o.ParentFolderId.Unset()
 }
 
 func (o MoveFolderData) MarshalJSON() ([]byte, error) {
@@ -81,8 +91,8 @@ func (o MoveFolderData) MarshalJSON() ([]byte, error) {
 
 func (o MoveFolderData) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if !IsNil(o.ParentFolderId) {
-		toSerialize["parent_folder_id"] = o.ParentFolderId
+	if o.ParentFolderId.IsSet() {
+		toSerialize["parent_folder_id"] = o.ParentFolderId.Get()
 	}
 	return toSerialize, nil
 }

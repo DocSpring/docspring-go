@@ -24,6 +24,7 @@ type Submission struct {
 	BatchId NullableString `json:"batch_id"`
 	DataRequests []SubmissionDataRequest `json:"data_requests"`
 	Editable NullableBool `json:"editable"`
+	ErrorMessage NullableString `json:"error_message"`
 	Expired bool `json:"expired"`
 	ExpiresAt NullableString `json:"expires_at"`
 	Id NullableString `json:"id"`
@@ -44,9 +45,9 @@ type Submission struct {
 	PreviewGeneratedAt NullableString `json:"preview_generated_at"`
 	AuditTrailDownloadUrl NullableString `json:"audit_trail_download_url"`
 	Actions []SubmissionAction `json:"actions"`
-	Source string `json:"source"`
-	Referrer NullableString `json:"referrer"`
-	Data map[string]interface{} `json:"data"`
+	Source *string `json:"source,omitempty"`
+	Referrer NullableString `json:"referrer,omitempty"`
+	Data map[string]interface{} `json:"data,omitempty"`
 }
 
 type _Submission Submission
@@ -55,11 +56,12 @@ type _Submission Submission
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewSubmission(batchId NullableString, dataRequests []SubmissionDataRequest, editable NullableBool, expired bool, expiresAt NullableString, id NullableString, jsonSchemaErrors []string, metadata map[string]interface{}, password NullableString, processedAt NullableString, state string, templateId NullableString, templateType string, templateVersion NullableString, test bool, truncatedText map[string]interface{}, pdfHash NullableString, downloadUrl NullableString, permanentDownloadUrl NullableString, previewDownloadUrl NullableString, previewGeneratedAt NullableString, auditTrailDownloadUrl NullableString, actions []SubmissionAction, source string, referrer NullableString, data map[string]interface{}) *Submission {
+func NewSubmission(batchId NullableString, dataRequests []SubmissionDataRequest, editable NullableBool, errorMessage NullableString, expired bool, expiresAt NullableString, id NullableString, jsonSchemaErrors []string, metadata map[string]interface{}, password NullableString, processedAt NullableString, state string, templateId NullableString, templateType string, templateVersion NullableString, test bool, truncatedText map[string]interface{}, pdfHash NullableString, downloadUrl NullableString, permanentDownloadUrl NullableString, previewDownloadUrl NullableString, previewGeneratedAt NullableString, auditTrailDownloadUrl NullableString, actions []SubmissionAction) *Submission {
 	this := Submission{}
 	this.BatchId = batchId
 	this.DataRequests = dataRequests
 	this.Editable = editable
+	this.ErrorMessage = errorMessage
 	this.Expired = expired
 	this.ExpiresAt = expiresAt
 	this.Id = id
@@ -80,9 +82,6 @@ func NewSubmission(batchId NullableString, dataRequests []SubmissionDataRequest,
 	this.PreviewGeneratedAt = previewGeneratedAt
 	this.AuditTrailDownloadUrl = auditTrailDownloadUrl
 	this.Actions = actions
-	this.Source = source
-	this.Referrer = referrer
-	this.Data = data
 	return &this
 }
 
@@ -168,6 +167,32 @@ func (o *Submission) GetEditableOk() (*bool, bool) {
 // SetEditable sets field value
 func (o *Submission) SetEditable(v bool) {
 	o.Editable.Set(&v)
+}
+
+// GetErrorMessage returns the ErrorMessage field value
+// If the value is explicit nil, the zero value for string will be returned
+func (o *Submission) GetErrorMessage() string {
+	if o == nil || o.ErrorMessage.Get() == nil {
+		var ret string
+		return ret
+	}
+
+	return *o.ErrorMessage.Get()
+}
+
+// GetErrorMessageOk returns a tuple with the ErrorMessage field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *Submission) GetErrorMessageOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.ErrorMessage.Get(), o.ErrorMessage.IsSet()
+}
+
+// SetErrorMessage sets field value
+func (o *Submission) SetErrorMessage(v string) {
+	o.ErrorMessage.Set(&v)
 }
 
 // GetExpired returns the Expired field value
@@ -678,42 +703,48 @@ func (o *Submission) SetActions(v []SubmissionAction) {
 	o.Actions = v
 }
 
-// GetSource returns the Source field value
+// GetSource returns the Source field value if set, zero value otherwise.
 func (o *Submission) GetSource() string {
-	if o == nil {
+	if o == nil || IsNil(o.Source) {
 		var ret string
 		return ret
 	}
-
-	return o.Source
+	return *o.Source
 }
 
-// GetSourceOk returns a tuple with the Source field value
+// GetSourceOk returns a tuple with the Source field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Submission) GetSourceOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Source) {
 		return nil, false
 	}
-	return &o.Source, true
+	return o.Source, true
 }
 
-// SetSource sets field value
+// HasSource returns a boolean if a field has been set.
+func (o *Submission) HasSource() bool {
+	if o != nil && !IsNil(o.Source) {
+		return true
+	}
+
+	return false
+}
+
+// SetSource gets a reference to the given string and assigns it to the Source field.
 func (o *Submission) SetSource(v string) {
-	o.Source = v
+	o.Source = &v
 }
 
-// GetReferrer returns the Referrer field value
-// If the value is explicit nil, the zero value for string will be returned
+// GetReferrer returns the Referrer field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *Submission) GetReferrer() string {
-	if o == nil || o.Referrer.Get() == nil {
+	if o == nil || IsNil(o.Referrer.Get()) {
 		var ret string
 		return ret
 	}
-
 	return *o.Referrer.Get()
 }
 
-// GetReferrerOk returns a tuple with the Referrer field value
+// GetReferrerOk returns a tuple with the Referrer field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *Submission) GetReferrerOk() (*string, bool) {
@@ -723,23 +754,39 @@ func (o *Submission) GetReferrerOk() (*string, bool) {
 	return o.Referrer.Get(), o.Referrer.IsSet()
 }
 
-// SetReferrer sets field value
+// HasReferrer returns a boolean if a field has been set.
+func (o *Submission) HasReferrer() bool {
+	if o != nil && o.Referrer.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetReferrer gets a reference to the given NullableString and assigns it to the Referrer field.
 func (o *Submission) SetReferrer(v string) {
 	o.Referrer.Set(&v)
 }
+// SetReferrerNil sets the value for Referrer to be an explicit nil
+func (o *Submission) SetReferrerNil() {
+	o.Referrer.Set(nil)
+}
 
-// GetData returns the Data field value
-// If the value is explicit nil, the zero value for map[string]interface{} will be returned
+// UnsetReferrer ensures that no value is present for Referrer, not even an explicit nil
+func (o *Submission) UnsetReferrer() {
+	o.Referrer.Unset()
+}
+
+// GetData returns the Data field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *Submission) GetData() map[string]interface{} {
 	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
-
 	return o.Data
 }
 
-// GetDataOk returns a tuple with the Data field value
+// GetDataOk returns a tuple with the Data field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *Submission) GetDataOk() (map[string]interface{}, bool) {
@@ -749,7 +796,16 @@ func (o *Submission) GetDataOk() (map[string]interface{}, bool) {
 	return o.Data, true
 }
 
-// SetData sets field value
+// HasData returns a boolean if a field has been set.
+func (o *Submission) HasData() bool {
+	if o != nil && !IsNil(o.Data) {
+		return true
+	}
+
+	return false
+}
+
+// SetData gets a reference to the given map[string]interface{} and assigns it to the Data field.
 func (o *Submission) SetData(v map[string]interface{}) {
 	o.Data = v
 }
@@ -767,6 +823,7 @@ func (o Submission) ToMap() (map[string]interface{}, error) {
 	toSerialize["batch_id"] = o.BatchId.Get()
 	toSerialize["data_requests"] = o.DataRequests
 	toSerialize["editable"] = o.Editable.Get()
+	toSerialize["error_message"] = o.ErrorMessage.Get()
 	toSerialize["expired"] = o.Expired
 	toSerialize["expires_at"] = o.ExpiresAt.Get()
 	toSerialize["id"] = o.Id.Get()
@@ -791,8 +848,12 @@ func (o Submission) ToMap() (map[string]interface{}, error) {
 	toSerialize["preview_generated_at"] = o.PreviewGeneratedAt.Get()
 	toSerialize["audit_trail_download_url"] = o.AuditTrailDownloadUrl.Get()
 	toSerialize["actions"] = o.Actions
-	toSerialize["source"] = o.Source
-	toSerialize["referrer"] = o.Referrer.Get()
+	if !IsNil(o.Source) {
+		toSerialize["source"] = o.Source
+	}
+	if o.Referrer.IsSet() {
+		toSerialize["referrer"] = o.Referrer.Get()
+	}
 	if o.Data != nil {
 		toSerialize["data"] = o.Data
 	}
@@ -807,6 +868,7 @@ func (o *Submission) UnmarshalJSON(data []byte) (err error) {
 		"batch_id",
 		"data_requests",
 		"editable",
+		"error_message",
 		"expired",
 		"expires_at",
 		"id",
@@ -827,9 +889,6 @@ func (o *Submission) UnmarshalJSON(data []byte) (err error) {
 		"preview_generated_at",
 		"audit_trail_download_url",
 		"actions",
-		"source",
-		"referrer",
-		"data",
 	}
 
 	allProperties := make(map[string]interface{})

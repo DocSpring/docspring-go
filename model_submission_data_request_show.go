@@ -31,6 +31,7 @@ type SubmissionDataRequestShow struct {
 	State string `json:"state"`
 	ViewedAt NullableString `json:"viewed_at"`
 	CompletedAt NullableString `json:"completed_at"`
+	DeclinedAt NullableString `json:"declined_at"`
 	Data map[string]interface{} `json:"data"`
 	AuthType string `json:"auth_type"`
 	AuthSecondFactorType string `json:"auth_second_factor_type"`
@@ -51,7 +52,7 @@ type _SubmissionDataRequestShow SubmissionDataRequestShow
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewSubmissionDataRequestShow(id NullableString, email NullableString, name NullableString, order NullableInt32, sortOrder int32, fields []string, metadata map[string]interface{}, state string, viewedAt NullableString, completedAt NullableString, data map[string]interface{}, authType string, authSecondFactorType string, authProvider NullableString, authSessionStartedAt NullableString, authSessionIdHash NullableString, authUserIdHash NullableString, authUsernameHash NullableString, authPhoneNumberHash NullableString, ipAddress NullableString, userAgent NullableString, submissionId NullableString) *SubmissionDataRequestShow {
+func NewSubmissionDataRequestShow(id NullableString, email NullableString, name NullableString, order NullableInt32, sortOrder int32, fields []string, metadata map[string]interface{}, state string, viewedAt NullableString, completedAt NullableString, declinedAt NullableString, data map[string]interface{}, authType string, authSecondFactorType string, authProvider NullableString, authSessionStartedAt NullableString, authSessionIdHash NullableString, authUserIdHash NullableString, authUsernameHash NullableString, authPhoneNumberHash NullableString, ipAddress NullableString, userAgent NullableString, submissionId NullableString) *SubmissionDataRequestShow {
 	this := SubmissionDataRequestShow{}
 	this.Id = id
 	this.Email = email
@@ -63,6 +64,7 @@ func NewSubmissionDataRequestShow(id NullableString, email NullableString, name 
 	this.State = state
 	this.ViewedAt = viewedAt
 	this.CompletedAt = completedAt
+	this.DeclinedAt = declinedAt
 	this.Data = data
 	this.AuthType = authType
 	this.AuthSecondFactorType = authSecondFactorType
@@ -340,6 +342,32 @@ func (o *SubmissionDataRequestShow) GetCompletedAtOk() (*string, bool) {
 // SetCompletedAt sets field value
 func (o *SubmissionDataRequestShow) SetCompletedAt(v string) {
 	o.CompletedAt.Set(&v)
+}
+
+// GetDeclinedAt returns the DeclinedAt field value
+// If the value is explicit nil, the zero value for string will be returned
+func (o *SubmissionDataRequestShow) GetDeclinedAt() string {
+	if o == nil || o.DeclinedAt.Get() == nil {
+		var ret string
+		return ret
+	}
+
+	return *o.DeclinedAt.Get()
+}
+
+// GetDeclinedAtOk returns a tuple with the DeclinedAt field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *SubmissionDataRequestShow) GetDeclinedAtOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.DeclinedAt.Get(), o.DeclinedAt.IsSet()
+}
+
+// SetDeclinedAt sets field value
+func (o *SubmissionDataRequestShow) SetDeclinedAt(v string) {
+	o.DeclinedAt.Set(&v)
 }
 
 // GetData returns the Data field value
@@ -674,6 +702,7 @@ func (o SubmissionDataRequestShow) ToMap() (map[string]interface{}, error) {
 	toSerialize["state"] = o.State
 	toSerialize["viewed_at"] = o.ViewedAt.Get()
 	toSerialize["completed_at"] = o.CompletedAt.Get()
+	toSerialize["declined_at"] = o.DeclinedAt.Get()
 	if o.Data != nil {
 		toSerialize["data"] = o.Data
 	}
@@ -706,6 +735,7 @@ func (o *SubmissionDataRequestShow) UnmarshalJSON(data []byte) (err error) {
 		"state",
 		"viewed_at",
 		"completed_at",
+		"declined_at",
 		"data",
 		"auth_type",
 		"auth_second_factor_type",

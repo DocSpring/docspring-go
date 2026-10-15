@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Schema** | Pointer to **string** |  | [optional] 
 **Id** | Pointer to **string** |  | [optional] 
+**SchemaId** | Pointer to **string** |  | [optional] 
 **Title** | Pointer to **string** |  | [optional] 
 **Description** | Pointer to **string** |  | [optional] 
 **Definitions** | Pointer to **map[string]interface{}** |  | [optional] 
@@ -13,6 +14,8 @@ Name | Type | Description | Notes
 **Properties** | Pointer to **map[string]interface{}** |  | [optional] 
 **AdditionalPropertiesField** | Pointer to **bool** |  | [optional] 
 **Required** | Pointer to **[]string** |  | [optional] 
+**Dependencies** | Pointer to **map[string]interface{}** |  | [optional] 
+**AllOf** | Pointer to **[]map[string]interface{}** |  | [optional] 
 
 ## Methods
 
@@ -82,6 +85,31 @@ SetId sets Id field to given value.
 `func (o *JsonSchema) HasId() bool`
 
 HasId returns a boolean if a field has been set.
+
+### GetSchemaId
+
+`func (o *JsonSchema) GetSchemaId() string`
+
+GetSchemaId returns the SchemaId field if non-nil, zero value otherwise.
+
+### GetSchemaIdOk
+
+`func (o *JsonSchema) GetSchemaIdOk() (*string, bool)`
+
+GetSchemaIdOk returns a tuple with the SchemaId field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSchemaId
+
+`func (o *JsonSchema) SetSchemaId(v string)`
+
+SetSchemaId sets SchemaId field to given value.
+
+### HasSchemaId
+
+`func (o *JsonSchema) HasSchemaId() bool`
+
+HasSchemaId returns a boolean if a field has been set.
 
 ### GetTitle
 
@@ -257,6 +285,56 @@ SetRequired sets Required field to given value.
 `func (o *JsonSchema) HasRequired() bool`
 
 HasRequired returns a boolean if a field has been set.
+
+### GetDependencies
+
+`func (o *JsonSchema) GetDependencies() map[string]interface{}`
+
+GetDependencies returns the Dependencies field if non-nil, zero value otherwise.
+
+### GetDependenciesOk
+
+`func (o *JsonSchema) GetDependenciesOk() (*map[string]interface{}, bool)`
+
+GetDependenciesOk returns a tuple with the Dependencies field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDependencies
+
+`func (o *JsonSchema) SetDependencies(v map[string]interface{})`
+
+SetDependencies sets Dependencies field to given value.
+
+### HasDependencies
+
+`func (o *JsonSchema) HasDependencies() bool`
+
+HasDependencies returns a boolean if a field has been set.
+
+### GetAllOf
+
+`func (o *JsonSchema) GetAllOf() []map[string]interface{}`
+
+GetAllOf returns the AllOf field if non-nil, zero value otherwise.
+
+### GetAllOfOk
+
+`func (o *JsonSchema) GetAllOfOk() (*[]map[string]interface{}, bool)`
+
+GetAllOfOk returns a tuple with the AllOf field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetAllOf
+
+`func (o *JsonSchema) SetAllOf(v []map[string]interface{})`
+
+SetAllOf sets AllOf field to given value.
+
+### HasAllOf
+
+`func (o *JsonSchema) HasAllOf() bool`
+
+HasAllOf returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

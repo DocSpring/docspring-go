@@ -162,6 +162,18 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
+	t.Run("Test ClientAPIService CreateWebhook", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		resp, httpRes, err := apiClient.ClientAPI.CreateWebhook(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
 	t.Run("Test ClientAPIService DeleteFolder", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
@@ -183,6 +195,20 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 		var templateId string
 
 		resp, httpRes, err := apiClient.ClientAPI.DeleteTemplate(context.Background(), templateId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService DeleteWebhook", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var webhookId string
+
+		resp, httpRes, err := apiClient.ClientAPI.DeleteWebhook(context.Background(), webhookId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -342,6 +368,20 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
+	t.Run("Test ClientAPIService GetTemplateModelCode", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var templateId string
+
+		resp, httpRes, err := apiClient.ClientAPI.GetTemplateModelCode(context.Background(), templateId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
 	t.Run("Test ClientAPIService GetTemplateSchema", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
@@ -349,6 +389,20 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 		var templateId string
 
 		resp, httpRes, err := apiClient.ClientAPI.GetTemplateSchema(context.Background(), templateId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService GetWebhook", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var webhookId string
+
+		resp, httpRes, err := apiClient.ClientAPI.GetWebhook(context.Background(), webhookId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -411,6 +465,18 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 		t.Skip("skip test")  // remove to run test
 
 		resp, httpRes, err := apiClient.ClientAPI.ListTemplates(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService ListWebhooks", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		resp, httpRes, err := apiClient.ClientAPI.ListWebhooks(context.Background()).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -549,6 +615,20 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 		var templateId string
 
 		resp, httpRes, err := apiClient.ClientAPI.UpdateTemplateDocumentFromUpload(context.Background(), templateId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService UpdateWebhook", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var webhookId string
+
+		resp, httpRes, err := apiClient.ClientAPI.UpdateWebhook(context.Background(), webhookId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)

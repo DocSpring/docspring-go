@@ -15,6 +15,9 @@ Name | Type | Description | Notes
 **DocumentUrl** | **NullableString** |  | 
 **EditableSubmissions** | **bool** |  | 
 **EmbedDomains** | **NullableString** |  | 
+**EmbedEditAllowSettings** | **bool** |  | 
+**EmbedEditAllowVersioning** | **bool** |  | 
+**EmbedEditAllowDocumentReplacement** | **bool** |  | 
 **EncryptPdfsPassword** | **NullableString** |  | 
 **EncryptPdfs** | **bool** |  | 
 **ExpirationInterval** | **string** |  | 
@@ -30,7 +33,7 @@ Name | Type | Description | Notes
 **PageCount** | **int32** |  | 
 **PageDimensions** | **[][]float32** |  | 
 **ParentFolderId** | **NullableString** |  | 
-**Path** | **NullableString** |  | 
+**Path** | **string** |  | 
 **PermanentDocumentUrl** | **NullableString** |  | 
 **PublicSubmissions** | **bool** |  | 
 **PublicWebForm** | **bool** |  | 
@@ -41,17 +44,21 @@ Name | Type | Description | Notes
 **VersionPublishedAt** | **NullableString** |  | 
 **Version** | **NullableString** |  | 
 **WebhookUrl** | **NullableString** |  | 
+**EmbedEditToken** | Pointer to **NullableString** |  | [optional] 
 **Demo** | **bool** |  | 
 **LatestVersion** | **NullableString** |  | 
 **LastChangedAt** | **NullableString** |  | 
 **LastChangedByType** | **NullableString** |  | 
 **LastChangedById** | **NullableString** |  | 
+**LastChangedByExternalName** | **NullableString** |  | 
+**LastChangedByExternalEmail** | **NullableString** |  | 
+**LastChangedByExternalId** | **NullableString** |  | 
 
 ## Methods
 
 ### NewTemplatePreview
 
-`func NewTemplatePreview(addDataRequestSubmissionIdFooters bool, allowAdditionalProperties bool, description NullableString, documentFilename NullableString, documentMd5 NullableString, documentParseError bool, documentProcessed bool, documentState string, documentUrl NullableString, editableSubmissions bool, embedDomains NullableString, encryptPdfsPassword NullableString, encryptPdfs bool, expirationInterval string, expireAfter int32, expireSubmissions bool, externalPredefinedFieldsTemplateId NullableString, externalPredefinedFieldsTemplateName NullableString, firstTemplate bool, id NullableString, locked bool, mergeAuditTrailPdf bool, name NullableString, pageCount int32, pageDimensions [][]float32, parentFolderId NullableString, path NullableString, permanentDocumentUrl NullableString, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, slackWebhookUrl NullableString, templateType string, updatedAt NullableString, versionPublishedAt NullableString, version NullableString, webhookUrl NullableString, demo bool, latestVersion NullableString, lastChangedAt NullableString, lastChangedByType NullableString, lastChangedById NullableString, ) *TemplatePreview`
+`func NewTemplatePreview(addDataRequestSubmissionIdFooters bool, allowAdditionalProperties bool, description NullableString, documentFilename NullableString, documentMd5 NullableString, documentParseError bool, documentProcessed bool, documentState string, documentUrl NullableString, editableSubmissions bool, embedDomains NullableString, embedEditAllowSettings bool, embedEditAllowVersioning bool, embedEditAllowDocumentReplacement bool, encryptPdfsPassword NullableString, encryptPdfs bool, expirationInterval string, expireAfter int32, expireSubmissions bool, externalPredefinedFieldsTemplateId NullableString, externalPredefinedFieldsTemplateName NullableString, firstTemplate bool, id NullableString, locked bool, mergeAuditTrailPdf bool, name NullableString, pageCount int32, pageDimensions [][]float32, parentFolderId NullableString, path string, permanentDocumentUrl NullableString, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, slackWebhookUrl NullableString, templateType string, updatedAt NullableString, versionPublishedAt NullableString, version NullableString, webhookUrl NullableString, demo bool, latestVersion NullableString, lastChangedAt NullableString, lastChangedByType NullableString, lastChangedById NullableString, lastChangedByExternalName NullableString, lastChangedByExternalEmail NullableString, lastChangedByExternalId NullableString, ) *TemplatePreview`
 
 NewTemplatePreview instantiates a new TemplatePreview object
 This constructor will assign default values to properties that have it defined,
@@ -336,6 +343,66 @@ SetEmbedDomains sets EmbedDomains field to given value.
 `func (o *TemplatePreview) UnsetEmbedDomains()`
 
 UnsetEmbedDomains ensures that no value is present for EmbedDomains, not even an explicit nil
+### GetEmbedEditAllowSettings
+
+`func (o *TemplatePreview) GetEmbedEditAllowSettings() bool`
+
+GetEmbedEditAllowSettings returns the EmbedEditAllowSettings field if non-nil, zero value otherwise.
+
+### GetEmbedEditAllowSettingsOk
+
+`func (o *TemplatePreview) GetEmbedEditAllowSettingsOk() (*bool, bool)`
+
+GetEmbedEditAllowSettingsOk returns a tuple with the EmbedEditAllowSettings field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetEmbedEditAllowSettings
+
+`func (o *TemplatePreview) SetEmbedEditAllowSettings(v bool)`
+
+SetEmbedEditAllowSettings sets EmbedEditAllowSettings field to given value.
+
+
+### GetEmbedEditAllowVersioning
+
+`func (o *TemplatePreview) GetEmbedEditAllowVersioning() bool`
+
+GetEmbedEditAllowVersioning returns the EmbedEditAllowVersioning field if non-nil, zero value otherwise.
+
+### GetEmbedEditAllowVersioningOk
+
+`func (o *TemplatePreview) GetEmbedEditAllowVersioningOk() (*bool, bool)`
+
+GetEmbedEditAllowVersioningOk returns a tuple with the EmbedEditAllowVersioning field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetEmbedEditAllowVersioning
+
+`func (o *TemplatePreview) SetEmbedEditAllowVersioning(v bool)`
+
+SetEmbedEditAllowVersioning sets EmbedEditAllowVersioning field to given value.
+
+
+### GetEmbedEditAllowDocumentReplacement
+
+`func (o *TemplatePreview) GetEmbedEditAllowDocumentReplacement() bool`
+
+GetEmbedEditAllowDocumentReplacement returns the EmbedEditAllowDocumentReplacement field if non-nil, zero value otherwise.
+
+### GetEmbedEditAllowDocumentReplacementOk
+
+`func (o *TemplatePreview) GetEmbedEditAllowDocumentReplacementOk() (*bool, bool)`
+
+GetEmbedEditAllowDocumentReplacementOk returns a tuple with the EmbedEditAllowDocumentReplacement field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetEmbedEditAllowDocumentReplacement
+
+`func (o *TemplatePreview) SetEmbedEditAllowDocumentReplacement(v bool)`
+
+SetEmbedEditAllowDocumentReplacement sets EmbedEditAllowDocumentReplacement field to given value.
+
+
 ### GetEncryptPdfsPassword
 
 `func (o *TemplatePreview) GetEncryptPdfsPassword() string`
@@ -726,16 +793,6 @@ and a boolean to check if the value has been set.
 SetPath sets Path field to given value.
 
 
-### SetPathNil
-
-`func (o *TemplatePreview) SetPathNil(b bool)`
-
- SetPathNil sets the value for Path to be an explicit nil
-
-### UnsetPath
-`func (o *TemplatePreview) UnsetPath()`
-
-UnsetPath ensures that no value is present for Path, not even an explicit nil
 ### GetPermanentDocumentUrl
 
 `func (o *TemplatePreview) GetPermanentDocumentUrl() string`
@@ -1006,6 +1063,41 @@ SetWebhookUrl sets WebhookUrl field to given value.
 `func (o *TemplatePreview) UnsetWebhookUrl()`
 
 UnsetWebhookUrl ensures that no value is present for WebhookUrl, not even an explicit nil
+### GetEmbedEditToken
+
+`func (o *TemplatePreview) GetEmbedEditToken() string`
+
+GetEmbedEditToken returns the EmbedEditToken field if non-nil, zero value otherwise.
+
+### GetEmbedEditTokenOk
+
+`func (o *TemplatePreview) GetEmbedEditTokenOk() (*string, bool)`
+
+GetEmbedEditTokenOk returns a tuple with the EmbedEditToken field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetEmbedEditToken
+
+`func (o *TemplatePreview) SetEmbedEditToken(v string)`
+
+SetEmbedEditToken sets EmbedEditToken field to given value.
+
+### HasEmbedEditToken
+
+`func (o *TemplatePreview) HasEmbedEditToken() bool`
+
+HasEmbedEditToken returns a boolean if a field has been set.
+
+### SetEmbedEditTokenNil
+
+`func (o *TemplatePreview) SetEmbedEditTokenNil(b bool)`
+
+ SetEmbedEditTokenNil sets the value for EmbedEditToken to be an explicit nil
+
+### UnsetEmbedEditToken
+`func (o *TemplatePreview) UnsetEmbedEditToken()`
+
+UnsetEmbedEditToken ensures that no value is present for EmbedEditToken, not even an explicit nil
 ### GetDemo
 
 `func (o *TemplatePreview) GetDemo() bool`
@@ -1146,6 +1238,96 @@ SetLastChangedById sets LastChangedById field to given value.
 `func (o *TemplatePreview) UnsetLastChangedById()`
 
 UnsetLastChangedById ensures that no value is present for LastChangedById, not even an explicit nil
+### GetLastChangedByExternalName
+
+`func (o *TemplatePreview) GetLastChangedByExternalName() string`
+
+GetLastChangedByExternalName returns the LastChangedByExternalName field if non-nil, zero value otherwise.
+
+### GetLastChangedByExternalNameOk
+
+`func (o *TemplatePreview) GetLastChangedByExternalNameOk() (*string, bool)`
+
+GetLastChangedByExternalNameOk returns a tuple with the LastChangedByExternalName field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetLastChangedByExternalName
+
+`func (o *TemplatePreview) SetLastChangedByExternalName(v string)`
+
+SetLastChangedByExternalName sets LastChangedByExternalName field to given value.
+
+
+### SetLastChangedByExternalNameNil
+
+`func (o *TemplatePreview) SetLastChangedByExternalNameNil(b bool)`
+
+ SetLastChangedByExternalNameNil sets the value for LastChangedByExternalName to be an explicit nil
+
+### UnsetLastChangedByExternalName
+`func (o *TemplatePreview) UnsetLastChangedByExternalName()`
+
+UnsetLastChangedByExternalName ensures that no value is present for LastChangedByExternalName, not even an explicit nil
+### GetLastChangedByExternalEmail
+
+`func (o *TemplatePreview) GetLastChangedByExternalEmail() string`
+
+GetLastChangedByExternalEmail returns the LastChangedByExternalEmail field if non-nil, zero value otherwise.
+
+### GetLastChangedByExternalEmailOk
+
+`func (o *TemplatePreview) GetLastChangedByExternalEmailOk() (*string, bool)`
+
+GetLastChangedByExternalEmailOk returns a tuple with the LastChangedByExternalEmail field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetLastChangedByExternalEmail
+
+`func (o *TemplatePreview) SetLastChangedByExternalEmail(v string)`
+
+SetLastChangedByExternalEmail sets LastChangedByExternalEmail field to given value.
+
+
+### SetLastChangedByExternalEmailNil
+
+`func (o *TemplatePreview) SetLastChangedByExternalEmailNil(b bool)`
+
+ SetLastChangedByExternalEmailNil sets the value for LastChangedByExternalEmail to be an explicit nil
+
+### UnsetLastChangedByExternalEmail
+`func (o *TemplatePreview) UnsetLastChangedByExternalEmail()`
+
+UnsetLastChangedByExternalEmail ensures that no value is present for LastChangedByExternalEmail, not even an explicit nil
+### GetLastChangedByExternalId
+
+`func (o *TemplatePreview) GetLastChangedByExternalId() string`
+
+GetLastChangedByExternalId returns the LastChangedByExternalId field if non-nil, zero value otherwise.
+
+### GetLastChangedByExternalIdOk
+
+`func (o *TemplatePreview) GetLastChangedByExternalIdOk() (*string, bool)`
+
+GetLastChangedByExternalIdOk returns a tuple with the LastChangedByExternalId field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetLastChangedByExternalId
+
+`func (o *TemplatePreview) SetLastChangedByExternalId(v string)`
+
+SetLastChangedByExternalId sets LastChangedByExternalId field to given value.
+
+
+### SetLastChangedByExternalIdNil
+
+`func (o *TemplatePreview) SetLastChangedByExternalIdNil(b bool)`
+
+ SetLastChangedByExternalIdNil sets the value for LastChangedByExternalId to be an explicit nil
+
+### UnsetLastChangedByExternalId
+`func (o *TemplatePreview) UnsetLastChangedByExternalId()`
+
+UnsetLastChangedByExternalId ensures that no value is present for LastChangedByExternalId, not even an explicit nil
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

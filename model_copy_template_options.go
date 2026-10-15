@@ -12,8 +12,6 @@ package docspring
 
 import (
 	"encoding/json"
-	"bytes"
-	"fmt"
 )
 
 // checks if the CopyTemplateOptions type satisfies the MappedNullable interface at compile time
@@ -22,18 +20,16 @@ var _ MappedNullable = &CopyTemplateOptions{}
 // CopyTemplateOptions struct for CopyTemplateOptions
 type CopyTemplateOptions struct {
 	Name *string `json:"name,omitempty"`
-	ParentFolderId string `json:"parent_folder_id"`
+	ParentFolderId *string `json:"parent_folder_id,omitempty"`
+	Version *string `json:"version,omitempty"`
 }
-
-type _CopyTemplateOptions CopyTemplateOptions
 
 // NewCopyTemplateOptions instantiates a new CopyTemplateOptions object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCopyTemplateOptions(parentFolderId string) *CopyTemplateOptions {
+func NewCopyTemplateOptions() *CopyTemplateOptions {
 	this := CopyTemplateOptions{}
-	this.ParentFolderId = parentFolderId
 	return &this
 }
 
@@ -77,28 +73,68 @@ func (o *CopyTemplateOptions) SetName(v string) {
 	o.Name = &v
 }
 
-// GetParentFolderId returns the ParentFolderId field value
+// GetParentFolderId returns the ParentFolderId field value if set, zero value otherwise.
 func (o *CopyTemplateOptions) GetParentFolderId() string {
-	if o == nil {
+	if o == nil || IsNil(o.ParentFolderId) {
 		var ret string
 		return ret
 	}
-
-	return o.ParentFolderId
+	return *o.ParentFolderId
 }
 
-// GetParentFolderIdOk returns a tuple with the ParentFolderId field value
+// GetParentFolderIdOk returns a tuple with the ParentFolderId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *CopyTemplateOptions) GetParentFolderIdOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.ParentFolderId) {
 		return nil, false
 	}
-	return &o.ParentFolderId, true
+	return o.ParentFolderId, true
 }
 
-// SetParentFolderId sets field value
+// HasParentFolderId returns a boolean if a field has been set.
+func (o *CopyTemplateOptions) HasParentFolderId() bool {
+	if o != nil && !IsNil(o.ParentFolderId) {
+		return true
+	}
+
+	return false
+}
+
+// SetParentFolderId gets a reference to the given string and assigns it to the ParentFolderId field.
 func (o *CopyTemplateOptions) SetParentFolderId(v string) {
-	o.ParentFolderId = v
+	o.ParentFolderId = &v
+}
+
+// GetVersion returns the Version field value if set, zero value otherwise.
+func (o *CopyTemplateOptions) GetVersion() string {
+	if o == nil || IsNil(o.Version) {
+		var ret string
+		return ret
+	}
+	return *o.Version
+}
+
+// GetVersionOk returns a tuple with the Version field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CopyTemplateOptions) GetVersionOk() (*string, bool) {
+	if o == nil || IsNil(o.Version) {
+		return nil, false
+	}
+	return o.Version, true
+}
+
+// HasVersion returns a boolean if a field has been set.
+func (o *CopyTemplateOptions) HasVersion() bool {
+	if o != nil && !IsNil(o.Version) {
+		return true
+	}
+
+	return false
+}
+
+// SetVersion gets a reference to the given string and assigns it to the Version field.
+func (o *CopyTemplateOptions) SetVersion(v string) {
+	o.Version = &v
 }
 
 func (o CopyTemplateOptions) MarshalJSON() ([]byte, error) {
@@ -114,45 +150,13 @@ func (o CopyTemplateOptions) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Name) {
 		toSerialize["name"] = o.Name
 	}
-	toSerialize["parent_folder_id"] = o.ParentFolderId
+	if !IsNil(o.ParentFolderId) {
+		toSerialize["parent_folder_id"] = o.ParentFolderId
+	}
+	if !IsNil(o.Version) {
+		toSerialize["version"] = o.Version
+	}
 	return toSerialize, nil
-}
-
-func (o *CopyTemplateOptions) UnmarshalJSON(data []byte) (err error) {
-	// This validates that all required properties are included in the JSON object
-	// by unmarshalling the object into a generic map with string keys and checking
-	// that every required field exists as a key in the generic map.
-	requiredProperties := []string{
-		"parent_folder_id",
-	}
-
-	allProperties := make(map[string]interface{})
-
-	err = json.Unmarshal(data, &allProperties)
-
-	if err != nil {
-		return err;
-	}
-
-	for _, requiredProperty := range(requiredProperties) {
-		if _, exists := allProperties[requiredProperty]; !exists {
-			return fmt.Errorf("no value given for required property %v", requiredProperty)
-		}
-	}
-
-	varCopyTemplateOptions := _CopyTemplateOptions{}
-
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCopyTemplateOptions)
-
-	if err != nil {
-		return err
-	}
-
-	*o = CopyTemplateOptions(varCopyTemplateOptions)
-
-	return err
 }
 
 type NullableCopyTemplateOptions struct {
