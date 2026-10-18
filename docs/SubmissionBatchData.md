@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **Submissions** | **[]map[string]interface{}** |  | 
 **TemplateId** | Pointer to **NullableString** |  | [optional] 
 **TemplateVersion** | Pointer to **NullableString** |  | [optional] 
-**Test** | Pointer to **bool** |  | [optional] 
+**Test** | Pointer to **bool** | Generate a watermarked test PDF. Test PDFs are free; live PDFs (the default) use credits. | [optional] 
 
 ## Methods
 

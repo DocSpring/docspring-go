@@ -1,7 +1,7 @@
 /*
 DocSpring API
 
-Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
+Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures. Requests are rate limited per account, and live PDFs use credits: a request over the limit returns 429 with a Retry-After header, and one your credits can't cover returns 402. See [Credits & Rate Limits](https://docspring.com/docs/api-guide/credits-and-rate-limits/).
 
 API version: v1
 */
@@ -22,6 +22,7 @@ var _ MappedNullable = &CreateCustomFileResponse{}
 type CreateCustomFileResponse struct {
 	Status string `json:"status"`
 	CustomFile CustomFile `json:"custom_file"`
+	Error *string `json:"error,omitempty"`
 	Errors []string `json:"errors,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
@@ -95,6 +96,38 @@ func (o *CreateCustomFileResponse) SetCustomFile(v CustomFile) {
 	o.CustomFile = v
 }
 
+// GetError returns the Error field value if set, zero value otherwise.
+func (o *CreateCustomFileResponse) GetError() string {
+	if o == nil || IsNil(o.Error) {
+		var ret string
+		return ret
+	}
+	return *o.Error
+}
+
+// GetErrorOk returns a tuple with the Error field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateCustomFileResponse) GetErrorOk() (*string, bool) {
+	if o == nil || IsNil(o.Error) {
+		return nil, false
+	}
+	return o.Error, true
+}
+
+// HasError returns a boolean if a field has been set.
+func (o *CreateCustomFileResponse) HasError() bool {
+	if o != nil && !IsNil(o.Error) {
+		return true
+	}
+
+	return false
+}
+
+// SetError gets a reference to the given string and assigns it to the Error field.
+func (o *CreateCustomFileResponse) SetError(v string) {
+	o.Error = &v
+}
+
 // GetErrors returns the Errors field value if set, zero value otherwise.
 func (o *CreateCustomFileResponse) GetErrors() []string {
 	if o == nil || IsNil(o.Errors) {
@@ -139,6 +172,9 @@ func (o CreateCustomFileResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["status"] = o.Status
 	toSerialize["custom_file"] = o.CustomFile
+	if !IsNil(o.Error) {
+		toSerialize["error"] = o.Error
+	}
 	if !IsNil(o.Errors) {
 		toSerialize["errors"] = o.Errors
 	}
@@ -188,6 +224,7 @@ func (o *CreateCustomFileResponse) UnmarshalJSON(data []byte) (err error) {
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "status")
 		delete(additionalProperties, "custom_file")
+		delete(additionalProperties, "error")
 		delete(additionalProperties, "errors")
 		o.AdditionalProperties = additionalProperties
 	}

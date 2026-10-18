@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **Errors** | Pointer to **[]string** |  | [optional] 
 **SubmissionBatch** | [**SubmissionBatch**](SubmissionBatch.md) |  | 
 **Submissions** | **[]map[string]interface{}** |  | 
+**Code** | Pointer to **string** | &#x60;insufficient_credits&#x60; when the response is a 402. | [optional] 
 
 ## Methods
 
@@ -138,6 +139,31 @@ and a boolean to check if the value has been set.
 
 SetSubmissions sets Submissions field to given value.
 
+
+### GetCode
+
+`func (o *BatchGeneratePdfs201Response) GetCode() string`
+
+GetCode returns the Code field if non-nil, zero value otherwise.
+
+### GetCodeOk
+
+`func (o *BatchGeneratePdfs201Response) GetCodeOk() (*string, bool)`
+
+GetCodeOk returns a tuple with the Code field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetCode
+
+`func (o *BatchGeneratePdfs201Response) SetCode(v string)`
+
+SetCode sets Code field to given value.
+
+### HasCode
+
+`func (o *BatchGeneratePdfs201Response) HasCode() bool`
+
+HasCode returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

@@ -1,7 +1,7 @@
 /*
 DocSpring API
 
-Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
+Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures. Requests are rate limited per account, and live PDFs use credits: a request over the limit returns 429 with a Retry-After header, and one your credits can't cover returns 402. See [Credits & Rate Limits](https://docspring.com/docs/api-guide/credits-and-rate-limits/).
 
 API version: v1
 */
@@ -179,6 +179,10 @@ Generates up to 50 PDFs in a single request. Each submission can use a different
 and data. Supports both synchronous (wait for all PDFs) and asynchronous processing. More
 efficient than individual requests when creating multiple PDFs.
 
+Live PDFs use credits. If any live submission is waiting for credits, the API returns 402 and the
+others are still processed: check each submission's `state`. See
+[Credits & Rate Limits](https://docspring.com/docs/api-guide/credits-and-rate-limits/).
+
 See also:
 - [Batch Generate PDFs](https://docspring.com/docs/api-guide/generate-pdfs/batch-generate-pdfs/) - Request format, responses, and limits
 
@@ -264,6 +268,28 @@ func (a *ClientAPIService) BatchGeneratePdfsExecute(r ApiBatchGeneratePdfsReques
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
+		if localVarHTTPResponse.StatusCode == 402 {
+			var v BatchGeneratePdfs201Response
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ForbiddenErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
 		if localVarHTTPResponse.StatusCode == 401 {
 			var v ErrorResponse
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
@@ -332,6 +358,11 @@ CombinePdfs Merge submission PDFs, template PDFs, or custom files
 Combines multiple PDFs from various sources into a single PDF file. Supports merging
 submission PDFs, template PDFs, custom files, other merged PDFs,
 and PDFs from URLs. Merges the PDFs in the order provided.
+
+Combining uses credits (4 per source PDF, plus 4 per unit of the combined PDF), even with a test API
+token or watermarked source PDFs. If your balance can't cover it, the API returns 402 and the combined
+submission waits in the `insufficient_credits` state until you add credits. See
+[Credits & Rate Limits](https://docspring.com/docs/api-guide/credits-and-rate-limits/).
 
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -409,8 +440,8 @@ func (a *ClientAPIService) CombinePdfsExecute(r ApiCombinePdfsRequest) (*CreateC
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		if localVarHTTPResponse.StatusCode == 422 {
-			var v MultipleErrorsResponse
+		if localVarHTTPResponse.StatusCode == 402 {
+			var v CreateCombinedSubmissionResponse
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -422,6 +453,17 @@ func (a *ClientAPIService) CombinePdfsExecute(r ApiCombinePdfsRequest) (*CreateC
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
 			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 422 {
+			var v MultipleErrorsResponse
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -565,6 +607,17 @@ func (a *ClientAPIService) CopyTemplateExecute(r ApiCopyTemplateRequest) (*Templ
 		newErr := &GenericOpenAPIError{
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ForbiddenErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
 			var v ErrorResponse
@@ -1236,6 +1289,17 @@ func (a *ClientAPIService) CreateHtmlTemplateExecute(r ApiCreateHtmlTemplateRequ
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ForbiddenErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
 		if localVarHTTPResponse.StatusCode == 401 {
 			var v ErrorResponse
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
@@ -1413,6 +1477,17 @@ func (a *ClientAPIService) CreatePdfTemplateExecute(r ApiCreatePdfTemplateReques
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ForbiddenErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
 		if localVarHTTPResponse.StatusCode == 401 {
 			var v ErrorResponse
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
@@ -1538,6 +1613,17 @@ func (a *ClientAPIService) CreatePdfTemplateFromUploadExecute(r ApiCreatePdfTemp
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
 			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ForbiddenErrorResponse
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -2396,6 +2482,10 @@ GeneratePdf Generate a PDF
 Creates a PDF submission by filling in a template with data. Supports both synchronous (default) and
 asynchronous processing. Add the `wait=false` query parameter to return immediately.
 
+Live PDFs use credits; test PDFs (`test: true`) are free and watermarked. If your balance can't cover a
+live PDF, the API returns 402 and the submission waits in the `insufficient_credits` state until you add
+credits. See [Credits & Rate Limits](https://docspring.com/docs/api-guide/credits-and-rate-limits/).
+
 See also:
 - [Customize the PDF Title and Filename](https://docspring.com/docs/api-guide/generate-pdfs/customize-pdf-title-and-filename/) - Set custom metadata
 - [Handling Truncated Text](https://docspring.com/docs/api-guide/generate-pdfs/handle-truncated-text/) - Handle text that doesn't fit in fields
@@ -2485,8 +2575,30 @@ func (a *ClientAPIService) GeneratePdfExecute(r ApiGeneratePdfRequest) (*CreateS
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
+		if localVarHTTPResponse.StatusCode == 402 {
+			var v CreateSubmissionResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
 		if localVarHTTPResponse.StatusCode == 422 {
 			var v Submission422Response
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ForbiddenErrorResponse
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -2664,6 +2776,9 @@ GetCombinedSubmission Check the status of a combined submission (merged PDFs)
 Retrieves the details and status of a combined submission. Returns processing state,
 download URL (if processed), metadata, and information about any integrated actions
 (e.g., S3 uploads).
+
+`insufficient_credits` means the combined submission is waiting for credits and is processed once you
+add them. If it's still waiting after 30 days, it moves to `error`.
 
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -3172,6 +3287,9 @@ Retrieves the details and status of a PDF submission. Returns processing state, 
 URL (if processed), metadata, submission data (optional), and information about any
 integrated actions. Use this to poll for completion when using asynchronous processing.
 
+`insufficient_credits` means the submission is waiting for credits and is processed once you add them.
+If it's still waiting after 30 days, it moves to `error`.
+
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param submissionId
@@ -3307,6 +3425,9 @@ GetSubmissionBatch Check the status of a submission batch job
 Retrieves the status and results of a batch PDF generation job. Returns processing state,
 completion statistics, and optionally includes all individual submission details. Use this
 to poll for completion when using asynchronous batch processing.
+
+Submissions waiting for credits are in the `insufficient_credits` state and count as pending, so the
+batch stays `pending` until you add credits or they stop waiting after 30 days.
 
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().

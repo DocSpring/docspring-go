@@ -1,7 +1,7 @@
 /*
 DocSpring API
 
-Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
+Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures. Requests are rate limited per account, and live PDFs use credits: a request over the limit returns 429 with a Retry-After header, and one your credits can't cover returns 402. See [Credits & Rate Limits](https://docspring.com/docs/api-guide/credits-and-rate-limits/).
 
 API version: v1
 */
@@ -22,7 +22,10 @@ var _ MappedNullable = &CreateSubmissionResponse{}
 type CreateSubmissionResponse struct {
 	Status string `json:"status"`
 	Submission SubmissionPreview `json:"submission"`
+	Error *string `json:"error,omitempty"`
 	Errors []string `json:"errors,omitempty"`
+	// `insufficient_credits` when the response is a 402.
+	Code *string `json:"code,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -95,6 +98,38 @@ func (o *CreateSubmissionResponse) SetSubmission(v SubmissionPreview) {
 	o.Submission = v
 }
 
+// GetError returns the Error field value if set, zero value otherwise.
+func (o *CreateSubmissionResponse) GetError() string {
+	if o == nil || IsNil(o.Error) {
+		var ret string
+		return ret
+	}
+	return *o.Error
+}
+
+// GetErrorOk returns a tuple with the Error field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateSubmissionResponse) GetErrorOk() (*string, bool) {
+	if o == nil || IsNil(o.Error) {
+		return nil, false
+	}
+	return o.Error, true
+}
+
+// HasError returns a boolean if a field has been set.
+func (o *CreateSubmissionResponse) HasError() bool {
+	if o != nil && !IsNil(o.Error) {
+		return true
+	}
+
+	return false
+}
+
+// SetError gets a reference to the given string and assigns it to the Error field.
+func (o *CreateSubmissionResponse) SetError(v string) {
+	o.Error = &v
+}
+
 // GetErrors returns the Errors field value if set, zero value otherwise.
 func (o *CreateSubmissionResponse) GetErrors() []string {
 	if o == nil || IsNil(o.Errors) {
@@ -127,6 +162,38 @@ func (o *CreateSubmissionResponse) SetErrors(v []string) {
 	o.Errors = v
 }
 
+// GetCode returns the Code field value if set, zero value otherwise.
+func (o *CreateSubmissionResponse) GetCode() string {
+	if o == nil || IsNil(o.Code) {
+		var ret string
+		return ret
+	}
+	return *o.Code
+}
+
+// GetCodeOk returns a tuple with the Code field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateSubmissionResponse) GetCodeOk() (*string, bool) {
+	if o == nil || IsNil(o.Code) {
+		return nil, false
+	}
+	return o.Code, true
+}
+
+// HasCode returns a boolean if a field has been set.
+func (o *CreateSubmissionResponse) HasCode() bool {
+	if o != nil && !IsNil(o.Code) {
+		return true
+	}
+
+	return false
+}
+
+// SetCode gets a reference to the given string and assigns it to the Code field.
+func (o *CreateSubmissionResponse) SetCode(v string) {
+	o.Code = &v
+}
+
 func (o CreateSubmissionResponse) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -139,8 +206,14 @@ func (o CreateSubmissionResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["status"] = o.Status
 	toSerialize["submission"] = o.Submission
+	if !IsNil(o.Error) {
+		toSerialize["error"] = o.Error
+	}
 	if !IsNil(o.Errors) {
 		toSerialize["errors"] = o.Errors
+	}
+	if !IsNil(o.Code) {
+		toSerialize["code"] = o.Code
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -188,7 +261,9 @@ func (o *CreateSubmissionResponse) UnmarshalJSON(data []byte) (err error) {
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "status")
 		delete(additionalProperties, "submission")
+		delete(additionalProperties, "error")
 		delete(additionalProperties, "errors")
+		delete(additionalProperties, "code")
 		o.AdditionalProperties = additionalProperties
 	}
 

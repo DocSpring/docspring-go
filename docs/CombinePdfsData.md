@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **Metadata** | Pointer to **map[string]interface{}** |  | [optional] 
 **Password** | Pointer to **string** |  | [optional] 
 **SourcePdfs** | **[]map[string]interface{}** |  | 
-**Test** | Pointer to **bool** | Deprecated, and has no effect. A combined PDF is a test or live document because of its source PDFs. | [optional] 
+**Test** | Pointer to **bool** | Deprecated, and has no effect. Combining always uses credits, even with a test API token or watermarked source PDFs. | [optional] 
 
 ## Methods
 

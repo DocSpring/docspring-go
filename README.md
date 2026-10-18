@@ -6,7 +6,7 @@ templates with your data, generates PDFs from HTML templates, combines PDFs and 
 [Documentation](https://docspring.com/docs/) · [API reference](https://docspring.com/docs/api/) ·
 [pkg.go.dev](https://pkg.go.dev/github.com/docspring/docspring-go/v3) · [Changelog](https://github.com/DocSpring/docspring-go/blob/main/CHANGELOG.md)
 
-Version 3.2.0. Requires Go 1.23 or later.
+Version 3.3.0. Requires Go 1.23 or later.
 
 ## Install and configure
 

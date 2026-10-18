@@ -30,6 +30,7 @@ docs/CustomFile.md
 docs/ErrorOrMultipleErrorsResponse.md
 docs/ErrorResponse.md
 docs/Folder.md
+docs/ForbiddenErrorResponse.md
 docs/JsonSchema.md
 docs/ListSubmissionsResponse.md
 docs/MoveFolderData.md
@@ -90,6 +91,7 @@ model_custom_file.go
 model_error_or_multiple_errors_response.go
 model_error_response.go
 model_folder.go
+model_forbidden_error_response.go
 model_json_schema.go
 model_list_submissions_response.go
 model_move_folder_data.go

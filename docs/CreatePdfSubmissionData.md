@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **FieldOverrides** | Pointer to **map[string]interface{}** |  | [optional] 
 **Metadata** | Pointer to **map[string]interface{}** |  | [optional] 
 **Password** | Pointer to **string** |  | [optional] 
-**Test** | Pointer to **bool** |  | [optional] 
+**Test** | Pointer to **bool** | Generate a watermarked test PDF. Test PDFs are free; live PDFs (the default) use credits. | [optional] 
 **Version** | Pointer to **string** |  | [optional] 
 
 ## Methods

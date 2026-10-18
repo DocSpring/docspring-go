@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Status** | **string** |  | 
 **DataRequest** | [**SubmissionDataRequestShow**](SubmissionDataRequestShow.md) |  | 
+**Error** | Pointer to **string** |  | [optional] 
 **Errors** | Pointer to **[]string** |  | [optional] 
 
 ## Methods
@@ -66,6 +67,31 @@ and a boolean to check if the value has been set.
 
 SetDataRequest sets DataRequest field to given value.
 
+
+### GetError
+
+`func (o *CreateSubmissionDataRequestResponse) GetError() string`
+
+GetError returns the Error field if non-nil, zero value otherwise.
+
+### GetErrorOk
+
+`func (o *CreateSubmissionDataRequestResponse) GetErrorOk() (*string, bool)`
+
+GetErrorOk returns a tuple with the Error field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetError
+
+`func (o *CreateSubmissionDataRequestResponse) SetError(v string)`
+
+SetError sets Error field to given value.
+
+### HasError
+
+`func (o *CreateSubmissionDataRequestResponse) HasError() bool`
+
+HasError returns a boolean if a field has been set.
 
 ### GetErrors
 

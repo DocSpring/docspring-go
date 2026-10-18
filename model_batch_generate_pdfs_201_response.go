@@ -1,7 +1,7 @@
 /*
 DocSpring API
 
-Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
+Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures. Requests are rate limited per account, and live PDFs use credits: a request over the limit returns 429 with a Retry-After header, and one your credits can't cover returns 402. See [Credits & Rate Limits](https://docspring.com/docs/api-guide/credits-and-rate-limits/).
 
 API version: v1
 */
@@ -25,6 +25,8 @@ type BatchGeneratePdfs201Response struct {
 	Errors []string `json:"errors,omitempty"`
 	SubmissionBatch SubmissionBatch `json:"submission_batch"`
 	Submissions []map[string]interface{} `json:"submissions"`
+	// `insufficient_credits` when the response is a 402.
+	Code *string `json:"code,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -186,6 +188,38 @@ func (o *BatchGeneratePdfs201Response) SetSubmissions(v []map[string]interface{}
 	o.Submissions = v
 }
 
+// GetCode returns the Code field value if set, zero value otherwise.
+func (o *BatchGeneratePdfs201Response) GetCode() string {
+	if o == nil || IsNil(o.Code) {
+		var ret string
+		return ret
+	}
+	return *o.Code
+}
+
+// GetCodeOk returns a tuple with the Code field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BatchGeneratePdfs201Response) GetCodeOk() (*string, bool) {
+	if o == nil || IsNil(o.Code) {
+		return nil, false
+	}
+	return o.Code, true
+}
+
+// HasCode returns a boolean if a field has been set.
+func (o *BatchGeneratePdfs201Response) HasCode() bool {
+	if o != nil && !IsNil(o.Code) {
+		return true
+	}
+
+	return false
+}
+
+// SetCode gets a reference to the given string and assigns it to the Code field.
+func (o *BatchGeneratePdfs201Response) SetCode(v string) {
+	o.Code = &v
+}
+
 func (o BatchGeneratePdfs201Response) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -205,6 +239,9 @@ func (o BatchGeneratePdfs201Response) ToMap() (map[string]interface{}, error) {
 	}
 	toSerialize["submission_batch"] = o.SubmissionBatch
 	toSerialize["submissions"] = o.Submissions
+	if !IsNil(o.Code) {
+		toSerialize["code"] = o.Code
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -255,6 +292,7 @@ func (o *BatchGeneratePdfs201Response) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "errors")
 		delete(additionalProperties, "submission_batch")
 		delete(additionalProperties, "submissions")
+		delete(additionalProperties, "code")
 		o.AdditionalProperties = additionalProperties
 	}
 
