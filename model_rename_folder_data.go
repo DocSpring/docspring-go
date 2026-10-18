@@ -12,7 +12,6 @@ package docspring
 
 import (
 	"encoding/json"
-	"bytes"
 	"fmt"
 )
 
@@ -106,9 +105,8 @@ func (o *RenameFolderData) UnmarshalJSON(data []byte) (err error) {
 
 	varRenameFolderData := _RenameFolderData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varRenameFolderData)
+	// Ignore unknown fields, so a field added to the API later doesn't break this client.
+	err = json.Unmarshal(data, &varRenameFolderData)
 
 	if err != nil {
 		return err

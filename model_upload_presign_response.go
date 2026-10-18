@@ -12,7 +12,6 @@ package docspring
 
 import (
 	"encoding/json"
-	"bytes"
 	"fmt"
 )
 
@@ -25,6 +24,7 @@ type UploadPresignResponse struct {
 	Headers map[string]interface{} `json:"headers"`
 	Url string `json:"url"`
 	Method *string `json:"method,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _UploadPresignResponse UploadPresignResponse
@@ -169,6 +169,11 @@ func (o UploadPresignResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Method) {
 		toSerialize["method"] = o.Method
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -198,15 +203,23 @@ func (o *UploadPresignResponse) UnmarshalJSON(data []byte) (err error) {
 
 	varUploadPresignResponse := _UploadPresignResponse{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varUploadPresignResponse)
+	err = json.Unmarshal(data, &varUploadPresignResponse)
 
 	if err != nil {
 		return err
 	}
 
 	*o = UploadPresignResponse(varUploadPresignResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "fields")
+		delete(additionalProperties, "headers")
+		delete(additionalProperties, "url")
+		delete(additionalProperties, "method")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

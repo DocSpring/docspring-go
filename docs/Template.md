@@ -33,6 +33,7 @@ Name | Type | Description | Notes
 **PageCount** | **int32** |  | 
 **PageDimensions** | **[][]float32** |  | 
 **ParentFolderId** | **NullableString** |  | 
+**ParseDatesUsingTemplateDateFormat** | **bool** |  | 
 **Path** | **string** |  | 
 **PermanentDocumentUrl** | **NullableString** |  | 
 **PublicSubmissions** | **bool** |  | 
@@ -71,7 +72,7 @@ Name | Type | Description | Notes
 
 ### NewTemplate
 
-`func NewTemplate(addDataRequestSubmissionIdFooters bool, allowAdditionalProperties bool, description NullableString, documentFilename NullableString, documentMd5 NullableString, documentParseError bool, documentProcessed bool, documentState string, documentUrl NullableString, editableSubmissions bool, embedDomains NullableString, embedEditAllowSettings bool, embedEditAllowVersioning bool, embedEditAllowDocumentReplacement bool, encryptPdfsPassword NullableString, encryptPdfs bool, expirationInterval string, expireAfter int32, expireSubmissions bool, externalPredefinedFieldsTemplateId NullableString, externalPredefinedFieldsTemplateName NullableString, firstTemplate bool, id NullableString, locked bool, mergeAuditTrailPdf bool, name NullableString, pageCount int32, pageDimensions [][]float32, parentFolderId NullableString, path string, permanentDocumentUrl NullableString, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, slackWebhookUrl NullableString, templateType string, updatedAt NullableString, versionPublishedAt NullableString, version NullableString, webhookUrl NullableString, demo bool, latestVersion NullableString, lastChangedAt NullableString, lastChangedByType NullableString, lastChangedById NullableString, lastChangedByExternalName NullableString, lastChangedByExternalEmail NullableString, lastChangedByExternalId NullableString, defaults map[string]interface{}, fieldDependencies []map[string]interface{}, fieldOrder [][]float32, fields map[string]interface{}, footerHtml NullableString, headerHtml NullableString, htmlEngineOptions map[string]interface{}, html NullableString, predefinedFields []map[string]interface{}, scss NullableString, sharedFieldData map[string]interface{}, templateSchemaVersion int32, versions []map[string]interface{}, ) *Template`
+`func NewTemplate(addDataRequestSubmissionIdFooters bool, allowAdditionalProperties bool, description NullableString, documentFilename NullableString, documentMd5 NullableString, documentParseError bool, documentProcessed bool, documentState string, documentUrl NullableString, editableSubmissions bool, embedDomains NullableString, embedEditAllowSettings bool, embedEditAllowVersioning bool, embedEditAllowDocumentReplacement bool, encryptPdfsPassword NullableString, encryptPdfs bool, expirationInterval string, expireAfter int32, expireSubmissions bool, externalPredefinedFieldsTemplateId NullableString, externalPredefinedFieldsTemplateName NullableString, firstTemplate bool, id NullableString, locked bool, mergeAuditTrailPdf bool, name NullableString, pageCount int32, pageDimensions [][]float32, parentFolderId NullableString, parseDatesUsingTemplateDateFormat bool, path string, permanentDocumentUrl NullableString, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, slackWebhookUrl NullableString, templateType string, updatedAt NullableString, versionPublishedAt NullableString, version NullableString, webhookUrl NullableString, demo bool, latestVersion NullableString, lastChangedAt NullableString, lastChangedByType NullableString, lastChangedById NullableString, lastChangedByExternalName NullableString, lastChangedByExternalEmail NullableString, lastChangedByExternalId NullableString, defaults map[string]interface{}, fieldDependencies []map[string]interface{}, fieldOrder [][]float32, fields map[string]interface{}, footerHtml NullableString, headerHtml NullableString, htmlEngineOptions map[string]interface{}, html NullableString, predefinedFields []map[string]interface{}, scss NullableString, sharedFieldData map[string]interface{}, templateSchemaVersion int32, versions []map[string]interface{}, ) *Template`
 
 NewTemplate instantiates a new Template object
 This constructor will assign default values to properties that have it defined,
@@ -786,6 +787,26 @@ SetParentFolderId sets ParentFolderId field to given value.
 `func (o *Template) UnsetParentFolderId()`
 
 UnsetParentFolderId ensures that no value is present for ParentFolderId, not even an explicit nil
+### GetParseDatesUsingTemplateDateFormat
+
+`func (o *Template) GetParseDatesUsingTemplateDateFormat() bool`
+
+GetParseDatesUsingTemplateDateFormat returns the ParseDatesUsingTemplateDateFormat field if non-nil, zero value otherwise.
+
+### GetParseDatesUsingTemplateDateFormatOk
+
+`func (o *Template) GetParseDatesUsingTemplateDateFormatOk() (*bool, bool)`
+
+GetParseDatesUsingTemplateDateFormatOk returns a tuple with the ParseDatesUsingTemplateDateFormat field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetParseDatesUsingTemplateDateFormat
+
+`func (o *Template) SetParseDatesUsingTemplateDateFormat(v bool)`
+
+SetParseDatesUsingTemplateDateFormat sets ParseDatesUsingTemplateDateFormat field to given value.
+
+
 ### GetPath
 
 `func (o *Template) GetPath() string`

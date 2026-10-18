@@ -12,7 +12,6 @@ package docspring
 
 import (
 	"encoding/json"
-	"bytes"
 	"fmt"
 )
 
@@ -24,6 +23,7 @@ type TemplatePublishVersionResponse struct {
 	Status string `json:"status"`
 	Result map[string]interface{} `json:"result"`
 	Errors []string `json:"errors,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _TemplatePublishVersionResponse TemplatePublishVersionResponse
@@ -142,6 +142,11 @@ func (o TemplatePublishVersionResponse) ToMap() (map[string]interface{}, error) 
 	if !IsNil(o.Errors) {
 		toSerialize["errors"] = o.Errors
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -170,15 +175,22 @@ func (o *TemplatePublishVersionResponse) UnmarshalJSON(data []byte) (err error) 
 
 	varTemplatePublishVersionResponse := _TemplatePublishVersionResponse{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varTemplatePublishVersionResponse)
+	err = json.Unmarshal(data, &varTemplatePublishVersionResponse)
 
 	if err != nil {
 		return err
 	}
 
 	*o = TemplatePublishVersionResponse(varTemplatePublishVersionResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "result")
+		delete(additionalProperties, "errors")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

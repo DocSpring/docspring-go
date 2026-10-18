@@ -12,7 +12,6 @@ package docspring
 
 import (
 	"encoding/json"
-	"bytes"
 	"fmt"
 )
 
@@ -41,6 +40,7 @@ type Webhook struct {
 	Secret NullableString `json:"secret"`
 	CreatedAt NullableString `json:"created_at"`
 	UpdatedAt NullableString `json:"updated_at"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _Webhook Webhook
@@ -610,6 +610,11 @@ func (o Webhook) ToMap() (map[string]interface{}, error) {
 	toSerialize["secret"] = o.Secret.Get()
 	toSerialize["created_at"] = o.CreatedAt.Get()
 	toSerialize["updated_at"] = o.UpdatedAt.Get()
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -656,15 +661,39 @@ func (o *Webhook) UnmarshalJSON(data []byte) (err error) {
 
 	varWebhook := _Webhook{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varWebhook)
+	err = json.Unmarshal(data, &varWebhook)
 
 	if err != nil {
 		return err
 	}
 
 	*o = Webhook(varWebhook)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "url")
+		delete(additionalProperties, "enabled")
+		delete(additionalProperties, "event_types")
+		delete(additionalProperties, "mode")
+		delete(additionalProperties, "version")
+		delete(additionalProperties, "api_token_ids")
+		delete(additionalProperties, "template_ids")
+		delete(additionalProperties, "folder_ids")
+		delete(additionalProperties, "include_submission_data")
+		delete(additionalProperties, "strip_fields")
+		delete(additionalProperties, "headers")
+		delete(additionalProperties, "consecutive_failures")
+		delete(additionalProperties, "last_failure_at")
+		delete(additionalProperties, "disabled_at")
+		delete(additionalProperties, "disabled_reason")
+		delete(additionalProperties, "secret")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

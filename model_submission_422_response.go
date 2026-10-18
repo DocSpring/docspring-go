@@ -12,7 +12,6 @@ package docspring
 
 import (
 	"encoding/json"
-	"bytes"
 	"fmt"
 )
 
@@ -27,6 +26,7 @@ type Submission422Response struct {
 	Submission *SubmissionPreview `json:"submission,omitempty"`
 	// Array of validation error messages (when submission data is invalid)
 	Errors []string `json:"errors,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _Submission422Response Submission422Response
@@ -189,6 +189,11 @@ func (o Submission422Response) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Errors) {
 		toSerialize["errors"] = o.Errors
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -216,15 +221,23 @@ func (o *Submission422Response) UnmarshalJSON(data []byte) (err error) {
 
 	varSubmission422Response := _Submission422Response{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varSubmission422Response)
+	err = json.Unmarshal(data, &varSubmission422Response)
 
 	if err != nil {
 		return err
 	}
 
 	*o = Submission422Response(varSubmission422Response)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "error")
+		delete(additionalProperties, "submission")
+		delete(additionalProperties, "errors")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

@@ -12,7 +12,6 @@ package docspring
 
 import (
 	"encoding/json"
-	"bytes"
 	"fmt"
 )
 
@@ -26,6 +25,7 @@ type BatchGeneratePdfs201Response struct {
 	Errors []string `json:"errors,omitempty"`
 	SubmissionBatch SubmissionBatch `json:"submission_batch"`
 	Submissions []map[string]interface{} `json:"submissions"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _BatchGeneratePdfs201Response BatchGeneratePdfs201Response
@@ -205,6 +205,11 @@ func (o BatchGeneratePdfs201Response) ToMap() (map[string]interface{}, error) {
 	}
 	toSerialize["submission_batch"] = o.SubmissionBatch
 	toSerialize["submissions"] = o.Submissions
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -234,15 +239,24 @@ func (o *BatchGeneratePdfs201Response) UnmarshalJSON(data []byte) (err error) {
 
 	varBatchGeneratePdfs201Response := _BatchGeneratePdfs201Response{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varBatchGeneratePdfs201Response)
+	err = json.Unmarshal(data, &varBatchGeneratePdfs201Response)
 
 	if err != nil {
 		return err
 	}
 
 	*o = BatchGeneratePdfs201Response(varBatchGeneratePdfs201Response)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "error")
+		delete(additionalProperties, "errors")
+		delete(additionalProperties, "submission_batch")
+		delete(additionalProperties, "submissions")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

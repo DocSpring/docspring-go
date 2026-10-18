@@ -12,7 +12,6 @@ package docspring
 
 import (
 	"encoding/json"
-	"bytes"
 	"fmt"
 )
 
@@ -28,6 +27,7 @@ type SubmissionDataRequestEvent struct {
 	MessageType NullableString `json:"message_type"`
 	MessageRecipient NullableString `json:"message_recipient"`
 	OccurredAt NullableString `json:"occurred_at"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _SubmissionDataRequestEvent SubmissionDataRequestEvent
@@ -253,6 +253,11 @@ func (o SubmissionDataRequestEvent) ToMap() (map[string]interface{}, error) {
 	toSerialize["message_type"] = o.MessageType.Get()
 	toSerialize["message_recipient"] = o.MessageRecipient.Get()
 	toSerialize["occurred_at"] = o.OccurredAt.Get()
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -286,15 +291,26 @@ func (o *SubmissionDataRequestEvent) UnmarshalJSON(data []byte) (err error) {
 
 	varSubmissionDataRequestEvent := _SubmissionDataRequestEvent{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varSubmissionDataRequestEvent)
+	err = json.Unmarshal(data, &varSubmissionDataRequestEvent)
 
 	if err != nil {
 		return err
 	}
 
 	*o = SubmissionDataRequestEvent(varSubmissionDataRequestEvent)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "submission_id")
+		delete(additionalProperties, "submission_data_request_id")
+		delete(additionalProperties, "event_type")
+		delete(additionalProperties, "message_type")
+		delete(additionalProperties, "message_recipient")
+		delete(additionalProperties, "occurred_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

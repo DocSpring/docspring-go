@@ -12,7 +12,6 @@ package docspring
 
 import (
 	"encoding/json"
-	"bytes"
 	"fmt"
 )
 
@@ -106,9 +105,8 @@ func (o *CreateHtmlTemplate) UnmarshalJSON(data []byte) (err error) {
 
 	varCreateHtmlTemplate := _CreateHtmlTemplate{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCreateHtmlTemplate)
+	// Ignore unknown fields, so a field added to the API later doesn't break this client.
+	err = json.Unmarshal(data, &varCreateHtmlTemplate)
 
 	if err != nil {
 		return err

@@ -12,7 +12,6 @@ package docspring
 
 import (
 	"encoding/json"
-	"bytes"
 	"fmt"
 )
 
@@ -23,6 +22,7 @@ var _ MappedNullable = &SuccessMultipleErrorsResponse{}
 type SuccessMultipleErrorsResponse struct {
 	Status string `json:"status"`
 	Errors []string `json:"errors,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _SuccessMultipleErrorsResponse SuccessMultipleErrorsResponse
@@ -115,6 +115,11 @@ func (o SuccessMultipleErrorsResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Errors) {
 		toSerialize["errors"] = o.Errors
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -142,15 +147,21 @@ func (o *SuccessMultipleErrorsResponse) UnmarshalJSON(data []byte) (err error) {
 
 	varSuccessMultipleErrorsResponse := _SuccessMultipleErrorsResponse{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varSuccessMultipleErrorsResponse)
+	err = json.Unmarshal(data, &varSuccessMultipleErrorsResponse)
 
 	if err != nil {
 		return err
 	}
 
 	*o = SuccessMultipleErrorsResponse(varSuccessMultipleErrorsResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "errors")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

@@ -12,7 +12,6 @@ package docspring
 
 import (
 	"encoding/json"
-	"bytes"
 	"fmt"
 )
 
@@ -29,6 +28,7 @@ type SubmissionBatch struct {
 	PendingCount int32 `json:"pending_count"`
 	ErrorCount int32 `json:"error_count"`
 	CompletionPercentage float32 `json:"completion_percentage"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _SubmissionBatch SubmissionBatch
@@ -272,6 +272,11 @@ func (o SubmissionBatch) ToMap() (map[string]interface{}, error) {
 	toSerialize["pending_count"] = o.PendingCount
 	toSerialize["error_count"] = o.ErrorCount
 	toSerialize["completion_percentage"] = o.CompletionPercentage
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -306,15 +311,27 @@ func (o *SubmissionBatch) UnmarshalJSON(data []byte) (err error) {
 
 	varSubmissionBatch := _SubmissionBatch{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varSubmissionBatch)
+	err = json.Unmarshal(data, &varSubmissionBatch)
 
 	if err != nil {
 		return err
 	}
 
 	*o = SubmissionBatch(varSubmissionBatch)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "state")
+		delete(additionalProperties, "metadata")
+		delete(additionalProperties, "processed_at")
+		delete(additionalProperties, "total_count")
+		delete(additionalProperties, "pending_count")
+		delete(additionalProperties, "error_count")
+		delete(additionalProperties, "completion_percentage")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

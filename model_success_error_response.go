@@ -12,7 +12,6 @@ package docspring
 
 import (
 	"encoding/json"
-	"bytes"
 	"fmt"
 )
 
@@ -23,6 +22,7 @@ var _ MappedNullable = &SuccessErrorResponse{}
 type SuccessErrorResponse struct {
 	Status string `json:"status"`
 	Error *string `json:"error,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _SuccessErrorResponse SuccessErrorResponse
@@ -115,6 +115,11 @@ func (o SuccessErrorResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Error) {
 		toSerialize["error"] = o.Error
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -142,15 +147,21 @@ func (o *SuccessErrorResponse) UnmarshalJSON(data []byte) (err error) {
 
 	varSuccessErrorResponse := _SuccessErrorResponse{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varSuccessErrorResponse)
+	err = json.Unmarshal(data, &varSuccessErrorResponse)
 
 	if err != nil {
 		return err
 	}
 
 	*o = SuccessErrorResponse(varSuccessErrorResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "error")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

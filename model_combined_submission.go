@@ -12,7 +12,6 @@ package docspring
 
 import (
 	"encoding/json"
-	"bytes"
 	"fmt"
 )
 
@@ -35,6 +34,7 @@ type CombinedSubmission struct {
 	PdfHash NullableString `json:"pdf_hash"`
 	DownloadUrl NullableString `json:"download_url"`
 	Actions []CombinedSubmissionAction `json:"actions"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CombinedSubmission CombinedSubmission
@@ -446,6 +446,11 @@ func (o CombinedSubmission) ToMap() (map[string]interface{}, error) {
 	toSerialize["pdf_hash"] = o.PdfHash.Get()
 	toSerialize["download_url"] = o.DownloadUrl.Get()
 	toSerialize["actions"] = o.Actions
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -486,15 +491,33 @@ func (o *CombinedSubmission) UnmarshalJSON(data []byte) (err error) {
 
 	varCombinedSubmission := _CombinedSubmission{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCombinedSubmission)
+	err = json.Unmarshal(data, &varCombinedSubmission)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CombinedSubmission(varCombinedSubmission)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "state")
+		delete(additionalProperties, "expired")
+		delete(additionalProperties, "expires_in")
+		delete(additionalProperties, "expires_at")
+		delete(additionalProperties, "processed_at")
+		delete(additionalProperties, "error_message")
+		delete(additionalProperties, "submission_ids")
+		delete(additionalProperties, "source_pdfs")
+		delete(additionalProperties, "metadata")
+		delete(additionalProperties, "password")
+		delete(additionalProperties, "pdf_hash")
+		delete(additionalProperties, "download_url")
+		delete(additionalProperties, "actions")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

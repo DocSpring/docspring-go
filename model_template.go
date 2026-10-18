@@ -12,7 +12,6 @@ package docspring
 
 import (
 	"encoding/json"
-	"bytes"
 	"fmt"
 )
 
@@ -50,6 +49,7 @@ type Template struct {
 	PageCount int32 `json:"page_count"`
 	PageDimensions [][]float32 `json:"page_dimensions"`
 	ParentFolderId NullableString `json:"parent_folder_id"`
+	ParseDatesUsingTemplateDateFormat bool `json:"parse_dates_using_template_date_format"`
 	Path string `json:"path"`
 	PermanentDocumentUrl NullableString `json:"permanent_document_url"`
 	PublicSubmissions bool `json:"public_submissions"`
@@ -83,6 +83,7 @@ type Template struct {
 	SharedFieldData map[string]interface{} `json:"shared_field_data"`
 	TemplateSchemaVersion int32 `json:"template_schema_version"`
 	Versions []map[string]interface{} `json:"versions"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _Template Template
@@ -91,7 +92,7 @@ type _Template Template
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewTemplate(addDataRequestSubmissionIdFooters bool, allowAdditionalProperties bool, description NullableString, documentFilename NullableString, documentMd5 NullableString, documentParseError bool, documentProcessed bool, documentState string, documentUrl NullableString, editableSubmissions bool, embedDomains NullableString, embedEditAllowSettings bool, embedEditAllowVersioning bool, embedEditAllowDocumentReplacement bool, encryptPdfsPassword NullableString, encryptPdfs bool, expirationInterval string, expireAfter int32, expireSubmissions bool, externalPredefinedFieldsTemplateId NullableString, externalPredefinedFieldsTemplateName NullableString, firstTemplate bool, id NullableString, locked bool, mergeAuditTrailPdf bool, name NullableString, pageCount int32, pageDimensions [][]float32, parentFolderId NullableString, path string, permanentDocumentUrl NullableString, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, slackWebhookUrl NullableString, templateType string, updatedAt NullableString, versionPublishedAt NullableString, version NullableString, webhookUrl NullableString, demo bool, latestVersion NullableString, lastChangedAt NullableString, lastChangedByType NullableString, lastChangedById NullableString, lastChangedByExternalName NullableString, lastChangedByExternalEmail NullableString, lastChangedByExternalId NullableString, defaults map[string]interface{}, fieldDependencies []map[string]interface{}, fieldOrder [][]float32, fields map[string]interface{}, footerHtml NullableString, headerHtml NullableString, htmlEngineOptions map[string]interface{}, html NullableString, predefinedFields []map[string]interface{}, scss NullableString, sharedFieldData map[string]interface{}, templateSchemaVersion int32, versions []map[string]interface{}) *Template {
+func NewTemplate(addDataRequestSubmissionIdFooters bool, allowAdditionalProperties bool, description NullableString, documentFilename NullableString, documentMd5 NullableString, documentParseError bool, documentProcessed bool, documentState string, documentUrl NullableString, editableSubmissions bool, embedDomains NullableString, embedEditAllowSettings bool, embedEditAllowVersioning bool, embedEditAllowDocumentReplacement bool, encryptPdfsPassword NullableString, encryptPdfs bool, expirationInterval string, expireAfter int32, expireSubmissions bool, externalPredefinedFieldsTemplateId NullableString, externalPredefinedFieldsTemplateName NullableString, firstTemplate bool, id NullableString, locked bool, mergeAuditTrailPdf bool, name NullableString, pageCount int32, pageDimensions [][]float32, parentFolderId NullableString, parseDatesUsingTemplateDateFormat bool, path string, permanentDocumentUrl NullableString, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, slackWebhookUrl NullableString, templateType string, updatedAt NullableString, versionPublishedAt NullableString, version NullableString, webhookUrl NullableString, demo bool, latestVersion NullableString, lastChangedAt NullableString, lastChangedByType NullableString, lastChangedById NullableString, lastChangedByExternalName NullableString, lastChangedByExternalEmail NullableString, lastChangedByExternalId NullableString, defaults map[string]interface{}, fieldDependencies []map[string]interface{}, fieldOrder [][]float32, fields map[string]interface{}, footerHtml NullableString, headerHtml NullableString, htmlEngineOptions map[string]interface{}, html NullableString, predefinedFields []map[string]interface{}, scss NullableString, sharedFieldData map[string]interface{}, templateSchemaVersion int32, versions []map[string]interface{}) *Template {
 	this := Template{}
 	this.AddDataRequestSubmissionIdFooters = addDataRequestSubmissionIdFooters
 	this.AllowAdditionalProperties = allowAdditionalProperties
@@ -122,6 +123,7 @@ func NewTemplate(addDataRequestSubmissionIdFooters bool, allowAdditionalProperti
 	this.PageCount = pageCount
 	this.PageDimensions = pageDimensions
 	this.ParentFolderId = parentFolderId
+	this.ParseDatesUsingTemplateDateFormat = parseDatesUsingTemplateDateFormat
 	this.Path = path
 	this.PermanentDocumentUrl = permanentDocumentUrl
 	this.PublicSubmissions = publicSubmissions
@@ -883,6 +885,30 @@ func (o *Template) GetParentFolderIdOk() (*string, bool) {
 // SetParentFolderId sets field value
 func (o *Template) SetParentFolderId(v string) {
 	o.ParentFolderId.Set(&v)
+}
+
+// GetParseDatesUsingTemplateDateFormat returns the ParseDatesUsingTemplateDateFormat field value
+func (o *Template) GetParseDatesUsingTemplateDateFormat() bool {
+	if o == nil {
+		var ret bool
+		return ret
+	}
+
+	return o.ParseDatesUsingTemplateDateFormat
+}
+
+// GetParseDatesUsingTemplateDateFormatOk returns a tuple with the ParseDatesUsingTemplateDateFormat field value
+// and a boolean to check if the value has been set.
+func (o *Template) GetParseDatesUsingTemplateDateFormatOk() (*bool, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.ParseDatesUsingTemplateDateFormat, true
+}
+
+// SetParseDatesUsingTemplateDateFormat sets field value
+func (o *Template) SetParseDatesUsingTemplateDateFormat(v bool) {
+	o.ParseDatesUsingTemplateDateFormat = v
 }
 
 // GetPath returns the Path field value
@@ -1772,6 +1798,7 @@ func (o Template) ToMap() (map[string]interface{}, error) {
 		toSerialize["page_dimensions"] = o.PageDimensions
 	}
 	toSerialize["parent_folder_id"] = o.ParentFolderId.Get()
+	toSerialize["parse_dates_using_template_date_format"] = o.ParseDatesUsingTemplateDateFormat
 	toSerialize["path"] = o.Path
 	toSerialize["permanent_document_url"] = o.PermanentDocumentUrl.Get()
 	toSerialize["public_submissions"] = o.PublicSubmissions
@@ -1807,6 +1834,11 @@ func (o Template) ToMap() (map[string]interface{}, error) {
 	toSerialize["shared_field_data"] = o.SharedFieldData
 	toSerialize["template_schema_version"] = o.TemplateSchemaVersion
 	toSerialize["versions"] = o.Versions
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -1844,6 +1876,7 @@ func (o *Template) UnmarshalJSON(data []byte) (err error) {
 		"page_count",
 		"page_dimensions",
 		"parent_folder_id",
+		"parse_dates_using_template_date_format",
 		"path",
 		"permanent_document_url",
 		"public_submissions",
@@ -1894,15 +1927,82 @@ func (o *Template) UnmarshalJSON(data []byte) (err error) {
 
 	varTemplate := _Template{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varTemplate)
+	err = json.Unmarshal(data, &varTemplate)
 
 	if err != nil {
 		return err
 	}
 
 	*o = Template(varTemplate)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "add_data_request_submission_id_footers")
+		delete(additionalProperties, "allow_additional_properties")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "document_filename")
+		delete(additionalProperties, "document_md5")
+		delete(additionalProperties, "document_parse_error")
+		delete(additionalProperties, "document_processed")
+		delete(additionalProperties, "document_state")
+		delete(additionalProperties, "document_url")
+		delete(additionalProperties, "editable_submissions")
+		delete(additionalProperties, "embed_domains")
+		delete(additionalProperties, "embed_edit_allow_settings")
+		delete(additionalProperties, "embed_edit_allow_versioning")
+		delete(additionalProperties, "embed_edit_allow_document_replacement")
+		delete(additionalProperties, "encrypt_pdfs_password")
+		delete(additionalProperties, "encrypt_pdfs")
+		delete(additionalProperties, "expiration_interval")
+		delete(additionalProperties, "expire_after")
+		delete(additionalProperties, "expire_submissions")
+		delete(additionalProperties, "external_predefined_fields_template_id")
+		delete(additionalProperties, "external_predefined_fields_template_name")
+		delete(additionalProperties, "first_template")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "locked")
+		delete(additionalProperties, "merge_audit_trail_pdf")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "page_count")
+		delete(additionalProperties, "page_dimensions")
+		delete(additionalProperties, "parent_folder_id")
+		delete(additionalProperties, "parse_dates_using_template_date_format")
+		delete(additionalProperties, "path")
+		delete(additionalProperties, "permanent_document_url")
+		delete(additionalProperties, "public_submissions")
+		delete(additionalProperties, "public_web_form")
+		delete(additionalProperties, "redirect_url")
+		delete(additionalProperties, "slack_webhook_url")
+		delete(additionalProperties, "template_type")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "version_published_at")
+		delete(additionalProperties, "version")
+		delete(additionalProperties, "webhook_url")
+		delete(additionalProperties, "embed_edit_token")
+		delete(additionalProperties, "demo")
+		delete(additionalProperties, "latest_version")
+		delete(additionalProperties, "last_changed_at")
+		delete(additionalProperties, "last_changed_by_type")
+		delete(additionalProperties, "last_changed_by_id")
+		delete(additionalProperties, "last_changed_by_external_name")
+		delete(additionalProperties, "last_changed_by_external_email")
+		delete(additionalProperties, "last_changed_by_external_id")
+		delete(additionalProperties, "defaults")
+		delete(additionalProperties, "field_dependencies")
+		delete(additionalProperties, "field_order")
+		delete(additionalProperties, "fields")
+		delete(additionalProperties, "footer_html")
+		delete(additionalProperties, "header_html")
+		delete(additionalProperties, "html_engine_options")
+		delete(additionalProperties, "html")
+		delete(additionalProperties, "predefined_fields")
+		delete(additionalProperties, "scss")
+		delete(additionalProperties, "shared_field_data")
+		delete(additionalProperties, "template_schema_version")
+		delete(additionalProperties, "versions")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

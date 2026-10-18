@@ -12,7 +12,6 @@ package docspring
 
 import (
 	"encoding/json"
-	"bytes"
 	"fmt"
 )
 
@@ -24,6 +23,7 @@ type TemplateModelCodeResponse struct {
 	Lang string `json:"lang"`
 	RootTypeName string `json:"root_type_name"`
 	Code string `json:"code"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _TemplateModelCodeResponse TemplateModelCodeResponse
@@ -133,6 +133,11 @@ func (o TemplateModelCodeResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize["lang"] = o.Lang
 	toSerialize["root_type_name"] = o.RootTypeName
 	toSerialize["code"] = o.Code
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -162,15 +167,22 @@ func (o *TemplateModelCodeResponse) UnmarshalJSON(data []byte) (err error) {
 
 	varTemplateModelCodeResponse := _TemplateModelCodeResponse{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varTemplateModelCodeResponse)
+	err = json.Unmarshal(data, &varTemplateModelCodeResponse)
 
 	if err != nil {
 		return err
 	}
 
 	*o = TemplateModelCodeResponse(varTemplateModelCodeResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "lang")
+		delete(additionalProperties, "root_type_name")
+		delete(additionalProperties, "code")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

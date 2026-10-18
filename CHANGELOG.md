@@ -1,3 +1,18 @@
+### 3.2.0 [October 18, 2026]
+
+- Models no longer return an error when a response has a field this version doesn't know, so new API fields don't
+  break your code. Response models keep those fields in a new `AdditionalProperties` map. Versions 2.x to 3.1.0
+  fail to decode any response with a field they don't know. Templates have one since October 18, 2026
+  (`parse_dates_using_template_date_format`), so upgrade to keep template calls working.
+- Because of the new map, `CustomFile`, `ErrorResponse`, `Folder`, `SubmissionDataRequestEvent`,
+  `SubmissionDataRequestToken`, `SuccessErrorResponse` and `TemplateModelCodeResponse` can no longer be compared
+  with `==`.
+- Templates: new `parse_dates_using_template_date_format` setting, when you create or update a template. When it's
+  true, date values sent as NN/NN/YYYY (with slashes, dashes or dots) are read in the order of the template's default
+  date format: month first for `%m/%d/%Y`, day first for `%d/%m/%Y`. When it's false, they're read day first.
+- A new README: installing, a quick start, every API method, errors, and how API changes are handled. The repository
+  also has an AGENTS.md for coding agents.
+
 ### 3.1.0 [October 15, 2026]
 
 - Submissions and data requests can now be in the `declined` state, when a signer declines to sign. Data

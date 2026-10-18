@@ -12,7 +12,6 @@ package docspring
 
 import (
 	"encoding/json"
-	"bytes"
 	"fmt"
 )
 
@@ -25,6 +24,7 @@ type SubmissionDataRequestToken struct {
 	Secret string `json:"secret"`
 	ExpiresAt NullableString `json:"expires_at"`
 	DataRequestUrl NullableString `json:"data_request_url"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _SubmissionDataRequestToken SubmissionDataRequestToken
@@ -166,6 +166,11 @@ func (o SubmissionDataRequestToken) ToMap() (map[string]interface{}, error) {
 	toSerialize["secret"] = o.Secret
 	toSerialize["expires_at"] = o.ExpiresAt.Get()
 	toSerialize["data_request_url"] = o.DataRequestUrl.Get()
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -196,15 +201,23 @@ func (o *SubmissionDataRequestToken) UnmarshalJSON(data []byte) (err error) {
 
 	varSubmissionDataRequestToken := _SubmissionDataRequestToken{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varSubmissionDataRequestToken)
+	err = json.Unmarshal(data, &varSubmissionDataRequestToken)
 
 	if err != nil {
 		return err
 	}
 
 	*o = SubmissionDataRequestToken(varSubmissionDataRequestToken)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "secret")
+		delete(additionalProperties, "expires_at")
+		delete(additionalProperties, "data_request_url")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

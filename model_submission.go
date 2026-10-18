@@ -12,7 +12,6 @@ package docspring
 
 import (
 	"encoding/json"
-	"bytes"
 	"fmt"
 )
 
@@ -48,6 +47,7 @@ type Submission struct {
 	Source *string `json:"source,omitempty"`
 	Referrer NullableString `json:"referrer,omitempty"`
 	Data map[string]interface{} `json:"data,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _Submission Submission
@@ -857,6 +857,11 @@ func (o Submission) ToMap() (map[string]interface{}, error) {
 	if o.Data != nil {
 		toSerialize["data"] = o.Data
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -907,15 +912,46 @@ func (o *Submission) UnmarshalJSON(data []byte) (err error) {
 
 	varSubmission := _Submission{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varSubmission)
+	err = json.Unmarshal(data, &varSubmission)
 
 	if err != nil {
 		return err
 	}
 
 	*o = Submission(varSubmission)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "batch_id")
+		delete(additionalProperties, "data_requests")
+		delete(additionalProperties, "editable")
+		delete(additionalProperties, "error_message")
+		delete(additionalProperties, "expired")
+		delete(additionalProperties, "expires_at")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "json_schema_errors")
+		delete(additionalProperties, "metadata")
+		delete(additionalProperties, "password")
+		delete(additionalProperties, "processed_at")
+		delete(additionalProperties, "state")
+		delete(additionalProperties, "template_id")
+		delete(additionalProperties, "template_type")
+		delete(additionalProperties, "template_version")
+		delete(additionalProperties, "test")
+		delete(additionalProperties, "truncated_text")
+		delete(additionalProperties, "pdf_hash")
+		delete(additionalProperties, "download_url")
+		delete(additionalProperties, "permanent_download_url")
+		delete(additionalProperties, "preview_download_url")
+		delete(additionalProperties, "preview_generated_at")
+		delete(additionalProperties, "audit_trail_download_url")
+		delete(additionalProperties, "actions")
+		delete(additionalProperties, "source")
+		delete(additionalProperties, "referrer")
+		delete(additionalProperties, "data")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

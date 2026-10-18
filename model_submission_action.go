@@ -12,7 +12,6 @@ package docspring
 
 import (
 	"encoding/json"
-	"bytes"
 	"fmt"
 )
 
@@ -28,6 +27,7 @@ type SubmissionAction struct {
 	ActionCategory string `json:"action_category"`
 	ResultData map[string]interface{} `json:"result_data"`
 	ErrorMessage NullableString `json:"error_message"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _SubmissionAction SubmissionAction
@@ -247,6 +247,11 @@ func (o SubmissionAction) ToMap() (map[string]interface{}, error) {
 	toSerialize["action_category"] = o.ActionCategory
 	toSerialize["result_data"] = o.ResultData
 	toSerialize["error_message"] = o.ErrorMessage.Get()
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -280,15 +285,26 @@ func (o *SubmissionAction) UnmarshalJSON(data []byte) (err error) {
 
 	varSubmissionAction := _SubmissionAction{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varSubmissionAction)
+	err = json.Unmarshal(data, &varSubmissionAction)
 
 	if err != nil {
 		return err
 	}
 
 	*o = SubmissionAction(varSubmissionAction)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "integration_id")
+		delete(additionalProperties, "state")
+		delete(additionalProperties, "action_type")
+		delete(additionalProperties, "action_category")
+		delete(additionalProperties, "result_data")
+		delete(additionalProperties, "error_message")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

@@ -12,7 +12,6 @@ package docspring
 
 import (
 	"encoding/json"
-	"bytes"
 	"fmt"
 )
 
@@ -43,6 +42,7 @@ type SubmissionDataRequest struct {
 	AuthPhoneNumberHash NullableString `json:"auth_phone_number_hash"`
 	IpAddress NullableString `json:"ip_address"`
 	UserAgent NullableString `json:"user_agent"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _SubmissionDataRequest SubmissionDataRequest
@@ -688,6 +688,11 @@ func (o SubmissionDataRequest) ToMap() (map[string]interface{}, error) {
 	toSerialize["auth_phone_number_hash"] = o.AuthPhoneNumberHash.Get()
 	toSerialize["ip_address"] = o.IpAddress.Get()
 	toSerialize["user_agent"] = o.UserAgent.Get()
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -736,15 +741,41 @@ func (o *SubmissionDataRequest) UnmarshalJSON(data []byte) (err error) {
 
 	varSubmissionDataRequest := _SubmissionDataRequest{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varSubmissionDataRequest)
+	err = json.Unmarshal(data, &varSubmissionDataRequest)
 
 	if err != nil {
 		return err
 	}
 
 	*o = SubmissionDataRequest(varSubmissionDataRequest)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "email")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "order")
+		delete(additionalProperties, "sort_order")
+		delete(additionalProperties, "fields")
+		delete(additionalProperties, "metadata")
+		delete(additionalProperties, "state")
+		delete(additionalProperties, "viewed_at")
+		delete(additionalProperties, "completed_at")
+		delete(additionalProperties, "declined_at")
+		delete(additionalProperties, "data")
+		delete(additionalProperties, "auth_type")
+		delete(additionalProperties, "auth_second_factor_type")
+		delete(additionalProperties, "auth_provider")
+		delete(additionalProperties, "auth_session_started_at")
+		delete(additionalProperties, "auth_session_id_hash")
+		delete(additionalProperties, "auth_user_id_hash")
+		delete(additionalProperties, "auth_username_hash")
+		delete(additionalProperties, "auth_phone_number_hash")
+		delete(additionalProperties, "ip_address")
+		delete(additionalProperties, "user_agent")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

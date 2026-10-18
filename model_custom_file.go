@@ -12,7 +12,6 @@ package docspring
 
 import (
 	"encoding/json"
-	"bytes"
 	"fmt"
 )
 
@@ -23,6 +22,7 @@ var _ MappedNullable = &CustomFile{}
 type CustomFile struct {
 	Id NullableString `json:"id"`
 	Url NullableString `json:"url"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CustomFile CustomFile
@@ -110,6 +110,11 @@ func (o CustomFile) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["id"] = o.Id.Get()
 	toSerialize["url"] = o.Url.Get()
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -138,15 +143,21 @@ func (o *CustomFile) UnmarshalJSON(data []byte) (err error) {
 
 	varCustomFile := _CustomFile{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCustomFile)
+	err = json.Unmarshal(data, &varCustomFile)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CustomFile(varCustomFile)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "url")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

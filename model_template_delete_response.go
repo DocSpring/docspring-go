@@ -12,7 +12,6 @@ package docspring
 
 import (
 	"encoding/json"
-	"bytes"
 	"fmt"
 )
 
@@ -25,6 +24,7 @@ type TemplateDeleteResponse struct {
 	Errors []string `json:"errors,omitempty"`
 	LatestVersion NullableString `json:"latest_version,omitempty"`
 	Versions []map[string]interface{} `json:"versions,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _TemplateDeleteResponse TemplateDeleteResponse
@@ -197,6 +197,11 @@ func (o TemplateDeleteResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Versions) {
 		toSerialize["versions"] = o.Versions
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -224,15 +229,23 @@ func (o *TemplateDeleteResponse) UnmarshalJSON(data []byte) (err error) {
 
 	varTemplateDeleteResponse := _TemplateDeleteResponse{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varTemplateDeleteResponse)
+	err = json.Unmarshal(data, &varTemplateDeleteResponse)
 
 	if err != nil {
 		return err
 	}
 
 	*o = TemplateDeleteResponse(varTemplateDeleteResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "errors")
+		delete(additionalProperties, "latest_version")
+		delete(additionalProperties, "versions")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

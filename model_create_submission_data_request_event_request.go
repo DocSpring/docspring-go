@@ -12,7 +12,6 @@ package docspring
 
 import (
 	"encoding/json"
-	"bytes"
 	"fmt"
 )
 
@@ -244,9 +243,8 @@ func (o *CreateSubmissionDataRequestEventRequest) UnmarshalJSON(data []byte) (er
 
 	varCreateSubmissionDataRequestEventRequest := _CreateSubmissionDataRequestEventRequest{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCreateSubmissionDataRequestEventRequest)
+	// Ignore unknown fields, so a field added to the API later doesn't break this client.
+	err = json.Unmarshal(data, &varCreateSubmissionDataRequestEventRequest)
 
 	if err != nil {
 		return err

@@ -12,7 +12,6 @@ package docspring
 
 import (
 	"encoding/json"
-	"bytes"
 	"fmt"
 )
 
@@ -106,9 +105,8 @@ func (o *CreateCustomFileData) UnmarshalJSON(data []byte) (err error) {
 
 	varCreateCustomFileData := _CreateCustomFileData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCreateCustomFileData)
+	// Ignore unknown fields, so a field added to the API later doesn't break this client.
+	err = json.Unmarshal(data, &varCreateCustomFileData)
 
 	if err != nil {
 		return err

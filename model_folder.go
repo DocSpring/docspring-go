@@ -12,7 +12,6 @@ package docspring
 
 import (
 	"encoding/json"
-	"bytes"
 	"fmt"
 )
 
@@ -25,6 +24,7 @@ type Folder struct {
 	Name NullableString `json:"name"`
 	Path NullableString `json:"path"`
 	ParentFolderId NullableString `json:"parent_folder_id"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _Folder Folder
@@ -168,6 +168,11 @@ func (o Folder) ToMap() (map[string]interface{}, error) {
 	toSerialize["name"] = o.Name.Get()
 	toSerialize["path"] = o.Path.Get()
 	toSerialize["parent_folder_id"] = o.ParentFolderId.Get()
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -198,15 +203,23 @@ func (o *Folder) UnmarshalJSON(data []byte) (err error) {
 
 	varFolder := _Folder{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varFolder)
+	err = json.Unmarshal(data, &varFolder)
 
 	if err != nil {
 		return err
 	}
 
 	*o = Folder(varFolder)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "path")
+		delete(additionalProperties, "parent_folder_id")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

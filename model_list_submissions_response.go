@@ -12,7 +12,6 @@ package docspring
 
 import (
 	"encoding/json"
-	"bytes"
 	"fmt"
 )
 
@@ -24,6 +23,7 @@ type ListSubmissionsResponse struct {
 	Submissions []Submission `json:"submissions"`
 	Limit int32 `json:"limit"`
 	NextCursor NullableString `json:"next_cursor"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _ListSubmissionsResponse ListSubmissionsResponse
@@ -135,6 +135,11 @@ func (o ListSubmissionsResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize["submissions"] = o.Submissions
 	toSerialize["limit"] = o.Limit
 	toSerialize["next_cursor"] = o.NextCursor.Get()
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -164,15 +169,22 @@ func (o *ListSubmissionsResponse) UnmarshalJSON(data []byte) (err error) {
 
 	varListSubmissionsResponse := _ListSubmissionsResponse{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varListSubmissionsResponse)
+	err = json.Unmarshal(data, &varListSubmissionsResponse)
 
 	if err != nil {
 		return err
 	}
 
 	*o = ListSubmissionsResponse(varListSubmissionsResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "submissions")
+		delete(additionalProperties, "limit")
+		delete(additionalProperties, "next_cursor")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

@@ -12,7 +12,6 @@ package docspring
 
 import (
 	"encoding/json"
-	"bytes"
 	"fmt"
 )
 
@@ -24,6 +23,7 @@ type TemplateAddFieldsResponse struct {
 	Status string `json:"status"`
 	Errors []string `json:"errors,omitempty"`
 	NewFieldIds []int32 `json:"new_field_ids,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _TemplateAddFieldsResponse TemplateAddFieldsResponse
@@ -151,6 +151,11 @@ func (o TemplateAddFieldsResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.NewFieldIds) {
 		toSerialize["new_field_ids"] = o.NewFieldIds
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -178,15 +183,22 @@ func (o *TemplateAddFieldsResponse) UnmarshalJSON(data []byte) (err error) {
 
 	varTemplateAddFieldsResponse := _TemplateAddFieldsResponse{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varTemplateAddFieldsResponse)
+	err = json.Unmarshal(data, &varTemplateAddFieldsResponse)
 
 	if err != nil {
 		return err
 	}
 
 	*o = TemplateAddFieldsResponse(varTemplateAddFieldsResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "errors")
+		delete(additionalProperties, "new_field_ids")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

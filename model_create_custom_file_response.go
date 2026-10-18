@@ -12,7 +12,6 @@ package docspring
 
 import (
 	"encoding/json"
-	"bytes"
 	"fmt"
 )
 
@@ -24,6 +23,7 @@ type CreateCustomFileResponse struct {
 	Status string `json:"status"`
 	CustomFile CustomFile `json:"custom_file"`
 	Errors []string `json:"errors,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CreateCustomFileResponse CreateCustomFileResponse
@@ -142,6 +142,11 @@ func (o CreateCustomFileResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Errors) {
 		toSerialize["errors"] = o.Errors
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -170,15 +175,22 @@ func (o *CreateCustomFileResponse) UnmarshalJSON(data []byte) (err error) {
 
 	varCreateCustomFileResponse := _CreateCustomFileResponse{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCreateCustomFileResponse)
+	err = json.Unmarshal(data, &varCreateCustomFileResponse)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CreateCustomFileResponse(varCreateCustomFileResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "custom_file")
+		delete(additionalProperties, "errors")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

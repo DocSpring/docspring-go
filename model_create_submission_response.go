@@ -12,7 +12,6 @@ package docspring
 
 import (
 	"encoding/json"
-	"bytes"
 	"fmt"
 )
 
@@ -24,6 +23,7 @@ type CreateSubmissionResponse struct {
 	Status string `json:"status"`
 	Submission SubmissionPreview `json:"submission"`
 	Errors []string `json:"errors,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CreateSubmissionResponse CreateSubmissionResponse
@@ -142,6 +142,11 @@ func (o CreateSubmissionResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Errors) {
 		toSerialize["errors"] = o.Errors
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -170,15 +175,22 @@ func (o *CreateSubmissionResponse) UnmarshalJSON(data []byte) (err error) {
 
 	varCreateSubmissionResponse := _CreateSubmissionResponse{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCreateSubmissionResponse)
+	err = json.Unmarshal(data, &varCreateSubmissionResponse)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CreateSubmissionResponse(varCreateSubmissionResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "submission")
+		delete(additionalProperties, "errors")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

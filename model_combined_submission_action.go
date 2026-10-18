@@ -12,7 +12,6 @@ package docspring
 
 import (
 	"encoding/json"
-	"bytes"
 	"fmt"
 )
 
@@ -28,6 +27,7 @@ type CombinedSubmissionAction struct {
 	ActionCategory string `json:"action_category"`
 	ResultData map[string]interface{} `json:"result_data"`
 	ErrorMessage NullableString `json:"error_message"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CombinedSubmissionAction CombinedSubmissionAction
@@ -249,6 +249,11 @@ func (o CombinedSubmissionAction) ToMap() (map[string]interface{}, error) {
 	toSerialize["action_category"] = o.ActionCategory
 	toSerialize["result_data"] = o.ResultData
 	toSerialize["error_message"] = o.ErrorMessage.Get()
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -282,15 +287,26 @@ func (o *CombinedSubmissionAction) UnmarshalJSON(data []byte) (err error) {
 
 	varCombinedSubmissionAction := _CombinedSubmissionAction{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCombinedSubmissionAction)
+	err = json.Unmarshal(data, &varCombinedSubmissionAction)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CombinedSubmissionAction(varCombinedSubmissionAction)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "integration_id")
+		delete(additionalProperties, "state")
+		delete(additionalProperties, "action_type")
+		delete(additionalProperties, "action_category")
+		delete(additionalProperties, "result_data")
+		delete(additionalProperties, "error_message")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }
