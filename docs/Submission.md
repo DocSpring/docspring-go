@@ -21,7 +21,8 @@ Name | Type | Description | Notes
 **SignatureRequests** | [**[]SignatureRequest**](SignatureRequest.md) | The people asked to sign the submission (and fill in their fields), in order. | 
 **Actions** | [**[]SubmissionAction**](SubmissionAction.md) | The uploads of the submission's PDF to your storage (account integrations). | 
 **TruncatedText** | **map[string][]string** | The text of each field that didn't fit in it, by field name. Left out (null) with `data`, and empty once the submission has expired. | 
-**Files** | [**SubmissionFiles**](SubmissionFiles.md) | The generated files: `pdf` once the submission has been processed, `audit_trail` once its signature requests are completed, and `preview` once a preview PDF has been generated. Empty once the submission has expired. | 
+**OutputFormats** | [**[]OutputFormat**](OutputFormat.md) | What the submission makes: `pdf`, and `png` (an image of each page of the PDF, up to 100 pages) when you ask for it. Default `["pdf"]`. POST /submissions/{submission_id}/generate_files adds `png` to a processed submission. | 
+**Files** | [**SubmissionFiles**](SubmissionFiles.md) | The generated files: `pdf` once the submission has been processed, `png` (the images of the PDF's pages, when `output_formats` has it: `files.png.pages[0]` is page 1), `audit_trail` once its signature requests are completed, and `preview` once a preview PDF has been generated. Empty once the submission has expired. | 
 **PreviewGeneratedAt** | **NullableTime** | When the preview PDF was generated. Null if there is no preview. | 
 **Expired** | **bool** | An expired submission's data, metadata, password and PDF have been deleted. | 
 **ExpiresAt** | **NullableTime** | When the submission expires. Null if it's kept until you delete it. | 
@@ -33,7 +34,7 @@ Name | Type | Description | Notes
 
 ### NewSubmission
 
-`func NewSubmission(id string, templateId NullableString, templateType TemplateType, templateVersion NullableString, batchId NullableString, source SubmissionSource, state SubmissionState, test bool, editable bool, data map[string]interface{}, dataErrors []ErrorDetail, errorMessage NullableString, metadata map[string]interface{}, hasPassword bool, signatureRequests []SignatureRequest, actions []SubmissionAction, truncatedText map[string][]string, files SubmissionFiles, previewGeneratedAt NullableTime, expired bool, expiresAt NullableTime, processedAt NullableTime, createdAt time.Time, updatedAt time.Time, ) *Submission`
+`func NewSubmission(id string, templateId NullableString, templateType TemplateType, templateVersion NullableString, batchId NullableString, source SubmissionSource, state SubmissionState, test bool, editable bool, data map[string]interface{}, dataErrors []ErrorDetail, errorMessage NullableString, metadata map[string]interface{}, hasPassword bool, signatureRequests []SignatureRequest, actions []SubmissionAction, truncatedText map[string][]string, outputFormats []OutputFormat, files SubmissionFiles, previewGeneratedAt NullableTime, expired bool, expiresAt NullableTime, processedAt NullableTime, createdAt time.Time, updatedAt time.Time, ) *Submission`
 
 NewSubmission instantiates a new Submission object
 This constructor will assign default values to properties that have it defined,
@@ -448,6 +449,26 @@ SetTruncatedText sets TruncatedText field to given value.
 `func (o *Submission) UnsetTruncatedText()`
 
 UnsetTruncatedText ensures that no value is present for TruncatedText, not even an explicit nil
+### GetOutputFormats
+
+`func (o *Submission) GetOutputFormats() []OutputFormat`
+
+GetOutputFormats returns the OutputFormats field if non-nil, zero value otherwise.
+
+### GetOutputFormatsOk
+
+`func (o *Submission) GetOutputFormatsOk() (*[]OutputFormat, bool)`
+
+GetOutputFormatsOk returns a tuple with the OutputFormats field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetOutputFormats
+
+`func (o *Submission) SetOutputFormats(v []OutputFormat)`
+
+SetOutputFormats sets OutputFormats field to given value.
+
+
 ### GetFiles
 
 `func (o *Submission) GetFiles() SubmissionFiles`

@@ -55,7 +55,9 @@ type Submission struct {
 	Actions []SubmissionAction `json:"actions"`
 	// The text of each field that didn't fit in it, by field name. Left out (null) with `data`, and empty once the submission has expired.
 	TruncatedText map[string][]string `json:"truncated_text"`
-	// The generated files: `pdf` once the submission has been processed, `audit_trail` once its signature requests are completed, and `preview` once a preview PDF has been generated. Empty once the submission has expired.
+	// What the submission makes: `pdf`, and `png` (an image of each page of the PDF, up to 100 pages) when you ask for it. Default `["pdf"]`. POST /submissions/{submission_id}/generate_files adds `png` to a processed submission.
+	OutputFormats []OutputFormat `json:"output_formats"`
+	// The generated files: `pdf` once the submission has been processed, `png` (the images of the PDF's pages, when `output_formats` has it: `files.png.pages[0]` is page 1), `audit_trail` once its signature requests are completed, and `preview` once a preview PDF has been generated. Empty once the submission has expired.
 	Files SubmissionFiles `json:"files"`
 	// When the preview PDF was generated. Null if there is no preview.
 	PreviewGeneratedAt NullableTime `json:"preview_generated_at"`
@@ -78,7 +80,7 @@ type _Submission Submission
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewSubmission(id string, templateId NullableString, templateType TemplateType, templateVersion NullableString, batchId NullableString, source SubmissionSource, state SubmissionState, test bool, editable bool, data map[string]interface{}, dataErrors []ErrorDetail, errorMessage NullableString, metadata map[string]interface{}, hasPassword bool, signatureRequests []SignatureRequest, actions []SubmissionAction, truncatedText map[string][]string, files SubmissionFiles, previewGeneratedAt NullableTime, expired bool, expiresAt NullableTime, processedAt NullableTime, createdAt time.Time, updatedAt time.Time) *Submission {
+func NewSubmission(id string, templateId NullableString, templateType TemplateType, templateVersion NullableString, batchId NullableString, source SubmissionSource, state SubmissionState, test bool, editable bool, data map[string]interface{}, dataErrors []ErrorDetail, errorMessage NullableString, metadata map[string]interface{}, hasPassword bool, signatureRequests []SignatureRequest, actions []SubmissionAction, truncatedText map[string][]string, outputFormats []OutputFormat, files SubmissionFiles, previewGeneratedAt NullableTime, expired bool, expiresAt NullableTime, processedAt NullableTime, createdAt time.Time, updatedAt time.Time) *Submission {
 	this := Submission{}
 	this.Id = id
 	this.TemplateId = templateId
@@ -97,6 +99,7 @@ func NewSubmission(id string, templateId NullableString, templateType TemplateTy
 	this.SignatureRequests = signatureRequests
 	this.Actions = actions
 	this.TruncatedText = truncatedText
+	this.OutputFormats = outputFormats
 	this.Files = files
 	this.PreviewGeneratedAt = previewGeneratedAt
 	this.Expired = expired
@@ -535,6 +538,30 @@ func (o *Submission) SetTruncatedText(v map[string][]string) {
 	o.TruncatedText = v
 }
 
+// GetOutputFormats returns the OutputFormats field value
+func (o *Submission) GetOutputFormats() []OutputFormat {
+	if o == nil {
+		var ret []OutputFormat
+		return ret
+	}
+
+	return o.OutputFormats
+}
+
+// GetOutputFormatsOk returns a tuple with the OutputFormats field value
+// and a boolean to check if the value has been set.
+func (o *Submission) GetOutputFormatsOk() ([]OutputFormat, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.OutputFormats, true
+}
+
+// SetOutputFormats sets field value
+func (o *Submission) SetOutputFormats(v []OutputFormat) {
+	o.OutputFormats = v
+}
+
 // GetFiles returns the Files field value
 func (o *Submission) GetFiles() SubmissionFiles {
 	if o == nil {
@@ -740,6 +767,7 @@ func (o Submission) ToMap() (map[string]interface{}, error) {
 	if o.TruncatedText != nil {
 		toSerialize["truncated_text"] = o.TruncatedText
 	}
+	toSerialize["output_formats"] = o.OutputFormats
 	toSerialize["files"] = o.Files
 	toSerialize["preview_generated_at"] = o.PreviewGeneratedAt.Get()
 	toSerialize["expired"] = o.Expired
@@ -777,6 +805,7 @@ func (o *Submission) UnmarshalJSON(data []byte) (err error) {
 		"signature_requests",
 		"actions",
 		"truncated_text",
+		"output_formats",
 		"files",
 		"preview_generated_at",
 		"expired",
@@ -830,6 +859,7 @@ func (o *Submission) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "signature_requests")
 		delete(additionalProperties, "actions")
 		delete(additionalProperties, "truncated_text")
+		delete(additionalProperties, "output_formats")
 		delete(additionalProperties, "files")
 		delete(additionalProperties, "preview_generated_at")
 		delete(additionalProperties, "expired")

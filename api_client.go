@@ -25,6 +25,171 @@ import (
 // ClientAPIService ClientAPI service
 type ClientAPIService service
 
+type ApiAddTemplateFieldsRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	templateId string
+	body *AddTemplateFieldsRequest
+}
+
+// The fields to add to the template's draft.
+func (r ApiAddTemplateFieldsRequest) Body(body AddTemplateFieldsRequest) ApiAddTemplateFieldsRequest {
+	r.body = &body
+	return r
+}
+
+func (r ApiAddTemplateFieldsRequest) Execute() (*TemplateFields, *http.Response, error) {
+	return r.ApiService.AddTemplateFieldsExecute(r)
+}
+
+/*
+AddTemplateFields Add fields to a template
+
+Adds fields to a template's draft and returns all of its fields. Publish a version for submissions of
+published versions to have them.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param templateId The template's ID.
+ @return ApiAddTemplateFieldsRequest
+*/
+func (a *ClientAPIService) AddTemplateFields(ctx context.Context, templateId string) ApiAddTemplateFieldsRequest {
+	return ApiAddTemplateFieldsRequest{
+		ApiService: a,
+		ctx: ctx,
+		templateId: templateId,
+	}
+}
+
+// Execute executes the request
+//  @return TemplateFields
+func (a *ClientAPIService) AddTemplateFieldsExecute(r ApiAddTemplateFieldsRequest) (*TemplateFields, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *TemplateFields
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.AddTemplateFields")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/templates/{template_id}/fields"
+	localVarPath = strings.Replace(localVarPath, "{"+"template_id"+"}", url.PathEscape(parameterValueToString(r.templateId, "templateId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	if r.body != nil {
+		localVarPostBody = r.body
+	}
+	if err := a.client.validateRequest("addTemplateFields", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
+		return localVarReturnValue, nil, err
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 409 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 422 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiCopyTemplateRequest struct {
 	ctx context.Context
 	ApiService *ClientAPIService
@@ -989,7 +1154,7 @@ func (r ApiCreateSubmissionRequest) Version(version string) ApiCreateSubmissionR
 	return r
 }
 
-// Wait until the PDF has been generated before responding. Default true on sync.api hosts.
+// Wait until the files have been generated before responding. Default true on sync.api hosts.
 func (r ApiCreateSubmissionRequest) Wait(wait bool) ApiCreateSubmissionRequest {
 	r.wait = &wait
 	return r
@@ -1357,7 +1522,7 @@ func (r ApiCreateTemplateRequest) Body(body CreateTemplateRequest) ApiCreateTemp
 	return r
 }
 
-// Wait until the PDF has been processed before responding. Default true on sync.api hosts.
+// Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts.
 func (r ApiCreateTemplateRequest) Wait(wait bool) ApiCreateTemplateRequest {
 	r.wait = &wait
 	return r
@@ -2443,6 +2608,186 @@ func (a *ClientAPIService) ExpireSubmissionExecute(r ApiExpireSubmissionRequest)
 			error: localVarHTTPResponse.Status,
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiGenerateSubmissionFilesRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	submissionId string
+	body *GenerateSubmissionFilesRequest
+	wait *bool
+}
+
+// The formats to make.
+func (r ApiGenerateSubmissionFilesRequest) Body(body GenerateSubmissionFilesRequest) ApiGenerateSubmissionFilesRequest {
+	r.body = &body
+	return r
+}
+
+// Wait until the files have been generated before responding. Default true on sync.api hosts.
+func (r ApiGenerateSubmissionFilesRequest) Wait(wait bool) ApiGenerateSubmissionFilesRequest {
+	r.wait = &wait
+	return r
+}
+
+func (r ApiGenerateSubmissionFilesRequest) Execute() (*Submission, *http.Response, error) {
+	return r.ApiService.GenerateSubmissionFilesExecute(r)
+}
+
+/*
+GenerateSubmissionFiles Generate more files
+
+Adds formats to a processed submission's files, in the background: `png`, a PNG image of each page of the
+PDF (up to 100 pages). To make them with the submission, add them to `output_formats` when you create it.
+
+Each new file is listed in `files` while it's made: on sync.api hosts the request waits for them (unless you
+pass `wait=false`), otherwise poll GET /submissions/{submission_id} until none of their `state` is `pending`.
+A file that couldn't be made has the state `error` and an `error_message`, and the submission stays
+processed. Asking for a format the submission already has (or is making) changes nothing.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param submissionId The submission's ID.
+ @return ApiGenerateSubmissionFilesRequest
+*/
+func (a *ClientAPIService) GenerateSubmissionFiles(ctx context.Context, submissionId string) ApiGenerateSubmissionFilesRequest {
+	return ApiGenerateSubmissionFilesRequest{
+		ApiService: a,
+		ctx: ctx,
+		submissionId: submissionId,
+	}
+}
+
+// Execute executes the request
+//  @return Submission
+func (a *ClientAPIService) GenerateSubmissionFilesExecute(r ApiGenerateSubmissionFilesRequest) (*Submission, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *Submission
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.GenerateSubmissionFiles")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/submissions/{submission_id}/generate_files"
+	localVarPath = strings.Replace(localVarPath, "{"+"submission_id"+"}", url.PathEscape(parameterValueToString(r.submissionId, "submissionId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
+
+	if r.wait != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "wait", r.wait, "form", "")
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	if r.body != nil {
+		localVarPostBody = r.body
+	}
+	if err := a.client.validateRequest("generateSubmissionFiles", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
+		return localVarReturnValue, nil, err
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 409 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 422 {
 			var v ErrorResponse
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
@@ -3666,6 +4011,157 @@ func (a *ClientAPIService) GetTemplateExecute(r ApiGetTemplateRequest) (*Templat
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiGetTemplateDiffRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	templateId string
+	version *string
+}
+
+// A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+func (r ApiGetTemplateDiffRequest) Version(version string) ApiGetTemplateDiffRequest {
+	r.version = &version
+	return r
+}
+
+func (r ApiGetTemplateDiffRequest) Execute() (*TemplateDiff, *http.Response, error) {
+	return r.ApiService.GetTemplateDiffExecute(r)
+}
+
+/*
+GetTemplateDiff Compare a version of a template with the one before it
+
+Returns what changed in the template's draft since its latest published version (or in a published version
+since the one before it): fields added, removed, changed and moved, the settings that changed, and whether
+the document was replaced. Check it before you publish a version.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param templateId The template's ID.
+ @return ApiGetTemplateDiffRequest
+*/
+func (a *ClientAPIService) GetTemplateDiff(ctx context.Context, templateId string) ApiGetTemplateDiffRequest {
+	return ApiGetTemplateDiffRequest{
+		ApiService: a,
+		ctx: ctx,
+		templateId: templateId,
+	}
+}
+
+// Execute executes the request
+//  @return TemplateDiff
+func (a *ClientAPIService) GetTemplateDiffExecute(r ApiGetTemplateDiffRequest) (*TemplateDiff, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *TemplateDiff
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.GetTemplateDiff")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/templates/{template_id}/diff"
+	localVarPath = strings.Replace(localVarPath, "{"+"template_id"+"}", url.PathEscape(parameterValueToString(r.templateId, "templateId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	if r.version != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "version", r.version, "form", "")
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if err := a.client.validateRequest("getTemplateDiff", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
+		return localVarReturnValue, nil, err
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 409 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiGetTemplateModelCodeRequest struct {
 	ctx context.Context
 	ApiService *ClientAPIService
@@ -3783,6 +4279,156 @@ func (a *ClientAPIService) GetTemplateModelCodeExecute(r ApiGetTemplateModelCode
 			error: localVarHTTPResponse.Status,
 		}
 		if localVarHTTPResponse.StatusCode == 422 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiGetTemplatePageImagesRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	templateId string
+	version *string
+}
+
+// A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+func (r ApiGetTemplatePageImagesRequest) Version(version string) ApiGetTemplatePageImagesRequest {
+	r.version = &version
+	return r
+}
+
+func (r ApiGetTemplatePageImagesRequest) Execute() (*TemplatePageImages, *http.Response, error) {
+	return r.ApiService.GetTemplatePageImagesExecute(r)
+}
+
+/*
+GetTemplatePageImages Get images of a template's pages
+
+Returns a JPEG image of each page of a PDF template's PDF, with temporary links to download them: the draft's
+PDF, or a published version's. Use them to see the pages that fields are placed on.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param templateId The template's ID.
+ @return ApiGetTemplatePageImagesRequest
+*/
+func (a *ClientAPIService) GetTemplatePageImages(ctx context.Context, templateId string) ApiGetTemplatePageImagesRequest {
+	return ApiGetTemplatePageImagesRequest{
+		ApiService: a,
+		ctx: ctx,
+		templateId: templateId,
+	}
+}
+
+// Execute executes the request
+//  @return TemplatePageImages
+func (a *ClientAPIService) GetTemplatePageImagesExecute(r ApiGetTemplatePageImagesRequest) (*TemplatePageImages, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *TemplatePageImages
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.GetTemplatePageImages")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/templates/{template_id}/page_images"
+	localVarPath = strings.Replace(localVarPath, "{"+"template_id"+"}", url.PathEscape(parameterValueToString(r.templateId, "templateId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	if r.version != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "version", r.version, "form", "")
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if err := a.client.validateRequest("getTemplatePageImages", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
+		return localVarReturnValue, nil, err
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 409 {
 			var v ErrorResponse
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
@@ -4747,6 +5393,157 @@ func (a *ClientAPIService) ListSubmissionsExecute(r ApiListSubmissionsRequest) (
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiListTemplateFieldsRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	templateId string
+	version *string
+}
+
+// A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+func (r ApiListTemplateFieldsRequest) Version(version string) ApiListTemplateFieldsRequest {
+	r.version = &version
+	return r
+}
+
+func (r ApiListTemplateFieldsRequest) Execute() (*TemplateFields, *http.Response, error) {
+	return r.ApiService.ListTemplateFieldsExecute(r)
+}
+
+/*
+ListTemplateFields List a template's fields
+
+Returns a template's fields with all of their settings, page by page: the draft's fields, or a published
+version's. A PDF template's fields are placed on its pages: GET /templates/{template_id}/page_images has images
+of the pages.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param templateId The template's ID.
+ @return ApiListTemplateFieldsRequest
+*/
+func (a *ClientAPIService) ListTemplateFields(ctx context.Context, templateId string) ApiListTemplateFieldsRequest {
+	return ApiListTemplateFieldsRequest{
+		ApiService: a,
+		ctx: ctx,
+		templateId: templateId,
+	}
+}
+
+// Execute executes the request
+//  @return TemplateFields
+func (a *ClientAPIService) ListTemplateFieldsExecute(r ApiListTemplateFieldsRequest) (*TemplateFields, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *TemplateFields
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.ListTemplateFields")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/templates/{template_id}/fields"
+	localVarPath = strings.Replace(localVarPath, "{"+"template_id"+"}", url.PathEscape(parameterValueToString(r.templateId, "templateId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	if r.version != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "version", r.version, "form", "")
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if err := a.client.validateRequest("listTemplateFields", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
+		return localVarReturnValue, nil, err
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 409 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiListTemplateSubmissionsRequest struct {
 	ctx context.Context
 	ApiService *ClientAPIService
@@ -5644,7 +6441,8 @@ func (r ApiPublishTemplateVersionRequest) Execute() (*TemplateVersion, *http.Res
 PublishTemplateVersion Publish a template version
 
 Publishes the template's draft as a new version that doesn't change. `version_type` says which part of the
-latest version number goes up.
+latest version number goes up. While the template's PDF is downloading or being processed, or DocSpring is
+setting up its fields, it returns a 409 that says so.
 
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -5788,6 +6586,160 @@ func (a *ClientAPIService) PublishTemplateVersionExecute(r ApiPublishTemplateVer
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiRemoveTemplateFieldsRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	templateId string
+	body *RemoveTemplateFieldsRequest
+}
+
+// The fields to remove from the template's draft.
+func (r ApiRemoveTemplateFieldsRequest) Body(body RemoveTemplateFieldsRequest) ApiRemoveTemplateFieldsRequest {
+	r.body = &body
+	return r
+}
+
+func (r ApiRemoveTemplateFieldsRequest) Execute() (*TemplateFields, *http.Response, error) {
+	return r.ApiService.RemoveTemplateFieldsExecute(r)
+}
+
+/*
+RemoveTemplateFields Remove fields from a template
+
+Removes fields from a template's draft and returns the fields that are left. Conditional logic that used only
+the removed fields is removed too.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param templateId The template's ID.
+ @return ApiRemoveTemplateFieldsRequest
+*/
+func (a *ClientAPIService) RemoveTemplateFields(ctx context.Context, templateId string) ApiRemoveTemplateFieldsRequest {
+	return ApiRemoveTemplateFieldsRequest{
+		ApiService: a,
+		ctx: ctx,
+		templateId: templateId,
+	}
+}
+
+// Execute executes the request
+//  @return TemplateFields
+func (a *ClientAPIService) RemoveTemplateFieldsExecute(r ApiRemoveTemplateFieldsRequest) (*TemplateFields, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *TemplateFields
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.RemoveTemplateFields")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/templates/{template_id}/fields/remove"
+	localVarPath = strings.Replace(localVarPath, "{"+"template_id"+"}", url.PathEscape(parameterValueToString(r.templateId, "templateId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	if r.body != nil {
+		localVarPostBody = r.body
+	}
+	if err := a.client.validateRequest("removeTemplateFields", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
+		return localVarReturnValue, nil, err
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 422 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiRenameFolderRequest struct {
 	ctx context.Context
 	ApiService *ClientAPIService
@@ -5870,6 +6822,161 @@ func (a *ClientAPIService) RenameFolderExecute(r ApiRenameFolderRequest) (*Folde
 		localVarPostBody = r.body
 	}
 	if err := a.client.validateRequest("renameFolder", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
+		return localVarReturnValue, nil, err
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 422 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiReorderTemplateFieldsRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	templateId string
+	body *ReorderTemplateFieldsRequest
+}
+
+// The new order of the fields in the template's draft.
+func (r ApiReorderTemplateFieldsRequest) Body(body ReorderTemplateFieldsRequest) ApiReorderTemplateFieldsRequest {
+	r.body = &body
+	return r
+}
+
+func (r ApiReorderTemplateFieldsRequest) Execute() (*TemplateFields, *http.Response, error) {
+	return r.ApiService.ReorderTemplateFieldsExecute(r)
+}
+
+/*
+ReorderTemplateFields Reorder a template's fields
+
+Changes the order of the fields in a template's draft and returns them in their new order. Send every field's
+ID: each field stays on its page, and a page's fields are printed in this order, so a later field prints over
+an earlier one where they overlap. Their values are in this order in the template's data schema and forms.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param templateId The template's ID.
+ @return ApiReorderTemplateFieldsRequest
+*/
+func (a *ClientAPIService) ReorderTemplateFields(ctx context.Context, templateId string) ApiReorderTemplateFieldsRequest {
+	return ApiReorderTemplateFieldsRequest{
+		ApiService: a,
+		ctx: ctx,
+		templateId: templateId,
+	}
+}
+
+// Execute executes the request
+//  @return TemplateFields
+func (a *ClientAPIService) ReorderTemplateFieldsExecute(r ApiReorderTemplateFieldsRequest) (*TemplateFields, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *TemplateFields
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.ReorderTemplateFields")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/templates/{template_id}/fields/reorder"
+	localVarPath = strings.Replace(localVarPath, "{"+"template_id"+"}", url.PathEscape(parameterValueToString(r.templateId, "templateId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	if r.body != nil {
+		localVarPostBody = r.body
+	}
+	if err := a.client.validateRequest("reorderTemplateFields", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
 		return localVarReturnValue, nil, err
 	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -6405,7 +7512,8 @@ func (r ApiUpdateTemplateRequest) Execute() (*Template, *http.Response, error) {
 UpdateTemplate Update a template
 
 Changes a template's draft. Properties left out keep their values. `defaults` and `html_engine_options`
-replace the whole object. Setting `parent_folder_id` moves the template and all of its published versions.
+replace the whole object, and `field_groups` changes only the groups it lists. Setting `parent_folder_id`
+moves the template and all of its published versions.
 
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -6502,7 +7610,7 @@ func (a *ClientAPIService) UpdateTemplateExecute(r ApiUpdateTemplateRequest) (*T
 					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
-		if localVarHTTPResponse.StatusCode == 404 {
+		if localVarHTTPResponse.StatusCode == 422 {
 			var v ErrorResponse
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
@@ -6513,7 +7621,7 @@ func (a *ClientAPIService) UpdateTemplateExecute(r ApiUpdateTemplateRequest) (*T
 					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
-		if localVarHTTPResponse.StatusCode == 422 {
+		if localVarHTTPResponse.StatusCode == 404 {
 			var v ErrorResponse
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
@@ -6557,13 +7665,13 @@ type ApiUpdateTemplateDocumentRequest struct {
 	wait *bool
 }
 
-// The new PDF.
+// The new PDF, as one of `cache_id`, `document_url` and `document_base64`.
 func (r ApiUpdateTemplateDocumentRequest) Body(body UpdateTemplateDocumentRequest) ApiUpdateTemplateDocumentRequest {
 	r.body = &body
 	return r
 }
 
-// Wait until the PDF has been processed before responding. Default true on sync.api hosts.
+// Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts.
 func (r ApiUpdateTemplateDocumentRequest) Wait(wait bool) ApiUpdateTemplateDocumentRequest {
 	r.wait = &wait
 	return r
@@ -6576,9 +7684,10 @@ func (r ApiUpdateTemplateDocumentRequest) Execute() (*Template, *http.Response, 
 /*
 UpdateTemplateDocument Replace a template's PDF
 
-Replaces a PDF template's PDF with one you uploaded with the presigned upload (GET /uploads/presign). The
+Replaces a PDF template's PDF with one you uploaded with the presigned upload (GET /uploads/presign)
+(`cache_id`), a link to download it from (`document_url`), or the file in base64 (`document_base64`). The
 fields stay where they are, unless `reimport_fields` replaces them with the new PDF's fillable fields. To send
-the PDF with the request instead, use PUT /templates/{template_id}/document/upload.
+the PDF as `multipart/form-data` instead, use PUT /templates/{template_id}/document/upload.
 
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -6677,6 +7786,160 @@ func (a *ClientAPIService) UpdateTemplateDocumentExecute(r ApiUpdateTemplateDocu
 					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 422 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiUpdateTemplateFieldsRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	templateId string
+	body *UpdateTemplateFieldsRequest
+}
+
+// The fields to change in the template's draft.
+func (r ApiUpdateTemplateFieldsRequest) Body(body UpdateTemplateFieldsRequest) ApiUpdateTemplateFieldsRequest {
+	r.body = &body
+	return r
+}
+
+func (r ApiUpdateTemplateFieldsRequest) Execute() (*TemplateFields, *http.Response, error) {
+	return r.ApiService.UpdateTemplateFieldsExecute(r)
+}
+
+/*
+UpdateTemplateFields Update a template's fields
+
+Changes fields of a template's draft and returns all of its fields. Settings left out keep their values. A
+shared setting (`type`, `required`, `default`, ...) changes for every field with the same name.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param templateId The template's ID.
+ @return ApiUpdateTemplateFieldsRequest
+*/
+func (a *ClientAPIService) UpdateTemplateFields(ctx context.Context, templateId string) ApiUpdateTemplateFieldsRequest {
+	return ApiUpdateTemplateFieldsRequest{
+		ApiService: a,
+		ctx: ctx,
+		templateId: templateId,
+	}
+}
+
+// Execute executes the request
+//  @return TemplateFields
+func (a *ClientAPIService) UpdateTemplateFieldsExecute(r ApiUpdateTemplateFieldsRequest) (*TemplateFields, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPut
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *TemplateFields
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.UpdateTemplateFields")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/templates/{template_id}/fields"
+	localVarPath = strings.Replace(localVarPath, "{"+"template_id"+"}", url.PathEscape(parameterValueToString(r.templateId, "templateId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	if r.body != nil {
+		localVarPostBody = r.body
+	}
+	if err := a.client.validateRequest("updateTemplateFields", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
+		return localVarReturnValue, nil, err
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
 		}
 		if localVarHTTPResponse.StatusCode == 422 {
 			var v ErrorResponse
@@ -6898,7 +8161,7 @@ func (r ApiUploadTemplateRequest) Document(document *os.File) ApiUploadTemplateR
 	return r
 }
 
-// Wait until the PDF has been processed before responding. Default true on sync.api hosts.
+// Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts.
 func (r ApiUploadTemplateRequest) Wait(wait bool) ApiUploadTemplateRequest {
 	r.wait = &wait
 	return r
@@ -7143,7 +8406,7 @@ func (r ApiUploadTemplateDocumentRequest) Document(document *os.File) ApiUploadT
 	return r
 }
 
-// Wait until the PDF has been processed before responding. Default true on sync.api hosts.
+// Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts.
 func (r ApiUploadTemplateDocumentRequest) Wait(wait bool) ApiUploadTemplateDocumentRequest {
 	r.wait = &wait
 	return r
@@ -7278,6 +8541,171 @@ func (a *ClientAPIService) UploadTemplateDocumentExecute(r ApiUploadTemplateDocu
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiValidateSubmissionRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	templateId string
+	body *ValidateSubmissionRequest
+	version *string
+}
+
+// The submission's data and settings.
+func (r ApiValidateSubmissionRequest) Body(body ValidateSubmissionRequest) ApiValidateSubmissionRequest {
+	r.body = &body
+	return r
+}
+
+// The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published).
+func (r ApiValidateSubmissionRequest) Version(version string) ApiValidateSubmissionRequest {
+	r.version = &version
+	return r
+}
+
+func (r ApiValidateSubmissionRequest) Execute() (*SubmissionValidation, *http.Response, error) {
+	return r.ApiService.ValidateSubmissionExecute(r)
+}
+
+/*
+ValidateSubmission Check a submission without creating it
+
+Checks a submission as creating it would (its data against the template's fields, its settings and signature
+requests) without saving it, generating anything or using credits. It doesn't check your account's credits.
+The response says whether the submission is valid, and if not, has the error that creating it would return.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param templateId The template's ID.
+ @return ApiValidateSubmissionRequest
+*/
+func (a *ClientAPIService) ValidateSubmission(ctx context.Context, templateId string) ApiValidateSubmissionRequest {
+	return ApiValidateSubmissionRequest{
+		ApiService: a,
+		ctx: ctx,
+		templateId: templateId,
+	}
+}
+
+// Execute executes the request
+//  @return SubmissionValidation
+func (a *ClientAPIService) ValidateSubmissionExecute(r ApiValidateSubmissionRequest) (*SubmissionValidation, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *SubmissionValidation
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.ValidateSubmission")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/templates/{template_id}/submissions/validate"
+	localVarPath = strings.Replace(localVarPath, "{"+"template_id"+"}", url.PathEscape(parameterValueToString(r.templateId, "templateId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
+
+	if r.version != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "version", r.version, "form", "")
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	if r.body != nil {
+		localVarPostBody = r.body
+	}
+	if err := a.client.validateRequest("validateSubmission", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
+		return localVarReturnValue, nil, err
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 422 {
 			var v ErrorResponse
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {

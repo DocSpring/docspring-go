@@ -76,6 +76,10 @@ type CreateTemplateRequest struct {
 	Defaults *TemplateDefaultsInput `json:"defaults,omitempty"`
 	// The template's conditional logic rules. Setting them replaces all of the rules.
 	FieldDependencies []TemplateFieldDependencyInput `json:"field_dependencies,omitempty"`
+	// The field names that people using the embedded template editor choose from, each with the data type and settings a field gets when it's given that name. Setting it replaces the whole list; an empty list turns them off.
+	PredefinedFields []PredefinedFieldInput `json:"predefined_fields,omitempty"`
+	// Sample submission data that sets `predefined_fields`: each value becomes a predefined field, with a type that fits it (`string`, `number`, `boolean`, `date`, `email` or `url`) and `required_in_template` true. Nested objects and arrays become names with `/`, such as `customer/email`. Without `predefined_fields` in the same request, it replaces them; with them, it adds to them and sets the types of the ones it has values for.
+	PredefinedFieldsSampleData map[string]interface{} `json:"predefined_fields_sample_data,omitempty"`
 	// The HTML of an HTML template, as a Liquid template. Null for PDF templates.
 	Html NullableString `json:"html,omitempty"`
 	// The SCSS of an HTML template.
@@ -86,9 +90,13 @@ type CreateTemplateRequest struct {
 	FooterHtml NullableString `json:"footer_html,omitempty"`
 	// Null resets the options to their defaults.
 	HtmlEngineOptions NullableHtmlEngineOptionsInput `json:"html_engine_options,omitempty"`
-	// A PDF template's document: the `fields.key` of a file you uploaded with the presigned upload (GET /uploads/presign). Required for a PDF template. To upload the PDF with the request, use POST /templates/upload.
+	// A PDF template's document: the `fields.key` of a file you uploaded with the presigned upload (GET /uploads/presign). A PDF template needs one of `cache_id`, `document_url` and `document_base64`. To upload the PDF with the request, use POST /templates/upload.
 	CacheId *string `json:"cache_id,omitempty"`
-	// The PDF's file name, for a `cache_id` (presigned uploads don't send one).
+	// An https:// link to the template's PDF (up to 100 MB), instead of `cache_id`. DocSpring downloads it after responding, following redirects to other https:// links: the template's `document.state` is `downloading` until then (sync.api hosts wait for it). If it can't be downloaded, the state is `download_failed` and `document.error_message` says why.
+	DocumentUrl *string `json:"document_url,omitempty"`
+	// The template's PDF, encoded as base64 (a `data:` URI works too), instead of `cache_id`. Up to 7 MB before it's encoded: send a larger file with `cache_id` or `document_url`.
+	DocumentBase64 *string `json:"document_base64,omitempty"`
+	// The PDF's file name, for a `cache_id` (presigned uploads don't send one) or `document_base64`. A `document_url`'s is the last part of its path unless you set it.
 	Filename *string `json:"filename,omitempty"`
 	// Set up the PDF's fields as DocSpring's "Automatically detect fields" upload option does: import or detect the fields, name them with AI, and set up conditional logic. `field_source`, `field_naming` and `field_logic` choose how. Default false. `document.page_processing_statuses` and `document.field_logic_status` show how it's going, and `document.state` becomes `processed` once every page's fields are set up.
 	DetectFields *bool `json:"detect_fields,omitempty"`
@@ -98,6 +106,7 @@ type CreateTemplateRequest struct {
 	FieldNaming *FieldSetupNaming `json:"field_naming,omitempty"`
 	// With `detect_fields`, whether AI reads the whole form once the fields are named and sets up conditional logic and required fields (`ai`) or not (`none`). Default: your account's template settings.
 	FieldLogic *FieldSetupLogic `json:"field_logic,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CreateTemplateRequest CreateTemplateRequest
@@ -1058,6 +1067,71 @@ func (o *CreateTemplateRequest) SetFieldDependencies(v []TemplateFieldDependency
 	o.FieldDependencies = v
 }
 
+// GetPredefinedFields returns the PredefinedFields field value if set, zero value otherwise.
+func (o *CreateTemplateRequest) GetPredefinedFields() []PredefinedFieldInput {
+	if o == nil || IsNil(o.PredefinedFields) {
+		var ret []PredefinedFieldInput
+		return ret
+	}
+	return o.PredefinedFields
+}
+
+// GetPredefinedFieldsOk returns a tuple with the PredefinedFields field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateTemplateRequest) GetPredefinedFieldsOk() ([]PredefinedFieldInput, bool) {
+	if o == nil || IsNil(o.PredefinedFields) {
+		return nil, false
+	}
+	return o.PredefinedFields, true
+}
+
+// HasPredefinedFields returns a boolean if a field has been set.
+func (o *CreateTemplateRequest) HasPredefinedFields() bool {
+	if o != nil && !IsNil(o.PredefinedFields) {
+		return true
+	}
+
+	return false
+}
+
+// SetPredefinedFields gets a reference to the given []PredefinedFieldInput and assigns it to the PredefinedFields field.
+func (o *CreateTemplateRequest) SetPredefinedFields(v []PredefinedFieldInput) {
+	o.PredefinedFields = v
+}
+
+// GetPredefinedFieldsSampleData returns the PredefinedFieldsSampleData field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *CreateTemplateRequest) GetPredefinedFieldsSampleData() map[string]interface{} {
+	if o == nil {
+		var ret map[string]interface{}
+		return ret
+	}
+	return o.PredefinedFieldsSampleData
+}
+
+// GetPredefinedFieldsSampleDataOk returns a tuple with the PredefinedFieldsSampleData field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *CreateTemplateRequest) GetPredefinedFieldsSampleDataOk() (map[string]interface{}, bool) {
+	if o == nil || IsNil(o.PredefinedFieldsSampleData) {
+		return map[string]interface{}{}, false
+	}
+	return o.PredefinedFieldsSampleData, true
+}
+
+// HasPredefinedFieldsSampleData returns a boolean if a field has been set.
+func (o *CreateTemplateRequest) HasPredefinedFieldsSampleData() bool {
+	if o != nil && !IsNil(o.PredefinedFieldsSampleData) {
+		return true
+	}
+
+	return false
+}
+
+// SetPredefinedFieldsSampleData gets a reference to the given map[string]interface{} and assigns it to the PredefinedFieldsSampleData field.
+func (o *CreateTemplateRequest) SetPredefinedFieldsSampleData(v map[string]interface{}) {
+	o.PredefinedFieldsSampleData = v
+}
+
 // GetHtml returns the Html field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *CreateTemplateRequest) GetHtml() string {
 	if o == nil || IsNil(o.Html.Get()) {
@@ -1298,6 +1372,70 @@ func (o *CreateTemplateRequest) HasCacheId() bool {
 // SetCacheId gets a reference to the given string and assigns it to the CacheId field.
 func (o *CreateTemplateRequest) SetCacheId(v string) {
 	o.CacheId = &v
+}
+
+// GetDocumentUrl returns the DocumentUrl field value if set, zero value otherwise.
+func (o *CreateTemplateRequest) GetDocumentUrl() string {
+	if o == nil || IsNil(o.DocumentUrl) {
+		var ret string
+		return ret
+	}
+	return *o.DocumentUrl
+}
+
+// GetDocumentUrlOk returns a tuple with the DocumentUrl field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateTemplateRequest) GetDocumentUrlOk() (*string, bool) {
+	if o == nil || IsNil(o.DocumentUrl) {
+		return nil, false
+	}
+	return o.DocumentUrl, true
+}
+
+// HasDocumentUrl returns a boolean if a field has been set.
+func (o *CreateTemplateRequest) HasDocumentUrl() bool {
+	if o != nil && !IsNil(o.DocumentUrl) {
+		return true
+	}
+
+	return false
+}
+
+// SetDocumentUrl gets a reference to the given string and assigns it to the DocumentUrl field.
+func (o *CreateTemplateRequest) SetDocumentUrl(v string) {
+	o.DocumentUrl = &v
+}
+
+// GetDocumentBase64 returns the DocumentBase64 field value if set, zero value otherwise.
+func (o *CreateTemplateRequest) GetDocumentBase64() string {
+	if o == nil || IsNil(o.DocumentBase64) {
+		var ret string
+		return ret
+	}
+	return *o.DocumentBase64
+}
+
+// GetDocumentBase64Ok returns a tuple with the DocumentBase64 field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateTemplateRequest) GetDocumentBase64Ok() (*string, bool) {
+	if o == nil || IsNil(o.DocumentBase64) {
+		return nil, false
+	}
+	return o.DocumentBase64, true
+}
+
+// HasDocumentBase64 returns a boolean if a field has been set.
+func (o *CreateTemplateRequest) HasDocumentBase64() bool {
+	if o != nil && !IsNil(o.DocumentBase64) {
+		return true
+	}
+
+	return false
+}
+
+// SetDocumentBase64 gets a reference to the given string and assigns it to the DocumentBase64 field.
+func (o *CreateTemplateRequest) SetDocumentBase64(v string) {
+	o.DocumentBase64 = &v
 }
 
 // GetFilename returns the Filename field value if set, zero value otherwise.
@@ -1552,6 +1690,12 @@ func (o CreateTemplateRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.FieldDependencies) {
 		toSerialize["field_dependencies"] = o.FieldDependencies
 	}
+	if !IsNil(o.PredefinedFields) {
+		toSerialize["predefined_fields"] = o.PredefinedFields
+	}
+	if o.PredefinedFieldsSampleData != nil {
+		toSerialize["predefined_fields_sample_data"] = o.PredefinedFieldsSampleData
+	}
 	if o.Html.IsSet() {
 		toSerialize["html"] = o.Html.Get()
 	}
@@ -1570,6 +1714,12 @@ func (o CreateTemplateRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.CacheId) {
 		toSerialize["cache_id"] = o.CacheId
 	}
+	if !IsNil(o.DocumentUrl) {
+		toSerialize["document_url"] = o.DocumentUrl
+	}
+	if !IsNil(o.DocumentBase64) {
+		toSerialize["document_base64"] = o.DocumentBase64
+	}
 	if !IsNil(o.Filename) {
 		toSerialize["filename"] = o.Filename
 	}
@@ -1585,6 +1735,11 @@ func (o CreateTemplateRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.FieldLogic) {
 		toSerialize["field_logic"] = o.FieldLogic
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -1612,7 +1767,6 @@ func (o *CreateTemplateRequest) UnmarshalJSON(data []byte) (err error) {
 
 	varCreateTemplateRequest := _CreateTemplateRequest{}
 
-	// Ignore unknown fields, so a field added to the API later doesn't break this client.
 	err = json.Unmarshal(data, &varCreateTemplateRequest)
 
 	if err != nil {
@@ -1620,6 +1774,55 @@ func (o *CreateTemplateRequest) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = CreateTemplateRequest(varCreateTemplateRequest)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "template_type")
+		delete(additionalProperties, "parent_folder_id")
+		delete(additionalProperties, "locked")
+		delete(additionalProperties, "add_signature_request_submission_id_footers")
+		delete(additionalProperties, "ai_field_naming_language")
+		delete(additionalProperties, "allow_additional_properties")
+		delete(additionalProperties, "allow_skipping_optional_fields")
+		delete(additionalProperties, "default_form_mode")
+		delete(additionalProperties, "editable_submissions")
+		delete(additionalProperties, "embed_domains")
+		delete(additionalProperties, "embed_edit_allow_settings")
+		delete(additionalProperties, "embed_edit_allow_versioning")
+		delete(additionalProperties, "embed_edit_allow_document_replacement")
+		delete(additionalProperties, "encrypt_pdfs")
+		delete(additionalProperties, "encrypt_pdfs_password")
+		delete(additionalProperties, "expire_submissions")
+		delete(additionalProperties, "expire_after")
+		delete(additionalProperties, "expiration_interval")
+		delete(additionalProperties, "merge_audit_trail_pdf")
+		delete(additionalProperties, "parse_dates_using_template_date_format")
+		delete(additionalProperties, "public_submissions")
+		delete(additionalProperties, "public_web_form")
+		delete(additionalProperties, "redirect_url")
+		delete(additionalProperties, "slack_webhook_url")
+		delete(additionalProperties, "defaults")
+		delete(additionalProperties, "field_dependencies")
+		delete(additionalProperties, "predefined_fields")
+		delete(additionalProperties, "predefined_fields_sample_data")
+		delete(additionalProperties, "html")
+		delete(additionalProperties, "scss")
+		delete(additionalProperties, "header_html")
+		delete(additionalProperties, "footer_html")
+		delete(additionalProperties, "html_engine_options")
+		delete(additionalProperties, "cache_id")
+		delete(additionalProperties, "document_url")
+		delete(additionalProperties, "document_base64")
+		delete(additionalProperties, "filename")
+		delete(additionalProperties, "detect_fields")
+		delete(additionalProperties, "field_source")
+		delete(additionalProperties, "field_naming")
+		delete(additionalProperties, "field_logic")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Action** | [**TemplateFieldDependencyAction**](TemplateFieldDependencyAction.md) | What the rule does to its targets when its conditions are met. | 
+**Action** | [**TemplateFieldDependencyAction**](TemplateFieldDependencyAction.md) | What the rule does to the fields it applies to when its conditions are met. | 
 **Match** | Pointer to [**TemplateFieldDependencyMatch**](TemplateFieldDependencyMatch.md) | Whether all of the conditions (the default) or any of them must be met. | [optional] 
 **Conditions** | [**[]TemplateFieldDependencyCondition**](TemplateFieldDependencyCondition.md) | The conditions on other fields' values. | 
 **Targets** | **[]string** | The names of the fields the rule shows or makes required. | 

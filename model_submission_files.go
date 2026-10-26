@@ -25,6 +25,7 @@ type SubmissionFiles struct {
 	AuditTrail *GeneratedFile `json:"audit_trail,omitempty"`
 	// The preview PDF from POST /submissions/{submission_id}/generate_preview, such as for a submission still waiting for its signature requests.
 	Preview *GeneratedFile `json:"preview,omitempty"`
+	Png *PageImages `json:"png,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -143,6 +144,38 @@ func (o *SubmissionFiles) SetPreview(v GeneratedFile) {
 	o.Preview = &v
 }
 
+// GetPng returns the Png field value if set, zero value otherwise.
+func (o *SubmissionFiles) GetPng() PageImages {
+	if o == nil || IsNil(o.Png) {
+		var ret PageImages
+		return ret
+	}
+	return *o.Png
+}
+
+// GetPngOk returns a tuple with the Png field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SubmissionFiles) GetPngOk() (*PageImages, bool) {
+	if o == nil || IsNil(o.Png) {
+		return nil, false
+	}
+	return o.Png, true
+}
+
+// HasPng returns a boolean if a field has been set.
+func (o *SubmissionFiles) HasPng() bool {
+	if o != nil && !IsNil(o.Png) {
+		return true
+	}
+
+	return false
+}
+
+// SetPng gets a reference to the given PageImages and assigns it to the Png field.
+func (o *SubmissionFiles) SetPng(v PageImages) {
+	o.Png = &v
+}
+
 func (o SubmissionFiles) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -161,6 +194,9 @@ func (o SubmissionFiles) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Preview) {
 		toSerialize["preview"] = o.Preview
+	}
+	if !IsNil(o.Png) {
+		toSerialize["png"] = o.Png
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -187,6 +223,7 @@ func (o *SubmissionFiles) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "pdf")
 		delete(additionalProperties, "audit_trail")
 		delete(additionalProperties, "preview")
+		delete(additionalProperties, "png")
 		o.AdditionalProperties = additionalProperties
 	}
 

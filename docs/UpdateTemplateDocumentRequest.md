@@ -4,15 +4,17 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**CacheId** | **string** | The `fields.key` of the new PDF, uploaded with the presigned upload (GET /uploads/presign). | 
-**Filename** | Pointer to **string** | The PDF's file name, for a `cache_id` (presigned uploads don't send one). | [optional] 
+**CacheId** | Pointer to **string** | The `fields.key` of the new PDF, uploaded with the presigned upload (GET /uploads/presign). | [optional] 
+**DocumentUrl** | Pointer to **string** | An https:// link to the template's PDF (up to 100 MB), instead of `cache_id`. DocSpring downloads it after responding, following redirects to other https:// links: the template's `document.state` is `downloading` until then (sync.api hosts wait for it). If it can't be downloaded, the state is `download_failed` and `document.error_message` says why. | [optional] 
+**DocumentBase64** | Pointer to **string** | The template's PDF, encoded as base64 (a `data:` URI works too), instead of `cache_id`. Up to 7 MB before it's encoded: send a larger file with `cache_id` or `document_url`. | [optional] 
+**Filename** | Pointer to **string** | The PDF's file name, for a `cache_id` (presigned uploads don't send one) or `document_base64`. A `document_url`'s is the last part of its path unless you set it. | [optional] 
 **ReimportFields** | Pointer to **bool** | Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. | [optional] 
 
 ## Methods
 
 ### NewUpdateTemplateDocumentRequest
 
-`func NewUpdateTemplateDocumentRequest(cacheId string, ) *UpdateTemplateDocumentRequest`
+`func NewUpdateTemplateDocumentRequest() *UpdateTemplateDocumentRequest`
 
 NewUpdateTemplateDocumentRequest instantiates a new UpdateTemplateDocumentRequest object
 This constructor will assign default values to properties that have it defined,
@@ -46,6 +48,61 @@ and a boolean to check if the value has been set.
 
 SetCacheId sets CacheId field to given value.
 
+### HasCacheId
+
+`func (o *UpdateTemplateDocumentRequest) HasCacheId() bool`
+
+HasCacheId returns a boolean if a field has been set.
+
+### GetDocumentUrl
+
+`func (o *UpdateTemplateDocumentRequest) GetDocumentUrl() string`
+
+GetDocumentUrl returns the DocumentUrl field if non-nil, zero value otherwise.
+
+### GetDocumentUrlOk
+
+`func (o *UpdateTemplateDocumentRequest) GetDocumentUrlOk() (*string, bool)`
+
+GetDocumentUrlOk returns a tuple with the DocumentUrl field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDocumentUrl
+
+`func (o *UpdateTemplateDocumentRequest) SetDocumentUrl(v string)`
+
+SetDocumentUrl sets DocumentUrl field to given value.
+
+### HasDocumentUrl
+
+`func (o *UpdateTemplateDocumentRequest) HasDocumentUrl() bool`
+
+HasDocumentUrl returns a boolean if a field has been set.
+
+### GetDocumentBase64
+
+`func (o *UpdateTemplateDocumentRequest) GetDocumentBase64() string`
+
+GetDocumentBase64 returns the DocumentBase64 field if non-nil, zero value otherwise.
+
+### GetDocumentBase64Ok
+
+`func (o *UpdateTemplateDocumentRequest) GetDocumentBase64Ok() (*string, bool)`
+
+GetDocumentBase64Ok returns a tuple with the DocumentBase64 field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDocumentBase64
+
+`func (o *UpdateTemplateDocumentRequest) SetDocumentBase64(v string)`
+
+SetDocumentBase64 sets DocumentBase64 field to given value.
+
+### HasDocumentBase64
+
+`func (o *UpdateTemplateDocumentRequest) HasDocumentBase64() bool`
+
+HasDocumentBase64 returns a boolean if a field has been set.
 
 ### GetFilename
 

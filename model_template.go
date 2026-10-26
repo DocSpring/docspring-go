@@ -98,6 +98,12 @@ type Template struct {
 	Defaults TemplateDefaults `json:"defaults"`
 	// Conditional logic: each rule shows or hides its target fields, or makes them required, depending on the values of other fields.
 	FieldDependencies []TemplateFieldDependency `json:"field_dependencies"`
+	// The groups of the template's fields, with their settings. A field's name puts it in groups: `address/city` is in the group `address`, and `items/0/price` is in the list `items` and its items' group `items/~`.
+	FieldGroups []FieldGroup `json:"field_groups"`
+	// The field names that people using the embedded template editor choose from, each with the data type and settings a field gets when it's given that name. Setting it replaces the whole list; an empty list turns them off.
+	PredefinedFields []PredefinedField `json:"predefined_fields"`
+	// Sample submission data that sets `predefined_fields`: each value becomes a predefined field, with a type that fits it (`string`, `number`, `boolean`, `date`, `email` or `url`) and `required_in_template` true. Nested objects and arrays become names with `/`, such as `customer/email`. Without `predefined_fields` in the same request, it replaces them; with them, it adds to them and sets the types of the ones it has values for.
+	PredefinedFieldsSampleData map[string]interface{} `json:"predefined_fields_sample_data"`
 	// The HTML of an HTML template, as a Liquid template. Null for PDF templates.
 	Html NullableString `json:"html"`
 	// The SCSS of an HTML template.
@@ -121,7 +127,7 @@ type _Template Template
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewTemplate(id string, name NullableString, description NullableString, templateType TemplateType, ready bool, document NullableTemplateDocument, parentFolderId NullableString, path string, version NullableString, latestVersion NullableString, versionPublishedAt NullableTime, locked bool, addSignatureRequestSubmissionIdFooters bool, aiFieldNamingLanguage NullableAiFieldNamingLanguage, allowAdditionalProperties bool, allowSkippingOptionalFields bool, defaultFormMode TemplateFormMode, editableSubmissions bool, embedDomains []string, embedEditAllowSettings bool, embedEditAllowVersioning bool, embedEditAllowDocumentReplacement bool, encryptPdfs bool, hasEncryptPdfsPassword bool, expireSubmissions bool, expireAfter int32, expirationInterval ExpirationInterval, mergeAuditTrailPdf bool, parseDatesUsingTemplateDateFormat bool, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, hasSlackWebhookUrl bool, lastChangedAt NullableTime, lastChangedBy NullableTemplateActor, createdAt time.Time, updatedAt time.Time, defaults TemplateDefaults, fieldDependencies []TemplateFieldDependency, html NullableString, scss NullableString, headerHtml NullableString, footerHtml NullableString, htmlEngineOptions NullableHtmlEngineOptions, embedEditToken NullableString, versions []TemplateVersion) *Template {
+func NewTemplate(id string, name NullableString, description NullableString, templateType TemplateType, ready bool, document NullableTemplateDocument, parentFolderId NullableString, path string, version NullableString, latestVersion NullableString, versionPublishedAt NullableTime, locked bool, addSignatureRequestSubmissionIdFooters bool, aiFieldNamingLanguage NullableAiFieldNamingLanguage, allowAdditionalProperties bool, allowSkippingOptionalFields bool, defaultFormMode TemplateFormMode, editableSubmissions bool, embedDomains []string, embedEditAllowSettings bool, embedEditAllowVersioning bool, embedEditAllowDocumentReplacement bool, encryptPdfs bool, hasEncryptPdfsPassword bool, expireSubmissions bool, expireAfter int32, expirationInterval ExpirationInterval, mergeAuditTrailPdf bool, parseDatesUsingTemplateDateFormat bool, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, hasSlackWebhookUrl bool, lastChangedAt NullableTime, lastChangedBy NullableTemplateActor, createdAt time.Time, updatedAt time.Time, defaults TemplateDefaults, fieldDependencies []TemplateFieldDependency, fieldGroups []FieldGroup, predefinedFields []PredefinedField, predefinedFieldsSampleData map[string]interface{}, html NullableString, scss NullableString, headerHtml NullableString, footerHtml NullableString, htmlEngineOptions NullableHtmlEngineOptions, embedEditToken NullableString, versions []TemplateVersion) *Template {
 	this := Template{}
 	this.Id = id
 	this.Name = name
@@ -162,6 +168,9 @@ func NewTemplate(id string, name NullableString, description NullableString, tem
 	this.UpdatedAt = updatedAt
 	this.Defaults = defaults
 	this.FieldDependencies = fieldDependencies
+	this.FieldGroups = fieldGroups
+	this.PredefinedFields = predefinedFields
+	this.PredefinedFieldsSampleData = predefinedFieldsSampleData
 	this.Html = html
 	this.Scss = scss
 	this.HeaderHtml = headerHtml
@@ -1138,6 +1147,80 @@ func (o *Template) SetFieldDependencies(v []TemplateFieldDependency) {
 	o.FieldDependencies = v
 }
 
+// GetFieldGroups returns the FieldGroups field value
+func (o *Template) GetFieldGroups() []FieldGroup {
+	if o == nil {
+		var ret []FieldGroup
+		return ret
+	}
+
+	return o.FieldGroups
+}
+
+// GetFieldGroupsOk returns a tuple with the FieldGroups field value
+// and a boolean to check if the value has been set.
+func (o *Template) GetFieldGroupsOk() ([]FieldGroup, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.FieldGroups, true
+}
+
+// SetFieldGroups sets field value
+func (o *Template) SetFieldGroups(v []FieldGroup) {
+	o.FieldGroups = v
+}
+
+// GetPredefinedFields returns the PredefinedFields field value
+func (o *Template) GetPredefinedFields() []PredefinedField {
+	if o == nil {
+		var ret []PredefinedField
+		return ret
+	}
+
+	return o.PredefinedFields
+}
+
+// GetPredefinedFieldsOk returns a tuple with the PredefinedFields field value
+// and a boolean to check if the value has been set.
+func (o *Template) GetPredefinedFieldsOk() ([]PredefinedField, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.PredefinedFields, true
+}
+
+// SetPredefinedFields sets field value
+func (o *Template) SetPredefinedFields(v []PredefinedField) {
+	o.PredefinedFields = v
+}
+
+// GetPredefinedFieldsSampleData returns the PredefinedFieldsSampleData field value
+// If the value is explicit nil, the zero value for map[string]interface{} will be returned
+func (o *Template) GetPredefinedFieldsSampleData() map[string]interface{} {
+	if o == nil {
+		var ret map[string]interface{}
+		return ret
+	}
+
+	return o.PredefinedFieldsSampleData
+}
+
+// GetPredefinedFieldsSampleDataOk returns a tuple with the PredefinedFieldsSampleData field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *Template) GetPredefinedFieldsSampleDataOk() (map[string]interface{}, bool) {
+	if o == nil || IsNil(o.PredefinedFieldsSampleData) {
+		return map[string]interface{}{}, false
+	}
+	return o.PredefinedFieldsSampleData, true
+}
+
+// SetPredefinedFieldsSampleData sets field value
+func (o *Template) SetPredefinedFieldsSampleData(v map[string]interface{}) {
+	o.PredefinedFieldsSampleData = v
+}
+
 // GetHtml returns the Html field value
 // If the value is explicit nil, the zero value for string will be returned
 func (o *Template) GetHtml() string {
@@ -1367,6 +1450,11 @@ func (o Template) ToMap() (map[string]interface{}, error) {
 	toSerialize["updated_at"] = o.UpdatedAt
 	toSerialize["defaults"] = o.Defaults
 	toSerialize["field_dependencies"] = o.FieldDependencies
+	toSerialize["field_groups"] = o.FieldGroups
+	toSerialize["predefined_fields"] = o.PredefinedFields
+	if o.PredefinedFieldsSampleData != nil {
+		toSerialize["predefined_fields_sample_data"] = o.PredefinedFieldsSampleData
+	}
 	toSerialize["html"] = o.Html.Get()
 	toSerialize["scss"] = o.Scss.Get()
 	toSerialize["header_html"] = o.HeaderHtml.Get()
@@ -1426,6 +1514,9 @@ func (o *Template) UnmarshalJSON(data []byte) (err error) {
 		"updated_at",
 		"defaults",
 		"field_dependencies",
+		"field_groups",
+		"predefined_fields",
+		"predefined_fields_sample_data",
 		"html",
 		"scss",
 		"header_html",
@@ -1501,6 +1592,9 @@ func (o *Template) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "updated_at")
 		delete(additionalProperties, "defaults")
 		delete(additionalProperties, "field_dependencies")
+		delete(additionalProperties, "field_groups")
+		delete(additionalProperties, "predefined_fields")
+		delete(additionalProperties, "predefined_fields_sample_data")
 		delete(additionalProperties, "html")
 		delete(additionalProperties, "scss")
 		delete(additionalProperties, "header_html")

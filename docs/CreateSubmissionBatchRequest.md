@@ -8,6 +8,7 @@ Name | Type | Description | Notes
 **TemplateId** | Pointer to **string** | The template for each submission that doesn't name its own `template_id`. | [optional] 
 **TemplateVersion** | Pointer to **string** | The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published). | [optional] 
 **Test** | Pointer to **bool** | The default `test` for each submission that doesn't set its own. | [optional] 
+**OutputFormats** | Pointer to [**[]OutputFormat**](OutputFormat.md) | The default `output_formats` for each submission that doesn't set its own. | [optional] 
 **Submissions** | [**[]SubmissionInput**](SubmissionInput.md) | Up to 50 submissions. Each one takes the properties of POST /templates/{template_id}/submissions except `signature_requests`, plus `template_id` and `template_version` when it uses a different template from the batch. | 
 
 ## Methods
@@ -128,6 +129,31 @@ SetTest sets Test field to given value.
 `func (o *CreateSubmissionBatchRequest) HasTest() bool`
 
 HasTest returns a boolean if a field has been set.
+
+### GetOutputFormats
+
+`func (o *CreateSubmissionBatchRequest) GetOutputFormats() []OutputFormat`
+
+GetOutputFormats returns the OutputFormats field if non-nil, zero value otherwise.
+
+### GetOutputFormatsOk
+
+`func (o *CreateSubmissionBatchRequest) GetOutputFormatsOk() (*[]OutputFormat, bool)`
+
+GetOutputFormatsOk returns a tuple with the OutputFormats field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetOutputFormats
+
+`func (o *CreateSubmissionBatchRequest) SetOutputFormats(v []OutputFormat)`
+
+SetOutputFormats sets OutputFormats field to given value.
+
+### HasOutputFormats
+
+`func (o *CreateSubmissionBatchRequest) HasOutputFormats() bool`
+
+HasOutputFormats returns a boolean if a field has been set.
 
 ### GetSubmissions
 

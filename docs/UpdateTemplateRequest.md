@@ -31,6 +31,9 @@ Name | Type | Description | Notes
 **SlackWebhookUrl** | Pointer to **NullableString** | A Slack incoming webhook URL that is notified about the template's submissions. It's never returned; `has_slack_webhook_url` says if it's set. | [optional] 
 **Defaults** | Pointer to [**TemplateDefaultsInput**](TemplateDefaultsInput.md) | The default style of the template's fields. Setting it replaces the whole object. | [optional] 
 **FieldDependencies** | Pointer to [**[]TemplateFieldDependencyInput**](TemplateFieldDependencyInput.md) | The template's conditional logic rules. Setting them replaces all of the rules. | [optional] 
+**FieldGroups** | Pointer to [**[]FieldGroupInput**](FieldGroupInput.md) | Changes to the settings of the template's field groups, each with the `name` of the group it changes. Settings left out keep their values, and groups left out are unchanged. | [optional] 
+**PredefinedFields** | Pointer to [**[]PredefinedFieldInput**](PredefinedFieldInput.md) | The field names that people using the embedded template editor choose from, each with the data type and settings a field gets when it's given that name. Setting it replaces the whole list; an empty list turns them off. | [optional] 
+**PredefinedFieldsSampleData** | Pointer to **map[string]interface{}** | Sample submission data that sets `predefined_fields`: each value becomes a predefined field, with a type that fits it (`string`, `number`, `boolean`, `date`, `email` or `url`) and `required_in_template` true. Nested objects and arrays become names with `/`, such as `customer/email`. Without `predefined_fields` in the same request, it replaces them; with them, it adds to them and sets the types of the ones it has values for. | [optional] 
 **Html** | Pointer to **NullableString** | The HTML of an HTML template, as a Liquid template. Null for PDF templates. | [optional] 
 **Scss** | Pointer to **NullableString** | The SCSS of an HTML template. | [optional] 
 **HeaderHtml** | Pointer to **NullableString** | The HTML printed at the top of each page of an HTML template. | [optional] 
@@ -781,6 +784,91 @@ SetFieldDependencies sets FieldDependencies field to given value.
 
 HasFieldDependencies returns a boolean if a field has been set.
 
+### GetFieldGroups
+
+`func (o *UpdateTemplateRequest) GetFieldGroups() []FieldGroupInput`
+
+GetFieldGroups returns the FieldGroups field if non-nil, zero value otherwise.
+
+### GetFieldGroupsOk
+
+`func (o *UpdateTemplateRequest) GetFieldGroupsOk() (*[]FieldGroupInput, bool)`
+
+GetFieldGroupsOk returns a tuple with the FieldGroups field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetFieldGroups
+
+`func (o *UpdateTemplateRequest) SetFieldGroups(v []FieldGroupInput)`
+
+SetFieldGroups sets FieldGroups field to given value.
+
+### HasFieldGroups
+
+`func (o *UpdateTemplateRequest) HasFieldGroups() bool`
+
+HasFieldGroups returns a boolean if a field has been set.
+
+### GetPredefinedFields
+
+`func (o *UpdateTemplateRequest) GetPredefinedFields() []PredefinedFieldInput`
+
+GetPredefinedFields returns the PredefinedFields field if non-nil, zero value otherwise.
+
+### GetPredefinedFieldsOk
+
+`func (o *UpdateTemplateRequest) GetPredefinedFieldsOk() (*[]PredefinedFieldInput, bool)`
+
+GetPredefinedFieldsOk returns a tuple with the PredefinedFields field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPredefinedFields
+
+`func (o *UpdateTemplateRequest) SetPredefinedFields(v []PredefinedFieldInput)`
+
+SetPredefinedFields sets PredefinedFields field to given value.
+
+### HasPredefinedFields
+
+`func (o *UpdateTemplateRequest) HasPredefinedFields() bool`
+
+HasPredefinedFields returns a boolean if a field has been set.
+
+### GetPredefinedFieldsSampleData
+
+`func (o *UpdateTemplateRequest) GetPredefinedFieldsSampleData() map[string]interface{}`
+
+GetPredefinedFieldsSampleData returns the PredefinedFieldsSampleData field if non-nil, zero value otherwise.
+
+### GetPredefinedFieldsSampleDataOk
+
+`func (o *UpdateTemplateRequest) GetPredefinedFieldsSampleDataOk() (*map[string]interface{}, bool)`
+
+GetPredefinedFieldsSampleDataOk returns a tuple with the PredefinedFieldsSampleData field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPredefinedFieldsSampleData
+
+`func (o *UpdateTemplateRequest) SetPredefinedFieldsSampleData(v map[string]interface{})`
+
+SetPredefinedFieldsSampleData sets PredefinedFieldsSampleData field to given value.
+
+### HasPredefinedFieldsSampleData
+
+`func (o *UpdateTemplateRequest) HasPredefinedFieldsSampleData() bool`
+
+HasPredefinedFieldsSampleData returns a boolean if a field has been set.
+
+### SetPredefinedFieldsSampleDataNil
+
+`func (o *UpdateTemplateRequest) SetPredefinedFieldsSampleDataNil(b bool)`
+
+ SetPredefinedFieldsSampleDataNil sets the value for PredefinedFieldsSampleData to be an explicit nil
+
+### UnsetPredefinedFieldsSampleData
+`func (o *UpdateTemplateRequest) UnsetPredefinedFieldsSampleData()`
+
+UnsetPredefinedFieldsSampleData ensures that no value is present for PredefinedFieldsSampleData, not even an explicit nil
 ### GetHtml
 
 `func (o *UpdateTemplateRequest) GetHtml() string`

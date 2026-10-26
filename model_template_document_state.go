@@ -25,6 +25,8 @@ const (
 	TEMPLATEDOCUMENTSTATE_PASSWORD_REQUIRED TemplateDocumentState = "password_required"
 	TEMPLATEDOCUMENTSTATE_MALFORMED_PDF TemplateDocumentState = "malformed_pdf"
 	TEMPLATEDOCUMENTSTATE_UNKNOWN_ERROR TemplateDocumentState = "unknown_error"
+	TEMPLATEDOCUMENTSTATE_DOWNLOADING TemplateDocumentState = "downloading"
+	TEMPLATEDOCUMENTSTATE_DOWNLOAD_FAILED TemplateDocumentState = "download_failed"
 )
 
 // All allowed values of TemplateDocumentState enum
@@ -34,6 +36,8 @@ var AllowedTemplateDocumentStateEnumValues = []TemplateDocumentState{
 	"password_required",
 	"malformed_pdf",
 	"unknown_error",
+	"downloading",
+	"download_failed",
 }
 
 func (v *TemplateDocumentState) UnmarshalJSON(src []byte) error {

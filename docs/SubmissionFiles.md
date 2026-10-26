@@ -7,6 +7,7 @@ Name | Type | Description | Notes
 **Pdf** | Pointer to [**GeneratedFile**](GeneratedFile.md) | The submission's PDF. | [optional] 
 **AuditTrail** | Pointer to [**GeneratedFile**](GeneratedFile.md) | The audit trail of a submission with signature requests: who signed, when and how. It's also added to the end of the PDF when the template's `merge_audit_trail_pdf` is on. | [optional] 
 **Preview** | Pointer to [**GeneratedFile**](GeneratedFile.md) | The preview PDF from POST /submissions/{submission_id}/generate_preview, such as for a submission still waiting for its signature requests. | [optional] 
+**Png** | Pointer to [**PageImages**](PageImages.md) |  | [optional] 
 
 ## Methods
 
@@ -101,6 +102,31 @@ SetPreview sets Preview field to given value.
 `func (o *SubmissionFiles) HasPreview() bool`
 
 HasPreview returns a boolean if a field has been set.
+
+### GetPng
+
+`func (o *SubmissionFiles) GetPng() PageImages`
+
+GetPng returns the Png field if non-nil, zero value otherwise.
+
+### GetPngOk
+
+`func (o *SubmissionFiles) GetPngOk() (*PageImages, bool)`
+
+GetPngOk returns a tuple with the Png field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPng
+
+`func (o *SubmissionFiles) SetPng(v PageImages)`
+
+SetPng sets Png field to given value.
+
+### HasPng
+
+`func (o *SubmissionFiles) HasPng() bool`
+
+HasPng returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

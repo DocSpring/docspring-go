@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **Data** | Pointer to **map[string]interface{}** | The values of the template's fields, by field name. Required for a PDF template. | [optional] 
 **Metadata** | Pointer to **map[string]interface{}** | Your own data about the submission, such as an ID from your app. It isn't printed on the PDF. | [optional] 
 **Password** | Pointer to **string** | A password that the PDF needs to be opened with. It's never returned; `has_password` says if it's set. | [optional] 
+**OutputFormats** | Pointer to [**[]OutputFormat**](OutputFormat.md) | What the submission makes: `pdf`, and `png` (an image of each page of the PDF, up to 100 pages) when you ask for it. Default `["pdf"]`. POST /submissions/{submission_id}/generate_files adds `png` to a processed submission. | [optional] 
 **ExpiresIn** | Pointer to **int32** | Seconds after the PDF is generated until the submission expires, up to 10 years (315360000). Default the template's expiration setting. A submission that isn't processed, such as one with invalid data, is kept for at least 48 hours. | [optional] 
 **FieldOverrides** | Pointer to [**map[string]FieldOverride**](FieldOverride.md) | Changes to field settings for this submission only, by field name, such as `{"name": {"required": false, "font_size": 9}}`. A setting that identifies the field (`id`, `name`, `type`), that only the template sets (such as `description`), or that doesn't apply to the field's type and display type (such as `check_character` on a field displayed as text) is a 422. With `signature_requests`, `editable: true` is a 422, and a `default` for a signature or initials field makes the submission `invalid_data`. | [optional] 
 **Html** | Pointer to **string** | For an HTML template, HTML to use instead of the template's. | [optional] 
@@ -159,6 +160,31 @@ SetPassword sets Password field to given value.
 `func (o *SubmissionInput) HasPassword() bool`
 
 HasPassword returns a boolean if a field has been set.
+
+### GetOutputFormats
+
+`func (o *SubmissionInput) GetOutputFormats() []OutputFormat`
+
+GetOutputFormats returns the OutputFormats field if non-nil, zero value otherwise.
+
+### GetOutputFormatsOk
+
+`func (o *SubmissionInput) GetOutputFormatsOk() (*[]OutputFormat, bool)`
+
+GetOutputFormatsOk returns a tuple with the OutputFormats field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetOutputFormats
+
+`func (o *SubmissionInput) SetOutputFormats(v []OutputFormat)`
+
+SetOutputFormats sets OutputFormats field to given value.
+
+### HasOutputFormats
+
+`func (o *SubmissionInput) HasOutputFormats() bool`
+
+HasOutputFormats returns a boolean if a field has been set.
 
 ### GetExpiresIn
 

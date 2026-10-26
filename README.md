@@ -9,7 +9,7 @@ templates with your data, generates PDFs from HTML templates, combines PDFs and 
 The code in this repository is generated from DocSpring's OpenAPI spec ([About this SDK](#about-this-sdk)). Issues and
 pull requests are welcome.
 
-Version 4.0.0. Requires Go 1.23 or later.
+Version 4.1.0. Requires Go 1.23 or later.
 
 ## Install and configure
 
@@ -84,6 +84,7 @@ Go code for every method.
 
 | Method | Description |
 | ------ | ----------- |
+| [`AddTemplateFields`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#addtemplatefields) | Add fields to a template |
 | [`CopyTemplate`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#copytemplate) | Copy a template |
 | [`CreateCombinedPdf`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#createcombinedpdf) | Combine PDFs |
 | [`CreateCustomFileFromUpload`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#createcustomfilefromupload) | Create a custom file from an upload |
@@ -100,6 +101,7 @@ Go code for every method.
 | [`DeleteWebhook`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#deletewebhook) | Delete a webhook |
 | [`ExpireCombinedPdf`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#expirecombinedpdf) | Expire a combined PDF |
 | [`ExpireSubmission`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#expiresubmission) | Expire a submission |
+| [`GenerateSubmissionFiles`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#generatesubmissionfiles) | Generate more files |
 | [`GenerateSubmissionPreview`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#generatesubmissionpreview) | Generate a preview PDF |
 | [`GetCombinedPdf`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#getcombinedpdf) | Get a combined PDF |
 | [`GetCustomFile`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#getcustomfile) | Get a custom file |
@@ -109,28 +111,35 @@ Go code for every method.
 | [`GetSubmission`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#getsubmission) | Get a submission |
 | [`GetSubmissionBatch`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#getsubmissionbatch) | Get a batch |
 | [`GetTemplate`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#gettemplate) | Get a template |
+| [`GetTemplateDiff`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#gettemplatediff) | Compare a version of a template with the one before it |
 | [`GetTemplateModelCode`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#gettemplatemodelcode) | Generate typed code for a template's submission data |
+| [`GetTemplatePageImages`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#gettemplatepageimages) | Get images of a template's pages |
 | [`GetTemplateSchema`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#gettemplateschema) | Get the JSON Schema of a template's submission data |
 | [`GetWebhook`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#getwebhook) | Get a webhook |
 | [`ListCombinedPdfs`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#listcombinedpdfs) | List combined PDFs |
 | [`ListCustomFiles`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#listcustomfiles) | List custom files |
 | [`ListFolders`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#listfolders) | List folders |
 | [`ListSubmissions`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#listsubmissions) | List submissions |
+| [`ListTemplateFields`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#listtemplatefields) | List a template's fields |
 | [`ListTemplates`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#listtemplates) | List templates |
 | [`ListTemplateSubmissions`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#listtemplatesubmissions) | List a template's submissions |
 | [`ListWebhooks`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#listwebhooks) | List webhooks |
 | [`MoveFolder`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#movefolder) | Move a folder |
 | [`MoveTemplate`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#movetemplate) | Move a template to a folder |
 | [`PublishTemplateVersion`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#publishtemplateversion) | Publish a template version |
+| [`RemoveTemplateFields`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#removetemplatefields) | Remove fields from a template |
 | [`RenameFolder`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#renamefolder) | Rename a folder |
+| [`ReorderTemplateFields`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#reordertemplatefields) | Reorder a template's fields |
 | [`RestoreTemplateVersion`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#restoretemplateversion) | Restore a template version |
 | [`TestAuthentication`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#testauthentication) | Test authentication |
 | [`UpdateSignatureRequest`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#updatesignaturerequest) | Update a signature request |
 | [`UpdateTemplate`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#updatetemplate) | Update a template |
 | [`UpdateTemplateDocument`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#updatetemplatedocument) | Replace a template's PDF |
+| [`UpdateTemplateFields`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#updatetemplatefields) | Update a template's fields |
 | [`UpdateWebhook`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#updatewebhook) | Update a webhook |
 | [`UploadTemplate`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#uploadtemplate) | Create a PDF template from an uploaded PDF |
 | [`UploadTemplateDocument`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#uploadtemplatedocument) | Replace a template's PDF with an uploaded PDF |
+| [`ValidateSubmission`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#validatesubmission) | Check a submission without creating it |
 
 ## Errors
 

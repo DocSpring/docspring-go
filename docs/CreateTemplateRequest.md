@@ -32,13 +32,17 @@ Name | Type | Description | Notes
 **SlackWebhookUrl** | Pointer to **NullableString** | A Slack incoming webhook URL that is notified about the template's submissions. It's never returned; `has_slack_webhook_url` says if it's set. | [optional] 
 **Defaults** | Pointer to [**TemplateDefaultsInput**](TemplateDefaultsInput.md) | The default style of the template's fields. Setting it replaces the whole object. | [optional] 
 **FieldDependencies** | Pointer to [**[]TemplateFieldDependencyInput**](TemplateFieldDependencyInput.md) | The template's conditional logic rules. Setting them replaces all of the rules. | [optional] 
+**PredefinedFields** | Pointer to [**[]PredefinedFieldInput**](PredefinedFieldInput.md) | The field names that people using the embedded template editor choose from, each with the data type and settings a field gets when it's given that name. Setting it replaces the whole list; an empty list turns them off. | [optional] 
+**PredefinedFieldsSampleData** | Pointer to **map[string]interface{}** | Sample submission data that sets `predefined_fields`: each value becomes a predefined field, with a type that fits it (`string`, `number`, `boolean`, `date`, `email` or `url`) and `required_in_template` true. Nested objects and arrays become names with `/`, such as `customer/email`. Without `predefined_fields` in the same request, it replaces them; with them, it adds to them and sets the types of the ones it has values for. | [optional] 
 **Html** | Pointer to **NullableString** | The HTML of an HTML template, as a Liquid template. Null for PDF templates. | [optional] 
 **Scss** | Pointer to **NullableString** | The SCSS of an HTML template. | [optional] 
 **HeaderHtml** | Pointer to **NullableString** | The HTML printed at the top of each page of an HTML template. | [optional] 
 **FooterHtml** | Pointer to **NullableString** | The HTML printed at the bottom of each page of an HTML template. | [optional] 
 **HtmlEngineOptions** | Pointer to [**NullableHtmlEngineOptionsInput**](HtmlEngineOptionsInput.md) | Null resets the options to their defaults. | [optional] 
-**CacheId** | Pointer to **string** | A PDF template's document: the `fields.key` of a file you uploaded with the presigned upload (GET /uploads/presign). Required for a PDF template. To upload the PDF with the request, use POST /templates/upload. | [optional] 
-**Filename** | Pointer to **string** | The PDF's file name, for a `cache_id` (presigned uploads don't send one). | [optional] 
+**CacheId** | Pointer to **string** | A PDF template's document: the `fields.key` of a file you uploaded with the presigned upload (GET /uploads/presign). A PDF template needs one of `cache_id`, `document_url` and `document_base64`. To upload the PDF with the request, use POST /templates/upload. | [optional] 
+**DocumentUrl** | Pointer to **string** | An https:// link to the template's PDF (up to 100 MB), instead of `cache_id`. DocSpring downloads it after responding, following redirects to other https:// links: the template's `document.state` is `downloading` until then (sync.api hosts wait for it). If it can't be downloaded, the state is `download_failed` and `document.error_message` says why. | [optional] 
+**DocumentBase64** | Pointer to **string** | The template's PDF, encoded as base64 (a `data:` URI works too), instead of `cache_id`. Up to 7 MB before it's encoded: send a larger file with `cache_id` or `document_url`. | [optional] 
+**Filename** | Pointer to **string** | The PDF's file name, for a `cache_id` (presigned uploads don't send one) or `document_base64`. A `document_url`'s is the last part of its path unless you set it. | [optional] 
 **DetectFields** | Pointer to **bool** | Set up the PDF's fields as DocSpring's "Automatically detect fields" upload option does: import or detect the fields, name them with AI, and set up conditional logic. `field_source`, `field_naming` and `field_logic` choose how. Default false. `document.page_processing_statuses` and `document.field_logic_status` show how it's going, and `document.state` becomes `processed` once every page's fields are set up. | [optional] 
 **FieldSource** | Pointer to [**FieldSetupSource**](FieldSetupSource.md) | With `detect_fields`, where the fields come from. `auto` (the default) imports the form fields of a fillable PDF and detects the fields of a PDF without them; `pdf_detection` detects the fields from the page layout, even on a fillable PDF; `pdf_form_fields` only imports the PDF's form fields. | [optional] 
 **FieldNaming** | Pointer to [**FieldSetupNaming**](FieldSetupNaming.md) | With `detect_fields`, how the fields are named. `ai` (the default) names them and sets their types and settings with AI; `preserve` keeps the names of the PDF's form fields, and AI only names the fields it detected. `preserve` needs `field_source` `auto` or `pdf_form_fields`. | [optional] 
@@ -808,6 +812,66 @@ SetFieldDependencies sets FieldDependencies field to given value.
 
 HasFieldDependencies returns a boolean if a field has been set.
 
+### GetPredefinedFields
+
+`func (o *CreateTemplateRequest) GetPredefinedFields() []PredefinedFieldInput`
+
+GetPredefinedFields returns the PredefinedFields field if non-nil, zero value otherwise.
+
+### GetPredefinedFieldsOk
+
+`func (o *CreateTemplateRequest) GetPredefinedFieldsOk() (*[]PredefinedFieldInput, bool)`
+
+GetPredefinedFieldsOk returns a tuple with the PredefinedFields field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPredefinedFields
+
+`func (o *CreateTemplateRequest) SetPredefinedFields(v []PredefinedFieldInput)`
+
+SetPredefinedFields sets PredefinedFields field to given value.
+
+### HasPredefinedFields
+
+`func (o *CreateTemplateRequest) HasPredefinedFields() bool`
+
+HasPredefinedFields returns a boolean if a field has been set.
+
+### GetPredefinedFieldsSampleData
+
+`func (o *CreateTemplateRequest) GetPredefinedFieldsSampleData() map[string]interface{}`
+
+GetPredefinedFieldsSampleData returns the PredefinedFieldsSampleData field if non-nil, zero value otherwise.
+
+### GetPredefinedFieldsSampleDataOk
+
+`func (o *CreateTemplateRequest) GetPredefinedFieldsSampleDataOk() (*map[string]interface{}, bool)`
+
+GetPredefinedFieldsSampleDataOk returns a tuple with the PredefinedFieldsSampleData field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPredefinedFieldsSampleData
+
+`func (o *CreateTemplateRequest) SetPredefinedFieldsSampleData(v map[string]interface{})`
+
+SetPredefinedFieldsSampleData sets PredefinedFieldsSampleData field to given value.
+
+### HasPredefinedFieldsSampleData
+
+`func (o *CreateTemplateRequest) HasPredefinedFieldsSampleData() bool`
+
+HasPredefinedFieldsSampleData returns a boolean if a field has been set.
+
+### SetPredefinedFieldsSampleDataNil
+
+`func (o *CreateTemplateRequest) SetPredefinedFieldsSampleDataNil(b bool)`
+
+ SetPredefinedFieldsSampleDataNil sets the value for PredefinedFieldsSampleData to be an explicit nil
+
+### UnsetPredefinedFieldsSampleData
+`func (o *CreateTemplateRequest) UnsetPredefinedFieldsSampleData()`
+
+UnsetPredefinedFieldsSampleData ensures that no value is present for PredefinedFieldsSampleData, not even an explicit nil
 ### GetHtml
 
 `func (o *CreateTemplateRequest) GetHtml() string`
@@ -1007,6 +1071,56 @@ SetCacheId sets CacheId field to given value.
 `func (o *CreateTemplateRequest) HasCacheId() bool`
 
 HasCacheId returns a boolean if a field has been set.
+
+### GetDocumentUrl
+
+`func (o *CreateTemplateRequest) GetDocumentUrl() string`
+
+GetDocumentUrl returns the DocumentUrl field if non-nil, zero value otherwise.
+
+### GetDocumentUrlOk
+
+`func (o *CreateTemplateRequest) GetDocumentUrlOk() (*string, bool)`
+
+GetDocumentUrlOk returns a tuple with the DocumentUrl field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDocumentUrl
+
+`func (o *CreateTemplateRequest) SetDocumentUrl(v string)`
+
+SetDocumentUrl sets DocumentUrl field to given value.
+
+### HasDocumentUrl
+
+`func (o *CreateTemplateRequest) HasDocumentUrl() bool`
+
+HasDocumentUrl returns a boolean if a field has been set.
+
+### GetDocumentBase64
+
+`func (o *CreateTemplateRequest) GetDocumentBase64() string`
+
+GetDocumentBase64 returns the DocumentBase64 field if non-nil, zero value otherwise.
+
+### GetDocumentBase64Ok
+
+`func (o *CreateTemplateRequest) GetDocumentBase64Ok() (*string, bool)`
+
+GetDocumentBase64Ok returns a tuple with the DocumentBase64 field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDocumentBase64
+
+`func (o *CreateTemplateRequest) SetDocumentBase64(v string)`
+
+SetDocumentBase64 sets DocumentBase64 field to given value.
+
+### HasDocumentBase64
+
+`func (o *CreateTemplateRequest) HasDocumentBase64() bool`
+
+HasDocumentBase64 returns a boolean if a field has been set.
 
 ### GetFilename
 

@@ -12,31 +12,31 @@ package docspring
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // checks if the UpdateTemplateDocumentRequest type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &UpdateTemplateDocumentRequest{}
 
-// UpdateTemplateDocumentRequest The new PDF.
+// UpdateTemplateDocumentRequest The new PDF, as one of `cache_id`, `document_url` and `document_base64`.
 type UpdateTemplateDocumentRequest struct {
 	// The `fields.key` of the new PDF, uploaded with the presigned upload (GET /uploads/presign).
-	CacheId string `json:"cache_id"`
-	// The PDF's file name, for a `cache_id` (presigned uploads don't send one).
+	CacheId *string `json:"cache_id,omitempty"`
+	// An https:// link to the template's PDF (up to 100 MB), instead of `cache_id`. DocSpring downloads it after responding, following redirects to other https:// links: the template's `document.state` is `downloading` until then (sync.api hosts wait for it). If it can't be downloaded, the state is `download_failed` and `document.error_message` says why.
+	DocumentUrl *string `json:"document_url,omitempty"`
+	// The template's PDF, encoded as base64 (a `data:` URI works too), instead of `cache_id`. Up to 7 MB before it's encoded: send a larger file with `cache_id` or `document_url`.
+	DocumentBase64 *string `json:"document_base64,omitempty"`
+	// The PDF's file name, for a `cache_id` (presigned uploads don't send one) or `document_base64`. A `document_url`'s is the last part of its path unless you set it.
 	Filename *string `json:"filename,omitempty"`
 	// Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields.
 	ReimportFields *bool `json:"reimport_fields,omitempty"`
 }
 
-type _UpdateTemplateDocumentRequest UpdateTemplateDocumentRequest
-
 // NewUpdateTemplateDocumentRequest instantiates a new UpdateTemplateDocumentRequest object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewUpdateTemplateDocumentRequest(cacheId string) *UpdateTemplateDocumentRequest {
+func NewUpdateTemplateDocumentRequest() *UpdateTemplateDocumentRequest {
 	this := UpdateTemplateDocumentRequest{}
-	this.CacheId = cacheId
 	return &this
 }
 
@@ -48,28 +48,100 @@ func NewUpdateTemplateDocumentRequestWithDefaults() *UpdateTemplateDocumentReque
 	return &this
 }
 
-// GetCacheId returns the CacheId field value
+// GetCacheId returns the CacheId field value if set, zero value otherwise.
 func (o *UpdateTemplateDocumentRequest) GetCacheId() string {
-	if o == nil {
+	if o == nil || IsNil(o.CacheId) {
 		var ret string
 		return ret
 	}
-
-	return o.CacheId
+	return *o.CacheId
 }
 
-// GetCacheIdOk returns a tuple with the CacheId field value
+// GetCacheIdOk returns a tuple with the CacheId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *UpdateTemplateDocumentRequest) GetCacheIdOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.CacheId) {
 		return nil, false
 	}
-	return &o.CacheId, true
+	return o.CacheId, true
 }
 
-// SetCacheId sets field value
+// HasCacheId returns a boolean if a field has been set.
+func (o *UpdateTemplateDocumentRequest) HasCacheId() bool {
+	if o != nil && !IsNil(o.CacheId) {
+		return true
+	}
+
+	return false
+}
+
+// SetCacheId gets a reference to the given string and assigns it to the CacheId field.
 func (o *UpdateTemplateDocumentRequest) SetCacheId(v string) {
-	o.CacheId = v
+	o.CacheId = &v
+}
+
+// GetDocumentUrl returns the DocumentUrl field value if set, zero value otherwise.
+func (o *UpdateTemplateDocumentRequest) GetDocumentUrl() string {
+	if o == nil || IsNil(o.DocumentUrl) {
+		var ret string
+		return ret
+	}
+	return *o.DocumentUrl
+}
+
+// GetDocumentUrlOk returns a tuple with the DocumentUrl field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateTemplateDocumentRequest) GetDocumentUrlOk() (*string, bool) {
+	if o == nil || IsNil(o.DocumentUrl) {
+		return nil, false
+	}
+	return o.DocumentUrl, true
+}
+
+// HasDocumentUrl returns a boolean if a field has been set.
+func (o *UpdateTemplateDocumentRequest) HasDocumentUrl() bool {
+	if o != nil && !IsNil(o.DocumentUrl) {
+		return true
+	}
+
+	return false
+}
+
+// SetDocumentUrl gets a reference to the given string and assigns it to the DocumentUrl field.
+func (o *UpdateTemplateDocumentRequest) SetDocumentUrl(v string) {
+	o.DocumentUrl = &v
+}
+
+// GetDocumentBase64 returns the DocumentBase64 field value if set, zero value otherwise.
+func (o *UpdateTemplateDocumentRequest) GetDocumentBase64() string {
+	if o == nil || IsNil(o.DocumentBase64) {
+		var ret string
+		return ret
+	}
+	return *o.DocumentBase64
+}
+
+// GetDocumentBase64Ok returns a tuple with the DocumentBase64 field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateTemplateDocumentRequest) GetDocumentBase64Ok() (*string, bool) {
+	if o == nil || IsNil(o.DocumentBase64) {
+		return nil, false
+	}
+	return o.DocumentBase64, true
+}
+
+// HasDocumentBase64 returns a boolean if a field has been set.
+func (o *UpdateTemplateDocumentRequest) HasDocumentBase64() bool {
+	if o != nil && !IsNil(o.DocumentBase64) {
+		return true
+	}
+
+	return false
+}
+
+// SetDocumentBase64 gets a reference to the given string and assigns it to the DocumentBase64 field.
+func (o *UpdateTemplateDocumentRequest) SetDocumentBase64(v string) {
+	o.DocumentBase64 = &v
 }
 
 // GetFilename returns the Filename field value if set, zero value otherwise.
@@ -146,7 +218,15 @@ func (o UpdateTemplateDocumentRequest) MarshalJSON() ([]byte, error) {
 
 func (o UpdateTemplateDocumentRequest) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["cache_id"] = o.CacheId
+	if !IsNil(o.CacheId) {
+		toSerialize["cache_id"] = o.CacheId
+	}
+	if !IsNil(o.DocumentUrl) {
+		toSerialize["document_url"] = o.DocumentUrl
+	}
+	if !IsNil(o.DocumentBase64) {
+		toSerialize["document_base64"] = o.DocumentBase64
+	}
 	if !IsNil(o.Filename) {
 		toSerialize["filename"] = o.Filename
 	}
@@ -154,42 +234,6 @@ func (o UpdateTemplateDocumentRequest) ToMap() (map[string]interface{}, error) {
 		toSerialize["reimport_fields"] = o.ReimportFields
 	}
 	return toSerialize, nil
-}
-
-func (o *UpdateTemplateDocumentRequest) UnmarshalJSON(data []byte) (err error) {
-	// This validates that all required properties are included in the JSON object
-	// by unmarshalling the object into a generic map with string keys and checking
-	// that every required field exists as a key in the generic map.
-	requiredProperties := []string{
-		"cache_id",
-	}
-
-	allProperties := make(map[string]interface{})
-
-	err = json.Unmarshal(data, &allProperties)
-
-	if err != nil {
-		return err;
-	}
-
-	for _, requiredProperty := range(requiredProperties) {
-		if _, exists := allProperties[requiredProperty]; !exists {
-			return fmt.Errorf("no value given for required property %v", requiredProperty)
-		}
-	}
-
-	varUpdateTemplateDocumentRequest := _UpdateTemplateDocumentRequest{}
-
-	// Ignore unknown fields, so a field added to the API later doesn't break this client.
-	err = json.Unmarshal(data, &varUpdateTemplateDocumentRequest)
-
-	if err != nil {
-		return err
-	}
-
-	*o = UpdateTemplateDocumentRequest(varUpdateTemplateDocumentRequest)
-
-	return err
 }
 
 type NullableUpdateTemplateDocumentRequest struct {

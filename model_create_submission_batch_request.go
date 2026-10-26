@@ -28,6 +28,8 @@ type CreateSubmissionBatchRequest struct {
 	TemplateVersion *string `json:"template_version,omitempty"`
 	// The default `test` for each submission that doesn't set its own.
 	Test *bool `json:"test,omitempty"`
+	// The default `output_formats` for each submission that doesn't set its own.
+	OutputFormats []OutputFormat `json:"output_formats,omitempty"`
 	// Up to 50 submissions. Each one takes the properties of POST /templates/{template_id}/submissions except `signature_requests`, plus `template_id` and `template_version` when it uses a different template from the batch.
 	Submissions []SubmissionInput `json:"submissions"`
 	AdditionalProperties map[string]interface{}
@@ -181,6 +183,38 @@ func (o *CreateSubmissionBatchRequest) SetTest(v bool) {
 	o.Test = &v
 }
 
+// GetOutputFormats returns the OutputFormats field value if set, zero value otherwise.
+func (o *CreateSubmissionBatchRequest) GetOutputFormats() []OutputFormat {
+	if o == nil || IsNil(o.OutputFormats) {
+		var ret []OutputFormat
+		return ret
+	}
+	return o.OutputFormats
+}
+
+// GetOutputFormatsOk returns a tuple with the OutputFormats field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateSubmissionBatchRequest) GetOutputFormatsOk() ([]OutputFormat, bool) {
+	if o == nil || IsNil(o.OutputFormats) {
+		return nil, false
+	}
+	return o.OutputFormats, true
+}
+
+// HasOutputFormats returns a boolean if a field has been set.
+func (o *CreateSubmissionBatchRequest) HasOutputFormats() bool {
+	if o != nil && !IsNil(o.OutputFormats) {
+		return true
+	}
+
+	return false
+}
+
+// SetOutputFormats gets a reference to the given []OutputFormat and assigns it to the OutputFormats field.
+func (o *CreateSubmissionBatchRequest) SetOutputFormats(v []OutputFormat) {
+	o.OutputFormats = v
+}
+
 // GetSubmissions returns the Submissions field value
 func (o *CreateSubmissionBatchRequest) GetSubmissions() []SubmissionInput {
 	if o == nil {
@@ -226,6 +260,9 @@ func (o CreateSubmissionBatchRequest) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Test) {
 		toSerialize["test"] = o.Test
+	}
+	if !IsNil(o.OutputFormats) {
+		toSerialize["output_formats"] = o.OutputFormats
 	}
 	toSerialize["submissions"] = o.Submissions
 
@@ -275,6 +312,7 @@ func (o *CreateSubmissionBatchRequest) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "template_id")
 		delete(additionalProperties, "template_version")
 		delete(additionalProperties, "test")
+		delete(additionalProperties, "output_formats")
 		delete(additionalProperties, "submissions")
 		o.AdditionalProperties = additionalProperties
 	}

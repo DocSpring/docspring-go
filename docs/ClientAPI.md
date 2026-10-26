@@ -4,6 +4,7 @@ All URIs are relative to *https://sync.api.docspring.com/api/v2*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**AddTemplateFields**](ClientAPI.md#AddTemplateFields) | **Post** /templates/{template_id}/fields | Add fields to a template
 [**CopyTemplate**](ClientAPI.md#CopyTemplate) | **Post** /templates/{template_id}/copy | Copy a template
 [**CreateCombinedPdf**](ClientAPI.md#CreateCombinedPdf) | **Post** /combined_pdfs | Combine PDFs
 [**CreateCustomFileFromUpload**](ClientAPI.md#CreateCustomFileFromUpload) | **Post** /custom_files | Create a custom file from an upload
@@ -20,6 +21,7 @@ Method | HTTP request | Description
 [**DeleteWebhook**](ClientAPI.md#DeleteWebhook) | **Delete** /webhooks/{webhook_id} | Delete a webhook
 [**ExpireCombinedPdf**](ClientAPI.md#ExpireCombinedPdf) | **Delete** /combined_pdfs/{combined_pdf_id} | Expire a combined PDF
 [**ExpireSubmission**](ClientAPI.md#ExpireSubmission) | **Delete** /submissions/{submission_id} | Expire a submission
+[**GenerateSubmissionFiles**](ClientAPI.md#GenerateSubmissionFiles) | **Post** /submissions/{submission_id}/generate_files | Generate more files
 [**GenerateSubmissionPreview**](ClientAPI.md#GenerateSubmissionPreview) | **Post** /submissions/{submission_id}/generate_preview | Generate a preview PDF
 [**GetCombinedPdf**](ClientAPI.md#GetCombinedPdf) | **Get** /combined_pdfs/{combined_pdf_id} | Get a combined PDF
 [**GetCustomFile**](ClientAPI.md#GetCustomFile) | **Get** /custom_files/{custom_file_id} | Get a custom file
@@ -29,29 +31,108 @@ Method | HTTP request | Description
 [**GetSubmission**](ClientAPI.md#GetSubmission) | **Get** /submissions/{submission_id} | Get a submission
 [**GetSubmissionBatch**](ClientAPI.md#GetSubmissionBatch) | **Get** /submissions/batches/{submission_batch_id} | Get a batch
 [**GetTemplate**](ClientAPI.md#GetTemplate) | **Get** /templates/{template_id} | Get a template
+[**GetTemplateDiff**](ClientAPI.md#GetTemplateDiff) | **Get** /templates/{template_id}/diff | Compare a version of a template with the one before it
 [**GetTemplateModelCode**](ClientAPI.md#GetTemplateModelCode) | **Get** /templates/{template_id}/model_code | Generate typed code for a template's submission data
+[**GetTemplatePageImages**](ClientAPI.md#GetTemplatePageImages) | **Get** /templates/{template_id}/page_images | Get images of a template's pages
 [**GetTemplateSchema**](ClientAPI.md#GetTemplateSchema) | **Get** /templates/{template_id}/schema | Get the JSON Schema of a template's submission data
 [**GetWebhook**](ClientAPI.md#GetWebhook) | **Get** /webhooks/{webhook_id} | Get a webhook
 [**ListCombinedPdfs**](ClientAPI.md#ListCombinedPdfs) | **Get** /combined_pdfs | List combined PDFs
 [**ListCustomFiles**](ClientAPI.md#ListCustomFiles) | **Get** /custom_files | List custom files
 [**ListFolders**](ClientAPI.md#ListFolders) | **Get** /folders | List folders
 [**ListSubmissions**](ClientAPI.md#ListSubmissions) | **Get** /submissions | List submissions
+[**ListTemplateFields**](ClientAPI.md#ListTemplateFields) | **Get** /templates/{template_id}/fields | List a template's fields
 [**ListTemplateSubmissions**](ClientAPI.md#ListTemplateSubmissions) | **Get** /templates/{template_id}/submissions | List a template's submissions
 [**ListTemplates**](ClientAPI.md#ListTemplates) | **Get** /templates | List templates
 [**ListWebhooks**](ClientAPI.md#ListWebhooks) | **Get** /webhooks | List webhooks
 [**MoveFolder**](ClientAPI.md#MoveFolder) | **Post** /folders/{folder_id}/move | Move a folder
 [**MoveTemplate**](ClientAPI.md#MoveTemplate) | **Post** /templates/{template_id}/move | Move a template to a folder
 [**PublishTemplateVersion**](ClientAPI.md#PublishTemplateVersion) | **Post** /templates/{template_id}/publish_version | Publish a template version
+[**RemoveTemplateFields**](ClientAPI.md#RemoveTemplateFields) | **Post** /templates/{template_id}/fields/remove | Remove fields from a template
 [**RenameFolder**](ClientAPI.md#RenameFolder) | **Post** /folders/{folder_id}/rename | Rename a folder
+[**ReorderTemplateFields**](ClientAPI.md#ReorderTemplateFields) | **Post** /templates/{template_id}/fields/reorder | Reorder a template's fields
 [**RestoreTemplateVersion**](ClientAPI.md#RestoreTemplateVersion) | **Post** /templates/{template_id}/restore_version | Restore a template version
 [**TestAuthentication**](ClientAPI.md#TestAuthentication) | **Get** /authentication | Test authentication
 [**UpdateSignatureRequest**](ClientAPI.md#UpdateSignatureRequest) | **Put** /signature_requests/{signature_request_id} | Update a signature request
 [**UpdateTemplate**](ClientAPI.md#UpdateTemplate) | **Put** /templates/{template_id} | Update a template
 [**UpdateTemplateDocument**](ClientAPI.md#UpdateTemplateDocument) | **Put** /templates/{template_id}/document | Replace a template's PDF
+[**UpdateTemplateFields**](ClientAPI.md#UpdateTemplateFields) | **Put** /templates/{template_id}/fields | Update a template's fields
 [**UpdateWebhook**](ClientAPI.md#UpdateWebhook) | **Put** /webhooks/{webhook_id} | Update a webhook
 [**UploadTemplate**](ClientAPI.md#UploadTemplate) | **Post** /templates/upload | Create a PDF template from an uploaded PDF
 [**UploadTemplateDocument**](ClientAPI.md#UploadTemplateDocument) | **Put** /templates/{template_id}/document/upload | Replace a template's PDF with an uploaded PDF
+[**ValidateSubmission**](ClientAPI.md#ValidateSubmission) | **Post** /templates/{template_id}/submissions/validate | Check a submission without creating it
 
+
+
+## AddTemplateFields
+
+> TemplateFields AddTemplateFields(ctx, templateId).Body(body).Execute()
+
+Add fields to a template
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
+	body := *openapiclient.NewAddTemplateFieldsRequest([]openapiclient.FieldInput{*openapiclient.NewFieldInput()}) // AddTemplateFieldsRequest | The fields to add to the template's draft.
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.AddTemplateFields(context.Background(), templateId).Body(body).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.AddTemplateFields``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `AddTemplateFields`: TemplateFields
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.AddTemplateFields`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**templateId** | **string** | The template's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiAddTemplateFieldsRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **body** | [**AddTemplateFieldsRequest**](AddTemplateFieldsRequest.md) | The fields to add to the template's draft. | 
+
+### Return type
+
+[**TemplateFields**](TemplateFields.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
 
 
 ## CopyTemplate
@@ -494,7 +575,7 @@ func main() {
 	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
 	body := *openapiclient.NewCreateSubmissionRequest() // CreateSubmissionRequest | The submission's data and settings.
 	version := "version_example" // string | The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published). (optional)
-	wait := true // bool | Wait until the PDF has been generated before responding. Default true on sync.api hosts. (optional)
+	wait := true // bool | Wait until the files have been generated before responding. Default true on sync.api hosts. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -526,7 +607,7 @@ Name | Type | Description  | Notes
 
  **body** | [**CreateSubmissionRequest**](CreateSubmissionRequest.md) | The submission's data and settings. | 
  **version** | **string** | The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published). | 
- **wait** | **bool** | Wait until the PDF has been generated before responding. Default true on sync.api hosts. | 
+ **wait** | **bool** | Wait until the files have been generated before responding. Default true on sync.api hosts. | 
 
 ### Return type
 
@@ -636,7 +717,7 @@ import (
 
 func main() {
 	body := *openapiclient.NewCreateTemplateRequest(openapiclient.TemplateType("pdf")) // CreateTemplateRequest | The template to create.
-	wait := true // bool | Wait until the PDF has been processed before responding. Default true on sync.api hosts. (optional)
+	wait := true // bool | Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -662,7 +743,7 @@ Other parameters are passed through a pointer to a apiCreateTemplateRequest stru
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **body** | [**CreateTemplateRequest**](CreateTemplateRequest.md) | The template to create. | 
- **wait** | **bool** | Wait until the PDF has been processed before responding. Default true on sync.api hosts. | 
+ **wait** | **bool** | Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. | 
 
 ### Return type
 
@@ -1163,6 +1244,80 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
 - **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## GenerateSubmissionFiles
+
+> Submission GenerateSubmissionFiles(ctx, submissionId).Body(body).Wait(wait).Execute()
+
+Generate more files
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	submissionId := "sub_1234567890abcdef01" // string | The submission's ID.
+	body := *openapiclient.NewGenerateSubmissionFilesRequest([]openapiclient.GenerateFilesFormat{openapiclient.GenerateFilesFormat("png")}) // GenerateSubmissionFilesRequest | The formats to make.
+	wait := true // bool | Wait until the files have been generated before responding. Default true on sync.api hosts. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.GenerateSubmissionFiles(context.Background(), submissionId).Body(body).Wait(wait).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GenerateSubmissionFiles``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GenerateSubmissionFiles`: Submission
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GenerateSubmissionFiles`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**submissionId** | **string** | The submission's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGenerateSubmissionFilesRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **body** | [**GenerateSubmissionFilesRequest**](GenerateSubmissionFilesRequest.md) | The formats to make. | 
+ **wait** | **bool** | Wait until the files have been generated before responding. Default true on sync.api hosts. | 
+
+### Return type
+
+[**Submission**](Submission.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
@@ -1795,6 +1950,78 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
+## GetTemplateDiff
+
+> TemplateDiff GetTemplateDiff(ctx, templateId).Version(version).Execute()
+
+Compare a version of a template with the one before it
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
+	version := "0.1.0" // string | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.GetTemplateDiff(context.Background(), templateId).Version(version).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetTemplateDiff``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetTemplateDiff`: TemplateDiff
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetTemplateDiff`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**templateId** | **string** | The template's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetTemplateDiffRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **version** | **string** | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`. | 
+
+### Return type
+
+[**TemplateDiff**](TemplateDiff.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## GetTemplateModelCode
 
 > TemplateModelCode GetTemplateModelCode(ctx, templateId).Lang(lang).Version(version).Execute()
@@ -1854,6 +2081,78 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**TemplateModelCode**](TemplateModelCode.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## GetTemplatePageImages
+
+> TemplatePageImages GetTemplatePageImages(ctx, templateId).Version(version).Execute()
+
+Get images of a template's pages
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
+	version := "latest" // string | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.GetTemplatePageImages(context.Background(), templateId).Version(version).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetTemplatePageImages``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetTemplatePageImages`: TemplatePageImages
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetTemplatePageImages`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**templateId** | **string** | The template's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetTemplatePageImagesRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **version** | **string** | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`. | 
+
+### Return type
+
+[**TemplatePageImages**](TemplatePageImages.md)
 
 ### Authorization
 
@@ -2281,6 +2580,78 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**SubmissionList**](SubmissionList.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ListTemplateFields
+
+> TemplateFields ListTemplateFields(ctx, templateId).Version(version).Execute()
+
+List a template's fields
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
+	version := "latest" // string | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.ListTemplateFields(context.Background(), templateId).Version(version).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ListTemplateFields``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ListTemplateFields`: TemplateFields
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.ListTemplateFields`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**templateId** | **string** | The template's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiListTemplateFieldsRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **version** | **string** | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`. | 
+
+### Return type
+
+[**TemplateFields**](TemplateFields.md)
 
 ### Authorization
 
@@ -2745,6 +3116,78 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
+## RemoveTemplateFields
+
+> TemplateFields RemoveTemplateFields(ctx, templateId).Body(body).Execute()
+
+Remove fields from a template
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
+	body := *openapiclient.NewRemoveTemplateFieldsRequest([]int32{int32(123)}) // RemoveTemplateFieldsRequest | The fields to remove from the template's draft.
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.RemoveTemplateFields(context.Background(), templateId).Body(body).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.RemoveTemplateFields``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `RemoveTemplateFields`: TemplateFields
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.RemoveTemplateFields`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**templateId** | **string** | The template's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiRemoveTemplateFieldsRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **body** | [**RemoveTemplateFieldsRequest**](RemoveTemplateFieldsRequest.md) | The fields to remove from the template's draft. | 
+
+### Return type
+
+[**TemplateFields**](TemplateFields.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## RenameFolder
 
 > Folder RenameFolder(ctx, folderId).Body(body).Execute()
@@ -2802,6 +3245,78 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**Folder**](Folder.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ReorderTemplateFields
+
+> TemplateFields ReorderTemplateFields(ctx, templateId).Body(body).Execute()
+
+Reorder a template's fields
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
+	body := *openapiclient.NewReorderTemplateFieldsRequest([]int32{int32(123)}) // ReorderTemplateFieldsRequest | The new order of the fields in the template's draft.
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.ReorderTemplateFields(context.Background(), templateId).Body(body).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ReorderTemplateFields``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ReorderTemplateFields`: TemplateFields
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.ReorderTemplateFields`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**templateId** | **string** | The template's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiReorderTemplateFieldsRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **body** | [**ReorderTemplateFieldsRequest**](ReorderTemplateFieldsRequest.md) | The new order of the fields in the template's draft. | 
+
+### Return type
+
+[**TemplateFields**](TemplateFields.md)
 
 ### Authorization
 
@@ -3116,8 +3631,8 @@ import (
 
 func main() {
 	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
-	body := *openapiclient.NewUpdateTemplateDocumentRequest("CacheId_example") // UpdateTemplateDocumentRequest | The new PDF.
-	wait := true // bool | Wait until the PDF has been processed before responding. Default true on sync.api hosts. (optional)
+	body := *openapiclient.NewUpdateTemplateDocumentRequest() // UpdateTemplateDocumentRequest | The new PDF, as one of `cache_id`, `document_url` and `document_base64`.
+	wait := true // bool | Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -3147,12 +3662,84 @@ Other parameters are passed through a pointer to a apiUpdateTemplateDocumentRequ
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **body** | [**UpdateTemplateDocumentRequest**](UpdateTemplateDocumentRequest.md) | The new PDF. | 
- **wait** | **bool** | Wait until the PDF has been processed before responding. Default true on sync.api hosts. | 
+ **body** | [**UpdateTemplateDocumentRequest**](UpdateTemplateDocumentRequest.md) | The new PDF, as one of `cache_id`, `document_url` and `document_base64`. | 
+ **wait** | **bool** | Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. | 
 
 ### Return type
 
 [**Template**](Template.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## UpdateTemplateFields
+
+> TemplateFields UpdateTemplateFields(ctx, templateId).Body(body).Execute()
+
+Update a template's fields
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
+	body := *openapiclient.NewUpdateTemplateFieldsRequest([]openapiclient.FieldInput{*openapiclient.NewFieldInput()}) // UpdateTemplateFieldsRequest | The fields to change in the template's draft.
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.UpdateTemplateFields(context.Background(), templateId).Body(body).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.UpdateTemplateFields``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `UpdateTemplateFields`: TemplateFields
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.UpdateTemplateFields`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**templateId** | **string** | The template's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpdateTemplateFieldsRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **body** | [**UpdateTemplateFieldsRequest**](UpdateTemplateFieldsRequest.md) | The fields to change in the template's draft. | 
+
+### Return type
+
+[**TemplateFields**](TemplateFields.md)
 
 ### Authorization
 
@@ -3262,7 +3849,7 @@ import (
 
 func main() {
 	document := os.NewFile(1234, "some_file") // *os.File | The PDF.
-	wait := true // bool | Wait until the PDF has been processed before responding. Default true on sync.api hosts. (optional)
+	wait := true // bool | Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. (optional)
 	name := "name_example" // string | The template's name. (optional)
 	description := "description_example" // string | The template's description. (optional)
 	parentFolderId := "parentFolderId_example" // string | The folder to put the template in. Left out, it's created at the root. (optional)
@@ -3296,7 +3883,7 @@ Other parameters are passed through a pointer to a apiUploadTemplateRequest stru
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **document** | ***os.File** | The PDF. | 
- **wait** | **bool** | Wait until the PDF has been processed before responding. Default true on sync.api hosts. | 
+ **wait** | **bool** | Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. | 
  **name** | **string** | The template's name. | 
  **description** | **string** | The template's description. | 
  **parentFolderId** | **string** | The folder to put the template in. Left out, it's created at the root. | 
@@ -3347,7 +3934,7 @@ import (
 func main() {
 	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
 	document := os.NewFile(1234, "some_file") // *os.File | The new PDF.
-	wait := true // bool | Wait until the PDF has been processed before responding. Default true on sync.api hosts. (optional)
+	wait := true // bool | Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. (optional)
 	reimportFields := true // bool | Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. (optional)
 
 	configuration := openapiclient.NewConfiguration()
@@ -3379,7 +3966,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **document** | ***os.File** | The new PDF. | 
- **wait** | **bool** | Wait until the PDF has been processed before responding. Default true on sync.api hosts. | 
+ **wait** | **bool** | Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. | 
  **reimportFields** | **bool** | Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. | 
 
 ### Return type
@@ -3393,6 +3980,80 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
 - **Content-Type**: multipart/form-data
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ValidateSubmission
+
+> SubmissionValidation ValidateSubmission(ctx, templateId).Body(body).Version(version).Execute()
+
+Check a submission without creating it
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
+	body := *openapiclient.NewValidateSubmissionRequest() // ValidateSubmissionRequest | The submission's data and settings.
+	version := "latest" // string | The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published). (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.ValidateSubmission(context.Background(), templateId).Body(body).Version(version).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ValidateSubmission``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ValidateSubmission`: SubmissionValidation
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.ValidateSubmission`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**templateId** | **string** | The template's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiValidateSubmissionRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **body** | [**ValidateSubmissionRequest**](ValidateSubmissionRequest.md) | The submission's data and settings. | 
+ **version** | **string** | The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published). | 
+
+### Return type
+
+[**SubmissionValidation**](SubmissionValidation.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)

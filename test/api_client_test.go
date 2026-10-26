@@ -22,6 +22,20 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
 
+	t.Run("Test ClientAPIService AddTemplateFields", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var templateId string
+
+		resp, httpRes, err := apiClient.ClientAPI.AddTemplateFields(context.Background(), templateId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
 	t.Run("Test ClientAPIService CopyTemplate", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
@@ -234,6 +248,20 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
+	t.Run("Test ClientAPIService GenerateSubmissionFiles", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var submissionId string
+
+		resp, httpRes, err := apiClient.ClientAPI.GenerateSubmissionFiles(context.Background(), submissionId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
 	t.Run("Test ClientAPIService GenerateSubmissionPreview", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
@@ -358,6 +386,20 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
+	t.Run("Test ClientAPIService GetTemplateDiff", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var templateId string
+
+		resp, httpRes, err := apiClient.ClientAPI.GetTemplateDiff(context.Background(), templateId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
 	t.Run("Test ClientAPIService GetTemplateModelCode", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
@@ -365,6 +407,20 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 		var templateId string
 
 		resp, httpRes, err := apiClient.ClientAPI.GetTemplateModelCode(context.Background(), templateId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService GetTemplatePageImages", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var templateId string
+
+		resp, httpRes, err := apiClient.ClientAPI.GetTemplatePageImages(context.Background(), templateId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -441,6 +497,20 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 		t.Skip("skip test")  // remove to run test
 
 		resp, httpRes, err := apiClient.ClientAPI.ListSubmissions(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService ListTemplateFields", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var templateId string
+
+		resp, httpRes, err := apiClient.ClientAPI.ListTemplateFields(context.Background(), templateId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -528,6 +598,20 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
+	t.Run("Test ClientAPIService RemoveTemplateFields", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var templateId string
+
+		resp, httpRes, err := apiClient.ClientAPI.RemoveTemplateFields(context.Background(), templateId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
 	t.Run("Test ClientAPIService RenameFolder", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
@@ -535,6 +619,20 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 		var folderId string
 
 		resp, httpRes, err := apiClient.ClientAPI.RenameFolder(context.Background(), folderId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService ReorderTemplateFields", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var templateId string
+
+		resp, httpRes, err := apiClient.ClientAPI.ReorderTemplateFields(context.Background(), templateId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -610,6 +708,20 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
+	t.Run("Test ClientAPIService UpdateTemplateFields", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var templateId string
+
+		resp, httpRes, err := apiClient.ClientAPI.UpdateTemplateFields(context.Background(), templateId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
 	t.Run("Test ClientAPIService UpdateWebhook", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
@@ -643,6 +755,20 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 		var templateId string
 
 		resp, httpRes, err := apiClient.ClientAPI.UploadTemplateDocument(context.Background(), templateId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService ValidateSubmission", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var templateId string
+
+		resp, httpRes, err := apiClient.ClientAPI.ValidateSubmission(context.Background(), templateId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)

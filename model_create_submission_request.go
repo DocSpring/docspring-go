@@ -29,6 +29,8 @@ type CreateSubmissionRequest struct {
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
 	// A password that the PDF needs to be opened with. It's never returned; `has_password` says if it's set.
 	Password *string `json:"password,omitempty"`
+	// What the submission makes: `pdf`, and `png` (an image of each page of the PDF, up to 100 pages) when you ask for it. Default `["pdf"]`. POST /submissions/{submission_id}/generate_files adds `png` to a processed submission.
+	OutputFormats []OutputFormat `json:"output_formats,omitempty"`
 	// Seconds after the PDF is generated until the submission expires, up to 10 years (315360000). Default the template's expiration setting. A submission that isn't processed, such as one with invalid data, is kept for at least 48 hours.
 	ExpiresIn *int32 `json:"expires_in,omitempty"`
 	// Changes to field settings for this submission only, by field name, such as `{"name": {"required": false, "font_size": 9}}`. A setting that identifies the field (`id`, `name`, `type`), that only the template sets (such as `description`), or that doesn't apply to the field's type and display type (such as `check_character` on a field displayed as text) is a 422. With `signature_requests`, `editable: true` is a 422, and a `default` for a signature or initials field makes the submission `invalid_data`.
@@ -221,6 +223,38 @@ func (o *CreateSubmissionRequest) SetPassword(v string) {
 	o.Password = &v
 }
 
+// GetOutputFormats returns the OutputFormats field value if set, zero value otherwise.
+func (o *CreateSubmissionRequest) GetOutputFormats() []OutputFormat {
+	if o == nil || IsNil(o.OutputFormats) {
+		var ret []OutputFormat
+		return ret
+	}
+	return o.OutputFormats
+}
+
+// GetOutputFormatsOk returns a tuple with the OutputFormats field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateSubmissionRequest) GetOutputFormatsOk() ([]OutputFormat, bool) {
+	if o == nil || IsNil(o.OutputFormats) {
+		return nil, false
+	}
+	return o.OutputFormats, true
+}
+
+// HasOutputFormats returns a boolean if a field has been set.
+func (o *CreateSubmissionRequest) HasOutputFormats() bool {
+	if o != nil && !IsNil(o.OutputFormats) {
+		return true
+	}
+
+	return false
+}
+
+// SetOutputFormats gets a reference to the given []OutputFormat and assigns it to the OutputFormats field.
+func (o *CreateSubmissionRequest) SetOutputFormats(v []OutputFormat) {
+	o.OutputFormats = v
+}
+
 // GetExpiresIn returns the ExpiresIn field value if set, zero value otherwise.
 func (o *CreateSubmissionRequest) GetExpiresIn() int32 {
 	if o == nil || IsNil(o.ExpiresIn) {
@@ -406,6 +440,9 @@ func (o CreateSubmissionRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Password) {
 		toSerialize["password"] = o.Password
 	}
+	if !IsNil(o.OutputFormats) {
+		toSerialize["output_formats"] = o.OutputFormats
+	}
 	if !IsNil(o.ExpiresIn) {
 		toSerialize["expires_in"] = o.ExpiresIn
 	}
@@ -448,6 +485,7 @@ func (o *CreateSubmissionRequest) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "data")
 		delete(additionalProperties, "metadata")
 		delete(additionalProperties, "password")
+		delete(additionalProperties, "output_formats")
 		delete(additionalProperties, "expires_in")
 		delete(additionalProperties, "field_overrides")
 		delete(additionalProperties, "html")

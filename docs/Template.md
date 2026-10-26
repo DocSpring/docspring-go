@@ -43,6 +43,9 @@ Name | Type | Description | Notes
 **UpdatedAt** | **time.Time** | When the template was last updated. | 
 **Defaults** | [**TemplateDefaults**](TemplateDefaults.md) |  | 
 **FieldDependencies** | [**[]TemplateFieldDependency**](TemplateFieldDependency.md) | Conditional logic: each rule shows or hides its target fields, or makes them required, depending on the values of other fields. | 
+**FieldGroups** | [**[]FieldGroup**](FieldGroup.md) | The groups of the template's fields, with their settings. A field's name puts it in groups: `address/city` is in the group `address`, and `items/0/price` is in the list `items` and its items' group `items/~`. | 
+**PredefinedFields** | [**[]PredefinedField**](PredefinedField.md) | The field names that people using the embedded template editor choose from, each with the data type and settings a field gets when it's given that name. Setting it replaces the whole list; an empty list turns them off. | 
+**PredefinedFieldsSampleData** | **map[string]interface{}** | Sample submission data that sets `predefined_fields`: each value becomes a predefined field, with a type that fits it (`string`, `number`, `boolean`, `date`, `email` or `url`) and `required_in_template` true. Nested objects and arrays become names with `/`, such as `customer/email`. Without `predefined_fields` in the same request, it replaces them; with them, it adds to them and sets the types of the ones it has values for. | 
 **Html** | **NullableString** | The HTML of an HTML template, as a Liquid template. Null for PDF templates. | 
 **Scss** | **NullableString** | The SCSS of an HTML template. | 
 **HeaderHtml** | **NullableString** | The HTML printed at the top of each page of an HTML template. | 
@@ -55,7 +58,7 @@ Name | Type | Description | Notes
 
 ### NewTemplate
 
-`func NewTemplate(id string, name NullableString, description NullableString, templateType TemplateType, ready bool, document NullableTemplateDocument, parentFolderId NullableString, path string, version NullableString, latestVersion NullableString, versionPublishedAt NullableTime, locked bool, addSignatureRequestSubmissionIdFooters bool, aiFieldNamingLanguage NullableAiFieldNamingLanguage, allowAdditionalProperties bool, allowSkippingOptionalFields bool, defaultFormMode TemplateFormMode, editableSubmissions bool, embedDomains []string, embedEditAllowSettings bool, embedEditAllowVersioning bool, embedEditAllowDocumentReplacement bool, encryptPdfs bool, hasEncryptPdfsPassword bool, expireSubmissions bool, expireAfter int32, expirationInterval ExpirationInterval, mergeAuditTrailPdf bool, parseDatesUsingTemplateDateFormat bool, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, hasSlackWebhookUrl bool, lastChangedAt NullableTime, lastChangedBy NullableTemplateActor, createdAt time.Time, updatedAt time.Time, defaults TemplateDefaults, fieldDependencies []TemplateFieldDependency, html NullableString, scss NullableString, headerHtml NullableString, footerHtml NullableString, htmlEngineOptions NullableHtmlEngineOptions, embedEditToken NullableString, versions []TemplateVersion, ) *Template`
+`func NewTemplate(id string, name NullableString, description NullableString, templateType TemplateType, ready bool, document NullableTemplateDocument, parentFolderId NullableString, path string, version NullableString, latestVersion NullableString, versionPublishedAt NullableTime, locked bool, addSignatureRequestSubmissionIdFooters bool, aiFieldNamingLanguage NullableAiFieldNamingLanguage, allowAdditionalProperties bool, allowSkippingOptionalFields bool, defaultFormMode TemplateFormMode, editableSubmissions bool, embedDomains []string, embedEditAllowSettings bool, embedEditAllowVersioning bool, embedEditAllowDocumentReplacement bool, encryptPdfs bool, hasEncryptPdfsPassword bool, expireSubmissions bool, expireAfter int32, expirationInterval ExpirationInterval, mergeAuditTrailPdf bool, parseDatesUsingTemplateDateFormat bool, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, hasSlackWebhookUrl bool, lastChangedAt NullableTime, lastChangedBy NullableTemplateActor, createdAt time.Time, updatedAt time.Time, defaults TemplateDefaults, fieldDependencies []TemplateFieldDependency, fieldGroups []FieldGroup, predefinedFields []PredefinedField, predefinedFieldsSampleData map[string]interface{}, html NullableString, scss NullableString, headerHtml NullableString, footerHtml NullableString, htmlEngineOptions NullableHtmlEngineOptions, embedEditToken NullableString, versions []TemplateVersion, ) *Template`
 
 NewTemplate instantiates a new Template object
 This constructor will assign default values to properties that have it defined,
@@ -960,6 +963,76 @@ and a boolean to check if the value has been set.
 SetFieldDependencies sets FieldDependencies field to given value.
 
 
+### GetFieldGroups
+
+`func (o *Template) GetFieldGroups() []FieldGroup`
+
+GetFieldGroups returns the FieldGroups field if non-nil, zero value otherwise.
+
+### GetFieldGroupsOk
+
+`func (o *Template) GetFieldGroupsOk() (*[]FieldGroup, bool)`
+
+GetFieldGroupsOk returns a tuple with the FieldGroups field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetFieldGroups
+
+`func (o *Template) SetFieldGroups(v []FieldGroup)`
+
+SetFieldGroups sets FieldGroups field to given value.
+
+
+### GetPredefinedFields
+
+`func (o *Template) GetPredefinedFields() []PredefinedField`
+
+GetPredefinedFields returns the PredefinedFields field if non-nil, zero value otherwise.
+
+### GetPredefinedFieldsOk
+
+`func (o *Template) GetPredefinedFieldsOk() (*[]PredefinedField, bool)`
+
+GetPredefinedFieldsOk returns a tuple with the PredefinedFields field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPredefinedFields
+
+`func (o *Template) SetPredefinedFields(v []PredefinedField)`
+
+SetPredefinedFields sets PredefinedFields field to given value.
+
+
+### GetPredefinedFieldsSampleData
+
+`func (o *Template) GetPredefinedFieldsSampleData() map[string]interface{}`
+
+GetPredefinedFieldsSampleData returns the PredefinedFieldsSampleData field if non-nil, zero value otherwise.
+
+### GetPredefinedFieldsSampleDataOk
+
+`func (o *Template) GetPredefinedFieldsSampleDataOk() (*map[string]interface{}, bool)`
+
+GetPredefinedFieldsSampleDataOk returns a tuple with the PredefinedFieldsSampleData field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPredefinedFieldsSampleData
+
+`func (o *Template) SetPredefinedFieldsSampleData(v map[string]interface{})`
+
+SetPredefinedFieldsSampleData sets PredefinedFieldsSampleData field to given value.
+
+
+### SetPredefinedFieldsSampleDataNil
+
+`func (o *Template) SetPredefinedFieldsSampleDataNil(b bool)`
+
+ SetPredefinedFieldsSampleDataNil sets the value for PredefinedFieldsSampleData to be an explicit nil
+
+### UnsetPredefinedFieldsSampleData
+`func (o *Template) UnsetPredefinedFieldsSampleData()`
+
+UnsetPredefinedFieldsSampleData ensures that no value is present for PredefinedFieldsSampleData, not even an explicit nil
 ### GetHtml
 
 `func (o *Template) GetHtml() string`

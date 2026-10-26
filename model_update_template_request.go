@@ -73,6 +73,12 @@ type UpdateTemplateRequest struct {
 	Defaults *TemplateDefaultsInput `json:"defaults,omitempty"`
 	// The template's conditional logic rules. Setting them replaces all of the rules.
 	FieldDependencies []TemplateFieldDependencyInput `json:"field_dependencies,omitempty"`
+	// Changes to the settings of the template's field groups, each with the `name` of the group it changes. Settings left out keep their values, and groups left out are unchanged.
+	FieldGroups []FieldGroupInput `json:"field_groups,omitempty"`
+	// The field names that people using the embedded template editor choose from, each with the data type and settings a field gets when it's given that name. Setting it replaces the whole list; an empty list turns them off.
+	PredefinedFields []PredefinedFieldInput `json:"predefined_fields,omitempty"`
+	// Sample submission data that sets `predefined_fields`: each value becomes a predefined field, with a type that fits it (`string`, `number`, `boolean`, `date`, `email` or `url`) and `required_in_template` true. Nested objects and arrays become names with `/`, such as `customer/email`. Without `predefined_fields` in the same request, it replaces them; with them, it adds to them and sets the types of the ones it has values for.
+	PredefinedFieldsSampleData map[string]interface{} `json:"predefined_fields_sample_data,omitempty"`
 	// The HTML of an HTML template, as a Liquid template. Null for PDF templates.
 	Html NullableString `json:"html,omitempty"`
 	// The SCSS of an HTML template.
@@ -83,7 +89,10 @@ type UpdateTemplateRequest struct {
 	FooterHtml NullableString `json:"footer_html,omitempty"`
 	// Null resets the options to their defaults.
 	HtmlEngineOptions NullableHtmlEngineOptionsInput `json:"html_engine_options,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _UpdateTemplateRequest UpdateTemplateRequest
 
 // NewUpdateTemplateRequest instantiates a new UpdateTemplateRequest object
 // This constructor will assign default values to properties that have it defined,
@@ -1016,6 +1025,103 @@ func (o *UpdateTemplateRequest) SetFieldDependencies(v []TemplateFieldDependency
 	o.FieldDependencies = v
 }
 
+// GetFieldGroups returns the FieldGroups field value if set, zero value otherwise.
+func (o *UpdateTemplateRequest) GetFieldGroups() []FieldGroupInput {
+	if o == nil || IsNil(o.FieldGroups) {
+		var ret []FieldGroupInput
+		return ret
+	}
+	return o.FieldGroups
+}
+
+// GetFieldGroupsOk returns a tuple with the FieldGroups field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateTemplateRequest) GetFieldGroupsOk() ([]FieldGroupInput, bool) {
+	if o == nil || IsNil(o.FieldGroups) {
+		return nil, false
+	}
+	return o.FieldGroups, true
+}
+
+// HasFieldGroups returns a boolean if a field has been set.
+func (o *UpdateTemplateRequest) HasFieldGroups() bool {
+	if o != nil && !IsNil(o.FieldGroups) {
+		return true
+	}
+
+	return false
+}
+
+// SetFieldGroups gets a reference to the given []FieldGroupInput and assigns it to the FieldGroups field.
+func (o *UpdateTemplateRequest) SetFieldGroups(v []FieldGroupInput) {
+	o.FieldGroups = v
+}
+
+// GetPredefinedFields returns the PredefinedFields field value if set, zero value otherwise.
+func (o *UpdateTemplateRequest) GetPredefinedFields() []PredefinedFieldInput {
+	if o == nil || IsNil(o.PredefinedFields) {
+		var ret []PredefinedFieldInput
+		return ret
+	}
+	return o.PredefinedFields
+}
+
+// GetPredefinedFieldsOk returns a tuple with the PredefinedFields field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateTemplateRequest) GetPredefinedFieldsOk() ([]PredefinedFieldInput, bool) {
+	if o == nil || IsNil(o.PredefinedFields) {
+		return nil, false
+	}
+	return o.PredefinedFields, true
+}
+
+// HasPredefinedFields returns a boolean if a field has been set.
+func (o *UpdateTemplateRequest) HasPredefinedFields() bool {
+	if o != nil && !IsNil(o.PredefinedFields) {
+		return true
+	}
+
+	return false
+}
+
+// SetPredefinedFields gets a reference to the given []PredefinedFieldInput and assigns it to the PredefinedFields field.
+func (o *UpdateTemplateRequest) SetPredefinedFields(v []PredefinedFieldInput) {
+	o.PredefinedFields = v
+}
+
+// GetPredefinedFieldsSampleData returns the PredefinedFieldsSampleData field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *UpdateTemplateRequest) GetPredefinedFieldsSampleData() map[string]interface{} {
+	if o == nil {
+		var ret map[string]interface{}
+		return ret
+	}
+	return o.PredefinedFieldsSampleData
+}
+
+// GetPredefinedFieldsSampleDataOk returns a tuple with the PredefinedFieldsSampleData field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *UpdateTemplateRequest) GetPredefinedFieldsSampleDataOk() (map[string]interface{}, bool) {
+	if o == nil || IsNil(o.PredefinedFieldsSampleData) {
+		return map[string]interface{}{}, false
+	}
+	return o.PredefinedFieldsSampleData, true
+}
+
+// HasPredefinedFieldsSampleData returns a boolean if a field has been set.
+func (o *UpdateTemplateRequest) HasPredefinedFieldsSampleData() bool {
+	if o != nil && !IsNil(o.PredefinedFieldsSampleData) {
+		return true
+	}
+
+	return false
+}
+
+// SetPredefinedFieldsSampleData gets a reference to the given map[string]interface{} and assigns it to the PredefinedFieldsSampleData field.
+func (o *UpdateTemplateRequest) SetPredefinedFieldsSampleData(v map[string]interface{}) {
+	o.PredefinedFieldsSampleData = v
+}
+
 // GetHtml returns the Html field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *UpdateTemplateRequest) GetHtml() string {
 	if o == nil || IsNil(o.Html.Get()) {
@@ -1317,6 +1423,15 @@ func (o UpdateTemplateRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.FieldDependencies) {
 		toSerialize["field_dependencies"] = o.FieldDependencies
 	}
+	if !IsNil(o.FieldGroups) {
+		toSerialize["field_groups"] = o.FieldGroups
+	}
+	if !IsNil(o.PredefinedFields) {
+		toSerialize["predefined_fields"] = o.PredefinedFields
+	}
+	if o.PredefinedFieldsSampleData != nil {
+		toSerialize["predefined_fields_sample_data"] = o.PredefinedFieldsSampleData
+	}
 	if o.Html.IsSet() {
 		toSerialize["html"] = o.Html.Get()
 	}
@@ -1332,7 +1447,67 @@ func (o UpdateTemplateRequest) ToMap() (map[string]interface{}, error) {
 	if o.HtmlEngineOptions.IsSet() {
 		toSerialize["html_engine_options"] = o.HtmlEngineOptions.Get()
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *UpdateTemplateRequest) UnmarshalJSON(data []byte) (err error) {
+	varUpdateTemplateRequest := _UpdateTemplateRequest{}
+
+	err = json.Unmarshal(data, &varUpdateTemplateRequest)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UpdateTemplateRequest(varUpdateTemplateRequest)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "parent_folder_id")
+		delete(additionalProperties, "locked")
+		delete(additionalProperties, "add_signature_request_submission_id_footers")
+		delete(additionalProperties, "ai_field_naming_language")
+		delete(additionalProperties, "allow_additional_properties")
+		delete(additionalProperties, "allow_skipping_optional_fields")
+		delete(additionalProperties, "default_form_mode")
+		delete(additionalProperties, "editable_submissions")
+		delete(additionalProperties, "embed_domains")
+		delete(additionalProperties, "embed_edit_allow_settings")
+		delete(additionalProperties, "embed_edit_allow_versioning")
+		delete(additionalProperties, "embed_edit_allow_document_replacement")
+		delete(additionalProperties, "encrypt_pdfs")
+		delete(additionalProperties, "encrypt_pdfs_password")
+		delete(additionalProperties, "expire_submissions")
+		delete(additionalProperties, "expire_after")
+		delete(additionalProperties, "expiration_interval")
+		delete(additionalProperties, "merge_audit_trail_pdf")
+		delete(additionalProperties, "parse_dates_using_template_date_format")
+		delete(additionalProperties, "public_submissions")
+		delete(additionalProperties, "public_web_form")
+		delete(additionalProperties, "redirect_url")
+		delete(additionalProperties, "slack_webhook_url")
+		delete(additionalProperties, "defaults")
+		delete(additionalProperties, "field_dependencies")
+		delete(additionalProperties, "field_groups")
+		delete(additionalProperties, "predefined_fields")
+		delete(additionalProperties, "predefined_fields_sample_data")
+		delete(additionalProperties, "html")
+		delete(additionalProperties, "scss")
+		delete(additionalProperties, "header_html")
+		delete(additionalProperties, "footer_html")
+		delete(additionalProperties, "html_engine_options")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUpdateTemplateRequest struct {
