@@ -4,14 +4,13 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Status** | **string** |  | 
-**Error** | **string** |  | 
+**Error** | [**ErrorInfo**](ErrorInfo.md) |  | 
 
 ## Methods
 
 ### NewErrorResponse
 
-`func NewErrorResponse(status string, error_ string, ) *ErrorResponse`
+`func NewErrorResponse(error_ ErrorInfo, ) *ErrorResponse`
 
 NewErrorResponse instantiates a new ErrorResponse object
 This constructor will assign default values to properties that have it defined,
@@ -26,42 +25,22 @@ NewErrorResponseWithDefaults instantiates a new ErrorResponse object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
-### GetStatus
-
-`func (o *ErrorResponse) GetStatus() string`
-
-GetStatus returns the Status field if non-nil, zero value otherwise.
-
-### GetStatusOk
-
-`func (o *ErrorResponse) GetStatusOk() (*string, bool)`
-
-GetStatusOk returns a tuple with the Status field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetStatus
-
-`func (o *ErrorResponse) SetStatus(v string)`
-
-SetStatus sets Status field to given value.
-
-
 ### GetError
 
-`func (o *ErrorResponse) GetError() string`
+`func (o *ErrorResponse) GetError() ErrorInfo`
 
 GetError returns the Error field if non-nil, zero value otherwise.
 
 ### GetErrorOk
 
-`func (o *ErrorResponse) GetErrorOk() (*string, bool)`
+`func (o *ErrorResponse) GetErrorOk() (*ErrorInfo, bool)`
 
 GetErrorOk returns a tuple with the Error field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetError
 
-`func (o *ErrorResponse) SetError(v string)`
+`func (o *ErrorResponse) SetError(v ErrorInfo)`
 
 SetError sets Error field to given value.
 

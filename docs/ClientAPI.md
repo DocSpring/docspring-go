@@ -1,267 +1,62 @@
 # \ClientAPI
 
-All URIs are relative to *https://sync.api.docspring.com/api/v1*
+All URIs are relative to *https://sync.api.docspring.com/api/v2*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**AddFieldsToTemplate**](ClientAPI.md#AddFieldsToTemplate) | **Put** /templates/{template_id}/add_fields | Add new fields to a Template
-[**BatchGeneratePdfs**](ClientAPI.md#BatchGeneratePdfs) | **Post** /submissions/batches | Generate multiple PDFs
-[**CombinePdfs**](ClientAPI.md#CombinePdfs) | **Post** /combined_submissions | Merge submission PDFs, template PDFs, or custom files
 [**CopyTemplate**](ClientAPI.md#CopyTemplate) | **Post** /templates/{template_id}/copy | Copy a template
-[**CreateCustomFileFromUpload**](ClientAPI.md#CreateCustomFileFromUpload) | **Post** /custom_files | Create a new custom file from a cached S3 upload
-[**CreateDataRequestEvent**](ClientAPI.md#CreateDataRequestEvent) | **Post** /data_requests/{data_request_id}/events | Create a new event for emailing a signee a request for signature
-[**CreateDataRequestToken**](ClientAPI.md#CreateDataRequestToken) | **Post** /data_requests/{data_request_id}/tokens | Create a new data request token for form authentication
-[**CreateFolder**](ClientAPI.md#CreateFolder) | **Post** /folders/ | Create a folder
-[**CreateHtmlTemplate**](ClientAPI.md#CreateHtmlTemplate) | **Post** /templates?endpoint_variant&#x3D;create_html_template | Create a new HTML template
-[**CreatePdfTemplate**](ClientAPI.md#CreatePdfTemplate) | **Post** /templates | Create a new PDF template with a form POST file upload
-[**CreatePdfTemplateFromUpload**](ClientAPI.md#CreatePdfTemplateFromUpload) | **Post** /templates?endpoint_variant&#x3D;create_template_from_cached_upload | Create a new PDF template from a cached S3 file upload
+[**CreateCombinedPdf**](ClientAPI.md#CreateCombinedPdf) | **Post** /combined_pdfs | Combine PDFs
+[**CreateCustomFileFromUpload**](ClientAPI.md#CreateCustomFileFromUpload) | **Post** /custom_files | Create a custom file from an upload
+[**CreateFolder**](ClientAPI.md#CreateFolder) | **Post** /folders | Create a folder
+[**CreateSignatureRequestEvent**](ClientAPI.md#CreateSignatureRequestEvent) | **Post** /signature_requests/{signature_request_id}/events | Record a signature request event
+[**CreateSignatureRequestToken**](ClientAPI.md#CreateSignatureRequestToken) | **Post** /signature_requests/{signature_request_id}/tokens | Create a signature request token
+[**CreateSubmission**](ClientAPI.md#CreateSubmission) | **Post** /templates/{template_id}/submissions | Generate a PDF
+[**CreateSubmissionBatch**](ClientAPI.md#CreateSubmissionBatch) | **Post** /submissions/batches | Generate PDFs in a batch
+[**CreateTemplate**](ClientAPI.md#CreateTemplate) | **Post** /templates | Create a template
 [**CreateWebhook**](ClientAPI.md#CreateWebhook) | **Post** /webhooks | Create a webhook
+[**DeleteCustomFile**](ClientAPI.md#DeleteCustomFile) | **Delete** /custom_files/{custom_file_id} | Delete a custom file
 [**DeleteFolder**](ClientAPI.md#DeleteFolder) | **Delete** /folders/{folder_id} | Delete a folder
 [**DeleteTemplate**](ClientAPI.md#DeleteTemplate) | **Delete** /templates/{template_id} | Delete a template
 [**DeleteWebhook**](ClientAPI.md#DeleteWebhook) | **Delete** /webhooks/{webhook_id} | Delete a webhook
-[**ExpireCombinedSubmission**](ClientAPI.md#ExpireCombinedSubmission) | **Delete** /combined_submissions/{combined_submission_id} | Expire a combined submission
-[**ExpireSubmission**](ClientAPI.md#ExpireSubmission) | **Delete** /submissions/{submission_id} | Expire a PDF submission
-[**GeneratePdf**](ClientAPI.md#GeneratePdf) | **Post** /templates/{template_id}/submissions | Generate a PDF
-[**GeneratePreview**](ClientAPI.md#GeneratePreview) | **Post** /submissions/{submission_id}/generate_preview | Generate a preview PDF for partially completed data requests
-[**GetCombinedSubmission**](ClientAPI.md#GetCombinedSubmission) | **Get** /combined_submissions/{combined_submission_id} | Check the status of a combined submission (merged PDFs)
-[**GetDataRequest**](ClientAPI.md#GetDataRequest) | **Get** /data_requests/{data_request_id} | Look up a submission data request
-[**GetFullTemplate**](ClientAPI.md#GetFullTemplate) | **Get** /templates/{template_id}?full&#x3D;true | Fetch the full attributes for a PDF template
-[**GetPresignUrl**](ClientAPI.md#GetPresignUrl) | **Get** /uploads/presign | Get a presigned S3 URL for direct file upload
-[**GetSubmission**](ClientAPI.md#GetSubmission) | **Get** /submissions/{submission_id} | Check the status of a PDF
-[**GetSubmissionBatch**](ClientAPI.md#GetSubmissionBatch) | **Get** /submissions/batches/{submission_batch_id} | Check the status of a submission batch job
-[**GetTemplate**](ClientAPI.md#GetTemplate) | **Get** /templates/{template_id} | Check the status of an uploaded template
-[**GetTemplateModelCode**](ClientAPI.md#GetTemplateModelCode) | **Get** /templates/{template_id}/model_code | Generate typed model code for a template
-[**GetTemplateSchema**](ClientAPI.md#GetTemplateSchema) | **Get** /templates/{template_id}/schema | Fetch the JSON schema for a template
+[**ExpireCombinedPdf**](ClientAPI.md#ExpireCombinedPdf) | **Delete** /combined_pdfs/{combined_pdf_id} | Expire a combined PDF
+[**ExpireSubmission**](ClientAPI.md#ExpireSubmission) | **Delete** /submissions/{submission_id} | Expire a submission
+[**GenerateSubmissionPreview**](ClientAPI.md#GenerateSubmissionPreview) | **Post** /submissions/{submission_id}/generate_preview | Generate a preview PDF
+[**GetCombinedPdf**](ClientAPI.md#GetCombinedPdf) | **Get** /combined_pdfs/{combined_pdf_id} | Get a combined PDF
+[**GetCustomFile**](ClientAPI.md#GetCustomFile) | **Get** /custom_files/{custom_file_id} | Get a custom file
+[**GetFolder**](ClientAPI.md#GetFolder) | **Get** /folders/{folder_id} | Get a folder
+[**GetPresignUrl**](ClientAPI.md#GetPresignUrl) | **Get** /uploads/presign | Get a presigned URL to upload a file
+[**GetSignatureRequest**](ClientAPI.md#GetSignatureRequest) | **Get** /signature_requests/{signature_request_id} | Get a signature request
+[**GetSubmission**](ClientAPI.md#GetSubmission) | **Get** /submissions/{submission_id} | Get a submission
+[**GetSubmissionBatch**](ClientAPI.md#GetSubmissionBatch) | **Get** /submissions/batches/{submission_batch_id} | Get a batch
+[**GetTemplate**](ClientAPI.md#GetTemplate) | **Get** /templates/{template_id} | Get a template
+[**GetTemplateModelCode**](ClientAPI.md#GetTemplateModelCode) | **Get** /templates/{template_id}/model_code | Generate typed code for a template's submission data
+[**GetTemplateSchema**](ClientAPI.md#GetTemplateSchema) | **Get** /templates/{template_id}/schema | Get the JSON Schema of a template's submission data
 [**GetWebhook**](ClientAPI.md#GetWebhook) | **Get** /webhooks/{webhook_id} | Get a webhook
-[**ListCombinedSubmissions**](ClientAPI.md#ListCombinedSubmissions) | **Get** /combined_submissions | Get a list of all combined submissions
-[**ListFolders**](ClientAPI.md#ListFolders) | **Get** /folders/ | Get a list of all folders
-[**ListSubmissions**](ClientAPI.md#ListSubmissions) | **Get** /submissions | List all submissions
-[**ListTemplateSubmissions**](ClientAPI.md#ListTemplateSubmissions) | **Get** /templates/{template_id}/submissions | List all submissions for a given template
-[**ListTemplates**](ClientAPI.md#ListTemplates) | **Get** /templates | Get a list of all templates
-[**ListWebhooks**](ClientAPI.md#ListWebhooks) | **Get** /webhooks | Get a list of all webhooks
-[**MoveFolderToFolder**](ClientAPI.md#MoveFolderToFolder) | **Post** /folders/{folder_id}/move | Move a folder
-[**MoveTemplateToFolder**](ClientAPI.md#MoveTemplateToFolder) | **Post** /templates/{template_id}/move | Move Template to folder
+[**ListCombinedPdfs**](ClientAPI.md#ListCombinedPdfs) | **Get** /combined_pdfs | List combined PDFs
+[**ListCustomFiles**](ClientAPI.md#ListCustomFiles) | **Get** /custom_files | List custom files
+[**ListFolders**](ClientAPI.md#ListFolders) | **Get** /folders | List folders
+[**ListSubmissions**](ClientAPI.md#ListSubmissions) | **Get** /submissions | List submissions
+[**ListTemplateSubmissions**](ClientAPI.md#ListTemplateSubmissions) | **Get** /templates/{template_id}/submissions | List a template's submissions
+[**ListTemplates**](ClientAPI.md#ListTemplates) | **Get** /templates | List templates
+[**ListWebhooks**](ClientAPI.md#ListWebhooks) | **Get** /webhooks | List webhooks
+[**MoveFolder**](ClientAPI.md#MoveFolder) | **Post** /folders/{folder_id}/move | Move a folder
+[**MoveTemplate**](ClientAPI.md#MoveTemplate) | **Post** /templates/{template_id}/move | Move a template to a folder
 [**PublishTemplateVersion**](ClientAPI.md#PublishTemplateVersion) | **Post** /templates/{template_id}/publish_version | Publish a template version
 [**RenameFolder**](ClientAPI.md#RenameFolder) | **Post** /folders/{folder_id}/rename | Rename a folder
 [**RestoreTemplateVersion**](ClientAPI.md#RestoreTemplateVersion) | **Post** /templates/{template_id}/restore_version | Restore a template version
 [**TestAuthentication**](ClientAPI.md#TestAuthentication) | **Get** /authentication | Test authentication
-[**UpdateDataRequest**](ClientAPI.md#UpdateDataRequest) | **Put** /data_requests/{data_request_id} | Update a submission data request
-[**UpdateTemplate**](ClientAPI.md#UpdateTemplate) | **Put** /templates/{template_id} | Update a Template
-[**UpdateTemplateDocument**](ClientAPI.md#UpdateTemplateDocument) | **Put** /templates/{template_id}?endpoint_variant&#x3D;update_template_pdf_with_form_post | Update a template&#39;s document with a form POST file upload
-[**UpdateTemplateDocumentFromUpload**](ClientAPI.md#UpdateTemplateDocumentFromUpload) | **Put** /templates/{template_id}?endpoint_variant&#x3D;update_template_pdf_with_cached_upload | Update a template&#39;s document with a cached S3 file upload
+[**UpdateSignatureRequest**](ClientAPI.md#UpdateSignatureRequest) | **Put** /signature_requests/{signature_request_id} | Update a signature request
+[**UpdateTemplate**](ClientAPI.md#UpdateTemplate) | **Put** /templates/{template_id} | Update a template
+[**UpdateTemplateDocument**](ClientAPI.md#UpdateTemplateDocument) | **Put** /templates/{template_id}/document | Replace a template's PDF
 [**UpdateWebhook**](ClientAPI.md#UpdateWebhook) | **Put** /webhooks/{webhook_id} | Update a webhook
+[**UploadTemplate**](ClientAPI.md#UploadTemplate) | **Post** /templates/upload | Create a PDF template from an uploaded PDF
+[**UploadTemplateDocument**](ClientAPI.md#UploadTemplateDocument) | **Put** /templates/{template_id}/document/upload | Replace a template's PDF with an uploaded PDF
 
-
-
-## AddFieldsToTemplate
-
-> TemplateAddFieldsResponse AddFieldsToTemplate(ctx, templateId).Data(data).Execute()
-
-Add new fields to a Template
-
-
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
-)
-
-func main() {
-	templateId := "tpl_1234567890abcdef02" // string | 
-	data := *openapiclient.NewAddFieldsData([]map[string]interface{}{map[string]interface{}(123)}) // AddFieldsData | 
-
-	configuration := openapiclient.NewConfiguration()
-	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.AddFieldsToTemplate(context.Background(), templateId).Data(data).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.AddFieldsToTemplate``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `AddFieldsToTemplate`: TemplateAddFieldsResponse
-	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.AddFieldsToTemplate`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**templateId** | **string** |  | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiAddFieldsToTemplateRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
- **data** | [**AddFieldsData**](AddFieldsData.md) |  | 
-
-### Return type
-
-[**TemplateAddFieldsResponse**](TemplateAddFieldsResponse.md)
-
-### Authorization
-
-[api_token_basic](../README.md#api_token_basic)
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## BatchGeneratePdfs
-
-> BatchGeneratePdfs201Response BatchGeneratePdfs(ctx).Data(data).Wait(wait).Execute()
-
-Generate multiple PDFs
-
-
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
-)
-
-func main() {
-	data := *openapiclient.NewSubmissionBatchData([]map[string]interface{}{map[string]interface{}(123)}) // SubmissionBatchData | 
-	wait := true // bool | Wait for submission batch to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain) (optional) (default to true)
-
-	configuration := openapiclient.NewConfiguration()
-	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.BatchGeneratePdfs(context.Background()).Data(data).Wait(wait).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.BatchGeneratePdfs``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `BatchGeneratePdfs`: BatchGeneratePdfs201Response
-	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.BatchGeneratePdfs`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiBatchGeneratePdfsRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **data** | [**SubmissionBatchData**](SubmissionBatchData.md) |  | 
- **wait** | **bool** | Wait for submission batch to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain) | [default to true]
-
-### Return type
-
-[**BatchGeneratePdfs201Response**](BatchGeneratePdfs201Response.md)
-
-### Authorization
-
-[api_token_basic](../README.md#api_token_basic)
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## CombinePdfs
-
-> CreateCombinedSubmissionResponse CombinePdfs(ctx).Data(data).Execute()
-
-Merge submission PDFs, template PDFs, or custom files
-
-
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
-)
-
-func main() {
-	data := *openapiclient.NewCombinePdfsData([]map[string]interface{}{map[string]interface{}(123)}) // CombinePdfsData | 
-
-	configuration := openapiclient.NewConfiguration()
-	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.CombinePdfs(context.Background()).Data(data).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CombinePdfs``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `CombinePdfs`: CreateCombinedSubmissionResponse
-	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.CombinePdfs`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiCombinePdfsRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **data** | [**CombinePdfsData**](CombinePdfsData.md) |  | 
-
-### Return type
-
-[**CreateCombinedSubmissionResponse**](CreateCombinedSubmissionResponse.md)
-
-### Authorization
-
-[api_token_basic](../README.md#api_token_basic)
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
 
 
 ## CopyTemplate
 
-> TemplatePreview CopyTemplate(ctx, templateId).Options(options).Execute()
+> Template CopyTemplate(ctx, templateId).Body(body).Execute()
 
 Copy a template
 
@@ -276,21 +71,21 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	templateId := "tpl_1234567890abcdef01" // string | 
-	options := *openapiclient.NewCopyTemplateOptions() // CopyTemplateOptions |  (optional)
+	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
+	body := *openapiclient.NewCopyTemplateRequest() // CopyTemplateRequest | Settings for the copy. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.CopyTemplate(context.Background(), templateId).Options(options).Execute()
+	resp, r, err := apiClient.ClientAPI.CopyTemplate(context.Background(), templateId).Body(body).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CopyTemplate``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `CopyTemplate`: TemplatePreview
+	// response from `CopyTemplate`: Template
 	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.CopyTemplate`: %v\n", resp)
 }
 ```
@@ -301,7 +96,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**templateId** | **string** |  | 
+**templateId** | **string** | The template's ID. | 
 
 ### Other Parameters
 
@@ -311,11 +106,79 @@ Other parameters are passed through a pointer to a apiCopyTemplateRequest struct
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **options** | [**CopyTemplateOptions**](CopyTemplateOptions.md) |  | 
+ **body** | [**CopyTemplateRequest**](CopyTemplateRequest.md) | Settings for the copy. | 
 
 ### Return type
 
-[**TemplatePreview**](TemplatePreview.md)
+[**Template**](Template.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## CreateCombinedPdf
+
+> CombinedPdf CreateCombinedPdf(ctx).Body(body).Wait(wait).Execute()
+
+Combine PDFs
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	body := *openapiclient.NewCreateCombinedPdfRequest([]openapiclient.CombinedPdfSourceInput{openapiclient.CombinedPdfSourceInput{CombinedPdfSourcePdf: openapiclient.NewCombinedPdfSourcePdf("Type_example", "Id_example")}}) // CreateCombinedPdfRequest | The PDFs to merge, and the combined PDF's settings.
+	wait := true // bool | Wait until the PDF has been generated before responding. Default true on sync.api hosts. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.CreateCombinedPdf(context.Background()).Body(body).Wait(wait).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateCombinedPdf``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `CreateCombinedPdf`: CombinedPdf
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.CreateCombinedPdf`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCreateCombinedPdfRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**CreateCombinedPdfRequest**](CreateCombinedPdfRequest.md) | The PDFs to merge, and the combined PDF's settings. | 
+ **wait** | **bool** | Wait until the PDF has been generated before responding. Default true on sync.api hosts. | 
+
+### Return type
+
+[**CombinedPdf**](CombinedPdf.md)
 
 ### Authorization
 
@@ -333,9 +196,9 @@ Name | Type | Description  | Notes
 
 ## CreateCustomFileFromUpload
 
-> CreateCustomFileResponse CreateCustomFileFromUpload(ctx).Data(data).Execute()
+> CustomFile CreateCustomFileFromUpload(ctx).Body(body).Execute()
 
-Create a new custom file from a cached S3 upload
+Create a custom file from an upload
 
 
 
@@ -348,20 +211,20 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	data := *openapiclient.NewCreateCustomFileData("CacheId_example") // CreateCustomFileData | 
+	body := *openapiclient.NewCreateCustomFileFromUploadRequest("CacheId_example") // CreateCustomFileFromUploadRequest | The uploaded file to create the custom file from.
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.CreateCustomFileFromUpload(context.Background()).Data(data).Execute()
+	resp, r, err := apiClient.ClientAPI.CreateCustomFileFromUpload(context.Background()).Body(body).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateCustomFileFromUpload``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `CreateCustomFileFromUpload`: CreateCustomFileResponse
+	// response from `CreateCustomFileFromUpload`: CustomFile
 	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.CreateCustomFileFromUpload`: %v\n", resp)
 }
 ```
@@ -377,11 +240,11 @@ Other parameters are passed through a pointer to a apiCreateCustomFileFromUpload
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **data** | [**CreateCustomFileData**](CreateCustomFileData.md) |  | 
+ **body** | [**CreateCustomFileFromUploadRequest**](CreateCustomFileFromUploadRequest.md) | The uploaded file to create the custom file from. | 
 
 ### Return type
 
-[**CreateCustomFileResponse**](CreateCustomFileResponse.md)
+[**CustomFile**](CustomFile.md)
 
 ### Authorization
 
@@ -390,150 +253,6 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
 - **Content-Type**: application/json
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## CreateDataRequestEvent
-
-> CreateSubmissionDataRequestEventResponse CreateDataRequestEvent(ctx, dataRequestId).Event(event).Execute()
-
-Create a new event for emailing a signee a request for signature
-
-
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
-)
-
-func main() {
-	dataRequestId := "drq_1234567890abcdef01" // string | 
-	event := *openapiclient.NewCreateSubmissionDataRequestEventRequest("EventType_example") // CreateSubmissionDataRequestEventRequest | 
-
-	configuration := openapiclient.NewConfiguration()
-	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.CreateDataRequestEvent(context.Background(), dataRequestId).Event(event).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateDataRequestEvent``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `CreateDataRequestEvent`: CreateSubmissionDataRequestEventResponse
-	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.CreateDataRequestEvent`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**dataRequestId** | **string** |  | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiCreateDataRequestEventRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
- **event** | [**CreateSubmissionDataRequestEventRequest**](CreateSubmissionDataRequestEventRequest.md) |  | 
-
-### Return type
-
-[**CreateSubmissionDataRequestEventResponse**](CreateSubmissionDataRequestEventResponse.md)
-
-### Authorization
-
-[api_token_basic](../README.md#api_token_basic)
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## CreateDataRequestToken
-
-> CreateSubmissionDataRequestTokenResponse CreateDataRequestToken(ctx, dataRequestId).Type_(type_).Execute()
-
-Create a new data request token for form authentication
-
-
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
-)
-
-func main() {
-	dataRequestId := "drq_1234567890abcdef01" // string | 
-	type_ := "api" // string |  (optional)
-
-	configuration := openapiclient.NewConfiguration()
-	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.CreateDataRequestToken(context.Background(), dataRequestId).Type_(type_).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateDataRequestToken``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `CreateDataRequestToken`: CreateSubmissionDataRequestTokenResponse
-	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.CreateDataRequestToken`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**dataRequestId** | **string** |  | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiCreateDataRequestTokenRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
- **type_** | **string** |  | 
-
-### Return type
-
-[**CreateSubmissionDataRequestTokenResponse**](CreateSubmissionDataRequestTokenResponse.md)
-
-### Authorization
-
-[api_token_basic](../README.md#api_token_basic)
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
@@ -543,7 +262,7 @@ Name | Type | Description  | Notes
 
 ## CreateFolder
 
-> Folder CreateFolder(ctx).Data(data).Execute()
+> Folder CreateFolder(ctx).Body(body).Execute()
 
 Create a folder
 
@@ -558,15 +277,15 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	data := *openapiclient.NewCreateFolderData(map[string]interface{}(123)) // CreateFolderData | 
+	body := *openapiclient.NewCreateFolderRequest("Name_example") // CreateFolderRequest | The folder to create.
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.CreateFolder(context.Background()).Data(data).Execute()
+	resp, r, err := apiClient.ClientAPI.CreateFolder(context.Background()).Body(body).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateFolder``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -587,7 +306,7 @@ Other parameters are passed through a pointer to a apiCreateFolderRequest struct
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **data** | [**CreateFolderData**](CreateFolderData.md) |  | 
+ **body** | [**CreateFolderRequest**](CreateFolderRequest.md) | The folder to create. | 
 
 ### Return type
 
@@ -607,11 +326,11 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## CreateHtmlTemplate
+## CreateSignatureRequestEvent
 
-> TemplatePreview CreateHtmlTemplate(ctx).Data(data).Execute()
+> SignatureRequestEvent CreateSignatureRequestEvent(ctx, signatureRequestId).Body(body).Execute()
 
-Create a new HTML template
+Record a signature request event
 
 
 
@@ -624,40 +343,46 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	data := *openapiclient.NewCreateHtmlTemplate(map[string]interface{}(123)) // CreateHtmlTemplate | 
+	signatureRequestId := "srq_1234567890abcdef01" // string | The signature request's ID.
+	body := *openapiclient.NewCreateSignatureRequestEventRequest(openapiclient.SignatureRequestEventType("send_request")) // CreateSignatureRequestEventRequest | The event to record.
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.CreateHtmlTemplate(context.Background()).Data(data).Execute()
+	resp, r, err := apiClient.ClientAPI.CreateSignatureRequestEvent(context.Background(), signatureRequestId).Body(body).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateHtmlTemplate``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateSignatureRequestEvent``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `CreateHtmlTemplate`: TemplatePreview
-	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.CreateHtmlTemplate`: %v\n", resp)
+	// response from `CreateSignatureRequestEvent`: SignatureRequestEvent
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.CreateSignatureRequestEvent`: %v\n", resp)
 }
 ```
 
 ### Path Parameters
 
 
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**signatureRequestId** | **string** | The signature request's ID. | 
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiCreateHtmlTemplateRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiCreateSignatureRequestEventRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **data** | [**CreateHtmlTemplate**](CreateHtmlTemplate.md) |  | 
+
+ **body** | [**CreateSignatureRequestEventRequest**](CreateSignatureRequestEventRequest.md) | The event to record. | 
 
 ### Return type
 
-[**TemplatePreview**](TemplatePreview.md)
+[**SignatureRequestEvent**](SignatureRequestEvent.md)
 
 ### Authorization
 
@@ -673,11 +398,11 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## CreatePdfTemplate
+## CreateSignatureRequestToken
 
-> TemplatePreview CreatePdfTemplate(ctx).TemplateDocument(templateDocument).TemplateName(templateName).Wait(wait).TemplateDescription(templateDescription).TemplateParentFolderId(templateParentFolderId).Execute()
+> SignatureRequestToken CreateSignatureRequestToken(ctx, signatureRequestId).Body(body).Execute()
 
-Create a new PDF template with a form POST file upload
+Create a signature request token
 
 
 
@@ -690,48 +415,46 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	templateDocument := os.NewFile(1234, "some_file") // *os.File | 
-	templateName := "templateName_example" // string | 
-	wait := true // bool | Wait for template document to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain) (optional) (default to true)
-	templateDescription := "templateDescription_example" // string |  (optional)
-	templateParentFolderId := "templateParentFolderId_example" // string |  (optional)
+	signatureRequestId := "srq_1234567890abcdef01" // string | The signature request's ID.
+	body := *openapiclient.NewCreateSignatureRequestTokenRequest() // CreateSignatureRequestTokenRequest | The kind of link to make. Send no body for an `api` token. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.CreatePdfTemplate(context.Background()).TemplateDocument(templateDocument).TemplateName(templateName).Wait(wait).TemplateDescription(templateDescription).TemplateParentFolderId(templateParentFolderId).Execute()
+	resp, r, err := apiClient.ClientAPI.CreateSignatureRequestToken(context.Background(), signatureRequestId).Body(body).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreatePdfTemplate``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateSignatureRequestToken``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `CreatePdfTemplate`: TemplatePreview
-	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.CreatePdfTemplate`: %v\n", resp)
+	// response from `CreateSignatureRequestToken`: SignatureRequestToken
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.CreateSignatureRequestToken`: %v\n", resp)
 }
 ```
 
 ### Path Parameters
 
 
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**signatureRequestId** | **string** | The signature request's ID. | 
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiCreatePdfTemplateRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiCreateSignatureRequestTokenRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **templateDocument** | ***os.File** |  | 
- **templateName** | **string** |  | 
- **wait** | **bool** | Wait for template document to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain) | [default to true]
- **templateDescription** | **string** |  | 
- **templateParentFolderId** | **string** |  | 
+
+ **body** | [**CreateSignatureRequestTokenRequest**](CreateSignatureRequestTokenRequest.md) | The kind of link to make. Send no body for an `api` token. | 
 
 ### Return type
 
-[**TemplatePreview**](TemplatePreview.md)
+[**SignatureRequestToken**](SignatureRequestToken.md)
 
 ### Authorization
 
@@ -739,7 +462,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: multipart/form-data
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
@@ -747,11 +470,11 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## CreatePdfTemplateFromUpload
+## CreateSubmission
 
-> TemplatePreview CreatePdfTemplateFromUpload(ctx).Data(data).Execute()
+> Submission CreateSubmission(ctx, templateId).Body(body).Version(version).Wait(wait).Execute()
 
-Create a new PDF template from a cached S3 file upload
+Generate a PDF
 
 
 
@@ -764,21 +487,98 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	data := *openapiclient.NewCreatePdfTemplate(map[string]interface{}(123)) // CreatePdfTemplate | 
+	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
+	body := *openapiclient.NewCreateSubmissionRequest() // CreateSubmissionRequest | The submission's data and settings.
+	version := "version_example" // string | The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published). (optional)
+	wait := true // bool | Wait until the PDF has been generated before responding. Default true on sync.api hosts. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.CreatePdfTemplateFromUpload(context.Background()).Data(data).Execute()
+	resp, r, err := apiClient.ClientAPI.CreateSubmission(context.Background(), templateId).Body(body).Version(version).Wait(wait).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreatePdfTemplateFromUpload``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateSubmission``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `CreatePdfTemplateFromUpload`: TemplatePreview
-	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.CreatePdfTemplateFromUpload`: %v\n", resp)
+	// response from `CreateSubmission`: Submission
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.CreateSubmission`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**templateId** | **string** | The template's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCreateSubmissionRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **body** | [**CreateSubmissionRequest**](CreateSubmissionRequest.md) | The submission's data and settings. | 
+ **version** | **string** | The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published). | 
+ **wait** | **bool** | Wait until the PDF has been generated before responding. Default true on sync.api hosts. | 
+
+### Return type
+
+[**Submission**](Submission.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## CreateSubmissionBatch
+
+> SubmissionBatch CreateSubmissionBatch(ctx).Body(body).Wait(wait).Execute()
+
+Generate PDFs in a batch
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	body := *openapiclient.NewCreateSubmissionBatchRequest([]openapiclient.SubmissionInput{*openapiclient.NewSubmissionInput()}) // CreateSubmissionBatchRequest | The submissions to create, and the settings they share.
+	wait := true // bool | Wait until every PDF in the batch has been generated before responding. Default true on sync.api hosts. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.CreateSubmissionBatch(context.Background()).Body(body).Wait(wait).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateSubmissionBatch``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `CreateSubmissionBatch`: SubmissionBatch
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.CreateSubmissionBatch`: %v\n", resp)
 }
 ```
 
@@ -788,16 +588,85 @@ func main() {
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiCreatePdfTemplateFromUploadRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiCreateSubmissionBatchRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **data** | [**CreatePdfTemplate**](CreatePdfTemplate.md) |  | 
+ **body** | [**CreateSubmissionBatchRequest**](CreateSubmissionBatchRequest.md) | The submissions to create, and the settings they share. | 
+ **wait** | **bool** | Wait until every PDF in the batch has been generated before responding. Default true on sync.api hosts. | 
 
 ### Return type
 
-[**TemplatePreview**](TemplatePreview.md)
+[**SubmissionBatch**](SubmissionBatch.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## CreateTemplate
+
+> Template CreateTemplate(ctx).Body(body).Wait(wait).Execute()
+
+Create a template
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	body := *openapiclient.NewCreateTemplateRequest(openapiclient.TemplateType("pdf")) // CreateTemplateRequest | The template to create.
+	wait := true // bool | Wait until the PDF has been processed before responding. Default true on sync.api hosts. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.CreateTemplate(context.Background()).Body(body).Wait(wait).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateTemplate``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `CreateTemplate`: Template
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.CreateTemplate`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCreateTemplateRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**CreateTemplateRequest**](CreateTemplateRequest.md) | The template to create. | 
+ **wait** | **bool** | Wait until the PDF has been processed before responding. Default true on sync.api hosts. | 
+
+### Return type
+
+[**Template**](Template.md)
 
 ### Authorization
 
@@ -815,7 +684,7 @@ Name | Type | Description  | Notes
 
 ## CreateWebhook
 
-> Webhook CreateWebhook(ctx).Data(data).Execute()
+> Webhook CreateWebhook(ctx).Body(body).Execute()
 
 Create a webhook
 
@@ -830,15 +699,15 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	data := *openapiclient.NewCreateWebhookData(map[string]interface{}(123)) // CreateWebhookData | 
+	body := *openapiclient.NewCreateWebhookRequest("Url_example", []openapiclient.WebhookEventType{openapiclient.WebhookEventType("submission.processed")}) // CreateWebhookRequest | The webhook to create.
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.CreateWebhook(context.Background()).Data(data).Execute()
+	resp, r, err := apiClient.ClientAPI.CreateWebhook(context.Background()).Body(body).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateWebhook``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -859,7 +728,7 @@ Other parameters are passed through a pointer to a apiCreateWebhookRequest struc
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **data** | [**CreateWebhookData**](CreateWebhookData.md) |  | 
+ **body** | [**CreateWebhookRequest**](CreateWebhookRequest.md) | The webhook to create. | 
 
 ### Return type
 
@@ -872,6 +741,76 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
 - **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## DeleteCustomFile
+
+> CustomFile DeleteCustomFile(ctx, customFileId).Execute()
+
+Delete a custom file
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	customFileId := "customFileId_example" // string | The custom file's ID.
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.DeleteCustomFile(context.Background(), customFileId).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.DeleteCustomFile``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `DeleteCustomFile`: CustomFile
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.DeleteCustomFile`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**customFileId** | **string** | The custom file's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiDeleteCustomFileRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+### Return type
+
+[**CustomFile**](CustomFile.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
@@ -896,11 +835,11 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	folderId := "fld_1234567890abcdef01" // string | 
+	folderId := "folderId_example" // string | The folder's ID.
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -920,7 +859,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**folderId** | **string** |  | 
+**folderId** | **string** | The folder's ID. | 
 
 ### Other Parameters
 
@@ -951,7 +890,7 @@ Name | Type | Description  | Notes
 
 ## DeleteTemplate
 
-> TemplateDeleteResponse DeleteTemplate(ctx, templateId).Version(version).Execute()
+> Template DeleteTemplate(ctx, templateId).Version(version).Execute()
 
 Delete a template
 
@@ -966,12 +905,12 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	templateId := "tpl_1234567890abcdef01" // string | 
-	version := "0.1.0" // string |  (optional)
+	templateId := "tpl_1234567890abcdef02" // string | The template's ID.
+	version := "version_example" // string | Delete only this published version (`1.2.0`) or the draft (`draft`, when no version has been published). Without it, the draft and every published version are deleted. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -980,7 +919,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.DeleteTemplate``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `DeleteTemplate`: TemplateDeleteResponse
+	// response from `DeleteTemplate`: Template
 	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.DeleteTemplate`: %v\n", resp)
 }
 ```
@@ -991,7 +930,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**templateId** | **string** |  | 
+**templateId** | **string** | The template's ID. | 
 
 ### Other Parameters
 
@@ -1001,11 +940,11 @@ Other parameters are passed through a pointer to a apiDeleteTemplateRequest stru
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **version** | **string** |  | 
+ **version** | **string** | Delete only this published version (`1.2.0`) or the draft (`draft`, when no version has been published). Without it, the draft and every published version are deleted. | 
 
 ### Return type
 
-[**TemplateDeleteResponse**](TemplateDeleteResponse.md)
+[**Template**](Template.md)
 
 ### Authorization
 
@@ -1038,11 +977,11 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	webhookId := "whk_1234567890abcdef01" // string | 
+	webhookId := "webhookId_example" // string | The webhook's ID.
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -1062,7 +1001,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**webhookId** | **string** |  | 
+**webhookId** | **string** | The webhook's ID. | 
 
 ### Other Parameters
 
@@ -1091,11 +1030,11 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## ExpireCombinedSubmission
+## ExpireCombinedPdf
 
-> CombinedSubmission ExpireCombinedSubmission(ctx, combinedSubmissionId).Execute()
+> CombinedPdf ExpireCombinedPdf(ctx, combinedPdfId).Execute()
 
-Expire a combined submission
+Expire a combined PDF
 
 
 
@@ -1108,21 +1047,21 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	combinedSubmissionId := "com_1234567890abcdef01" // string | 
+	combinedPdfId := "com_1234567890abcdef05" // string | The combined PDF's ID.
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.ExpireCombinedSubmission(context.Background(), combinedSubmissionId).Execute()
+	resp, r, err := apiClient.ClientAPI.ExpireCombinedPdf(context.Background(), combinedPdfId).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ExpireCombinedSubmission``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ExpireCombinedPdf``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `ExpireCombinedSubmission`: CombinedSubmission
-	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.ExpireCombinedSubmission`: %v\n", resp)
+	// response from `ExpireCombinedPdf`: CombinedPdf
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.ExpireCombinedPdf`: %v\n", resp)
 }
 ```
 
@@ -1132,11 +1071,11 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**combinedSubmissionId** | **string** |  | 
+**combinedPdfId** | **string** | The combined PDF's ID. | 
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiExpireCombinedSubmissionRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiExpireCombinedPdfRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -1145,7 +1084,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**CombinedSubmission**](CombinedSubmission.md)
+[**CombinedPdf**](CombinedPdf.md)
 
 ### Authorization
 
@@ -1163,9 +1102,9 @@ Name | Type | Description  | Notes
 
 ## ExpireSubmission
 
-> SubmissionPreview ExpireSubmission(ctx, submissionId).Execute()
+> Submission ExpireSubmission(ctx, submissionId).Execute()
 
-Expire a PDF submission
+Expire a submission
 
 
 
@@ -1178,11 +1117,11 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	submissionId := "sub_1234567890abcdef01" // string | 
+	submissionId := "sub_1234567890abcdef01" // string | The submission's ID.
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -1191,7 +1130,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ExpireSubmission``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `ExpireSubmission`: SubmissionPreview
+	// response from `ExpireSubmission`: Submission
 	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.ExpireSubmission`: %v\n", resp)
 }
 ```
@@ -1202,7 +1141,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**submissionId** | **string** |  | 
+**submissionId** | **string** | The submission's ID. | 
 
 ### Other Parameters
 
@@ -1215,7 +1154,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**SubmissionPreview**](SubmissionPreview.md)
+[**Submission**](Submission.md)
 
 ### Authorization
 
@@ -1231,85 +1170,11 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## GeneratePdf
+## GenerateSubmissionPreview
 
-> CreateSubmissionResponse GeneratePdf(ctx, templateId).Submission(submission).Wait(wait).Execute()
+> Submission GenerateSubmissionPreview(ctx, submissionId).Execute()
 
-Generate a PDF
-
-
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
-)
-
-func main() {
-	templateId := "tpl_1234567890abcdef01" // string | 
-	submission := *openapiclient.NewCreatePdfSubmissionData(map[string]interface{}(123)) // CreatePdfSubmissionData | 
-	wait := true // bool | Wait for submission to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain) (optional) (default to true)
-
-	configuration := openapiclient.NewConfiguration()
-	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.GeneratePdf(context.Background(), templateId).Submission(submission).Wait(wait).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GeneratePdf``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `GeneratePdf`: CreateSubmissionResponse
-	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GeneratePdf`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**templateId** | **string** |  | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiGeneratePdfRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
- **submission** | [**CreatePdfSubmissionData**](CreatePdfSubmissionData.md) |  | 
- **wait** | **bool** | Wait for submission to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain) | [default to true]
-
-### Return type
-
-[**CreateSubmissionResponse**](CreateSubmissionResponse.md)
-
-### Authorization
-
-[api_token_basic](../README.md#api_token_basic)
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## GeneratePreview
-
-> SuccessErrorResponse GeneratePreview(ctx, submissionId).Execute()
-
-Generate a preview PDF for partially completed data requests
+Generate a preview PDF
 
 
 
@@ -1322,21 +1187,21 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	submissionId := "sub_1234567890abcdef01" // string | 
+	submissionId := "sub_1234567890abcdef03" // string | The submission's ID.
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.GeneratePreview(context.Background(), submissionId).Execute()
+	resp, r, err := apiClient.ClientAPI.GenerateSubmissionPreview(context.Background(), submissionId).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GeneratePreview``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GenerateSubmissionPreview``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `GeneratePreview`: SuccessErrorResponse
-	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GeneratePreview`: %v\n", resp)
+	// response from `GenerateSubmissionPreview`: Submission
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GenerateSubmissionPreview`: %v\n", resp)
 }
 ```
 
@@ -1346,11 +1211,11 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**submissionId** | **string** |  | 
+**submissionId** | **string** | The submission's ID. | 
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiGeneratePreviewRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiGenerateSubmissionPreviewRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -1359,7 +1224,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**SuccessErrorResponse**](SuccessErrorResponse.md)
+[**Submission**](Submission.md)
 
 ### Authorization
 
@@ -1375,11 +1240,11 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## GetCombinedSubmission
+## GetCombinedPdf
 
-> CombinedSubmission GetCombinedSubmission(ctx, combinedSubmissionId).Execute()
+> CombinedPdf GetCombinedPdf(ctx, combinedPdfId).Execute()
 
-Check the status of a combined submission (merged PDFs)
+Get a combined PDF
 
 
 
@@ -1392,21 +1257,21 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	combinedSubmissionId := "com_1234567890abcdef01" // string | 
+	combinedPdfId := "com_1234567890abcdef05" // string | The combined PDF's ID.
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.GetCombinedSubmission(context.Background(), combinedSubmissionId).Execute()
+	resp, r, err := apiClient.ClientAPI.GetCombinedPdf(context.Background(), combinedPdfId).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetCombinedSubmission``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetCombinedPdf``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `GetCombinedSubmission`: CombinedSubmission
-	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetCombinedSubmission`: %v\n", resp)
+	// response from `GetCombinedPdf`: CombinedPdf
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetCombinedPdf`: %v\n", resp)
 }
 ```
 
@@ -1416,11 +1281,11 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**combinedSubmissionId** | **string** |  | 
+**combinedPdfId** | **string** | The combined PDF's ID. | 
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiGetCombinedSubmissionRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiGetCombinedPdfRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -1429,7 +1294,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**CombinedSubmission**](CombinedSubmission.md)
+[**CombinedPdf**](CombinedPdf.md)
 
 ### Authorization
 
@@ -1445,11 +1310,11 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## GetDataRequest
+## GetCustomFile
 
-> SubmissionDataRequestShow GetDataRequest(ctx, dataRequestId).Execute()
+> CustomFile GetCustomFile(ctx, customFileId).Execute()
 
-Look up a submission data request
+Get a custom file
 
 
 
@@ -1462,21 +1327,21 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	dataRequestId := "drq_1234567890abcdef01" // string | 
+	customFileId := "customFileId_example" // string | The custom file's ID.
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.GetDataRequest(context.Background(), dataRequestId).Execute()
+	resp, r, err := apiClient.ClientAPI.GetCustomFile(context.Background(), customFileId).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetDataRequest``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetCustomFile``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `GetDataRequest`: SubmissionDataRequestShow
-	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetDataRequest`: %v\n", resp)
+	// response from `GetCustomFile`: CustomFile
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetCustomFile`: %v\n", resp)
 }
 ```
 
@@ -1486,11 +1351,11 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**dataRequestId** | **string** |  | 
+**customFileId** | **string** | The custom file's ID. | 
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiGetDataRequestRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiGetCustomFileRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -1499,7 +1364,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**SubmissionDataRequestShow**](SubmissionDataRequestShow.md)
+[**CustomFile**](CustomFile.md)
 
 ### Authorization
 
@@ -1515,11 +1380,11 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## GetFullTemplate
+## GetFolder
 
-> Template GetFullTemplate(ctx, templateId).Execute()
+> Folder GetFolder(ctx, folderId).Execute()
 
-Fetch the full attributes for a PDF template
+Get a folder
 
 
 
@@ -1532,21 +1397,21 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	templateId := "tpl_1234567890abcdef01" // string | 
+	folderId := "folderId_example" // string | The folder's ID.
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.GetFullTemplate(context.Background(), templateId).Execute()
+	resp, r, err := apiClient.ClientAPI.GetFolder(context.Background(), folderId).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetFullTemplate``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetFolder``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `GetFullTemplate`: Template
-	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetFullTemplate`: %v\n", resp)
+	// response from `GetFolder`: Folder
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetFolder`: %v\n", resp)
 }
 ```
 
@@ -1556,11 +1421,11 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**templateId** | **string** |  | 
+**folderId** | **string** | The folder's ID. | 
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiGetFullTemplateRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiGetFolderRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -1569,7 +1434,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**Template**](Template.md)
+[**Folder**](Folder.md)
 
 ### Authorization
 
@@ -1587,9 +1452,9 @@ Name | Type | Description  | Notes
 
 ## GetPresignUrl
 
-> UploadPresignResponse GetPresignUrl(ctx).Execute()
+> UploadPresign GetPresignUrl(ctx).Execute()
 
-Get a presigned S3 URL for direct file upload
+Get a presigned URL to upload a file
 
 
 
@@ -1602,7 +1467,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
@@ -1614,7 +1479,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetPresignUrl``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `GetPresignUrl`: UploadPresignResponse
+	// response from `GetPresignUrl`: UploadPresign
 	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetPresignUrl`: %v\n", resp)
 }
 ```
@@ -1630,7 +1495,77 @@ Other parameters are passed through a pointer to a apiGetPresignUrlRequest struc
 
 ### Return type
 
-[**UploadPresignResponse**](UploadPresignResponse.md)
+[**UploadPresign**](UploadPresign.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## GetSignatureRequest
+
+> SignatureRequest GetSignatureRequest(ctx, signatureRequestId).Execute()
+
+Get a signature request
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	signatureRequestId := "srq_1234567890abcdef01" // string | The signature request's ID.
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.GetSignatureRequest(context.Background(), signatureRequestId).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetSignatureRequest``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetSignatureRequest`: SignatureRequest
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetSignatureRequest`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**signatureRequestId** | **string** | The signature request's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetSignatureRequestRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+### Return type
+
+[**SignatureRequest**](SignatureRequest.md)
 
 ### Authorization
 
@@ -1648,9 +1583,9 @@ Other parameters are passed through a pointer to a apiGetPresignUrlRequest struc
 
 ## GetSubmission
 
-> Submission GetSubmission(ctx, submissionId).IncludeData(includeData).Execute()
+> Submission GetSubmission(ctx, submissionId).Execute()
 
-Check the status of a PDF
+Get a submission
 
 
 
@@ -1663,16 +1598,15 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	submissionId := "sub_1234567890abcdef01" // string | 
-	includeData := true // bool |  (optional)
+	submissionId := "sub_1234567890abcdef01" // string | The submission's ID.
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.GetSubmission(context.Background(), submissionId).IncludeData(includeData).Execute()
+	resp, r, err := apiClient.ClientAPI.GetSubmission(context.Background(), submissionId).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetSubmission``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -1688,7 +1622,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**submissionId** | **string** |  | 
+**submissionId** | **string** | The submission's ID. | 
 
 ### Other Parameters
 
@@ -1698,7 +1632,6 @@ Other parameters are passed through a pointer to a apiGetSubmissionRequest struc
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **includeData** | **bool** |  | 
 
 ### Return type
 
@@ -1720,9 +1653,9 @@ Name | Type | Description  | Notes
 
 ## GetSubmissionBatch
 
-> SubmissionBatchWithSubmissions GetSubmissionBatch(ctx, submissionBatchId).IncludeSubmissions(includeSubmissions).Execute()
+> SubmissionBatch GetSubmissionBatch(ctx, submissionBatchId).IncludeData(includeData).Execute()
 
-Check the status of a submission batch job
+Get a batch
 
 
 
@@ -1735,21 +1668,21 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	submissionBatchId := "sbb_1234567890abcdef01" // string | 
-	includeSubmissions := true // bool |  (optional)
+	submissionBatchId := "sbb_1234567890abcdef05" // string | The batch's ID.
+	includeData := true // bool | Include each submission's `data` (null without it). (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.GetSubmissionBatch(context.Background(), submissionBatchId).IncludeSubmissions(includeSubmissions).Execute()
+	resp, r, err := apiClient.ClientAPI.GetSubmissionBatch(context.Background(), submissionBatchId).IncludeData(includeData).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetSubmissionBatch``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `GetSubmissionBatch`: SubmissionBatchWithSubmissions
+	// response from `GetSubmissionBatch`: SubmissionBatch
 	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetSubmissionBatch`: %v\n", resp)
 }
 ```
@@ -1760,7 +1693,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**submissionBatchId** | **string** |  | 
+**submissionBatchId** | **string** | The batch's ID. | 
 
 ### Other Parameters
 
@@ -1770,11 +1703,11 @@ Other parameters are passed through a pointer to a apiGetSubmissionBatchRequest 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **includeSubmissions** | **bool** |  | 
+ **includeData** | **bool** | Include each submission's `data` (null without it). | 
 
 ### Return type
 
-[**SubmissionBatchWithSubmissions**](SubmissionBatchWithSubmissions.md)
+[**SubmissionBatch**](SubmissionBatch.md)
 
 ### Authorization
 
@@ -1792,9 +1725,9 @@ Name | Type | Description  | Notes
 
 ## GetTemplate
 
-> TemplatePreview GetTemplate(ctx, templateId).Execute()
+> Template GetTemplate(ctx, templateId).Version(version).Execute()
 
-Check the status of an uploaded template
+Get a template
 
 
 
@@ -1807,20 +1740,21 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	templateId := "tpl_1234567890abcdef01" // string | 
+	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
+	version := "latest" // string | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.GetTemplate(context.Background(), templateId).Execute()
+	resp, r, err := apiClient.ClientAPI.GetTemplate(context.Background(), templateId).Version(version).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetTemplate``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `GetTemplate`: TemplatePreview
+	// response from `GetTemplate`: Template
 	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetTemplate`: %v\n", resp)
 }
 ```
@@ -1831,7 +1765,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**templateId** | **string** |  | 
+**templateId** | **string** | The template's ID. | 
 
 ### Other Parameters
 
@@ -1841,10 +1775,11 @@ Other parameters are passed through a pointer to a apiGetTemplateRequest struct 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
+ **version** | **string** | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`. | 
 
 ### Return type
 
-[**TemplatePreview**](TemplatePreview.md)
+[**Template**](Template.md)
 
 ### Authorization
 
@@ -1862,9 +1797,9 @@ Name | Type | Description  | Notes
 
 ## GetTemplateModelCode
 
-> TemplateModelCodeResponse GetTemplateModelCode(ctx, templateId).Lang(lang).Execute()
+> TemplateModelCode GetTemplateModelCode(ctx, templateId).Lang(lang).Version(version).Execute()
 
-Generate typed model code for a template
+Generate typed code for a template's submission data
 
 
 
@@ -1877,21 +1812,22 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	templateId := "tpl_1234567890abcdef01" // string | 
-	lang := "typescript" // string | The language to generate code for
+	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
+	lang := openapiclient.ModelCodeLanguage("typescript") // ModelCodeLanguage | The language to generate the code in.
+	version := "draft" // string | The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.GetTemplateModelCode(context.Background(), templateId).Lang(lang).Execute()
+	resp, r, err := apiClient.ClientAPI.GetTemplateModelCode(context.Background(), templateId).Lang(lang).Version(version).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetTemplateModelCode``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `GetTemplateModelCode`: TemplateModelCodeResponse
+	// response from `GetTemplateModelCode`: TemplateModelCode
 	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetTemplateModelCode`: %v\n", resp)
 }
 ```
@@ -1902,7 +1838,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**templateId** | **string** |  | 
+**templateId** | **string** | The template's ID. | 
 
 ### Other Parameters
 
@@ -1912,11 +1848,12 @@ Other parameters are passed through a pointer to a apiGetTemplateModelCodeReques
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **lang** | **string** | The language to generate code for | 
+ **lang** | [**ModelCodeLanguage**](ModelCodeLanguage.md) | The language to generate the code in. | 
+ **version** | **string** | The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default. | 
 
 ### Return type
 
-[**TemplateModelCodeResponse**](TemplateModelCodeResponse.md)
+[**TemplateModelCode**](TemplateModelCode.md)
 
 ### Authorization
 
@@ -1934,9 +1871,9 @@ Name | Type | Description  | Notes
 
 ## GetTemplateSchema
 
-> JsonSchema GetTemplateSchema(ctx, templateId).Execute()
+> map[string]interface{} GetTemplateSchema(ctx, templateId).Version(version).Execute()
 
-Fetch the JSON schema for a template
+Get the JSON Schema of a template's submission data
 
 
 
@@ -1949,20 +1886,21 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	templateId := "tpl_1234567890abcdef01" // string | 
+	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
+	version := "draft" // string | The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.GetTemplateSchema(context.Background(), templateId).Execute()
+	resp, r, err := apiClient.ClientAPI.GetTemplateSchema(context.Background(), templateId).Version(version).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetTemplateSchema``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `GetTemplateSchema`: JsonSchema
+	// response from `GetTemplateSchema`: map[string]interface{}
 	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetTemplateSchema`: %v\n", resp)
 }
 ```
@@ -1973,7 +1911,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**templateId** | **string** |  | 
+**templateId** | **string** | The template's ID. | 
 
 ### Other Parameters
 
@@ -1983,10 +1921,11 @@ Other parameters are passed through a pointer to a apiGetTemplateSchemaRequest s
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
+ **version** | **string** | The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default. | 
 
 ### Return type
 
-[**JsonSchema**](JsonSchema.md)
+**map[string]interface{}**
 
 ### Authorization
 
@@ -2019,11 +1958,11 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	webhookId := "whk_1234567890abcdef01" // string | 
+	webhookId := "webhookId_example" // string | The webhook's ID.
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -2043,7 +1982,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**webhookId** | **string** |  | 
+**webhookId** | **string** | The webhook's ID. | 
 
 ### Other Parameters
 
@@ -2072,11 +2011,11 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## ListCombinedSubmissions
+## ListCombinedPdfs
 
-> []CombinedSubmission ListCombinedSubmissions(ctx).Page(page).PerPage(perPage).Execute()
+> CombinedPdfList ListCombinedPdfs(ctx).Limit(limit).Cursor(cursor).Execute()
 
-Get a list of all combined submissions
+List combined PDFs
 
 
 
@@ -2089,22 +2028,22 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	page := int32(3) // int32 | Default: 1 (optional)
-	perPage := int32(1) // int32 | Default: 50 (optional)
+	limit := int32(56) // int32 | How many items to return (1-100, default 50). (optional) (default to 50)
+	cursor := "cursor_example" // string | The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.ListCombinedSubmissions(context.Background()).Page(page).PerPage(perPage).Execute()
+	resp, r, err := apiClient.ClientAPI.ListCombinedPdfs(context.Background()).Limit(limit).Cursor(cursor).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ListCombinedSubmissions``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ListCombinedPdfs``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `ListCombinedSubmissions`: []CombinedSubmission
-	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.ListCombinedSubmissions`: %v\n", resp)
+	// response from `ListCombinedPdfs`: CombinedPdfList
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.ListCombinedPdfs`: %v\n", resp)
 }
 ```
 
@@ -2114,17 +2053,85 @@ func main() {
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiListCombinedSubmissionsRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiListCombinedPdfsRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **page** | **int32** | Default: 1 | 
- **perPage** | **int32** | Default: 50 | 
+ **limit** | **int32** | How many items to return (1-100, default 50). | [default to 50]
+ **cursor** | **string** | The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one. | 
 
 ### Return type
 
-[**[]CombinedSubmission**](CombinedSubmission.md)
+[**CombinedPdfList**](CombinedPdfList.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ListCustomFiles
+
+> CustomFileList ListCustomFiles(ctx).Limit(limit).Cursor(cursor).Execute()
+
+List custom files
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	limit := int32(56) // int32 | How many items to return (1-100, default 50). (optional) (default to 50)
+	cursor := "cursor_example" // string | The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.ListCustomFiles(context.Background()).Limit(limit).Cursor(cursor).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ListCustomFiles``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ListCustomFiles`: CustomFileList
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.ListCustomFiles`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiListCustomFilesRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **limit** | **int32** | How many items to return (1-100, default 50). | [default to 50]
+ **cursor** | **string** | The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one. | 
+
+### Return type
+
+[**CustomFileList**](CustomFileList.md)
 
 ### Authorization
 
@@ -2142,9 +2149,9 @@ Name | Type | Description  | Notes
 
 ## ListFolders
 
-> []Folder ListFolders(ctx).ParentFolderId(parentFolderId).Execute()
+> FolderList ListFolders(ctx).ParentFolderId(parentFolderId).Limit(limit).Cursor(cursor).Execute()
 
-Get a list of all folders
+List folders
 
 
 
@@ -2157,20 +2164,22 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	parentFolderId := "fld_1234567890abcdef02" // string | Filter By Folder Id (optional)
+	parentFolderId := "fld_1234567890abcdef02" // string | Only list the folders in this folder. Without it, the list has every folder, at any depth. (optional)
+	limit := int32(2) // int32 | How many items to return (1-100, default 50). (optional) (default to 50)
+	cursor := "fld_1234567890abcdef02" // string | The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.ListFolders(context.Background()).ParentFolderId(parentFolderId).Execute()
+	resp, r, err := apiClient.ClientAPI.ListFolders(context.Background()).ParentFolderId(parentFolderId).Limit(limit).Cursor(cursor).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ListFolders``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `ListFolders`: []Folder
+	// response from `ListFolders`: FolderList
 	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.ListFolders`: %v\n", resp)
 }
 ```
@@ -2186,11 +2195,13 @@ Other parameters are passed through a pointer to a apiListFoldersRequest struct 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **parentFolderId** | **string** | Filter By Folder Id | 
+ **parentFolderId** | **string** | Only list the folders in this folder. Without it, the list has every folder, at any depth. | 
+ **limit** | **int32** | How many items to return (1-100, default 50). | [default to 50]
+ **cursor** | **string** | The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one. | 
 
 ### Return type
 
-[**[]Folder**](Folder.md)
+[**FolderList**](FolderList.md)
 
 ### Authorization
 
@@ -2208,9 +2219,9 @@ Name | Type | Description  | Notes
 
 ## ListSubmissions
 
-> ListSubmissionsResponse ListSubmissions(ctx).Cursor(cursor).Limit(limit).CreatedAfter(createdAfter).CreatedBefore(createdBefore).Type_(type_).IncludeData(includeData).Execute()
+> SubmissionList ListSubmissions(ctx).TemplateId(templateId).Test(test).CreatedAfter(createdAfter).CreatedBefore(createdBefore).IncludeData(includeData).Limit(limit).Cursor(cursor).Execute()
 
-List all submissions
+List submissions
 
 
 
@@ -2223,25 +2234,27 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+    "time"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	cursor := "sub_1234567890abcdef12" // string |  (optional)
-	limit := int32(3) // int32 |  (optional)
-	createdAfter := "2019-01-01T09:00:00-05:00" // string |  (optional)
-	createdBefore := "2020-01-01T09:00:00.000+0200" // string |  (optional)
-	type_ := "test" // string |  (optional)
-	includeData := true // bool |  (optional)
+	templateId := "tpl_1234567890abcdef01" // string | Only list this template's submissions. (optional)
+	test := false // bool | Only list test submissions (true) or live submissions (false). (optional)
+	createdAfter := time.Now() // time.Time | Only list submissions created after this time (RFC 3339, such as `2025-01-31T09:00:00Z`). (optional)
+	createdBefore := time.Now() // time.Time | Only list submissions created before this time. (optional)
+	includeData := true // bool | Include each submission's `data` (null without it). (optional)
+	limit := int32(56) // int32 | How many items to return (1-100, default 50). (optional) (default to 50)
+	cursor := "cursor_example" // string | The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.ListSubmissions(context.Background()).Cursor(cursor).Limit(limit).CreatedAfter(createdAfter).CreatedBefore(createdBefore).Type_(type_).IncludeData(includeData).Execute()
+	resp, r, err := apiClient.ClientAPI.ListSubmissions(context.Background()).TemplateId(templateId).Test(test).CreatedAfter(createdAfter).CreatedBefore(createdBefore).IncludeData(includeData).Limit(limit).Cursor(cursor).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ListSubmissions``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `ListSubmissions`: ListSubmissionsResponse
+	// response from `ListSubmissions`: SubmissionList
 	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.ListSubmissions`: %v\n", resp)
 }
 ```
@@ -2257,16 +2270,17 @@ Other parameters are passed through a pointer to a apiListSubmissionsRequest str
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **cursor** | **string** |  | 
- **limit** | **int32** |  | 
- **createdAfter** | **string** |  | 
- **createdBefore** | **string** |  | 
- **type_** | **string** |  | 
- **includeData** | **bool** |  | 
+ **templateId** | **string** | Only list this template's submissions. | 
+ **test** | **bool** | Only list test submissions (true) or live submissions (false). | 
+ **createdAfter** | **time.Time** | Only list submissions created after this time (RFC 3339, such as `2025-01-31T09:00:00Z`). | 
+ **createdBefore** | **time.Time** | Only list submissions created before this time. | 
+ **includeData** | **bool** | Include each submission's `data` (null without it). | 
+ **limit** | **int32** | How many items to return (1-100, default 50). | [default to 50]
+ **cursor** | **string** | The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one. | 
 
 ### Return type
 
-[**ListSubmissionsResponse**](ListSubmissionsResponse.md)
+[**SubmissionList**](SubmissionList.md)
 
 ### Authorization
 
@@ -2284,9 +2298,9 @@ Name | Type | Description  | Notes
 
 ## ListTemplateSubmissions
 
-> ListSubmissionsResponse ListTemplateSubmissions(ctx, templateId).Cursor(cursor).Limit(limit).CreatedAfter(createdAfter).CreatedBefore(createdBefore).Type_(type_).IncludeData(includeData).Execute()
+> SubmissionList ListTemplateSubmissions(ctx, templateId).Test(test).CreatedAfter(createdAfter).CreatedBefore(createdBefore).IncludeData(includeData).Limit(limit).Cursor(cursor).Execute()
 
-List all submissions for a given template
+List a template's submissions
 
 
 
@@ -2299,26 +2313,27 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+    "time"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	templateId := "tpl_1234567890abcdef02" // string | 
-	cursor := "cursor_example" // string |  (optional)
-	limit := int32(56) // int32 |  (optional)
-	createdAfter := "createdAfter_example" // string |  (optional)
-	createdBefore := "createdBefore_example" // string |  (optional)
-	type_ := "type__example" // string |  (optional)
-	includeData := true // bool |  (optional)
+	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
+	test := true // bool | Only list test submissions (true) or live submissions (false). (optional)
+	createdAfter := time.Now() // time.Time | Only list submissions created after this time (RFC 3339, such as `2025-01-31T09:00:00Z`). (optional)
+	createdBefore := time.Now() // time.Time | Only list submissions created before this time. (optional)
+	includeData := true // bool | Include each submission's `data` (null without it). (optional)
+	limit := int32(56) // int32 | How many items to return (1-100, default 50). (optional) (default to 50)
+	cursor := "cursor_example" // string | The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.ListTemplateSubmissions(context.Background(), templateId).Cursor(cursor).Limit(limit).CreatedAfter(createdAfter).CreatedBefore(createdBefore).Type_(type_).IncludeData(includeData).Execute()
+	resp, r, err := apiClient.ClientAPI.ListTemplateSubmissions(context.Background(), templateId).Test(test).CreatedAfter(createdAfter).CreatedBefore(createdBefore).IncludeData(includeData).Limit(limit).Cursor(cursor).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ListTemplateSubmissions``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `ListTemplateSubmissions`: ListSubmissionsResponse
+	// response from `ListTemplateSubmissions`: SubmissionList
 	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.ListTemplateSubmissions`: %v\n", resp)
 }
 ```
@@ -2329,7 +2344,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**templateId** | **string** |  | 
+**templateId** | **string** | The template's ID. | 
 
 ### Other Parameters
 
@@ -2339,16 +2354,16 @@ Other parameters are passed through a pointer to a apiListTemplateSubmissionsReq
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **cursor** | **string** |  | 
- **limit** | **int32** |  | 
- **createdAfter** | **string** |  | 
- **createdBefore** | **string** |  | 
- **type_** | **string** |  | 
- **includeData** | **bool** |  | 
+ **test** | **bool** | Only list test submissions (true) or live submissions (false). | 
+ **createdAfter** | **time.Time** | Only list submissions created after this time (RFC 3339, such as `2025-01-31T09:00:00Z`). | 
+ **createdBefore** | **time.Time** | Only list submissions created before this time. | 
+ **includeData** | **bool** | Include each submission's `data` (null without it). | 
+ **limit** | **int32** | How many items to return (1-100, default 50). | [default to 50]
+ **cursor** | **string** | The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one. | 
 
 ### Return type
 
-[**ListSubmissionsResponse**](ListSubmissionsResponse.md)
+[**SubmissionList**](SubmissionList.md)
 
 ### Authorization
 
@@ -2366,9 +2381,9 @@ Name | Type | Description  | Notes
 
 ## ListTemplates
 
-> []TemplatePreview ListTemplates(ctx).Query(query).ParentFolderId(parentFolderId).Page(page).PerPage(perPage).Execute()
+> TemplateSummaryList ListTemplates(ctx).Query(query).ParentFolderId(parentFolderId).Limit(limit).Cursor(cursor).Execute()
 
-Get a list of all templates
+List templates
 
 
 
@@ -2381,23 +2396,23 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	query := "2" // string | Search By Name (optional)
-	parentFolderId := "fld_1234567890abcdef01" // string | Filter By Folder Id (optional)
-	page := int32(2) // int32 | Default: 1 (optional)
-	perPage := int32(1) // int32 | Default: 50 (optional)
+	query := "rental" // string | Only list templates whose name contains this text (ignoring case). (optional)
+	parentFolderId := "fld_1234567890abcdef01" // string | Only list the templates in this folder (not in its subfolders). (optional)
+	limit := int32(1) // int32 | How many items to return (1-100, default 50). (optional) (default to 50)
+	cursor := "cursor_example" // string | The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.ListTemplates(context.Background()).Query(query).ParentFolderId(parentFolderId).Page(page).PerPage(perPage).Execute()
+	resp, r, err := apiClient.ClientAPI.ListTemplates(context.Background()).Query(query).ParentFolderId(parentFolderId).Limit(limit).Cursor(cursor).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ListTemplates``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `ListTemplates`: []TemplatePreview
+	// response from `ListTemplates`: TemplateSummaryList
 	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.ListTemplates`: %v\n", resp)
 }
 ```
@@ -2413,14 +2428,14 @@ Other parameters are passed through a pointer to a apiListTemplatesRequest struc
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **query** | **string** | Search By Name | 
- **parentFolderId** | **string** | Filter By Folder Id | 
- **page** | **int32** | Default: 1 | 
- **perPage** | **int32** | Default: 50 | 
+ **query** | **string** | Only list templates whose name contains this text (ignoring case). | 
+ **parentFolderId** | **string** | Only list the templates in this folder (not in its subfolders). | 
+ **limit** | **int32** | How many items to return (1-100, default 50). | [default to 50]
+ **cursor** | **string** | The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one. | 
 
 ### Return type
 
-[**[]TemplatePreview**](TemplatePreview.md)
+[**TemplateSummaryList**](TemplateSummaryList.md)
 
 ### Authorization
 
@@ -2438,9 +2453,9 @@ Name | Type | Description  | Notes
 
 ## ListWebhooks
 
-> []Webhook ListWebhooks(ctx).Page(page).PerPage(perPage).EventType(eventType).Mode(mode).TemplateId(templateId).FolderId(folderId).ApiTokenId(apiTokenId).Execute()
+> WebhookList ListWebhooks(ctx).EventType(eventType).Mode(mode).TemplateId(templateId).FolderId(folderId).ApiTokenId(apiTokenId).Limit(limit).Cursor(cursor).Execute()
 
-Get a list of all webhooks
+List webhooks
 
 
 
@@ -2453,26 +2468,26 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	page := int32(56) // int32 | Default: 1 (optional)
-	perPage := int32(56) // int32 | Default: 50 (optional)
-	eventType := "submission.processed" // string | Filter by a subscribed event type (optional)
-	mode := "live" // string | Filter by mode (test or live) (optional)
-	templateId := "tpl_1234567890abcdef01" // string | Filter by a scoped template ID (optional)
-	folderId := "folderId_example" // string | Filter by a scoped folder ID (optional)
-	apiTokenId := "apiTokenId_example" // string | Filter by a scoped API token ID (optional)
+	eventType := openapiclient.WebhookEventType("submission.processed") // WebhookEventType | Only list webhooks that subscribe to this event. (optional)
+	mode := openapiclient.WebhookMode("test") // WebhookMode | Only list webhooks set to this mode. (optional)
+	templateId := "tpl_1234567890abcdef01" // string | Only list webhooks scoped to this template. (optional)
+	folderId := "folderId_example" // string | Only list webhooks scoped to this folder. (optional)
+	apiTokenId := "apiTokenId_example" // string | Only list webhooks scoped to this API token. (optional)
+	limit := int32(56) // int32 | How many items to return (1-100, default 50). (optional) (default to 50)
+	cursor := "cursor_example" // string | The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.ListWebhooks(context.Background()).Page(page).PerPage(perPage).EventType(eventType).Mode(mode).TemplateId(templateId).FolderId(folderId).ApiTokenId(apiTokenId).Execute()
+	resp, r, err := apiClient.ClientAPI.ListWebhooks(context.Background()).EventType(eventType).Mode(mode).TemplateId(templateId).FolderId(folderId).ApiTokenId(apiTokenId).Limit(limit).Cursor(cursor).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ListWebhooks``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `ListWebhooks`: []Webhook
+	// response from `ListWebhooks`: WebhookList
 	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.ListWebhooks`: %v\n", resp)
 }
 ```
@@ -2488,17 +2503,17 @@ Other parameters are passed through a pointer to a apiListWebhooksRequest struct
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **page** | **int32** | Default: 1 | 
- **perPage** | **int32** | Default: 50 | 
- **eventType** | **string** | Filter by a subscribed event type | 
- **mode** | **string** | Filter by mode (test or live) | 
- **templateId** | **string** | Filter by a scoped template ID | 
- **folderId** | **string** | Filter by a scoped folder ID | 
- **apiTokenId** | **string** | Filter by a scoped API token ID | 
+ **eventType** | [**WebhookEventType**](WebhookEventType.md) | Only list webhooks that subscribe to this event. | 
+ **mode** | [**WebhookMode**](WebhookMode.md) | Only list webhooks set to this mode. | 
+ **templateId** | **string** | Only list webhooks scoped to this template. | 
+ **folderId** | **string** | Only list webhooks scoped to this folder. | 
+ **apiTokenId** | **string** | Only list webhooks scoped to this API token. | 
+ **limit** | **int32** | How many items to return (1-100, default 50). | [default to 50]
+ **cursor** | **string** | The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one. | 
 
 ### Return type
 
-[**[]Webhook**](Webhook.md)
+[**WebhookList**](WebhookList.md)
 
 ### Authorization
 
@@ -2514,9 +2529,9 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## MoveFolderToFolder
+## MoveFolder
 
-> Folder MoveFolderToFolder(ctx, folderId).Data(data).Execute()
+> Folder MoveFolder(ctx, folderId).Body(body).Execute()
 
 Move a folder
 
@@ -2531,22 +2546,22 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	folderId := "fld_1234567890abcdef01" // string | 
-	data := *openapiclient.NewMoveFolderData() // MoveFolderData | 
+	folderId := "folderId_example" // string | The folder's ID.
+	body := *openapiclient.NewMoveFolderRequest("ParentFolderId_example") // MoveFolderRequest | Where to move the folder.
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.MoveFolderToFolder(context.Background(), folderId).Data(data).Execute()
+	resp, r, err := apiClient.ClientAPI.MoveFolder(context.Background(), folderId).Body(body).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.MoveFolderToFolder``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.MoveFolder``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `MoveFolderToFolder`: Folder
-	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.MoveFolderToFolder`: %v\n", resp)
+	// response from `MoveFolder`: Folder
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.MoveFolder`: %v\n", resp)
 }
 ```
 
@@ -2556,17 +2571,17 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**folderId** | **string** |  | 
+**folderId** | **string** | The folder's ID. | 
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiMoveFolderToFolderRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiMoveFolderRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | [**MoveFolderData**](MoveFolderData.md) |  | 
+ **body** | [**MoveFolderRequest**](MoveFolderRequest.md) | Where to move the folder. | 
 
 ### Return type
 
@@ -2586,11 +2601,11 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## MoveTemplateToFolder
+## MoveTemplate
 
-> TemplatePreview MoveTemplateToFolder(ctx, templateId).Data(data).Execute()
+> Template MoveTemplate(ctx, templateId).Body(body).Execute()
 
-Move Template to folder
+Move a template to a folder
 
 
 
@@ -2603,22 +2618,22 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	templateId := "tpl_1234567890abcdef01" // string | 
-	data := *openapiclient.NewMoveTemplateData("ParentFolderId_example") // MoveTemplateData | 
+	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
+	body := *openapiclient.NewMoveTemplateRequest("ParentFolderId_example") // MoveTemplateRequest | Where to move the template.
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.MoveTemplateToFolder(context.Background(), templateId).Data(data).Execute()
+	resp, r, err := apiClient.ClientAPI.MoveTemplate(context.Background(), templateId).Body(body).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.MoveTemplateToFolder``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.MoveTemplate``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `MoveTemplateToFolder`: TemplatePreview
-	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.MoveTemplateToFolder`: %v\n", resp)
+	// response from `MoveTemplate`: Template
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.MoveTemplate`: %v\n", resp)
 }
 ```
 
@@ -2628,21 +2643,21 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**templateId** | **string** |  | 
+**templateId** | **string** | The template's ID. | 
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiMoveTemplateToFolderRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiMoveTemplateRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | [**MoveTemplateData**](MoveTemplateData.md) |  | 
+ **body** | [**MoveTemplateRequest**](MoveTemplateRequest.md) | Where to move the template. | 
 
 ### Return type
 
-[**TemplatePreview**](TemplatePreview.md)
+[**Template**](Template.md)
 
 ### Authorization
 
@@ -2660,7 +2675,7 @@ Name | Type | Description  | Notes
 
 ## PublishTemplateVersion
 
-> TemplatePublishVersionResponse PublishTemplateVersion(ctx, templateId).Data(data).Execute()
+> TemplateVersion PublishTemplateVersion(ctx, templateId).Body(body).Execute()
 
 Publish a template version
 
@@ -2675,21 +2690,21 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	templateId := "tpl_1234567890abcdef01" // string | 
-	data := *openapiclient.NewPublishVersionData("VersionType_example") // PublishVersionData | 
+	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
+	body := *openapiclient.NewPublishTemplateVersionRequest(openapiclient.TemplateVersionType("major")) // PublishTemplateVersionRequest | The version to publish.
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.PublishTemplateVersion(context.Background(), templateId).Data(data).Execute()
+	resp, r, err := apiClient.ClientAPI.PublishTemplateVersion(context.Background(), templateId).Body(body).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.PublishTemplateVersion``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `PublishTemplateVersion`: TemplatePublishVersionResponse
+	// response from `PublishTemplateVersion`: TemplateVersion
 	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.PublishTemplateVersion`: %v\n", resp)
 }
 ```
@@ -2700,7 +2715,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**templateId** | **string** |  | 
+**templateId** | **string** | The template's ID. | 
 
 ### Other Parameters
 
@@ -2710,11 +2725,11 @@ Other parameters are passed through a pointer to a apiPublishTemplateVersionRequ
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | [**PublishVersionData**](PublishVersionData.md) |  | 
+ **body** | [**PublishTemplateVersionRequest**](PublishTemplateVersionRequest.md) | The version to publish. | 
 
 ### Return type
 
-[**TemplatePublishVersionResponse**](TemplatePublishVersionResponse.md)
+[**TemplateVersion**](TemplateVersion.md)
 
 ### Authorization
 
@@ -2732,7 +2747,7 @@ Name | Type | Description  | Notes
 
 ## RenameFolder
 
-> Folder RenameFolder(ctx, folderId).Data(data).Execute()
+> Folder RenameFolder(ctx, folderId).Body(body).Execute()
 
 Rename a folder
 
@@ -2747,16 +2762,16 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	folderId := "fld_1234567890abcdef01" // string | 
-	data := *openapiclient.NewRenameFolderData("Name_example") // RenameFolderData | 
+	folderId := "folderId_example" // string | The folder's ID.
+	body := *openapiclient.NewRenameFolderRequest("Name_example") // RenameFolderRequest | The folder's new name.
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.RenameFolder(context.Background(), folderId).Data(data).Execute()
+	resp, r, err := apiClient.ClientAPI.RenameFolder(context.Background(), folderId).Body(body).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.RenameFolder``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -2772,7 +2787,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**folderId** | **string** |  | 
+**folderId** | **string** | The folder's ID. | 
 
 ### Other Parameters
 
@@ -2782,7 +2797,7 @@ Other parameters are passed through a pointer to a apiRenameFolderRequest struct
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | [**RenameFolderData**](RenameFolderData.md) |  | 
+ **body** | [**RenameFolderRequest**](RenameFolderRequest.md) | The folder's new name. | 
 
 ### Return type
 
@@ -2804,7 +2819,7 @@ Name | Type | Description  | Notes
 
 ## RestoreTemplateVersion
 
-> SuccessErrorResponse RestoreTemplateVersion(ctx, templateId).Data(data).Execute()
+> Template RestoreTemplateVersion(ctx, templateId).Body(body).Execute()
 
 Restore a template version
 
@@ -2819,21 +2834,21 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	templateId := "tpl_1234567890abcdef01" // string | 
-	data := *openapiclient.NewRestoreVersionData("Version_example") // RestoreVersionData | 
+	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
+	body := *openapiclient.NewRestoreTemplateVersionRequest("Version_example") // RestoreTemplateVersionRequest | The version to restore.
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.RestoreTemplateVersion(context.Background(), templateId).Data(data).Execute()
+	resp, r, err := apiClient.ClientAPI.RestoreTemplateVersion(context.Background(), templateId).Body(body).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.RestoreTemplateVersion``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `RestoreTemplateVersion`: SuccessErrorResponse
+	// response from `RestoreTemplateVersion`: Template
 	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.RestoreTemplateVersion`: %v\n", resp)
 }
 ```
@@ -2844,7 +2859,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**templateId** | **string** |  | 
+**templateId** | **string** | The template's ID. | 
 
 ### Other Parameters
 
@@ -2854,11 +2869,11 @@ Other parameters are passed through a pointer to a apiRestoreTemplateVersionRequ
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | [**RestoreVersionData**](RestoreVersionData.md) |  | 
+ **body** | [**RestoreTemplateVersionRequest**](RestoreTemplateVersionRequest.md) | The version to restore. | 
 
 ### Return type
 
-[**SuccessErrorResponse**](SuccessErrorResponse.md)
+[**Template**](Template.md)
 
 ### Authorization
 
@@ -2876,7 +2891,7 @@ Name | Type | Description  | Notes
 
 ## TestAuthentication
 
-> SuccessErrorResponse TestAuthentication(ctx).Execute()
+> AuthenticationCheck TestAuthentication(ctx).Execute()
 
 Test authentication
 
@@ -2891,7 +2906,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
@@ -2903,7 +2918,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.TestAuthentication``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `TestAuthentication`: SuccessErrorResponse
+	// response from `TestAuthentication`: AuthenticationCheck
 	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.TestAuthentication`: %v\n", resp)
 }
 ```
@@ -2919,7 +2934,7 @@ Other parameters are passed through a pointer to a apiTestAuthenticationRequest 
 
 ### Return type
 
-[**SuccessErrorResponse**](SuccessErrorResponse.md)
+[**AuthenticationCheck**](AuthenticationCheck.md)
 
 ### Authorization
 
@@ -2935,11 +2950,11 @@ Other parameters are passed through a pointer to a apiTestAuthenticationRequest 
 [[Back to README]](../README.md)
 
 
-## UpdateDataRequest
+## UpdateSignatureRequest
 
-> CreateSubmissionDataRequestResponse UpdateDataRequest(ctx, dataRequestId).Data(data).Execute()
+> SignatureRequest UpdateSignatureRequest(ctx, signatureRequestId).Body(body).Execute()
 
-Update a submission data request
+Update a signature request
 
 
 
@@ -2952,22 +2967,22 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	dataRequestId := "drq_1234567890abcdef01" // string | 
-	data := *openapiclient.NewUpdateSubmissionDataRequestData() // UpdateSubmissionDataRequestData | 
+	signatureRequestId := "srq_1234567890abcdef01" // string | The signature request's ID.
+	body := *openapiclient.NewUpdateSignatureRequestRequest() // UpdateSignatureRequestRequest | The settings to change. Properties left out keep their values.
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.UpdateDataRequest(context.Background(), dataRequestId).Data(data).Execute()
+	resp, r, err := apiClient.ClientAPI.UpdateSignatureRequest(context.Background(), signatureRequestId).Body(body).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.UpdateDataRequest``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.UpdateSignatureRequest``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `UpdateDataRequest`: CreateSubmissionDataRequestResponse
-	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.UpdateDataRequest`: %v\n", resp)
+	// response from `UpdateSignatureRequest`: SignatureRequest
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.UpdateSignatureRequest`: %v\n", resp)
 }
 ```
 
@@ -2977,21 +2992,21 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**dataRequestId** | **string** |  | 
+**signatureRequestId** | **string** | The signature request's ID. | 
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiUpdateDataRequestRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiUpdateSignatureRequestRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | [**UpdateSubmissionDataRequestData**](UpdateSubmissionDataRequestData.md) |  | 
+ **body** | [**UpdateSignatureRequestRequest**](UpdateSignatureRequestRequest.md) | The settings to change. Properties left out keep their values. | 
 
 ### Return type
 
-[**CreateSubmissionDataRequestResponse**](CreateSubmissionDataRequestResponse.md)
+[**SignatureRequest**](SignatureRequest.md)
 
 ### Authorization
 
@@ -3009,9 +3024,9 @@ Name | Type | Description  | Notes
 
 ## UpdateTemplate
 
-> SuccessMultipleErrorsResponse UpdateTemplate(ctx, templateId).Data(data).Execute()
+> Template UpdateTemplate(ctx, templateId).Body(body).Execute()
 
-Update a Template
+Update a template
 
 
 
@@ -3024,21 +3039,21 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	templateId := "tpl_1234567890abcdef03" // string | 
-	data := *openapiclient.NewUpdateHtmlTemplate(map[string]interface{}(123)) // UpdateHtmlTemplate | 
+	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
+	body := *openapiclient.NewUpdateTemplateRequest() // UpdateTemplateRequest | The settings to change. Properties left out keep their values.
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.UpdateTemplate(context.Background(), templateId).Data(data).Execute()
+	resp, r, err := apiClient.ClientAPI.UpdateTemplate(context.Background(), templateId).Body(body).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.UpdateTemplate``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `UpdateTemplate`: SuccessMultipleErrorsResponse
+	// response from `UpdateTemplate`: Template
 	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.UpdateTemplate`: %v\n", resp)
 }
 ```
@@ -3049,7 +3064,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**templateId** | **string** |  | 
+**templateId** | **string** | The template's ID. | 
 
 ### Other Parameters
 
@@ -3059,11 +3074,11 @@ Other parameters are passed through a pointer to a apiUpdateTemplateRequest stru
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | [**UpdateHtmlTemplate**](UpdateHtmlTemplate.md) |  | 
+ **body** | [**UpdateTemplateRequest**](UpdateTemplateRequest.md) | The settings to change. Properties left out keep their values. | 
 
 ### Return type
 
-[**SuccessMultipleErrorsResponse**](SuccessMultipleErrorsResponse.md)
+[**Template**](Template.md)
 
 ### Authorization
 
@@ -3081,9 +3096,9 @@ Name | Type | Description  | Notes
 
 ## UpdateTemplateDocument
 
-> SuccessMultipleErrorsResponse UpdateTemplateDocument(ctx, templateId).TemplateDocument(templateDocument).TemplateName(templateName).Execute()
+> Template UpdateTemplateDocument(ctx, templateId).Body(body).Wait(wait).Execute()
 
-Update a template's document with a form POST file upload
+Replace a template's PDF
 
 
 
@@ -3096,22 +3111,22 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	templateId := "tpl_1234567890abcdef01" // string | 
-	templateDocument := os.NewFile(1234, "some_file") // *os.File | 
-	templateName := "templateName_example" // string |  (optional)
+	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
+	body := *openapiclient.NewUpdateTemplateDocumentRequest("CacheId_example") // UpdateTemplateDocumentRequest | The new PDF.
+	wait := true // bool | Wait until the PDF has been processed before responding. Default true on sync.api hosts. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.UpdateTemplateDocument(context.Background(), templateId).TemplateDocument(templateDocument).TemplateName(templateName).Execute()
+	resp, r, err := apiClient.ClientAPI.UpdateTemplateDocument(context.Background(), templateId).Body(body).Wait(wait).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.UpdateTemplateDocument``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `UpdateTemplateDocument`: SuccessMultipleErrorsResponse
+	// response from `UpdateTemplateDocument`: Template
 	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.UpdateTemplateDocument`: %v\n", resp)
 }
 ```
@@ -3122,7 +3137,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**templateId** | **string** |  | 
+**templateId** | **string** | The template's ID. | 
 
 ### Other Parameters
 
@@ -3132,84 +3147,12 @@ Other parameters are passed through a pointer to a apiUpdateTemplateDocumentRequ
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **templateDocument** | ***os.File** |  | 
- **templateName** | **string** |  | 
+ **body** | [**UpdateTemplateDocumentRequest**](UpdateTemplateDocumentRequest.md) | The new PDF. | 
+ **wait** | **bool** | Wait until the PDF has been processed before responding. Default true on sync.api hosts. | 
 
 ### Return type
 
-[**SuccessMultipleErrorsResponse**](SuccessMultipleErrorsResponse.md)
-
-### Authorization
-
-[api_token_basic](../README.md#api_token_basic)
-
-### HTTP request headers
-
-- **Content-Type**: multipart/form-data
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## UpdateTemplateDocumentFromUpload
-
-> SuccessMultipleErrorsResponse UpdateTemplateDocumentFromUpload(ctx, templateId).Data(data).Execute()
-
-Update a template's document with a cached S3 file upload
-
-
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
-)
-
-func main() {
-	templateId := "tpl_1234567890abcdef01" // string | 
-	data := *openapiclient.NewUpdatePdfTemplate(map[string]interface{}(123)) // UpdatePdfTemplate | 
-
-	configuration := openapiclient.NewConfiguration()
-	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.UpdateTemplateDocumentFromUpload(context.Background(), templateId).Data(data).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.UpdateTemplateDocumentFromUpload``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `UpdateTemplateDocumentFromUpload`: SuccessMultipleErrorsResponse
-	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.UpdateTemplateDocumentFromUpload`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**templateId** | **string** |  | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiUpdateTemplateDocumentFromUploadRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
- **data** | [**UpdatePdfTemplate**](UpdatePdfTemplate.md) |  | 
-
-### Return type
-
-[**SuccessMultipleErrorsResponse**](SuccessMultipleErrorsResponse.md)
+[**Template**](Template.md)
 
 ### Authorization
 
@@ -3227,7 +3170,7 @@ Name | Type | Description  | Notes
 
 ## UpdateWebhook
 
-> Webhook UpdateWebhook(ctx, webhookId).Data(data).Execute()
+> Webhook UpdateWebhook(ctx, webhookId).Body(body).Execute()
 
 Update a webhook
 
@@ -3242,16 +3185,16 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func main() {
-	webhookId := "whk_1234567890abcdef01" // string | 
-	data := *openapiclient.NewUpdateWebhookData(map[string]interface{}(123)) // UpdateWebhookData | 
+	webhookId := "webhookId_example" // string | The webhook's ID.
+	body := *openapiclient.NewUpdateWebhookRequest() // UpdateWebhookRequest | The settings to change. Properties left out keep their values.
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.UpdateWebhook(context.Background(), webhookId).Data(data).Execute()
+	resp, r, err := apiClient.ClientAPI.UpdateWebhook(context.Background(), webhookId).Body(body).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.UpdateWebhook``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -3267,7 +3210,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**webhookId** | **string** |  | 
+**webhookId** | **string** | The webhook's ID. | 
 
 ### Other Parameters
 
@@ -3277,7 +3220,7 @@ Other parameters are passed through a pointer to a apiUpdateWebhookRequest struc
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | [**UpdateWebhookData**](UpdateWebhookData.md) |  | 
+ **body** | [**UpdateWebhookRequest**](UpdateWebhookRequest.md) | The settings to change. Properties left out keep their values. | 
 
 ### Return type
 
@@ -3290,6 +3233,166 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
 - **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## UploadTemplate
+
+> Template UploadTemplate(ctx).Document(document).Wait(wait).Name(name).Description(description).ParentFolderId(parentFolderId).AiFieldNamingLanguage(aiFieldNamingLanguage).DetectFields(detectFields).FieldSource(fieldSource).FieldNaming(fieldNaming).FieldLogic(fieldLogic).Execute()
+
+Create a PDF template from an uploaded PDF
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	document := os.NewFile(1234, "some_file") // *os.File | The PDF.
+	wait := true // bool | Wait until the PDF has been processed before responding. Default true on sync.api hosts. (optional)
+	name := "name_example" // string | The template's name. (optional)
+	description := "description_example" // string | The template's description. (optional)
+	parentFolderId := "parentFolderId_example" // string | The folder to put the template in. Left out, it's created at the root. (optional)
+	aiFieldNamingLanguage := openapiclient.AiFieldNamingLanguage("auto") // AiFieldNamingLanguage | The language AI field setup names fields in: `auto` uses the form's language when it's written in the Latin alphabet without accents, and English otherwise; `english` always uses English; `form_language` uses the form's language and script. Default: your account's template settings. (optional)
+	detectFields := true // bool | Set up the PDF's fields as DocSpring's "Automatically detect fields" upload option does: import or detect the fields, name them with AI, and set up conditional logic. `field_source`, `field_naming` and `field_logic` choose how. Default false. `document.page_processing_statuses` and `document.field_logic_status` show how it's going, and `document.state` becomes `processed` once every page's fields are set up. (optional)
+	fieldSource := openapiclient.FieldSetupSource("auto") // FieldSetupSource | With `detect_fields`, where the fields come from. `auto` (the default) imports the form fields of a fillable PDF and detects the fields of a PDF without them; `pdf_detection` detects the fields from the page layout, even on a fillable PDF; `pdf_form_fields` only imports the PDF's form fields. (optional)
+	fieldNaming := openapiclient.FieldSetupNaming("ai") // FieldSetupNaming | With `detect_fields`, how the fields are named. `ai` (the default) names them and sets their types and settings with AI; `preserve` keeps the names of the PDF's form fields, and AI only names the fields it detected. `preserve` needs `field_source` `auto` or `pdf_form_fields`. (optional)
+	fieldLogic := openapiclient.FieldSetupLogic("ai") // FieldSetupLogic | With `detect_fields`, whether AI reads the whole form once the fields are named and sets up conditional logic and required fields (`ai`) or not (`none`). Default: your account's template settings. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.UploadTemplate(context.Background()).Document(document).Wait(wait).Name(name).Description(description).ParentFolderId(parentFolderId).AiFieldNamingLanguage(aiFieldNamingLanguage).DetectFields(detectFields).FieldSource(fieldSource).FieldNaming(fieldNaming).FieldLogic(fieldLogic).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.UploadTemplate``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `UploadTemplate`: Template
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.UploadTemplate`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUploadTemplateRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **document** | ***os.File** | The PDF. | 
+ **wait** | **bool** | Wait until the PDF has been processed before responding. Default true on sync.api hosts. | 
+ **name** | **string** | The template's name. | 
+ **description** | **string** | The template's description. | 
+ **parentFolderId** | **string** | The folder to put the template in. Left out, it's created at the root. | 
+ **aiFieldNamingLanguage** | [**AiFieldNamingLanguage**](AiFieldNamingLanguage.md) | The language AI field setup names fields in: `auto` uses the form's language when it's written in the Latin alphabet without accents, and English otherwise; `english` always uses English; `form_language` uses the form's language and script. Default: your account's template settings. | 
+ **detectFields** | **bool** | Set up the PDF's fields as DocSpring's "Automatically detect fields" upload option does: import or detect the fields, name them with AI, and set up conditional logic. `field_source`, `field_naming` and `field_logic` choose how. Default false. `document.page_processing_statuses` and `document.field_logic_status` show how it's going, and `document.state` becomes `processed` once every page's fields are set up. | 
+ **fieldSource** | [**FieldSetupSource**](FieldSetupSource.md) | With `detect_fields`, where the fields come from. `auto` (the default) imports the form fields of a fillable PDF and detects the fields of a PDF without them; `pdf_detection` detects the fields from the page layout, even on a fillable PDF; `pdf_form_fields` only imports the PDF's form fields. | 
+ **fieldNaming** | [**FieldSetupNaming**](FieldSetupNaming.md) | With `detect_fields`, how the fields are named. `ai` (the default) names them and sets their types and settings with AI; `preserve` keeps the names of the PDF's form fields, and AI only names the fields it detected. `preserve` needs `field_source` `auto` or `pdf_form_fields`. | 
+ **fieldLogic** | [**FieldSetupLogic**](FieldSetupLogic.md) | With `detect_fields`, whether AI reads the whole form once the fields are named and sets up conditional logic and required fields (`ai`) or not (`none`). Default: your account's template settings. | 
+
+### Return type
+
+[**Template**](Template.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+- **Content-Type**: multipart/form-data
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## UploadTemplateDocument
+
+> Template UploadTemplateDocument(ctx, templateId).Document(document).Wait(wait).ReimportFields(reimportFields).Execute()
+
+Replace a template's PDF with an uploaded PDF
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
+	document := os.NewFile(1234, "some_file") // *os.File | The new PDF.
+	wait := true // bool | Wait until the PDF has been processed before responding. Default true on sync.api hosts. (optional)
+	reimportFields := true // bool | Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.UploadTemplateDocument(context.Background(), templateId).Document(document).Wait(wait).ReimportFields(reimportFields).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.UploadTemplateDocument``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `UploadTemplateDocument`: Template
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.UploadTemplateDocument`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**templateId** | **string** | The template's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUploadTemplateDocumentRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **document** | ***os.File** | The new PDF. | 
+ **wait** | **bool** | Wait until the PDF has been processed before responding. Default true on sync.api hosts. | 
+ **reimportFields** | **bool** | Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. | 
+
+### Return type
+
+[**Template**](Template.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+- **Content-Type**: multipart/form-data
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)

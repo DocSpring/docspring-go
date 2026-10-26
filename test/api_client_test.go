@@ -14,51 +14,13 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"testing"
-	openapiclient "github.com/docspring/docspring-go/v3"
+	openapiclient "github.com/docspring/docspring-go/v4"
 )
 
 func Test_docspring_ClientAPIService(t *testing.T) {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-
-	t.Run("Test ClientAPIService AddFieldsToTemplate", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var templateId string
-
-		resp, httpRes, err := apiClient.ClientAPI.AddFieldsToTemplate(context.Background(), templateId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test ClientAPIService BatchGeneratePdfs", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		resp, httpRes, err := apiClient.ClientAPI.BatchGeneratePdfs(context.Background()).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test ClientAPIService CombinePdfs", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		resp, httpRes, err := apiClient.ClientAPI.CombinePdfs(context.Background()).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
 
 	t.Run("Test ClientAPIService CopyTemplate", func(t *testing.T) {
 
@@ -67,6 +29,18 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 		var templateId string
 
 		resp, httpRes, err := apiClient.ClientAPI.CopyTemplate(context.Background(), templateId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService CreateCombinedPdf", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		resp, httpRes, err := apiClient.ClientAPI.CreateCombinedPdf(context.Background()).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -86,34 +60,6 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test ClientAPIService CreateDataRequestEvent", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var dataRequestId string
-
-		resp, httpRes, err := apiClient.ClientAPI.CreateDataRequestEvent(context.Background(), dataRequestId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test ClientAPIService CreateDataRequestToken", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var dataRequestId string
-
-		resp, httpRes, err := apiClient.ClientAPI.CreateDataRequestToken(context.Background(), dataRequestId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
 	t.Run("Test ClientAPIService CreateFolder", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
@@ -126,11 +72,13 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test ClientAPIService CreateHtmlTemplate", func(t *testing.T) {
+	t.Run("Test ClientAPIService CreateSignatureRequestEvent", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
 
-		resp, httpRes, err := apiClient.ClientAPI.CreateHtmlTemplate(context.Background()).Execute()
+		var signatureRequestId string
+
+		resp, httpRes, err := apiClient.ClientAPI.CreateSignatureRequestEvent(context.Background(), signatureRequestId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -138,11 +86,13 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test ClientAPIService CreatePdfTemplate", func(t *testing.T) {
+	t.Run("Test ClientAPIService CreateSignatureRequestToken", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
 
-		resp, httpRes, err := apiClient.ClientAPI.CreatePdfTemplate(context.Background()).Execute()
+		var signatureRequestId string
+
+		resp, httpRes, err := apiClient.ClientAPI.CreateSignatureRequestToken(context.Background(), signatureRequestId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -150,11 +100,37 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test ClientAPIService CreatePdfTemplateFromUpload", func(t *testing.T) {
+	t.Run("Test ClientAPIService CreateSubmission", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
 
-		resp, httpRes, err := apiClient.ClientAPI.CreatePdfTemplateFromUpload(context.Background()).Execute()
+		var templateId string
+
+		resp, httpRes, err := apiClient.ClientAPI.CreateSubmission(context.Background(), templateId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService CreateSubmissionBatch", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		resp, httpRes, err := apiClient.ClientAPI.CreateSubmissionBatch(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService CreateTemplate", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		resp, httpRes, err := apiClient.ClientAPI.CreateTemplate(context.Background()).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -167,6 +143,20 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 		t.Skip("skip test")  // remove to run test
 
 		resp, httpRes, err := apiClient.ClientAPI.CreateWebhook(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService DeleteCustomFile", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var customFileId string
+
+		resp, httpRes, err := apiClient.ClientAPI.DeleteCustomFile(context.Background(), customFileId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -216,13 +206,13 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test ClientAPIService ExpireCombinedSubmission", func(t *testing.T) {
+	t.Run("Test ClientAPIService ExpireCombinedPdf", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
 
-		var combinedSubmissionId string
+		var combinedPdfId string
 
-		resp, httpRes, err := apiClient.ClientAPI.ExpireCombinedSubmission(context.Background(), combinedSubmissionId).Execute()
+		resp, httpRes, err := apiClient.ClientAPI.ExpireCombinedPdf(context.Background(), combinedPdfId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -244,27 +234,13 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test ClientAPIService GeneratePdf", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var templateId string
-
-		resp, httpRes, err := apiClient.ClientAPI.GeneratePdf(context.Background(), templateId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test ClientAPIService GeneratePreview", func(t *testing.T) {
+	t.Run("Test ClientAPIService GenerateSubmissionPreview", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
 
 		var submissionId string
 
-		resp, httpRes, err := apiClient.ClientAPI.GeneratePreview(context.Background(), submissionId).Execute()
+		resp, httpRes, err := apiClient.ClientAPI.GenerateSubmissionPreview(context.Background(), submissionId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -272,13 +248,13 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test ClientAPIService GetCombinedSubmission", func(t *testing.T) {
+	t.Run("Test ClientAPIService GetCombinedPdf", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
 
-		var combinedSubmissionId string
+		var combinedPdfId string
 
-		resp, httpRes, err := apiClient.ClientAPI.GetCombinedSubmission(context.Background(), combinedSubmissionId).Execute()
+		resp, httpRes, err := apiClient.ClientAPI.GetCombinedPdf(context.Background(), combinedPdfId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -286,13 +262,13 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test ClientAPIService GetDataRequest", func(t *testing.T) {
+	t.Run("Test ClientAPIService GetCustomFile", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
 
-		var dataRequestId string
+		var customFileId string
 
-		resp, httpRes, err := apiClient.ClientAPI.GetDataRequest(context.Background(), dataRequestId).Execute()
+		resp, httpRes, err := apiClient.ClientAPI.GetCustomFile(context.Background(), customFileId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -300,13 +276,13 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test ClientAPIService GetFullTemplate", func(t *testing.T) {
+	t.Run("Test ClientAPIService GetFolder", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
 
-		var templateId string
+		var folderId string
 
-		resp, httpRes, err := apiClient.ClientAPI.GetFullTemplate(context.Background(), templateId).Execute()
+		resp, httpRes, err := apiClient.ClientAPI.GetFolder(context.Background(), folderId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -319,6 +295,20 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 		t.Skip("skip test")  // remove to run test
 
 		resp, httpRes, err := apiClient.ClientAPI.GetPresignUrl(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService GetSignatureRequest", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var signatureRequestId string
+
+		resp, httpRes, err := apiClient.ClientAPI.GetSignatureRequest(context.Background(), signatureRequestId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -410,11 +400,23 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test ClientAPIService ListCombinedSubmissions", func(t *testing.T) {
+	t.Run("Test ClientAPIService ListCombinedPdfs", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
 
-		resp, httpRes, err := apiClient.ClientAPI.ListCombinedSubmissions(context.Background()).Execute()
+		resp, httpRes, err := apiClient.ClientAPI.ListCombinedPdfs(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService ListCustomFiles", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		resp, httpRes, err := apiClient.ClientAPI.ListCustomFiles(context.Background()).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -484,13 +486,13 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test ClientAPIService MoveFolderToFolder", func(t *testing.T) {
+	t.Run("Test ClientAPIService MoveFolder", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
 
 		var folderId string
 
-		resp, httpRes, err := apiClient.ClientAPI.MoveFolderToFolder(context.Background(), folderId).Execute()
+		resp, httpRes, err := apiClient.ClientAPI.MoveFolder(context.Background(), folderId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -498,13 +500,13 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test ClientAPIService MoveTemplateToFolder", func(t *testing.T) {
+	t.Run("Test ClientAPIService MoveTemplate", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
 
 		var templateId string
 
-		resp, httpRes, err := apiClient.ClientAPI.MoveTemplateToFolder(context.Background(), templateId).Execute()
+		resp, httpRes, err := apiClient.ClientAPI.MoveTemplate(context.Background(), templateId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -566,13 +568,13 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test ClientAPIService UpdateDataRequest", func(t *testing.T) {
+	t.Run("Test ClientAPIService UpdateSignatureRequest", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
 
-		var dataRequestId string
+		var signatureRequestId string
 
-		resp, httpRes, err := apiClient.ClientAPI.UpdateDataRequest(context.Background(), dataRequestId).Execute()
+		resp, httpRes, err := apiClient.ClientAPI.UpdateSignatureRequest(context.Background(), signatureRequestId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -608,20 +610,6 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test ClientAPIService UpdateTemplateDocumentFromUpload", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var templateId string
-
-		resp, httpRes, err := apiClient.ClientAPI.UpdateTemplateDocumentFromUpload(context.Background(), templateId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
 	t.Run("Test ClientAPIService UpdateWebhook", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
@@ -629,6 +617,32 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 		var webhookId string
 
 		resp, httpRes, err := apiClient.ClientAPI.UpdateWebhook(context.Background(), webhookId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService UploadTemplate", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		resp, httpRes, err := apiClient.ClientAPI.UploadTemplate(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService UploadTemplateDocument", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var templateId string
+
+		resp, httpRes, err := apiClient.ClientAPI.UploadTemplateDocument(context.Background(), templateId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)

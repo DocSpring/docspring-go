@@ -4,14 +4,18 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | **NullableString** |  | 
-**Url** | **NullableString** |  | 
+**Id** | **string** | The custom file's ID. | 
+**DownloadUrl** | **NullableString** | A temporary link to download the file. | 
+**Size** | **NullableInt32** | The file's size in bytes. | 
+**ContentType** | **NullableString** | The file's media type, such as `application/pdf`. | 
+**CreatedAt** | **time.Time** | When the custom file was created. | 
+**UpdatedAt** | **time.Time** | When the custom file was last updated. | 
 
 ## Methods
 
 ### NewCustomFile
 
-`func NewCustomFile(id NullableString, url NullableString, ) *CustomFile`
+`func NewCustomFile(id string, downloadUrl NullableString, size NullableInt32, contentType NullableString, createdAt time.Time, updatedAt time.Time, ) *CustomFile`
 
 NewCustomFile instantiates a new CustomFile object
 This constructor will assign default values to properties that have it defined,
@@ -46,46 +50,136 @@ and a boolean to check if the value has been set.
 SetId sets Id field to given value.
 
 
-### SetIdNil
+### GetDownloadUrl
 
-`func (o *CustomFile) SetIdNil(b bool)`
+`func (o *CustomFile) GetDownloadUrl() string`
 
- SetIdNil sets the value for Id to be an explicit nil
+GetDownloadUrl returns the DownloadUrl field if non-nil, zero value otherwise.
 
-### UnsetId
-`func (o *CustomFile) UnsetId()`
+### GetDownloadUrlOk
 
-UnsetId ensures that no value is present for Id, not even an explicit nil
-### GetUrl
+`func (o *CustomFile) GetDownloadUrlOk() (*string, bool)`
 
-`func (o *CustomFile) GetUrl() string`
-
-GetUrl returns the Url field if non-nil, zero value otherwise.
-
-### GetUrlOk
-
-`func (o *CustomFile) GetUrlOk() (*string, bool)`
-
-GetUrlOk returns a tuple with the Url field if it's non-nil, zero value otherwise
+GetDownloadUrlOk returns a tuple with the DownloadUrl field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetUrl
+### SetDownloadUrl
 
-`func (o *CustomFile) SetUrl(v string)`
+`func (o *CustomFile) SetDownloadUrl(v string)`
 
-SetUrl sets Url field to given value.
+SetDownloadUrl sets DownloadUrl field to given value.
 
 
-### SetUrlNil
+### SetDownloadUrlNil
 
-`func (o *CustomFile) SetUrlNil(b bool)`
+`func (o *CustomFile) SetDownloadUrlNil(b bool)`
 
- SetUrlNil sets the value for Url to be an explicit nil
+ SetDownloadUrlNil sets the value for DownloadUrl to be an explicit nil
 
-### UnsetUrl
-`func (o *CustomFile) UnsetUrl()`
+### UnsetDownloadUrl
+`func (o *CustomFile) UnsetDownloadUrl()`
 
-UnsetUrl ensures that no value is present for Url, not even an explicit nil
+UnsetDownloadUrl ensures that no value is present for DownloadUrl, not even an explicit nil
+### GetSize
+
+`func (o *CustomFile) GetSize() int32`
+
+GetSize returns the Size field if non-nil, zero value otherwise.
+
+### GetSizeOk
+
+`func (o *CustomFile) GetSizeOk() (*int32, bool)`
+
+GetSizeOk returns a tuple with the Size field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSize
+
+`func (o *CustomFile) SetSize(v int32)`
+
+SetSize sets Size field to given value.
+
+
+### SetSizeNil
+
+`func (o *CustomFile) SetSizeNil(b bool)`
+
+ SetSizeNil sets the value for Size to be an explicit nil
+
+### UnsetSize
+`func (o *CustomFile) UnsetSize()`
+
+UnsetSize ensures that no value is present for Size, not even an explicit nil
+### GetContentType
+
+`func (o *CustomFile) GetContentType() string`
+
+GetContentType returns the ContentType field if non-nil, zero value otherwise.
+
+### GetContentTypeOk
+
+`func (o *CustomFile) GetContentTypeOk() (*string, bool)`
+
+GetContentTypeOk returns a tuple with the ContentType field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetContentType
+
+`func (o *CustomFile) SetContentType(v string)`
+
+SetContentType sets ContentType field to given value.
+
+
+### SetContentTypeNil
+
+`func (o *CustomFile) SetContentTypeNil(b bool)`
+
+ SetContentTypeNil sets the value for ContentType to be an explicit nil
+
+### UnsetContentType
+`func (o *CustomFile) UnsetContentType()`
+
+UnsetContentType ensures that no value is present for ContentType, not even an explicit nil
+### GetCreatedAt
+
+`func (o *CustomFile) GetCreatedAt() time.Time`
+
+GetCreatedAt returns the CreatedAt field if non-nil, zero value otherwise.
+
+### GetCreatedAtOk
+
+`func (o *CustomFile) GetCreatedAtOk() (*time.Time, bool)`
+
+GetCreatedAtOk returns a tuple with the CreatedAt field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetCreatedAt
+
+`func (o *CustomFile) SetCreatedAt(v time.Time)`
+
+SetCreatedAt sets CreatedAt field to given value.
+
+
+### GetUpdatedAt
+
+`func (o *CustomFile) GetUpdatedAt() time.Time`
+
+GetUpdatedAt returns the UpdatedAt field if non-nil, zero value otherwise.
+
+### GetUpdatedAtOk
+
+`func (o *CustomFile) GetUpdatedAtOk() (*time.Time, bool)`
+
+GetUpdatedAtOk returns a tuple with the UpdatedAt field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetUpdatedAt
+
+`func (o *CustomFile) SetUpdatedAt(v time.Time)`
+
+SetUpdatedAt sets UpdatedAt field to given value.
+
+
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

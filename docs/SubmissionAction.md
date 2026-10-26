@@ -4,19 +4,18 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | **NullableString** |  | 
-**IntegrationId** | **NullableString** |  | 
-**State** | **string** |  | 
-**ActionType** | **string** |  | 
-**ActionCategory** | **string** |  | 
-**ResultData** | **map[string]interface{}** |  | 
-**ErrorMessage** | **NullableString** |  | 
+**Id** | **string** | The upload's ID. | 
+**IntegrationId** | **NullableString** | The ID of the account integration it used. | 
+**State** | [**SubmissionActionState**](SubmissionActionState.md) | `pending` until the upload has run, then `processed`. `failed`: your storage rejected it. `error`: it failed in DocSpring. | 
+**ActionType** | [**SubmissionActionType**](SubmissionActionType.md) | The kind of storage, such as `aws_s3_upload` for an S3 bucket. | 
+**ResultData** | **map[string]interface{}** | Where the PDF was uploaded, such as the S3 bucket and key. | 
+**ErrorMessage** | **NullableString** | Why the upload failed, when `state` is `failed` or `error`. | 
 
 ## Methods
 
 ### NewSubmissionAction
 
-`func NewSubmissionAction(id NullableString, integrationId NullableString, state string, actionType string, actionCategory string, resultData map[string]interface{}, errorMessage NullableString, ) *SubmissionAction`
+`func NewSubmissionAction(id string, integrationId NullableString, state SubmissionActionState, actionType SubmissionActionType, resultData map[string]interface{}, errorMessage NullableString, ) *SubmissionAction`
 
 NewSubmissionAction instantiates a new SubmissionAction object
 This constructor will assign default values to properties that have it defined,
@@ -51,16 +50,6 @@ and a boolean to check if the value has been set.
 SetId sets Id field to given value.
 
 
-### SetIdNil
-
-`func (o *SubmissionAction) SetIdNil(b bool)`
-
- SetIdNil sets the value for Id to be an explicit nil
-
-### UnsetId
-`func (o *SubmissionAction) UnsetId()`
-
-UnsetId ensures that no value is present for Id, not even an explicit nil
 ### GetIntegrationId
 
 `func (o *SubmissionAction) GetIntegrationId() string`
@@ -93,62 +82,42 @@ SetIntegrationId sets IntegrationId field to given value.
 UnsetIntegrationId ensures that no value is present for IntegrationId, not even an explicit nil
 ### GetState
 
-`func (o *SubmissionAction) GetState() string`
+`func (o *SubmissionAction) GetState() SubmissionActionState`
 
 GetState returns the State field if non-nil, zero value otherwise.
 
 ### GetStateOk
 
-`func (o *SubmissionAction) GetStateOk() (*string, bool)`
+`func (o *SubmissionAction) GetStateOk() (*SubmissionActionState, bool)`
 
 GetStateOk returns a tuple with the State field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetState
 
-`func (o *SubmissionAction) SetState(v string)`
+`func (o *SubmissionAction) SetState(v SubmissionActionState)`
 
 SetState sets State field to given value.
 
 
 ### GetActionType
 
-`func (o *SubmissionAction) GetActionType() string`
+`func (o *SubmissionAction) GetActionType() SubmissionActionType`
 
 GetActionType returns the ActionType field if non-nil, zero value otherwise.
 
 ### GetActionTypeOk
 
-`func (o *SubmissionAction) GetActionTypeOk() (*string, bool)`
+`func (o *SubmissionAction) GetActionTypeOk() (*SubmissionActionType, bool)`
 
 GetActionTypeOk returns a tuple with the ActionType field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetActionType
 
-`func (o *SubmissionAction) SetActionType(v string)`
+`func (o *SubmissionAction) SetActionType(v SubmissionActionType)`
 
 SetActionType sets ActionType field to given value.
-
-
-### GetActionCategory
-
-`func (o *SubmissionAction) GetActionCategory() string`
-
-GetActionCategory returns the ActionCategory field if non-nil, zero value otherwise.
-
-### GetActionCategoryOk
-
-`func (o *SubmissionAction) GetActionCategoryOk() (*string, bool)`
-
-GetActionCategoryOk returns a tuple with the ActionCategory field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetActionCategory
-
-`func (o *SubmissionAction) SetActionCategory(v string)`
-
-SetActionCategory sets ActionCategory field to given value.
 
 
 ### GetResultData

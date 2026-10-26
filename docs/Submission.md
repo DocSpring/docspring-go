@@ -4,39 +4,36 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**BatchId** | **NullableString** |  | 
-**DataRequests** | [**[]SubmissionDataRequest**](SubmissionDataRequest.md) |  | 
-**Editable** | **NullableBool** |  | 
-**ErrorMessage** | **NullableString** |  | 
-**Expired** | **bool** |  | 
-**ExpiresAt** | **NullableString** |  | 
-**Id** | **NullableString** |  | 
-**JsonSchemaErrors** | **[]string** |  | 
-**Metadata** | **map[string]interface{}** |  | 
-**Password** | **NullableString** |  | 
-**ProcessedAt** | **NullableString** |  | 
-**State** | **string** |  | 
-**TemplateId** | **NullableString** |  | 
-**TemplateType** | **string** |  | 
-**TemplateVersion** | **NullableString** |  | 
-**Test** | **bool** |  | 
-**TruncatedText** | **map[string]interface{}** |  | 
-**PdfHash** | **NullableString** |  | 
-**DownloadUrl** | **NullableString** |  | 
-**PermanentDownloadUrl** | **NullableString** |  | 
-**PreviewDownloadUrl** | **NullableString** |  | 
-**PreviewGeneratedAt** | **NullableString** |  | 
-**AuditTrailDownloadUrl** | **NullableString** |  | 
-**Actions** | [**[]SubmissionAction**](SubmissionAction.md) |  | 
-**Source** | Pointer to **string** |  | [optional] 
-**Referrer** | Pointer to **NullableString** |  | [optional] 
-**Data** | Pointer to **map[string]interface{}** |  | [optional] 
+**Id** | **string** | The submission's ID. | 
+**TemplateId** | **NullableString** | Null once the template has been permanently deleted. | 
+**TemplateType** | [**TemplateType**](TemplateType.md) | The template's type: `pdf` or `html`. | 
+**TemplateVersion** | **NullableString** | The published version of the template the submission used. Null for the draft. | 
+**BatchId** | **NullableString** | The ID of the batch the submission was created in. | 
+**Source** | [**SubmissionSource**](SubmissionSource.md) | `api`: created with the API. `web`: a web form. `reprocess`: a copy of another submission, made to generate its PDF again. | 
+**State** | [**SubmissionState**](SubmissionState.md) | `pending` until the PDF has been generated, then `processed`. `waiting_for_signature_requests` until every signature request is completed. `insufficient_credits`: waiting for credits; `error_message` says whether the PDF is generated once you add them. `account_suspended`: waiting for the account to be reactivated, for up to 30 days. Waiting ends in `error` if it's discarded or takes over 30 days. Every other state is final, with no PDF: `invalid_data` (the data doesn't match the template's fields: see `data_errors`), `declined` (a signature request was declined), and the states where generating the PDF failed, which have an `error_message`: `syntax_error` (a mistake in an HTML template's Liquid or SCSS), `image_download_failed` or `image_processing_failed` (an image in the data or the template couldn't be downloaded or read) and `error` (anything else). Older submissions can also be `license_revoked` or `accidental`. | 
+**Test** | **bool** | Test PDFs have a watermark and are free. Live PDFs use credits. Submissions made with a test API token are always test submissions. | 
+**Editable** | **bool** | `true` keeps the PDF's text and check fields fillable, and `false` flattens every field. Left out, the template decides: its `editable_submissions` setting, or each field's own Editable option. A response shows the template's setting when the request left this out. Can't be `true` with `signature_requests`. | 
+**Data** | **map[string]interface{}** | The submission's data, with the values entered in completed signature requests. Lists leave it out (null) unless you pass `include_data=true`. Empty once the submission has expired. | 
+**DataErrors** | [**[]ErrorDetail**](ErrorDetail.md) | Why the data doesn't match the template's fields, when `state` is `invalid_data`: the same details as the 422 response that recorded it, with pointers into the request that created the submission (`/data/name`). Cleared once the submission has expired. | 
+**ErrorMessage** | **NullableString** | Why the PDF couldn't be generated, when `state` is `error`. | 
+**Metadata** | **map[string]interface{}** | Your own data about the submission, such as an ID from your app. It isn't printed on the PDF. | 
+**HasPassword** | **bool** | Whether the PDF needs a password to open (`password`). | 
+**SignatureRequests** | [**[]SignatureRequest**](SignatureRequest.md) | The people asked to sign the submission (and fill in their fields), in order. | 
+**Actions** | [**[]SubmissionAction**](SubmissionAction.md) | The uploads of the submission's PDF to your storage (account integrations). | 
+**TruncatedText** | **map[string][]string** | The text of each field that didn't fit in it, by field name. Left out (null) with `data`, and empty once the submission has expired. | 
+**Files** | [**SubmissionFiles**](SubmissionFiles.md) | The generated files: `pdf` once the submission has been processed, `audit_trail` once its signature requests are completed, and `preview` once a preview PDF has been generated. Empty once the submission has expired. | 
+**PreviewGeneratedAt** | **NullableTime** | When the preview PDF was generated. Null if there is no preview. | 
+**Expired** | **bool** | An expired submission's data, metadata, password and PDF have been deleted. | 
+**ExpiresAt** | **NullableTime** | When the submission expires. Null if it's kept until you delete it. | 
+**ProcessedAt** | **NullableTime** | When the PDF was generated. Null until then. | 
+**CreatedAt** | **time.Time** | When the submission was created. | 
+**UpdatedAt** | **time.Time** | When the submission was last updated. | 
 
 ## Methods
 
 ### NewSubmission
 
-`func NewSubmission(batchId NullableString, dataRequests []SubmissionDataRequest, editable NullableBool, errorMessage NullableString, expired bool, expiresAt NullableString, id NullableString, jsonSchemaErrors []string, metadata map[string]interface{}, password NullableString, processedAt NullableString, state string, templateId NullableString, templateType string, templateVersion NullableString, test bool, truncatedText map[string]interface{}, pdfHash NullableString, downloadUrl NullableString, permanentDownloadUrl NullableString, previewDownloadUrl NullableString, previewGeneratedAt NullableString, auditTrailDownloadUrl NullableString, actions []SubmissionAction, ) *Submission`
+`func NewSubmission(id string, templateId NullableString, templateType TemplateType, templateVersion NullableString, batchId NullableString, source SubmissionSource, state SubmissionState, test bool, editable bool, data map[string]interface{}, dataErrors []ErrorDetail, errorMessage NullableString, metadata map[string]interface{}, hasPassword bool, signatureRequests []SignatureRequest, actions []SubmissionAction, truncatedText map[string][]string, files SubmissionFiles, previewGeneratedAt NullableTime, expired bool, expiresAt NullableTime, processedAt NullableTime, createdAt time.Time, updatedAt time.Time, ) *Submission`
 
 NewSubmission instantiates a new Submission object
 This constructor will assign default values to properties that have it defined,
@@ -51,166 +48,6 @@ NewSubmissionWithDefaults instantiates a new Submission object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
-### GetBatchId
-
-`func (o *Submission) GetBatchId() string`
-
-GetBatchId returns the BatchId field if non-nil, zero value otherwise.
-
-### GetBatchIdOk
-
-`func (o *Submission) GetBatchIdOk() (*string, bool)`
-
-GetBatchIdOk returns a tuple with the BatchId field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetBatchId
-
-`func (o *Submission) SetBatchId(v string)`
-
-SetBatchId sets BatchId field to given value.
-
-
-### SetBatchIdNil
-
-`func (o *Submission) SetBatchIdNil(b bool)`
-
- SetBatchIdNil sets the value for BatchId to be an explicit nil
-
-### UnsetBatchId
-`func (o *Submission) UnsetBatchId()`
-
-UnsetBatchId ensures that no value is present for BatchId, not even an explicit nil
-### GetDataRequests
-
-`func (o *Submission) GetDataRequests() []SubmissionDataRequest`
-
-GetDataRequests returns the DataRequests field if non-nil, zero value otherwise.
-
-### GetDataRequestsOk
-
-`func (o *Submission) GetDataRequestsOk() (*[]SubmissionDataRequest, bool)`
-
-GetDataRequestsOk returns a tuple with the DataRequests field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetDataRequests
-
-`func (o *Submission) SetDataRequests(v []SubmissionDataRequest)`
-
-SetDataRequests sets DataRequests field to given value.
-
-
-### GetEditable
-
-`func (o *Submission) GetEditable() bool`
-
-GetEditable returns the Editable field if non-nil, zero value otherwise.
-
-### GetEditableOk
-
-`func (o *Submission) GetEditableOk() (*bool, bool)`
-
-GetEditableOk returns a tuple with the Editable field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetEditable
-
-`func (o *Submission) SetEditable(v bool)`
-
-SetEditable sets Editable field to given value.
-
-
-### SetEditableNil
-
-`func (o *Submission) SetEditableNil(b bool)`
-
- SetEditableNil sets the value for Editable to be an explicit nil
-
-### UnsetEditable
-`func (o *Submission) UnsetEditable()`
-
-UnsetEditable ensures that no value is present for Editable, not even an explicit nil
-### GetErrorMessage
-
-`func (o *Submission) GetErrorMessage() string`
-
-GetErrorMessage returns the ErrorMessage field if non-nil, zero value otherwise.
-
-### GetErrorMessageOk
-
-`func (o *Submission) GetErrorMessageOk() (*string, bool)`
-
-GetErrorMessageOk returns a tuple with the ErrorMessage field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetErrorMessage
-
-`func (o *Submission) SetErrorMessage(v string)`
-
-SetErrorMessage sets ErrorMessage field to given value.
-
-
-### SetErrorMessageNil
-
-`func (o *Submission) SetErrorMessageNil(b bool)`
-
- SetErrorMessageNil sets the value for ErrorMessage to be an explicit nil
-
-### UnsetErrorMessage
-`func (o *Submission) UnsetErrorMessage()`
-
-UnsetErrorMessage ensures that no value is present for ErrorMessage, not even an explicit nil
-### GetExpired
-
-`func (o *Submission) GetExpired() bool`
-
-GetExpired returns the Expired field if non-nil, zero value otherwise.
-
-### GetExpiredOk
-
-`func (o *Submission) GetExpiredOk() (*bool, bool)`
-
-GetExpiredOk returns a tuple with the Expired field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetExpired
-
-`func (o *Submission) SetExpired(v bool)`
-
-SetExpired sets Expired field to given value.
-
-
-### GetExpiresAt
-
-`func (o *Submission) GetExpiresAt() string`
-
-GetExpiresAt returns the ExpiresAt field if non-nil, zero value otherwise.
-
-### GetExpiresAtOk
-
-`func (o *Submission) GetExpiresAtOk() (*string, bool)`
-
-GetExpiresAtOk returns a tuple with the ExpiresAt field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetExpiresAt
-
-`func (o *Submission) SetExpiresAt(v string)`
-
-SetExpiresAt sets ExpiresAt field to given value.
-
-
-### SetExpiresAtNil
-
-`func (o *Submission) SetExpiresAtNil(b bool)`
-
- SetExpiresAtNil sets the value for ExpiresAt to be an explicit nil
-
-### UnsetExpiresAt
-`func (o *Submission) UnsetExpiresAt()`
-
-UnsetExpiresAt ensures that no value is present for ExpiresAt, not even an explicit nil
 ### GetId
 
 `func (o *Submission) GetId() string`
@@ -229,146 +66,6 @@ and a boolean to check if the value has been set.
 `func (o *Submission) SetId(v string)`
 
 SetId sets Id field to given value.
-
-
-### SetIdNil
-
-`func (o *Submission) SetIdNil(b bool)`
-
- SetIdNil sets the value for Id to be an explicit nil
-
-### UnsetId
-`func (o *Submission) UnsetId()`
-
-UnsetId ensures that no value is present for Id, not even an explicit nil
-### GetJsonSchemaErrors
-
-`func (o *Submission) GetJsonSchemaErrors() []string`
-
-GetJsonSchemaErrors returns the JsonSchemaErrors field if non-nil, zero value otherwise.
-
-### GetJsonSchemaErrorsOk
-
-`func (o *Submission) GetJsonSchemaErrorsOk() (*[]string, bool)`
-
-GetJsonSchemaErrorsOk returns a tuple with the JsonSchemaErrors field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetJsonSchemaErrors
-
-`func (o *Submission) SetJsonSchemaErrors(v []string)`
-
-SetJsonSchemaErrors sets JsonSchemaErrors field to given value.
-
-
-### SetJsonSchemaErrorsNil
-
-`func (o *Submission) SetJsonSchemaErrorsNil(b bool)`
-
- SetJsonSchemaErrorsNil sets the value for JsonSchemaErrors to be an explicit nil
-
-### UnsetJsonSchemaErrors
-`func (o *Submission) UnsetJsonSchemaErrors()`
-
-UnsetJsonSchemaErrors ensures that no value is present for JsonSchemaErrors, not even an explicit nil
-### GetMetadata
-
-`func (o *Submission) GetMetadata() map[string]interface{}`
-
-GetMetadata returns the Metadata field if non-nil, zero value otherwise.
-
-### GetMetadataOk
-
-`func (o *Submission) GetMetadataOk() (*map[string]interface{}, bool)`
-
-GetMetadataOk returns a tuple with the Metadata field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetMetadata
-
-`func (o *Submission) SetMetadata(v map[string]interface{})`
-
-SetMetadata sets Metadata field to given value.
-
-
-### GetPassword
-
-`func (o *Submission) GetPassword() string`
-
-GetPassword returns the Password field if non-nil, zero value otherwise.
-
-### GetPasswordOk
-
-`func (o *Submission) GetPasswordOk() (*string, bool)`
-
-GetPasswordOk returns a tuple with the Password field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetPassword
-
-`func (o *Submission) SetPassword(v string)`
-
-SetPassword sets Password field to given value.
-
-
-### SetPasswordNil
-
-`func (o *Submission) SetPasswordNil(b bool)`
-
- SetPasswordNil sets the value for Password to be an explicit nil
-
-### UnsetPassword
-`func (o *Submission) UnsetPassword()`
-
-UnsetPassword ensures that no value is present for Password, not even an explicit nil
-### GetProcessedAt
-
-`func (o *Submission) GetProcessedAt() string`
-
-GetProcessedAt returns the ProcessedAt field if non-nil, zero value otherwise.
-
-### GetProcessedAtOk
-
-`func (o *Submission) GetProcessedAtOk() (*string, bool)`
-
-GetProcessedAtOk returns a tuple with the ProcessedAt field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetProcessedAt
-
-`func (o *Submission) SetProcessedAt(v string)`
-
-SetProcessedAt sets ProcessedAt field to given value.
-
-
-### SetProcessedAtNil
-
-`func (o *Submission) SetProcessedAtNil(b bool)`
-
- SetProcessedAtNil sets the value for ProcessedAt to be an explicit nil
-
-### UnsetProcessedAt
-`func (o *Submission) UnsetProcessedAt()`
-
-UnsetProcessedAt ensures that no value is present for ProcessedAt, not even an explicit nil
-### GetState
-
-`func (o *Submission) GetState() string`
-
-GetState returns the State field if non-nil, zero value otherwise.
-
-### GetStateOk
-
-`func (o *Submission) GetStateOk() (*string, bool)`
-
-GetStateOk returns a tuple with the State field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetState
-
-`func (o *Submission) SetState(v string)`
-
-SetState sets State field to given value.
 
 
 ### GetTemplateId
@@ -403,20 +100,20 @@ SetTemplateId sets TemplateId field to given value.
 UnsetTemplateId ensures that no value is present for TemplateId, not even an explicit nil
 ### GetTemplateType
 
-`func (o *Submission) GetTemplateType() string`
+`func (o *Submission) GetTemplateType() TemplateType`
 
 GetTemplateType returns the TemplateType field if non-nil, zero value otherwise.
 
 ### GetTemplateTypeOk
 
-`func (o *Submission) GetTemplateTypeOk() (*string, bool)`
+`func (o *Submission) GetTemplateTypeOk() (*TemplateType, bool)`
 
 GetTemplateTypeOk returns a tuple with the TemplateType field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetTemplateType
 
-`func (o *Submission) SetTemplateType(v string)`
+`func (o *Submission) SetTemplateType(v TemplateType)`
 
 SetTemplateType sets TemplateType field to given value.
 
@@ -451,6 +148,76 @@ SetTemplateVersion sets TemplateVersion field to given value.
 `func (o *Submission) UnsetTemplateVersion()`
 
 UnsetTemplateVersion ensures that no value is present for TemplateVersion, not even an explicit nil
+### GetBatchId
+
+`func (o *Submission) GetBatchId() string`
+
+GetBatchId returns the BatchId field if non-nil, zero value otherwise.
+
+### GetBatchIdOk
+
+`func (o *Submission) GetBatchIdOk() (*string, bool)`
+
+GetBatchIdOk returns a tuple with the BatchId field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetBatchId
+
+`func (o *Submission) SetBatchId(v string)`
+
+SetBatchId sets BatchId field to given value.
+
+
+### SetBatchIdNil
+
+`func (o *Submission) SetBatchIdNil(b bool)`
+
+ SetBatchIdNil sets the value for BatchId to be an explicit nil
+
+### UnsetBatchId
+`func (o *Submission) UnsetBatchId()`
+
+UnsetBatchId ensures that no value is present for BatchId, not even an explicit nil
+### GetSource
+
+`func (o *Submission) GetSource() SubmissionSource`
+
+GetSource returns the Source field if non-nil, zero value otherwise.
+
+### GetSourceOk
+
+`func (o *Submission) GetSourceOk() (*SubmissionSource, bool)`
+
+GetSourceOk returns a tuple with the Source field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSource
+
+`func (o *Submission) SetSource(v SubmissionSource)`
+
+SetSource sets Source field to given value.
+
+
+### GetState
+
+`func (o *Submission) GetState() SubmissionState`
+
+GetState returns the State field if non-nil, zero value otherwise.
+
+### GetStateOk
+
+`func (o *Submission) GetStateOk() (*SubmissionState, bool)`
+
+GetStateOk returns a tuple with the State field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetState
+
+`func (o *Submission) SetState(v SubmissionState)`
+
+SetState sets State field to given value.
+
+
 ### GetTest
 
 `func (o *Submission) GetTest() bool`
@@ -471,216 +238,166 @@ and a boolean to check if the value has been set.
 SetTest sets Test field to given value.
 
 
-### GetTruncatedText
+### GetEditable
 
-`func (o *Submission) GetTruncatedText() map[string]interface{}`
+`func (o *Submission) GetEditable() bool`
 
-GetTruncatedText returns the TruncatedText field if non-nil, zero value otherwise.
+GetEditable returns the Editable field if non-nil, zero value otherwise.
 
-### GetTruncatedTextOk
+### GetEditableOk
 
-`func (o *Submission) GetTruncatedTextOk() (*map[string]interface{}, bool)`
+`func (o *Submission) GetEditableOk() (*bool, bool)`
 
-GetTruncatedTextOk returns a tuple with the TruncatedText field if it's non-nil, zero value otherwise
+GetEditableOk returns a tuple with the Editable field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetTruncatedText
+### SetEditable
 
-`func (o *Submission) SetTruncatedText(v map[string]interface{})`
+`func (o *Submission) SetEditable(v bool)`
 
-SetTruncatedText sets TruncatedText field to given value.
+SetEditable sets Editable field to given value.
 
 
-### SetTruncatedTextNil
+### GetData
 
-`func (o *Submission) SetTruncatedTextNil(b bool)`
+`func (o *Submission) GetData() map[string]interface{}`
 
- SetTruncatedTextNil sets the value for TruncatedText to be an explicit nil
+GetData returns the Data field if non-nil, zero value otherwise.
 
-### UnsetTruncatedText
-`func (o *Submission) UnsetTruncatedText()`
+### GetDataOk
 
-UnsetTruncatedText ensures that no value is present for TruncatedText, not even an explicit nil
-### GetPdfHash
+`func (o *Submission) GetDataOk() (*map[string]interface{}, bool)`
 
-`func (o *Submission) GetPdfHash() string`
-
-GetPdfHash returns the PdfHash field if non-nil, zero value otherwise.
-
-### GetPdfHashOk
-
-`func (o *Submission) GetPdfHashOk() (*string, bool)`
-
-GetPdfHashOk returns a tuple with the PdfHash field if it's non-nil, zero value otherwise
+GetDataOk returns a tuple with the Data field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetPdfHash
+### SetData
 
-`func (o *Submission) SetPdfHash(v string)`
+`func (o *Submission) SetData(v map[string]interface{})`
 
-SetPdfHash sets PdfHash field to given value.
+SetData sets Data field to given value.
 
 
-### SetPdfHashNil
+### SetDataNil
 
-`func (o *Submission) SetPdfHashNil(b bool)`
+`func (o *Submission) SetDataNil(b bool)`
 
- SetPdfHashNil sets the value for PdfHash to be an explicit nil
+ SetDataNil sets the value for Data to be an explicit nil
 
-### UnsetPdfHash
-`func (o *Submission) UnsetPdfHash()`
+### UnsetData
+`func (o *Submission) UnsetData()`
 
-UnsetPdfHash ensures that no value is present for PdfHash, not even an explicit nil
-### GetDownloadUrl
+UnsetData ensures that no value is present for Data, not even an explicit nil
+### GetDataErrors
 
-`func (o *Submission) GetDownloadUrl() string`
+`func (o *Submission) GetDataErrors() []ErrorDetail`
 
-GetDownloadUrl returns the DownloadUrl field if non-nil, zero value otherwise.
+GetDataErrors returns the DataErrors field if non-nil, zero value otherwise.
 
-### GetDownloadUrlOk
+### GetDataErrorsOk
 
-`func (o *Submission) GetDownloadUrlOk() (*string, bool)`
+`func (o *Submission) GetDataErrorsOk() (*[]ErrorDetail, bool)`
 
-GetDownloadUrlOk returns a tuple with the DownloadUrl field if it's non-nil, zero value otherwise
+GetDataErrorsOk returns a tuple with the DataErrors field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetDownloadUrl
+### SetDataErrors
 
-`func (o *Submission) SetDownloadUrl(v string)`
+`func (o *Submission) SetDataErrors(v []ErrorDetail)`
 
-SetDownloadUrl sets DownloadUrl field to given value.
+SetDataErrors sets DataErrors field to given value.
 
 
-### SetDownloadUrlNil
+### GetErrorMessage
 
-`func (o *Submission) SetDownloadUrlNil(b bool)`
+`func (o *Submission) GetErrorMessage() string`
 
- SetDownloadUrlNil sets the value for DownloadUrl to be an explicit nil
+GetErrorMessage returns the ErrorMessage field if non-nil, zero value otherwise.
 
-### UnsetDownloadUrl
-`func (o *Submission) UnsetDownloadUrl()`
+### GetErrorMessageOk
 
-UnsetDownloadUrl ensures that no value is present for DownloadUrl, not even an explicit nil
-### GetPermanentDownloadUrl
+`func (o *Submission) GetErrorMessageOk() (*string, bool)`
 
-`func (o *Submission) GetPermanentDownloadUrl() string`
-
-GetPermanentDownloadUrl returns the PermanentDownloadUrl field if non-nil, zero value otherwise.
-
-### GetPermanentDownloadUrlOk
-
-`func (o *Submission) GetPermanentDownloadUrlOk() (*string, bool)`
-
-GetPermanentDownloadUrlOk returns a tuple with the PermanentDownloadUrl field if it's non-nil, zero value otherwise
+GetErrorMessageOk returns a tuple with the ErrorMessage field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetPermanentDownloadUrl
+### SetErrorMessage
 
-`func (o *Submission) SetPermanentDownloadUrl(v string)`
+`func (o *Submission) SetErrorMessage(v string)`
 
-SetPermanentDownloadUrl sets PermanentDownloadUrl field to given value.
+SetErrorMessage sets ErrorMessage field to given value.
 
 
-### SetPermanentDownloadUrlNil
+### SetErrorMessageNil
 
-`func (o *Submission) SetPermanentDownloadUrlNil(b bool)`
+`func (o *Submission) SetErrorMessageNil(b bool)`
 
- SetPermanentDownloadUrlNil sets the value for PermanentDownloadUrl to be an explicit nil
+ SetErrorMessageNil sets the value for ErrorMessage to be an explicit nil
 
-### UnsetPermanentDownloadUrl
-`func (o *Submission) UnsetPermanentDownloadUrl()`
+### UnsetErrorMessage
+`func (o *Submission) UnsetErrorMessage()`
 
-UnsetPermanentDownloadUrl ensures that no value is present for PermanentDownloadUrl, not even an explicit nil
-### GetPreviewDownloadUrl
+UnsetErrorMessage ensures that no value is present for ErrorMessage, not even an explicit nil
+### GetMetadata
 
-`func (o *Submission) GetPreviewDownloadUrl() string`
+`func (o *Submission) GetMetadata() map[string]interface{}`
 
-GetPreviewDownloadUrl returns the PreviewDownloadUrl field if non-nil, zero value otherwise.
+GetMetadata returns the Metadata field if non-nil, zero value otherwise.
 
-### GetPreviewDownloadUrlOk
+### GetMetadataOk
 
-`func (o *Submission) GetPreviewDownloadUrlOk() (*string, bool)`
+`func (o *Submission) GetMetadataOk() (*map[string]interface{}, bool)`
 
-GetPreviewDownloadUrlOk returns a tuple with the PreviewDownloadUrl field if it's non-nil, zero value otherwise
+GetMetadataOk returns a tuple with the Metadata field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetPreviewDownloadUrl
+### SetMetadata
 
-`func (o *Submission) SetPreviewDownloadUrl(v string)`
+`func (o *Submission) SetMetadata(v map[string]interface{})`
 
-SetPreviewDownloadUrl sets PreviewDownloadUrl field to given value.
+SetMetadata sets Metadata field to given value.
 
 
-### SetPreviewDownloadUrlNil
+### GetHasPassword
 
-`func (o *Submission) SetPreviewDownloadUrlNil(b bool)`
+`func (o *Submission) GetHasPassword() bool`
 
- SetPreviewDownloadUrlNil sets the value for PreviewDownloadUrl to be an explicit nil
+GetHasPassword returns the HasPassword field if non-nil, zero value otherwise.
 
-### UnsetPreviewDownloadUrl
-`func (o *Submission) UnsetPreviewDownloadUrl()`
+### GetHasPasswordOk
 
-UnsetPreviewDownloadUrl ensures that no value is present for PreviewDownloadUrl, not even an explicit nil
-### GetPreviewGeneratedAt
+`func (o *Submission) GetHasPasswordOk() (*bool, bool)`
 
-`func (o *Submission) GetPreviewGeneratedAt() string`
-
-GetPreviewGeneratedAt returns the PreviewGeneratedAt field if non-nil, zero value otherwise.
-
-### GetPreviewGeneratedAtOk
-
-`func (o *Submission) GetPreviewGeneratedAtOk() (*string, bool)`
-
-GetPreviewGeneratedAtOk returns a tuple with the PreviewGeneratedAt field if it's non-nil, zero value otherwise
+GetHasPasswordOk returns a tuple with the HasPassword field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetPreviewGeneratedAt
+### SetHasPassword
 
-`func (o *Submission) SetPreviewGeneratedAt(v string)`
+`func (o *Submission) SetHasPassword(v bool)`
 
-SetPreviewGeneratedAt sets PreviewGeneratedAt field to given value.
+SetHasPassword sets HasPassword field to given value.
 
 
-### SetPreviewGeneratedAtNil
+### GetSignatureRequests
 
-`func (o *Submission) SetPreviewGeneratedAtNil(b bool)`
+`func (o *Submission) GetSignatureRequests() []SignatureRequest`
 
- SetPreviewGeneratedAtNil sets the value for PreviewGeneratedAt to be an explicit nil
+GetSignatureRequests returns the SignatureRequests field if non-nil, zero value otherwise.
 
-### UnsetPreviewGeneratedAt
-`func (o *Submission) UnsetPreviewGeneratedAt()`
+### GetSignatureRequestsOk
 
-UnsetPreviewGeneratedAt ensures that no value is present for PreviewGeneratedAt, not even an explicit nil
-### GetAuditTrailDownloadUrl
+`func (o *Submission) GetSignatureRequestsOk() (*[]SignatureRequest, bool)`
 
-`func (o *Submission) GetAuditTrailDownloadUrl() string`
-
-GetAuditTrailDownloadUrl returns the AuditTrailDownloadUrl field if non-nil, zero value otherwise.
-
-### GetAuditTrailDownloadUrlOk
-
-`func (o *Submission) GetAuditTrailDownloadUrlOk() (*string, bool)`
-
-GetAuditTrailDownloadUrlOk returns a tuple with the AuditTrailDownloadUrl field if it's non-nil, zero value otherwise
+GetSignatureRequestsOk returns a tuple with the SignatureRequests field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetAuditTrailDownloadUrl
+### SetSignatureRequests
 
-`func (o *Submission) SetAuditTrailDownloadUrl(v string)`
+`func (o *Submission) SetSignatureRequests(v []SignatureRequest)`
 
-SetAuditTrailDownloadUrl sets AuditTrailDownloadUrl field to given value.
+SetSignatureRequests sets SignatureRequests field to given value.
 
 
-### SetAuditTrailDownloadUrlNil
-
-`func (o *Submission) SetAuditTrailDownloadUrlNil(b bool)`
-
- SetAuditTrailDownloadUrlNil sets the value for AuditTrailDownloadUrl to be an explicit nil
-
-### UnsetAuditTrailDownloadUrl
-`func (o *Submission) UnsetAuditTrailDownloadUrl()`
-
-UnsetAuditTrailDownloadUrl ensures that no value is present for AuditTrailDownloadUrl, not even an explicit nil
 ### GetActions
 
 `func (o *Submission) GetActions() []SubmissionAction`
@@ -701,101 +418,206 @@ and a boolean to check if the value has been set.
 SetActions sets Actions field to given value.
 
 
-### GetSource
+### GetTruncatedText
 
-`func (o *Submission) GetSource() string`
+`func (o *Submission) GetTruncatedText() map[string][]string`
 
-GetSource returns the Source field if non-nil, zero value otherwise.
+GetTruncatedText returns the TruncatedText field if non-nil, zero value otherwise.
 
-### GetSourceOk
+### GetTruncatedTextOk
 
-`func (o *Submission) GetSourceOk() (*string, bool)`
+`func (o *Submission) GetTruncatedTextOk() (*map[string][]string, bool)`
 
-GetSourceOk returns a tuple with the Source field if it's non-nil, zero value otherwise
+GetTruncatedTextOk returns a tuple with the TruncatedText field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetSource
+### SetTruncatedText
 
-`func (o *Submission) SetSource(v string)`
+`func (o *Submission) SetTruncatedText(v map[string][]string)`
 
-SetSource sets Source field to given value.
+SetTruncatedText sets TruncatedText field to given value.
 
-### HasSource
 
-`func (o *Submission) HasSource() bool`
+### SetTruncatedTextNil
 
-HasSource returns a boolean if a field has been set.
+`func (o *Submission) SetTruncatedTextNil(b bool)`
 
-### GetReferrer
+ SetTruncatedTextNil sets the value for TruncatedText to be an explicit nil
 
-`func (o *Submission) GetReferrer() string`
+### UnsetTruncatedText
+`func (o *Submission) UnsetTruncatedText()`
 
-GetReferrer returns the Referrer field if non-nil, zero value otherwise.
+UnsetTruncatedText ensures that no value is present for TruncatedText, not even an explicit nil
+### GetFiles
 
-### GetReferrerOk
+`func (o *Submission) GetFiles() SubmissionFiles`
 
-`func (o *Submission) GetReferrerOk() (*string, bool)`
+GetFiles returns the Files field if non-nil, zero value otherwise.
 
-GetReferrerOk returns a tuple with the Referrer field if it's non-nil, zero value otherwise
+### GetFilesOk
+
+`func (o *Submission) GetFilesOk() (*SubmissionFiles, bool)`
+
+GetFilesOk returns a tuple with the Files field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetReferrer
+### SetFiles
 
-`func (o *Submission) SetReferrer(v string)`
+`func (o *Submission) SetFiles(v SubmissionFiles)`
 
-SetReferrer sets Referrer field to given value.
+SetFiles sets Files field to given value.
 
-### HasReferrer
 
-`func (o *Submission) HasReferrer() bool`
+### GetPreviewGeneratedAt
 
-HasReferrer returns a boolean if a field has been set.
+`func (o *Submission) GetPreviewGeneratedAt() time.Time`
 
-### SetReferrerNil
+GetPreviewGeneratedAt returns the PreviewGeneratedAt field if non-nil, zero value otherwise.
 
-`func (o *Submission) SetReferrerNil(b bool)`
+### GetPreviewGeneratedAtOk
 
- SetReferrerNil sets the value for Referrer to be an explicit nil
+`func (o *Submission) GetPreviewGeneratedAtOk() (*time.Time, bool)`
 
-### UnsetReferrer
-`func (o *Submission) UnsetReferrer()`
-
-UnsetReferrer ensures that no value is present for Referrer, not even an explicit nil
-### GetData
-
-`func (o *Submission) GetData() map[string]interface{}`
-
-GetData returns the Data field if non-nil, zero value otherwise.
-
-### GetDataOk
-
-`func (o *Submission) GetDataOk() (*map[string]interface{}, bool)`
-
-GetDataOk returns a tuple with the Data field if it's non-nil, zero value otherwise
+GetPreviewGeneratedAtOk returns a tuple with the PreviewGeneratedAt field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetData
+### SetPreviewGeneratedAt
 
-`func (o *Submission) SetData(v map[string]interface{})`
+`func (o *Submission) SetPreviewGeneratedAt(v time.Time)`
 
-SetData sets Data field to given value.
+SetPreviewGeneratedAt sets PreviewGeneratedAt field to given value.
 
-### HasData
 
-`func (o *Submission) HasData() bool`
+### SetPreviewGeneratedAtNil
 
-HasData returns a boolean if a field has been set.
+`func (o *Submission) SetPreviewGeneratedAtNil(b bool)`
 
-### SetDataNil
+ SetPreviewGeneratedAtNil sets the value for PreviewGeneratedAt to be an explicit nil
 
-`func (o *Submission) SetDataNil(b bool)`
+### UnsetPreviewGeneratedAt
+`func (o *Submission) UnsetPreviewGeneratedAt()`
 
- SetDataNil sets the value for Data to be an explicit nil
+UnsetPreviewGeneratedAt ensures that no value is present for PreviewGeneratedAt, not even an explicit nil
+### GetExpired
 
-### UnsetData
-`func (o *Submission) UnsetData()`
+`func (o *Submission) GetExpired() bool`
 
-UnsetData ensures that no value is present for Data, not even an explicit nil
+GetExpired returns the Expired field if non-nil, zero value otherwise.
+
+### GetExpiredOk
+
+`func (o *Submission) GetExpiredOk() (*bool, bool)`
+
+GetExpiredOk returns a tuple with the Expired field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetExpired
+
+`func (o *Submission) SetExpired(v bool)`
+
+SetExpired sets Expired field to given value.
+
+
+### GetExpiresAt
+
+`func (o *Submission) GetExpiresAt() time.Time`
+
+GetExpiresAt returns the ExpiresAt field if non-nil, zero value otherwise.
+
+### GetExpiresAtOk
+
+`func (o *Submission) GetExpiresAtOk() (*time.Time, bool)`
+
+GetExpiresAtOk returns a tuple with the ExpiresAt field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetExpiresAt
+
+`func (o *Submission) SetExpiresAt(v time.Time)`
+
+SetExpiresAt sets ExpiresAt field to given value.
+
+
+### SetExpiresAtNil
+
+`func (o *Submission) SetExpiresAtNil(b bool)`
+
+ SetExpiresAtNil sets the value for ExpiresAt to be an explicit nil
+
+### UnsetExpiresAt
+`func (o *Submission) UnsetExpiresAt()`
+
+UnsetExpiresAt ensures that no value is present for ExpiresAt, not even an explicit nil
+### GetProcessedAt
+
+`func (o *Submission) GetProcessedAt() time.Time`
+
+GetProcessedAt returns the ProcessedAt field if non-nil, zero value otherwise.
+
+### GetProcessedAtOk
+
+`func (o *Submission) GetProcessedAtOk() (*time.Time, bool)`
+
+GetProcessedAtOk returns a tuple with the ProcessedAt field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetProcessedAt
+
+`func (o *Submission) SetProcessedAt(v time.Time)`
+
+SetProcessedAt sets ProcessedAt field to given value.
+
+
+### SetProcessedAtNil
+
+`func (o *Submission) SetProcessedAtNil(b bool)`
+
+ SetProcessedAtNil sets the value for ProcessedAt to be an explicit nil
+
+### UnsetProcessedAt
+`func (o *Submission) UnsetProcessedAt()`
+
+UnsetProcessedAt ensures that no value is present for ProcessedAt, not even an explicit nil
+### GetCreatedAt
+
+`func (o *Submission) GetCreatedAt() time.Time`
+
+GetCreatedAt returns the CreatedAt field if non-nil, zero value otherwise.
+
+### GetCreatedAtOk
+
+`func (o *Submission) GetCreatedAtOk() (*time.Time, bool)`
+
+GetCreatedAtOk returns a tuple with the CreatedAt field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetCreatedAt
+
+`func (o *Submission) SetCreatedAt(v time.Time)`
+
+SetCreatedAt sets CreatedAt field to given value.
+
+
+### GetUpdatedAt
+
+`func (o *Submission) GetUpdatedAt() time.Time`
+
+GetUpdatedAt returns the UpdatedAt field if non-nil, zero value otherwise.
+
+### GetUpdatedAtOk
+
+`func (o *Submission) GetUpdatedAtOk() (*time.Time, bool)`
+
+GetUpdatedAtOk returns a tuple with the UpdatedAt field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetUpdatedAt
+
+`func (o *Submission) SetUpdatedAt(v time.Time)`
+
+SetUpdatedAt sets UpdatedAt field to given value.
+
+
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
