@@ -19,7 +19,7 @@ import (
 // checks if the TemplateSummary type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &TemplateSummary{}
 
-// TemplateSummary A template in a list. Get a template by its ID for its HTML, defaults, field dependency rules and published versions.
+// TemplateSummary A template in a list: its name, type, folder, latest published version and whether it's ready. Get a template by its ID for its settings, its PDF in full, its HTML, defaults, field dependency rules and published versions.
 type TemplateSummary struct {
 	// The template's ID.
 	Id string `json:"id"`
@@ -29,68 +29,22 @@ type TemplateSummary struct {
 	Description NullableString `json:"description"`
 	// `pdf`: fields placed on an uploaded PDF. `html`: a PDF rendered from HTML and SCSS. It can't be changed after the template is created.
 	TemplateType TemplateType `json:"template_type"`
-	// Whether the template can generate PDFs. HTML templates are always ready. A PDF template is ready once its document has been processed (`document.state` is `processed`).
+	// Whether the template can generate PDFs. HTML templates are always ready. A PDF template is ready once DocSpring has stored its PDF, made an image of each page and finished looking for fields on each page, which can be after `document.state` becomes `processed`. A PDF template with no PDF (`document` is null) isn't ready.
 	Ready bool `json:"ready"`
-	// The PDF of a PDF template. Null for HTML templates, and for a PDF template that has no PDF yet.
-	Document NullableTemplateDocument `json:"document"`
+	// The PDF of a PDF template: its file name, page count and processing state. Null for HTML templates, and for a PDF template that has no PDF yet.
+	Document NullableTemplateDocumentSummary `json:"document"`
 	// The ID of the folder the template is in. Null for a template at the root. Setting it moves the template and all of its published versions.
 	ParentFolderId NullableString `json:"parent_folder_id"`
 	// The path of the folder the template is in, such as `/Contracts`. `/` for a template at the root.
 	Path string `json:"path"`
-	// The published version this is, such as `1.2.0`. Null for the draft.
-	Version NullableString `json:"version"`
 	// The template's latest published version. Null if no version has been published.
 	LatestVersion NullableString `json:"latest_version"`
 	// When this version was published. Null for the draft.
 	VersionPublishedAt NullableTime `json:"version_published_at"`
 	// A locked template can't be changed or deleted until it's unlocked (`locked` can always be changed).
 	Locked bool `json:"locked"`
-	// Print the submission ID in the footer of each page of PDFs signed through signature requests.
-	AddSignatureRequestSubmissionIdFooters bool `json:"add_signature_request_submission_id_footers"`
-	// The language AI field setup names fields in: `auto` uses the form's language when it's written in the Latin alphabet without accents, and English otherwise; `english` always uses English; `form_language` uses the form's language and script. New templates take it from your account's template settings. Null for HTML templates.
-	AiFieldNamingLanguage NullableAiFieldNamingLanguage `json:"ai_field_naming_language"`
-	// Accept submission data with properties that aren't fields of the template.
-	AllowAdditionalProperties bool `json:"allow_additional_properties"`
-	// Visual forms and signature request forms show the Continue button as soon as the required fields are filled in, without visiting each optional field. The `allowSkippingOptionalFields` embed option overrides it.
-	AllowSkippingOptionalFields bool `json:"allow_skipping_optional_fields"`
-	// The hosted form that /templates/{template_id}/form shows when its URL has no `mode` parameter: `web` (the web form), `visual` (the visual form, where fields are filled in on the PDF) or `dual` (both, in tabs). HTML templates have no visual form, so `web` is the only value they accept.
-	DefaultFormMode TemplateFormMode `json:"default_form_mode"`
-	// Generate PDFs whose text and check fields stay fillable ("Generate Editable PDFs"). A submission's `editable` overrides it.
-	EditableSubmissions bool `json:"editable_submissions"`
-	// The sites where the template's signature requests, forms and embedded template editor can be loaded: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work). When it's empty, live signature requests don't load on any site, and the embedded template editor loads on every site.
-	EmbedDomains []string `json:"embed_domains"`
-	// Allow the embedded template editor to change sensitive template settings (webhooks, redirect URL, encryption, public access, expiration and so on).
-	EmbedEditAllowSettings bool `json:"embed_edit_allow_settings"`
-	// Allow the embedded template editor to publish, restore, compare and delete published versions.
-	EmbedEditAllowVersioning bool `json:"embed_edit_allow_versioning"`
-	// Allow the embedded template editor to replace the template's PDF.
-	EmbedEditAllowDocumentReplacement bool `json:"embed_edit_allow_document_replacement"`
-	// Encrypt generated PDFs with `encrypt_pdfs_password`.
-	EncryptPdfs bool `json:"encrypt_pdfs"`
-	// Whether `encrypt_pdfs_password` is set.
-	HasEncryptPdfsPassword bool `json:"has_encrypt_pdfs_password"`
-	// Delete each submission's data and PDF after `expire_after` `expiration_interval`.
-	ExpireSubmissions bool `json:"expire_submissions"`
-	// How many `expiration_interval`s a submission's data and PDF are kept for, when `expire_submissions` is on. At most 5256000 (10 years in minutes).
-	ExpireAfter int32 `json:"expire_after"`
-	// The unit of `expire_after`.
-	ExpirationInterval ExpirationInterval `json:"expiration_interval"`
-	// Add the audit trail to the end of PDFs signed through signature requests.
-	MergeAuditTrailPdf bool `json:"merge_audit_trail_pdf"`
-	// Date fields also accept NN/NN/YYYY dates (with slashes, dashes or dots), read in the order of the template's default date format: month first for %m/%d/%Y, day first for %d/%m/%Y. When false, date fields only accept YYYY-MM-DD. Applies to PDF templates: an HTML template's date fields only accept YYYY-MM-DD. Date fields that include a time take RFC 3339 date-times either way.
-	ParseDatesUsingTemplateDateFormat bool `json:"parse_dates_using_template_date_format"`
-	// Allow anyone with a submission's ID to download its PDF.
-	PublicSubmissions bool `json:"public_submissions"`
-	// Allow anyone to fill in the template's web form.
-	PublicWebForm bool `json:"public_web_form"`
-	// Where the web form sends people after they submit it.
-	RedirectUrl NullableString `json:"redirect_url"`
-	// Whether `slack_webhook_url` is set.
-	HasSlackWebhookUrl bool `json:"has_slack_webhook_url"`
 	// When the draft was last changed.
 	LastChangedAt NullableTime `json:"last_changed_at"`
-	// Who last changed the draft: a user in your account, an API token, or someone using the embedded template editor. Null if no change has been recorded.
-	LastChangedBy NullableTemplateActor `json:"last_changed_by"`
 	// When the template was created.
 	CreatedAt time.Time `json:"created_at"`
 	// When the template was last updated.
@@ -104,7 +58,7 @@ type _TemplateSummary TemplateSummary
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewTemplateSummary(id string, name NullableString, description NullableString, templateType TemplateType, ready bool, document NullableTemplateDocument, parentFolderId NullableString, path string, version NullableString, latestVersion NullableString, versionPublishedAt NullableTime, locked bool, addSignatureRequestSubmissionIdFooters bool, aiFieldNamingLanguage NullableAiFieldNamingLanguage, allowAdditionalProperties bool, allowSkippingOptionalFields bool, defaultFormMode TemplateFormMode, editableSubmissions bool, embedDomains []string, embedEditAllowSettings bool, embedEditAllowVersioning bool, embedEditAllowDocumentReplacement bool, encryptPdfs bool, hasEncryptPdfsPassword bool, expireSubmissions bool, expireAfter int32, expirationInterval ExpirationInterval, mergeAuditTrailPdf bool, parseDatesUsingTemplateDateFormat bool, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, hasSlackWebhookUrl bool, lastChangedAt NullableTime, lastChangedBy NullableTemplateActor, createdAt time.Time, updatedAt time.Time) *TemplateSummary {
+func NewTemplateSummary(id string, name NullableString, description NullableString, templateType TemplateType, ready bool, document NullableTemplateDocumentSummary, parentFolderId NullableString, path string, latestVersion NullableString, versionPublishedAt NullableTime, locked bool, lastChangedAt NullableTime, createdAt time.Time, updatedAt time.Time) *TemplateSummary {
 	this := TemplateSummary{}
 	this.Id = id
 	this.Name = name
@@ -114,33 +68,10 @@ func NewTemplateSummary(id string, name NullableString, description NullableStri
 	this.Document = document
 	this.ParentFolderId = parentFolderId
 	this.Path = path
-	this.Version = version
 	this.LatestVersion = latestVersion
 	this.VersionPublishedAt = versionPublishedAt
 	this.Locked = locked
-	this.AddSignatureRequestSubmissionIdFooters = addSignatureRequestSubmissionIdFooters
-	this.AiFieldNamingLanguage = aiFieldNamingLanguage
-	this.AllowAdditionalProperties = allowAdditionalProperties
-	this.AllowSkippingOptionalFields = allowSkippingOptionalFields
-	this.DefaultFormMode = defaultFormMode
-	this.EditableSubmissions = editableSubmissions
-	this.EmbedDomains = embedDomains
-	this.EmbedEditAllowSettings = embedEditAllowSettings
-	this.EmbedEditAllowVersioning = embedEditAllowVersioning
-	this.EmbedEditAllowDocumentReplacement = embedEditAllowDocumentReplacement
-	this.EncryptPdfs = encryptPdfs
-	this.HasEncryptPdfsPassword = hasEncryptPdfsPassword
-	this.ExpireSubmissions = expireSubmissions
-	this.ExpireAfter = expireAfter
-	this.ExpirationInterval = expirationInterval
-	this.MergeAuditTrailPdf = mergeAuditTrailPdf
-	this.ParseDatesUsingTemplateDateFormat = parseDatesUsingTemplateDateFormat
-	this.PublicSubmissions = publicSubmissions
-	this.PublicWebForm = publicWebForm
-	this.RedirectUrl = redirectUrl
-	this.HasSlackWebhookUrl = hasSlackWebhookUrl
 	this.LastChangedAt = lastChangedAt
-	this.LastChangedBy = lastChangedBy
 	this.CreatedAt = createdAt
 	this.UpdatedAt = updatedAt
 	return &this
@@ -279,10 +210,10 @@ func (o *TemplateSummary) SetReady(v bool) {
 }
 
 // GetDocument returns the Document field value
-// If the value is explicit nil, the zero value for TemplateDocument will be returned
-func (o *TemplateSummary) GetDocument() TemplateDocument {
+// If the value is explicit nil, the zero value for TemplateDocumentSummary will be returned
+func (o *TemplateSummary) GetDocument() TemplateDocumentSummary {
 	if o == nil || o.Document.Get() == nil {
-		var ret TemplateDocument
+		var ret TemplateDocumentSummary
 		return ret
 	}
 
@@ -292,7 +223,7 @@ func (o *TemplateSummary) GetDocument() TemplateDocument {
 // GetDocumentOk returns a tuple with the Document field value
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *TemplateSummary) GetDocumentOk() (*TemplateDocument, bool) {
+func (o *TemplateSummary) GetDocumentOk() (*TemplateDocumentSummary, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -300,7 +231,7 @@ func (o *TemplateSummary) GetDocumentOk() (*TemplateDocument, bool) {
 }
 
 // SetDocument sets field value
-func (o *TemplateSummary) SetDocument(v TemplateDocument) {
+func (o *TemplateSummary) SetDocument(v TemplateDocumentSummary) {
 	o.Document.Set(&v)
 }
 
@@ -352,32 +283,6 @@ func (o *TemplateSummary) GetPathOk() (*string, bool) {
 // SetPath sets field value
 func (o *TemplateSummary) SetPath(v string) {
 	o.Path = v
-}
-
-// GetVersion returns the Version field value
-// If the value is explicit nil, the zero value for string will be returned
-func (o *TemplateSummary) GetVersion() string {
-	if o == nil || o.Version.Get() == nil {
-		var ret string
-		return ret
-	}
-
-	return *o.Version.Get()
-}
-
-// GetVersionOk returns a tuple with the Version field value
-// and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *TemplateSummary) GetVersionOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.Version.Get(), o.Version.IsSet()
-}
-
-// SetVersion sets field value
-func (o *TemplateSummary) SetVersion(v string) {
-	o.Version.Set(&v)
 }
 
 // GetLatestVersion returns the LatestVersion field value
@@ -456,514 +361,6 @@ func (o *TemplateSummary) SetLocked(v bool) {
 	o.Locked = v
 }
 
-// GetAddSignatureRequestSubmissionIdFooters returns the AddSignatureRequestSubmissionIdFooters field value
-func (o *TemplateSummary) GetAddSignatureRequestSubmissionIdFooters() bool {
-	if o == nil {
-		var ret bool
-		return ret
-	}
-
-	return o.AddSignatureRequestSubmissionIdFooters
-}
-
-// GetAddSignatureRequestSubmissionIdFootersOk returns a tuple with the AddSignatureRequestSubmissionIdFooters field value
-// and a boolean to check if the value has been set.
-func (o *TemplateSummary) GetAddSignatureRequestSubmissionIdFootersOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.AddSignatureRequestSubmissionIdFooters, true
-}
-
-// SetAddSignatureRequestSubmissionIdFooters sets field value
-func (o *TemplateSummary) SetAddSignatureRequestSubmissionIdFooters(v bool) {
-	o.AddSignatureRequestSubmissionIdFooters = v
-}
-
-// GetAiFieldNamingLanguage returns the AiFieldNamingLanguage field value
-// If the value is explicit nil, the zero value for AiFieldNamingLanguage will be returned
-func (o *TemplateSummary) GetAiFieldNamingLanguage() AiFieldNamingLanguage {
-	if o == nil || o.AiFieldNamingLanguage.Get() == nil {
-		var ret AiFieldNamingLanguage
-		return ret
-	}
-
-	return *o.AiFieldNamingLanguage.Get()
-}
-
-// GetAiFieldNamingLanguageOk returns a tuple with the AiFieldNamingLanguage field value
-// and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *TemplateSummary) GetAiFieldNamingLanguageOk() (*AiFieldNamingLanguage, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.AiFieldNamingLanguage.Get(), o.AiFieldNamingLanguage.IsSet()
-}
-
-// SetAiFieldNamingLanguage sets field value
-func (o *TemplateSummary) SetAiFieldNamingLanguage(v AiFieldNamingLanguage) {
-	o.AiFieldNamingLanguage.Set(&v)
-}
-
-// GetAllowAdditionalProperties returns the AllowAdditionalProperties field value
-func (o *TemplateSummary) GetAllowAdditionalProperties() bool {
-	if o == nil {
-		var ret bool
-		return ret
-	}
-
-	return o.AllowAdditionalProperties
-}
-
-// GetAllowAdditionalPropertiesOk returns a tuple with the AllowAdditionalProperties field value
-// and a boolean to check if the value has been set.
-func (o *TemplateSummary) GetAllowAdditionalPropertiesOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.AllowAdditionalProperties, true
-}
-
-// SetAllowAdditionalProperties sets field value
-func (o *TemplateSummary) SetAllowAdditionalProperties(v bool) {
-	o.AllowAdditionalProperties = v
-}
-
-// GetAllowSkippingOptionalFields returns the AllowSkippingOptionalFields field value
-func (o *TemplateSummary) GetAllowSkippingOptionalFields() bool {
-	if o == nil {
-		var ret bool
-		return ret
-	}
-
-	return o.AllowSkippingOptionalFields
-}
-
-// GetAllowSkippingOptionalFieldsOk returns a tuple with the AllowSkippingOptionalFields field value
-// and a boolean to check if the value has been set.
-func (o *TemplateSummary) GetAllowSkippingOptionalFieldsOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.AllowSkippingOptionalFields, true
-}
-
-// SetAllowSkippingOptionalFields sets field value
-func (o *TemplateSummary) SetAllowSkippingOptionalFields(v bool) {
-	o.AllowSkippingOptionalFields = v
-}
-
-// GetDefaultFormMode returns the DefaultFormMode field value
-func (o *TemplateSummary) GetDefaultFormMode() TemplateFormMode {
-	if o == nil {
-		var ret TemplateFormMode
-		return ret
-	}
-
-	return o.DefaultFormMode
-}
-
-// GetDefaultFormModeOk returns a tuple with the DefaultFormMode field value
-// and a boolean to check if the value has been set.
-func (o *TemplateSummary) GetDefaultFormModeOk() (*TemplateFormMode, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.DefaultFormMode, true
-}
-
-// SetDefaultFormMode sets field value
-func (o *TemplateSummary) SetDefaultFormMode(v TemplateFormMode) {
-	o.DefaultFormMode = v
-}
-
-// GetEditableSubmissions returns the EditableSubmissions field value
-func (o *TemplateSummary) GetEditableSubmissions() bool {
-	if o == nil {
-		var ret bool
-		return ret
-	}
-
-	return o.EditableSubmissions
-}
-
-// GetEditableSubmissionsOk returns a tuple with the EditableSubmissions field value
-// and a boolean to check if the value has been set.
-func (o *TemplateSummary) GetEditableSubmissionsOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.EditableSubmissions, true
-}
-
-// SetEditableSubmissions sets field value
-func (o *TemplateSummary) SetEditableSubmissions(v bool) {
-	o.EditableSubmissions = v
-}
-
-// GetEmbedDomains returns the EmbedDomains field value
-func (o *TemplateSummary) GetEmbedDomains() []string {
-	if o == nil {
-		var ret []string
-		return ret
-	}
-
-	return o.EmbedDomains
-}
-
-// GetEmbedDomainsOk returns a tuple with the EmbedDomains field value
-// and a boolean to check if the value has been set.
-func (o *TemplateSummary) GetEmbedDomainsOk() ([]string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.EmbedDomains, true
-}
-
-// SetEmbedDomains sets field value
-func (o *TemplateSummary) SetEmbedDomains(v []string) {
-	o.EmbedDomains = v
-}
-
-// GetEmbedEditAllowSettings returns the EmbedEditAllowSettings field value
-func (o *TemplateSummary) GetEmbedEditAllowSettings() bool {
-	if o == nil {
-		var ret bool
-		return ret
-	}
-
-	return o.EmbedEditAllowSettings
-}
-
-// GetEmbedEditAllowSettingsOk returns a tuple with the EmbedEditAllowSettings field value
-// and a boolean to check if the value has been set.
-func (o *TemplateSummary) GetEmbedEditAllowSettingsOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.EmbedEditAllowSettings, true
-}
-
-// SetEmbedEditAllowSettings sets field value
-func (o *TemplateSummary) SetEmbedEditAllowSettings(v bool) {
-	o.EmbedEditAllowSettings = v
-}
-
-// GetEmbedEditAllowVersioning returns the EmbedEditAllowVersioning field value
-func (o *TemplateSummary) GetEmbedEditAllowVersioning() bool {
-	if o == nil {
-		var ret bool
-		return ret
-	}
-
-	return o.EmbedEditAllowVersioning
-}
-
-// GetEmbedEditAllowVersioningOk returns a tuple with the EmbedEditAllowVersioning field value
-// and a boolean to check if the value has been set.
-func (o *TemplateSummary) GetEmbedEditAllowVersioningOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.EmbedEditAllowVersioning, true
-}
-
-// SetEmbedEditAllowVersioning sets field value
-func (o *TemplateSummary) SetEmbedEditAllowVersioning(v bool) {
-	o.EmbedEditAllowVersioning = v
-}
-
-// GetEmbedEditAllowDocumentReplacement returns the EmbedEditAllowDocumentReplacement field value
-func (o *TemplateSummary) GetEmbedEditAllowDocumentReplacement() bool {
-	if o == nil {
-		var ret bool
-		return ret
-	}
-
-	return o.EmbedEditAllowDocumentReplacement
-}
-
-// GetEmbedEditAllowDocumentReplacementOk returns a tuple with the EmbedEditAllowDocumentReplacement field value
-// and a boolean to check if the value has been set.
-func (o *TemplateSummary) GetEmbedEditAllowDocumentReplacementOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.EmbedEditAllowDocumentReplacement, true
-}
-
-// SetEmbedEditAllowDocumentReplacement sets field value
-func (o *TemplateSummary) SetEmbedEditAllowDocumentReplacement(v bool) {
-	o.EmbedEditAllowDocumentReplacement = v
-}
-
-// GetEncryptPdfs returns the EncryptPdfs field value
-func (o *TemplateSummary) GetEncryptPdfs() bool {
-	if o == nil {
-		var ret bool
-		return ret
-	}
-
-	return o.EncryptPdfs
-}
-
-// GetEncryptPdfsOk returns a tuple with the EncryptPdfs field value
-// and a boolean to check if the value has been set.
-func (o *TemplateSummary) GetEncryptPdfsOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.EncryptPdfs, true
-}
-
-// SetEncryptPdfs sets field value
-func (o *TemplateSummary) SetEncryptPdfs(v bool) {
-	o.EncryptPdfs = v
-}
-
-// GetHasEncryptPdfsPassword returns the HasEncryptPdfsPassword field value
-func (o *TemplateSummary) GetHasEncryptPdfsPassword() bool {
-	if o == nil {
-		var ret bool
-		return ret
-	}
-
-	return o.HasEncryptPdfsPassword
-}
-
-// GetHasEncryptPdfsPasswordOk returns a tuple with the HasEncryptPdfsPassword field value
-// and a boolean to check if the value has been set.
-func (o *TemplateSummary) GetHasEncryptPdfsPasswordOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.HasEncryptPdfsPassword, true
-}
-
-// SetHasEncryptPdfsPassword sets field value
-func (o *TemplateSummary) SetHasEncryptPdfsPassword(v bool) {
-	o.HasEncryptPdfsPassword = v
-}
-
-// GetExpireSubmissions returns the ExpireSubmissions field value
-func (o *TemplateSummary) GetExpireSubmissions() bool {
-	if o == nil {
-		var ret bool
-		return ret
-	}
-
-	return o.ExpireSubmissions
-}
-
-// GetExpireSubmissionsOk returns a tuple with the ExpireSubmissions field value
-// and a boolean to check if the value has been set.
-func (o *TemplateSummary) GetExpireSubmissionsOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.ExpireSubmissions, true
-}
-
-// SetExpireSubmissions sets field value
-func (o *TemplateSummary) SetExpireSubmissions(v bool) {
-	o.ExpireSubmissions = v
-}
-
-// GetExpireAfter returns the ExpireAfter field value
-func (o *TemplateSummary) GetExpireAfter() int32 {
-	if o == nil {
-		var ret int32
-		return ret
-	}
-
-	return o.ExpireAfter
-}
-
-// GetExpireAfterOk returns a tuple with the ExpireAfter field value
-// and a boolean to check if the value has been set.
-func (o *TemplateSummary) GetExpireAfterOk() (*int32, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.ExpireAfter, true
-}
-
-// SetExpireAfter sets field value
-func (o *TemplateSummary) SetExpireAfter(v int32) {
-	o.ExpireAfter = v
-}
-
-// GetExpirationInterval returns the ExpirationInterval field value
-func (o *TemplateSummary) GetExpirationInterval() ExpirationInterval {
-	if o == nil {
-		var ret ExpirationInterval
-		return ret
-	}
-
-	return o.ExpirationInterval
-}
-
-// GetExpirationIntervalOk returns a tuple with the ExpirationInterval field value
-// and a boolean to check if the value has been set.
-func (o *TemplateSummary) GetExpirationIntervalOk() (*ExpirationInterval, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.ExpirationInterval, true
-}
-
-// SetExpirationInterval sets field value
-func (o *TemplateSummary) SetExpirationInterval(v ExpirationInterval) {
-	o.ExpirationInterval = v
-}
-
-// GetMergeAuditTrailPdf returns the MergeAuditTrailPdf field value
-func (o *TemplateSummary) GetMergeAuditTrailPdf() bool {
-	if o == nil {
-		var ret bool
-		return ret
-	}
-
-	return o.MergeAuditTrailPdf
-}
-
-// GetMergeAuditTrailPdfOk returns a tuple with the MergeAuditTrailPdf field value
-// and a boolean to check if the value has been set.
-func (o *TemplateSummary) GetMergeAuditTrailPdfOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.MergeAuditTrailPdf, true
-}
-
-// SetMergeAuditTrailPdf sets field value
-func (o *TemplateSummary) SetMergeAuditTrailPdf(v bool) {
-	o.MergeAuditTrailPdf = v
-}
-
-// GetParseDatesUsingTemplateDateFormat returns the ParseDatesUsingTemplateDateFormat field value
-func (o *TemplateSummary) GetParseDatesUsingTemplateDateFormat() bool {
-	if o == nil {
-		var ret bool
-		return ret
-	}
-
-	return o.ParseDatesUsingTemplateDateFormat
-}
-
-// GetParseDatesUsingTemplateDateFormatOk returns a tuple with the ParseDatesUsingTemplateDateFormat field value
-// and a boolean to check if the value has been set.
-func (o *TemplateSummary) GetParseDatesUsingTemplateDateFormatOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.ParseDatesUsingTemplateDateFormat, true
-}
-
-// SetParseDatesUsingTemplateDateFormat sets field value
-func (o *TemplateSummary) SetParseDatesUsingTemplateDateFormat(v bool) {
-	o.ParseDatesUsingTemplateDateFormat = v
-}
-
-// GetPublicSubmissions returns the PublicSubmissions field value
-func (o *TemplateSummary) GetPublicSubmissions() bool {
-	if o == nil {
-		var ret bool
-		return ret
-	}
-
-	return o.PublicSubmissions
-}
-
-// GetPublicSubmissionsOk returns a tuple with the PublicSubmissions field value
-// and a boolean to check if the value has been set.
-func (o *TemplateSummary) GetPublicSubmissionsOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.PublicSubmissions, true
-}
-
-// SetPublicSubmissions sets field value
-func (o *TemplateSummary) SetPublicSubmissions(v bool) {
-	o.PublicSubmissions = v
-}
-
-// GetPublicWebForm returns the PublicWebForm field value
-func (o *TemplateSummary) GetPublicWebForm() bool {
-	if o == nil {
-		var ret bool
-		return ret
-	}
-
-	return o.PublicWebForm
-}
-
-// GetPublicWebFormOk returns a tuple with the PublicWebForm field value
-// and a boolean to check if the value has been set.
-func (o *TemplateSummary) GetPublicWebFormOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.PublicWebForm, true
-}
-
-// SetPublicWebForm sets field value
-func (o *TemplateSummary) SetPublicWebForm(v bool) {
-	o.PublicWebForm = v
-}
-
-// GetRedirectUrl returns the RedirectUrl field value
-// If the value is explicit nil, the zero value for string will be returned
-func (o *TemplateSummary) GetRedirectUrl() string {
-	if o == nil || o.RedirectUrl.Get() == nil {
-		var ret string
-		return ret
-	}
-
-	return *o.RedirectUrl.Get()
-}
-
-// GetRedirectUrlOk returns a tuple with the RedirectUrl field value
-// and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *TemplateSummary) GetRedirectUrlOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.RedirectUrl.Get(), o.RedirectUrl.IsSet()
-}
-
-// SetRedirectUrl sets field value
-func (o *TemplateSummary) SetRedirectUrl(v string) {
-	o.RedirectUrl.Set(&v)
-}
-
-// GetHasSlackWebhookUrl returns the HasSlackWebhookUrl field value
-func (o *TemplateSummary) GetHasSlackWebhookUrl() bool {
-	if o == nil {
-		var ret bool
-		return ret
-	}
-
-	return o.HasSlackWebhookUrl
-}
-
-// GetHasSlackWebhookUrlOk returns a tuple with the HasSlackWebhookUrl field value
-// and a boolean to check if the value has been set.
-func (o *TemplateSummary) GetHasSlackWebhookUrlOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.HasSlackWebhookUrl, true
-}
-
-// SetHasSlackWebhookUrl sets field value
-func (o *TemplateSummary) SetHasSlackWebhookUrl(v bool) {
-	o.HasSlackWebhookUrl = v
-}
-
 // GetLastChangedAt returns the LastChangedAt field value
 // If the value is explicit nil, the zero value for time.Time will be returned
 func (o *TemplateSummary) GetLastChangedAt() time.Time {
@@ -988,32 +385,6 @@ func (o *TemplateSummary) GetLastChangedAtOk() (*time.Time, bool) {
 // SetLastChangedAt sets field value
 func (o *TemplateSummary) SetLastChangedAt(v time.Time) {
 	o.LastChangedAt.Set(&v)
-}
-
-// GetLastChangedBy returns the LastChangedBy field value
-// If the value is explicit nil, the zero value for TemplateActor will be returned
-func (o *TemplateSummary) GetLastChangedBy() TemplateActor {
-	if o == nil || o.LastChangedBy.Get() == nil {
-		var ret TemplateActor
-		return ret
-	}
-
-	return *o.LastChangedBy.Get()
-}
-
-// GetLastChangedByOk returns a tuple with the LastChangedBy field value
-// and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *TemplateSummary) GetLastChangedByOk() (*TemplateActor, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.LastChangedBy.Get(), o.LastChangedBy.IsSet()
-}
-
-// SetLastChangedBy sets field value
-func (o *TemplateSummary) SetLastChangedBy(v TemplateActor) {
-	o.LastChangedBy.Set(&v)
 }
 
 // GetCreatedAt returns the CreatedAt field value
@@ -1082,33 +453,10 @@ func (o TemplateSummary) ToMap() (map[string]interface{}, error) {
 	toSerialize["document"] = o.Document.Get()
 	toSerialize["parent_folder_id"] = o.ParentFolderId.Get()
 	toSerialize["path"] = o.Path
-	toSerialize["version"] = o.Version.Get()
 	toSerialize["latest_version"] = o.LatestVersion.Get()
 	toSerialize["version_published_at"] = o.VersionPublishedAt.Get()
 	toSerialize["locked"] = o.Locked
-	toSerialize["add_signature_request_submission_id_footers"] = o.AddSignatureRequestSubmissionIdFooters
-	toSerialize["ai_field_naming_language"] = o.AiFieldNamingLanguage.Get()
-	toSerialize["allow_additional_properties"] = o.AllowAdditionalProperties
-	toSerialize["allow_skipping_optional_fields"] = o.AllowSkippingOptionalFields
-	toSerialize["default_form_mode"] = o.DefaultFormMode
-	toSerialize["editable_submissions"] = o.EditableSubmissions
-	toSerialize["embed_domains"] = o.EmbedDomains
-	toSerialize["embed_edit_allow_settings"] = o.EmbedEditAllowSettings
-	toSerialize["embed_edit_allow_versioning"] = o.EmbedEditAllowVersioning
-	toSerialize["embed_edit_allow_document_replacement"] = o.EmbedEditAllowDocumentReplacement
-	toSerialize["encrypt_pdfs"] = o.EncryptPdfs
-	toSerialize["has_encrypt_pdfs_password"] = o.HasEncryptPdfsPassword
-	toSerialize["expire_submissions"] = o.ExpireSubmissions
-	toSerialize["expire_after"] = o.ExpireAfter
-	toSerialize["expiration_interval"] = o.ExpirationInterval
-	toSerialize["merge_audit_trail_pdf"] = o.MergeAuditTrailPdf
-	toSerialize["parse_dates_using_template_date_format"] = o.ParseDatesUsingTemplateDateFormat
-	toSerialize["public_submissions"] = o.PublicSubmissions
-	toSerialize["public_web_form"] = o.PublicWebForm
-	toSerialize["redirect_url"] = o.RedirectUrl.Get()
-	toSerialize["has_slack_webhook_url"] = o.HasSlackWebhookUrl
 	toSerialize["last_changed_at"] = o.LastChangedAt.Get()
-	toSerialize["last_changed_by"] = o.LastChangedBy.Get()
 	toSerialize["created_at"] = o.CreatedAt
 	toSerialize["updated_at"] = o.UpdatedAt
 
@@ -1132,33 +480,10 @@ func (o *TemplateSummary) UnmarshalJSON(data []byte) (err error) {
 		"document",
 		"parent_folder_id",
 		"path",
-		"version",
 		"latest_version",
 		"version_published_at",
 		"locked",
-		"add_signature_request_submission_id_footers",
-		"ai_field_naming_language",
-		"allow_additional_properties",
-		"allow_skipping_optional_fields",
-		"default_form_mode",
-		"editable_submissions",
-		"embed_domains",
-		"embed_edit_allow_settings",
-		"embed_edit_allow_versioning",
-		"embed_edit_allow_document_replacement",
-		"encrypt_pdfs",
-		"has_encrypt_pdfs_password",
-		"expire_submissions",
-		"expire_after",
-		"expiration_interval",
-		"merge_audit_trail_pdf",
-		"parse_dates_using_template_date_format",
-		"public_submissions",
-		"public_web_form",
-		"redirect_url",
-		"has_slack_webhook_url",
 		"last_changed_at",
-		"last_changed_by",
 		"created_at",
 		"updated_at",
 	}
@@ -1198,33 +523,10 @@ func (o *TemplateSummary) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "document")
 		delete(additionalProperties, "parent_folder_id")
 		delete(additionalProperties, "path")
-		delete(additionalProperties, "version")
 		delete(additionalProperties, "latest_version")
 		delete(additionalProperties, "version_published_at")
 		delete(additionalProperties, "locked")
-		delete(additionalProperties, "add_signature_request_submission_id_footers")
-		delete(additionalProperties, "ai_field_naming_language")
-		delete(additionalProperties, "allow_additional_properties")
-		delete(additionalProperties, "allow_skipping_optional_fields")
-		delete(additionalProperties, "default_form_mode")
-		delete(additionalProperties, "editable_submissions")
-		delete(additionalProperties, "embed_domains")
-		delete(additionalProperties, "embed_edit_allow_settings")
-		delete(additionalProperties, "embed_edit_allow_versioning")
-		delete(additionalProperties, "embed_edit_allow_document_replacement")
-		delete(additionalProperties, "encrypt_pdfs")
-		delete(additionalProperties, "has_encrypt_pdfs_password")
-		delete(additionalProperties, "expire_submissions")
-		delete(additionalProperties, "expire_after")
-		delete(additionalProperties, "expiration_interval")
-		delete(additionalProperties, "merge_audit_trail_pdf")
-		delete(additionalProperties, "parse_dates_using_template_date_format")
-		delete(additionalProperties, "public_submissions")
-		delete(additionalProperties, "public_web_form")
-		delete(additionalProperties, "redirect_url")
-		delete(additionalProperties, "has_slack_webhook_url")
 		delete(additionalProperties, "last_changed_at")
-		delete(additionalProperties, "last_changed_by")
 		delete(additionalProperties, "created_at")
 		delete(additionalProperties, "updated_at")
 		o.AdditionalProperties = additionalProperties

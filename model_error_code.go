@@ -41,6 +41,8 @@ const (
 	ERRORCODE_SERVICE_UNAVAILABLE ErrorCode = "service_unavailable"
 	ERRORCODE_UPSTREAM_TIMEOUT ErrorCode = "upstream_timeout"
 	ERRORCODE_POLLING_TIMEOUT ErrorCode = "polling_timeout"
+	ERRORCODE_IDEMPOTENCY_KEY_IN_USE ErrorCode = "idempotency_key_in_use"
+	ERRORCODE_IDEMPOTENCY_KEY_REUSED ErrorCode = "idempotency_key_reused"
 )
 
 // All allowed values of ErrorCode enum
@@ -66,6 +68,8 @@ var AllowedErrorCodeEnumValues = []ErrorCode{
 	"service_unavailable",
 	"upstream_timeout",
 	"polling_timeout",
+	"idempotency_key_in_use",
+	"idempotency_key_reused",
 }
 
 func (v *ErrorCode) UnmarshalJSON(src []byte) error {

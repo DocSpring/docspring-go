@@ -26,7 +26,7 @@ type ErrorDetail struct {
 	Message string `json:"message"`
 	// A JSON pointer to the value in the request body (RFC 6901). An empty string means the whole body. In a submission's `data_errors`, it points into the request that created the submission.
 	Pointer *string `json:"pointer,omitempty"`
-	// The query parameter the detail is about.
+	// The query parameter or header the detail is about.
 	Parameter *string `json:"parameter,omitempty"`
 	// For a batch item that failed validation, the ID of the submission recorded for it.
 	SubmissionId *string `json:"submission_id,omitempty"`

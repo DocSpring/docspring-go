@@ -4,14 +4,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Data** | [**[]Submission**](Submission.md) | The items on this page. | 
+**Data** | [**[]SubmissionSummary**](SubmissionSummary.md) | The items on this page. | 
 **NextCursor** | **NullableString** | Pass it as `cursor` to get the next page. Null on the last page. | 
 
 ## Methods
 
 ### NewSubmissionList
 
-`func NewSubmissionList(data []Submission, nextCursor NullableString, ) *SubmissionList`
+`func NewSubmissionList(data []SubmissionSummary, nextCursor NullableString, ) *SubmissionList`
 
 NewSubmissionList instantiates a new SubmissionList object
 This constructor will assign default values to properties that have it defined,
@@ -28,20 +28,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetData
 
-`func (o *SubmissionList) GetData() []Submission`
+`func (o *SubmissionList) GetData() []SubmissionSummary`
 
 GetData returns the Data field if non-nil, zero value otherwise.
 
 ### GetDataOk
 
-`func (o *SubmissionList) GetDataOk() (*[]Submission, bool)`
+`func (o *SubmissionList) GetDataOk() (*[]SubmissionSummary, bool)`
 
 GetDataOk returns a tuple with the Data field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetData
 
-`func (o *SubmissionList) SetData(v []Submission)`
+`func (o *SubmissionList) SetData(v []SubmissionSummary)`
 
 SetData sets Data field to given value.
 

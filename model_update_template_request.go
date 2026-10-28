@@ -39,7 +39,7 @@ type UpdateTemplateRequest struct {
 	DefaultFormMode *TemplateFormMode `json:"default_form_mode,omitempty"`
 	// Generate PDFs whose text and check fields stay fillable ("Generate Editable PDFs"). A submission's `editable` overrides it.
 	EditableSubmissions *bool `json:"editable_submissions,omitempty"`
-	// The sites where the template's signature requests, forms and embedded template editor can be loaded: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work). When it's empty, live signature requests don't load on any site, and the embedded template editor loads on every site.
+	// The sites that can embed the template's live signature requests and its embedded template editor: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work). Browsers open a live signature request in a frame only on these sites (and DocSpring's), so with an empty list it can't be embedded anywhere; a test signature request can be embedded on any site. The embedded template editor loads only for a page on one of these sites (by its Referer or Origin header), and on any site when the list is empty. Forms embedded on a page (Visual Forms JS and the simple form) aren't restricted.
 	EmbedDomains []string `json:"embed_domains,omitempty"`
 	// Allow the embedded template editor to change sensitive template settings (webhooks, redirect URL, encryption, public access, expiration and so on).
 	EmbedEditAllowSettings *bool `json:"embed_edit_allow_settings,omitempty"`
@@ -89,6 +89,8 @@ type UpdateTemplateRequest struct {
 	FooterHtml NullableString `json:"footer_html,omitempty"`
 	// Null resets the options to their defaults.
 	HtmlEngineOptions NullableHtmlEngineOptionsInput `json:"html_engine_options,omitempty"`
+	// Whether an HTML template HTML-escapes the values it prints. When true, `{{ value }}` prints a value as text, so a `<` or `&` in it is printed as that character, and `{{ value | raw }}` prints a value as HTML. New HTML templates default to true. Templates created before October 2026, or with API v1, default to false, which prints every value as HTML. Null for PDF templates.
+	HtmlEscapeData *bool `json:"html_escape_data,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -1332,6 +1334,38 @@ func (o *UpdateTemplateRequest) UnsetHtmlEngineOptions() {
 	o.HtmlEngineOptions.Unset()
 }
 
+// GetHtmlEscapeData returns the HtmlEscapeData field value if set, zero value otherwise.
+func (o *UpdateTemplateRequest) GetHtmlEscapeData() bool {
+	if o == nil || IsNil(o.HtmlEscapeData) {
+		var ret bool
+		return ret
+	}
+	return *o.HtmlEscapeData
+}
+
+// GetHtmlEscapeDataOk returns a tuple with the HtmlEscapeData field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateTemplateRequest) GetHtmlEscapeDataOk() (*bool, bool) {
+	if o == nil || IsNil(o.HtmlEscapeData) {
+		return nil, false
+	}
+	return o.HtmlEscapeData, true
+}
+
+// HasHtmlEscapeData returns a boolean if a field has been set.
+func (o *UpdateTemplateRequest) HasHtmlEscapeData() bool {
+	if o != nil && !IsNil(o.HtmlEscapeData) {
+		return true
+	}
+
+	return false
+}
+
+// SetHtmlEscapeData gets a reference to the given bool and assigns it to the HtmlEscapeData field.
+func (o *UpdateTemplateRequest) SetHtmlEscapeData(v bool) {
+	o.HtmlEscapeData = &v
+}
+
 func (o UpdateTemplateRequest) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -1447,6 +1481,9 @@ func (o UpdateTemplateRequest) ToMap() (map[string]interface{}, error) {
 	if o.HtmlEngineOptions.IsSet() {
 		toSerialize["html_engine_options"] = o.HtmlEngineOptions.Get()
 	}
+	if !IsNil(o.HtmlEscapeData) {
+		toSerialize["html_escape_data"] = o.HtmlEscapeData
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -1504,6 +1541,7 @@ func (o *UpdateTemplateRequest) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "header_html")
 		delete(additionalProperties, "footer_html")
 		delete(additionalProperties, "html_engine_options")
+		delete(additionalProperties, "html_escape_data")
 		o.AdditionalProperties = additionalProperties
 	}
 

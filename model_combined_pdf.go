@@ -27,7 +27,7 @@ type CombinedPdf struct {
 	State CombinedPdfState `json:"state"`
 	// The PDFs to merge, in order.
 	SourcePdfs []CombinedPdfSource `json:"source_pdfs"`
-	// Your own data about the combined PDF, such as an ID from your app.
+	// Your own data about the combined PDF, such as an ID from your app. Its `pdf_filename` key names the PDF's file (`files.pdf.filename`, and its download): a `.pdf` ending is removed, each run of characters other than letters, digits, `-`, `_` and `.` becomes one `_`, and the first 128 characters are kept, then `.pdf` is added. Without it, the file is named after the combined PDF's ID (`com_1234567890abcdef01.pdf`).
 	Metadata map[string]interface{} `json:"metadata"`
 	// Whether the PDF needs a password to open (`password`).
 	HasPassword bool `json:"has_password"`

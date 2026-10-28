@@ -5,11 +5,11 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Filename** | **NullableString** | The PDF's file name. Null until a `document_url` has been downloaded. | 
-**Md5** | **NullableString** | The MD5 hash of the PDF. | 
-**State** | [**TemplateDocumentState**](TemplateDocumentState.md) | `pending` while DocSpring processes the PDF, then `processed`. `password_required`, `malformed_pdf` and `unknown_error` mean the PDF couldn't be processed, and `error_message` says why: upload it again or upload another one. `downloading` while DocSpring downloads a `document_url`, then as for an upload. `download_failed` means it couldn't be downloaded, and `error_message` says why. A template keeps its PDF while a new one is downloaded, and when it couldn't be. | 
+**State** | [**TemplateDocumentState**](TemplateDocumentState.md) | `pending` while DocSpring processes the PDF, then `processed` (`ready` says when its pages are done too). `password_required`, `malformed_pdf` and `unknown_error` mean the PDF couldn't be processed, and `error_message` says why: upload it again or upload another one. `downloading` while DocSpring downloads a `document_url`, then as for an upload. `download_failed` means it couldn't be downloaded, and `error_message` says why. A template keeps its PDF while a new one is downloaded, and when it couldn't be. | 
 **ErrorMessage** | **NullableString** | Why the PDF couldn't be processed or downloaded, and how to fix it. Null unless `state` is an error. | 
-**FieldReimportState** | [**FieldReimportState**](FieldReimportState.md) | Whether the fields are being re-imported from this PDF (`reimport_fields` when the PDF was replaced): `requested` while DocSpring processes the PDF, then `imported`, or `no_fields` when the PDF had no fillable fields and the template kept its fields. `none` when no re-import was asked for, or when it couldn't run (the PDF couldn't be processed, or the template was locked or published while it was). | 
 **PageCount** | **int32** | 0 until the PDF has been processed. | 
+**Md5** | **NullableString** | The MD5 hash of the PDF. | 
+**FieldReimportState** | [**FieldReimportState**](FieldReimportState.md) | Whether the fields are being re-imported from this PDF (`reimport_fields` when the PDF was replaced): `requested` while DocSpring processes the PDF, then `imported`, or `no_fields` when the PDF had no fillable fields and the template kept its fields. `none` when no re-import was asked for, or when it couldn't run (the PDF couldn't be processed, or the template was locked or published while it was). | 
 **PageDimensions** | **[][]float32** | Each page's width and height in PDF points. Null until the PDF has been processed. | 
 **HasFillableFields** | **NullableBool** | Whether the PDF has fillable form fields. Null until DocSpring has read the PDF. | 
 **PageProcessingStatuses** | [**[]TemplatePageProcessingStatus**](TemplatePageProcessingStatus.md) | How processing is going on each page, in page order: its image, and its fields when DocSpring sets them up (`detect_fields` when the template was created). `state` becomes `processed` once every page is done. Empty until DocSpring has read the PDF, and for PDFs uploaded before DocSpring recorded page statuses. | 
@@ -21,7 +21,7 @@ Name | Type | Description | Notes
 
 ### NewTemplateDocument
 
-`func NewTemplateDocument(filename NullableString, md5 NullableString, state TemplateDocumentState, errorMessage NullableString, fieldReimportState FieldReimportState, pageCount int32, pageDimensions [][]float32, hasFillableFields NullableBool, pageProcessingStatuses []TemplatePageProcessingStatus, fieldLogicStatus NullableTemplateFieldLogicStatus, downloadUrl NullableString, permanentUrl NullableString, ) *TemplateDocument`
+`func NewTemplateDocument(filename NullableString, state TemplateDocumentState, errorMessage NullableString, pageCount int32, md5 NullableString, fieldReimportState FieldReimportState, pageDimensions [][]float32, hasFillableFields NullableBool, pageProcessingStatuses []TemplatePageProcessingStatus, fieldLogicStatus NullableTemplateFieldLogicStatus, downloadUrl NullableString, permanentUrl NullableString, ) *TemplateDocument`
 
 NewTemplateDocument instantiates a new TemplateDocument object
 This constructor will assign default values to properties that have it defined,
@@ -66,36 +66,6 @@ SetFilename sets Filename field to given value.
 `func (o *TemplateDocument) UnsetFilename()`
 
 UnsetFilename ensures that no value is present for Filename, not even an explicit nil
-### GetMd5
-
-`func (o *TemplateDocument) GetMd5() string`
-
-GetMd5 returns the Md5 field if non-nil, zero value otherwise.
-
-### GetMd5Ok
-
-`func (o *TemplateDocument) GetMd5Ok() (*string, bool)`
-
-GetMd5Ok returns a tuple with the Md5 field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetMd5
-
-`func (o *TemplateDocument) SetMd5(v string)`
-
-SetMd5 sets Md5 field to given value.
-
-
-### SetMd5Nil
-
-`func (o *TemplateDocument) SetMd5Nil(b bool)`
-
- SetMd5Nil sets the value for Md5 to be an explicit nil
-
-### UnsetMd5
-`func (o *TemplateDocument) UnsetMd5()`
-
-UnsetMd5 ensures that no value is present for Md5, not even an explicit nil
 ### GetState
 
 `func (o *TemplateDocument) GetState() TemplateDocumentState`
@@ -146,26 +116,6 @@ SetErrorMessage sets ErrorMessage field to given value.
 `func (o *TemplateDocument) UnsetErrorMessage()`
 
 UnsetErrorMessage ensures that no value is present for ErrorMessage, not even an explicit nil
-### GetFieldReimportState
-
-`func (o *TemplateDocument) GetFieldReimportState() FieldReimportState`
-
-GetFieldReimportState returns the FieldReimportState field if non-nil, zero value otherwise.
-
-### GetFieldReimportStateOk
-
-`func (o *TemplateDocument) GetFieldReimportStateOk() (*FieldReimportState, bool)`
-
-GetFieldReimportStateOk returns a tuple with the FieldReimportState field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetFieldReimportState
-
-`func (o *TemplateDocument) SetFieldReimportState(v FieldReimportState)`
-
-SetFieldReimportState sets FieldReimportState field to given value.
-
-
 ### GetPageCount
 
 `func (o *TemplateDocument) GetPageCount() int32`
@@ -184,6 +134,56 @@ and a boolean to check if the value has been set.
 `func (o *TemplateDocument) SetPageCount(v int32)`
 
 SetPageCount sets PageCount field to given value.
+
+
+### GetMd5
+
+`func (o *TemplateDocument) GetMd5() string`
+
+GetMd5 returns the Md5 field if non-nil, zero value otherwise.
+
+### GetMd5Ok
+
+`func (o *TemplateDocument) GetMd5Ok() (*string, bool)`
+
+GetMd5Ok returns a tuple with the Md5 field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetMd5
+
+`func (o *TemplateDocument) SetMd5(v string)`
+
+SetMd5 sets Md5 field to given value.
+
+
+### SetMd5Nil
+
+`func (o *TemplateDocument) SetMd5Nil(b bool)`
+
+ SetMd5Nil sets the value for Md5 to be an explicit nil
+
+### UnsetMd5
+`func (o *TemplateDocument) UnsetMd5()`
+
+UnsetMd5 ensures that no value is present for Md5, not even an explicit nil
+### GetFieldReimportState
+
+`func (o *TemplateDocument) GetFieldReimportState() FieldReimportState`
+
+GetFieldReimportState returns the FieldReimportState field if non-nil, zero value otherwise.
+
+### GetFieldReimportStateOk
+
+`func (o *TemplateDocument) GetFieldReimportStateOk() (*FieldReimportState, bool)`
+
+GetFieldReimportStateOk returns a tuple with the FieldReimportState field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetFieldReimportState
+
+`func (o *TemplateDocument) SetFieldReimportState(v FieldReimportState)`
+
+SetFieldReimportState sets FieldReimportState field to given value.
 
 
 ### GetPageDimensions

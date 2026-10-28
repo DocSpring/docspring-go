@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 **Code** | **string** | What's wrong: `required`, `unknown_property`, `type`, `enum`, `format`, a JSON Schema keyword such as `minLength`, or a DocSpring code. New codes can be added. | 
 **Message** | **string** | A human-readable explanation of the problem. | 
 **Pointer** | Pointer to **string** | A JSON pointer to the value in the request body (RFC 6901). An empty string means the whole body. In a submission's `data_errors`, it points into the request that created the submission. | [optional] 
-**Parameter** | Pointer to **string** | The query parameter the detail is about. | [optional] 
+**Parameter** | Pointer to **string** | The query parameter or header the detail is about. | [optional] 
 **SubmissionId** | Pointer to **string** | For a batch item that failed validation, the ID of the submission recorded for it. | [optional] 
 
 ## Methods

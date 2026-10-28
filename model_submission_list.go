@@ -21,7 +21,7 @@ var _ MappedNullable = &SubmissionList{}
 // SubmissionList A page of submissions, newest first.
 type SubmissionList struct {
 	// The items on this page.
-	Data []Submission `json:"data"`
+	Data []SubmissionSummary `json:"data"`
 	// Pass it as `cursor` to get the next page. Null on the last page.
 	NextCursor NullableString `json:"next_cursor"`
 	AdditionalProperties map[string]interface{}
@@ -33,7 +33,7 @@ type _SubmissionList SubmissionList
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewSubmissionList(data []Submission, nextCursor NullableString) *SubmissionList {
+func NewSubmissionList(data []SubmissionSummary, nextCursor NullableString) *SubmissionList {
 	this := SubmissionList{}
 	this.Data = data
 	this.NextCursor = nextCursor
@@ -49,9 +49,9 @@ func NewSubmissionListWithDefaults() *SubmissionList {
 }
 
 // GetData returns the Data field value
-func (o *SubmissionList) GetData() []Submission {
+func (o *SubmissionList) GetData() []SubmissionSummary {
 	if o == nil {
-		var ret []Submission
+		var ret []SubmissionSummary
 		return ret
 	}
 
@@ -60,7 +60,7 @@ func (o *SubmissionList) GetData() []Submission {
 
 // GetDataOk returns a tuple with the Data field value
 // and a boolean to check if the value has been set.
-func (o *SubmissionList) GetDataOk() ([]Submission, bool) {
+func (o *SubmissionList) GetDataOk() ([]SubmissionSummary, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -68,7 +68,7 @@ func (o *SubmissionList) GetDataOk() ([]Submission, bool) {
 }
 
 // SetData sets field value
-func (o *SubmissionList) SetData(v []Submission) {
+func (o *SubmissionList) SetData(v []SubmissionSummary) {
 	o.Data = v
 }
 

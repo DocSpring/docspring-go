@@ -152,6 +152,20 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
+	t.Run("Test ClientAPIService CreateTemplatePreview", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var templateId string
+
+		resp, httpRes, err := apiClient.ClientAPI.CreateTemplatePreview(context.Background(), templateId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
 	t.Run("Test ClientAPIService CreateWebhook", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
@@ -421,6 +435,21 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 		var templateId string
 
 		resp, httpRes, err := apiClient.ClientAPI.GetTemplatePageImages(context.Background(), templateId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService GetTemplatePreview", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var templateId string
+		var previewId string
+
+		resp, httpRes, err := apiClient.ClientAPI.GetTemplatePreview(context.Background(), templateId, previewId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)

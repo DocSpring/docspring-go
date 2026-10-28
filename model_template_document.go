@@ -22,16 +22,16 @@ var _ MappedNullable = &TemplateDocument{}
 type TemplateDocument struct {
 	// The PDF's file name. Null until a `document_url` has been downloaded.
 	Filename NullableString `json:"filename"`
-	// The MD5 hash of the PDF.
-	Md5 NullableString `json:"md5"`
-	// `pending` while DocSpring processes the PDF, then `processed`. `password_required`, `malformed_pdf` and `unknown_error` mean the PDF couldn't be processed, and `error_message` says why: upload it again or upload another one. `downloading` while DocSpring downloads a `document_url`, then as for an upload. `download_failed` means it couldn't be downloaded, and `error_message` says why. A template keeps its PDF while a new one is downloaded, and when it couldn't be.
+	// `pending` while DocSpring processes the PDF, then `processed` (`ready` says when its pages are done too). `password_required`, `malformed_pdf` and `unknown_error` mean the PDF couldn't be processed, and `error_message` says why: upload it again or upload another one. `downloading` while DocSpring downloads a `document_url`, then as for an upload. `download_failed` means it couldn't be downloaded, and `error_message` says why. A template keeps its PDF while a new one is downloaded, and when it couldn't be.
 	State TemplateDocumentState `json:"state"`
 	// Why the PDF couldn't be processed or downloaded, and how to fix it. Null unless `state` is an error.
 	ErrorMessage NullableString `json:"error_message"`
-	// Whether the fields are being re-imported from this PDF (`reimport_fields` when the PDF was replaced): `requested` while DocSpring processes the PDF, then `imported`, or `no_fields` when the PDF had no fillable fields and the template kept its fields. `none` when no re-import was asked for, or when it couldn't run (the PDF couldn't be processed, or the template was locked or published while it was).
-	FieldReimportState FieldReimportState `json:"field_reimport_state"`
 	// 0 until the PDF has been processed.
 	PageCount int32 `json:"page_count"`
+	// The MD5 hash of the PDF.
+	Md5 NullableString `json:"md5"`
+	// Whether the fields are being re-imported from this PDF (`reimport_fields` when the PDF was replaced): `requested` while DocSpring processes the PDF, then `imported`, or `no_fields` when the PDF had no fillable fields and the template kept its fields. `none` when no re-import was asked for, or when it couldn't run (the PDF couldn't be processed, or the template was locked or published while it was).
+	FieldReimportState FieldReimportState `json:"field_reimport_state"`
 	// Each page's width and height in PDF points. Null until the PDF has been processed.
 	PageDimensions [][]float32 `json:"page_dimensions"`
 	// Whether the PDF has fillable form fields. Null until DocSpring has read the PDF.
@@ -52,14 +52,14 @@ type _TemplateDocument TemplateDocument
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewTemplateDocument(filename NullableString, md5 NullableString, state TemplateDocumentState, errorMessage NullableString, fieldReimportState FieldReimportState, pageCount int32, pageDimensions [][]float32, hasFillableFields NullableBool, pageProcessingStatuses []TemplatePageProcessingStatus, fieldLogicStatus NullableTemplateFieldLogicStatus, downloadUrl NullableString, permanentUrl NullableString) *TemplateDocument {
+func NewTemplateDocument(filename NullableString, state TemplateDocumentState, errorMessage NullableString, pageCount int32, md5 NullableString, fieldReimportState FieldReimportState, pageDimensions [][]float32, hasFillableFields NullableBool, pageProcessingStatuses []TemplatePageProcessingStatus, fieldLogicStatus NullableTemplateFieldLogicStatus, downloadUrl NullableString, permanentUrl NullableString) *TemplateDocument {
 	this := TemplateDocument{}
 	this.Filename = filename
-	this.Md5 = md5
 	this.State = state
 	this.ErrorMessage = errorMessage
-	this.FieldReimportState = fieldReimportState
 	this.PageCount = pageCount
+	this.Md5 = md5
+	this.FieldReimportState = fieldReimportState
 	this.PageDimensions = pageDimensions
 	this.HasFillableFields = hasFillableFields
 	this.PageProcessingStatuses = pageProcessingStatuses
@@ -101,32 +101,6 @@ func (o *TemplateDocument) GetFilenameOk() (*string, bool) {
 // SetFilename sets field value
 func (o *TemplateDocument) SetFilename(v string) {
 	o.Filename.Set(&v)
-}
-
-// GetMd5 returns the Md5 field value
-// If the value is explicit nil, the zero value for string will be returned
-func (o *TemplateDocument) GetMd5() string {
-	if o == nil || o.Md5.Get() == nil {
-		var ret string
-		return ret
-	}
-
-	return *o.Md5.Get()
-}
-
-// GetMd5Ok returns a tuple with the Md5 field value
-// and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *TemplateDocument) GetMd5Ok() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.Md5.Get(), o.Md5.IsSet()
-}
-
-// SetMd5 sets field value
-func (o *TemplateDocument) SetMd5(v string) {
-	o.Md5.Set(&v)
 }
 
 // GetState returns the State field value
@@ -179,30 +153,6 @@ func (o *TemplateDocument) SetErrorMessage(v string) {
 	o.ErrorMessage.Set(&v)
 }
 
-// GetFieldReimportState returns the FieldReimportState field value
-func (o *TemplateDocument) GetFieldReimportState() FieldReimportState {
-	if o == nil {
-		var ret FieldReimportState
-		return ret
-	}
-
-	return o.FieldReimportState
-}
-
-// GetFieldReimportStateOk returns a tuple with the FieldReimportState field value
-// and a boolean to check if the value has been set.
-func (o *TemplateDocument) GetFieldReimportStateOk() (*FieldReimportState, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.FieldReimportState, true
-}
-
-// SetFieldReimportState sets field value
-func (o *TemplateDocument) SetFieldReimportState(v FieldReimportState) {
-	o.FieldReimportState = v
-}
-
 // GetPageCount returns the PageCount field value
 func (o *TemplateDocument) GetPageCount() int32 {
 	if o == nil {
@@ -225,6 +175,56 @@ func (o *TemplateDocument) GetPageCountOk() (*int32, bool) {
 // SetPageCount sets field value
 func (o *TemplateDocument) SetPageCount(v int32) {
 	o.PageCount = v
+}
+
+// GetMd5 returns the Md5 field value
+// If the value is explicit nil, the zero value for string will be returned
+func (o *TemplateDocument) GetMd5() string {
+	if o == nil || o.Md5.Get() == nil {
+		var ret string
+		return ret
+	}
+
+	return *o.Md5.Get()
+}
+
+// GetMd5Ok returns a tuple with the Md5 field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *TemplateDocument) GetMd5Ok() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Md5.Get(), o.Md5.IsSet()
+}
+
+// SetMd5 sets field value
+func (o *TemplateDocument) SetMd5(v string) {
+	o.Md5.Set(&v)
+}
+
+// GetFieldReimportState returns the FieldReimportState field value
+func (o *TemplateDocument) GetFieldReimportState() FieldReimportState {
+	if o == nil {
+		var ret FieldReimportState
+		return ret
+	}
+
+	return o.FieldReimportState
+}
+
+// GetFieldReimportStateOk returns a tuple with the FieldReimportState field value
+// and a boolean to check if the value has been set.
+func (o *TemplateDocument) GetFieldReimportStateOk() (*FieldReimportState, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.FieldReimportState, true
+}
+
+// SetFieldReimportState sets field value
+func (o *TemplateDocument) SetFieldReimportState(v FieldReimportState) {
+	o.FieldReimportState = v
 }
 
 // GetPageDimensions returns the PageDimensions field value
@@ -392,11 +392,11 @@ func (o TemplateDocument) MarshalJSON() ([]byte, error) {
 func (o TemplateDocument) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["filename"] = o.Filename.Get()
-	toSerialize["md5"] = o.Md5.Get()
 	toSerialize["state"] = o.State
 	toSerialize["error_message"] = o.ErrorMessage.Get()
-	toSerialize["field_reimport_state"] = o.FieldReimportState
 	toSerialize["page_count"] = o.PageCount
+	toSerialize["md5"] = o.Md5.Get()
+	toSerialize["field_reimport_state"] = o.FieldReimportState
 	if o.PageDimensions != nil {
 		toSerialize["page_dimensions"] = o.PageDimensions
 	}
@@ -414,11 +414,11 @@ func (o *TemplateDocument) UnmarshalJSON(data []byte) (err error) {
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"filename",
-		"md5",
 		"state",
 		"error_message",
-		"field_reimport_state",
 		"page_count",
+		"md5",
+		"field_reimport_state",
 		"page_dimensions",
 		"has_fillable_fields",
 		"page_processing_statuses",

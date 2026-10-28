@@ -45,6 +45,10 @@
 
 * `POLLING_TIMEOUT` (value: `"polling_timeout"`)
 
+* `IDEMPOTENCY_KEY_IN_USE` (value: `"idempotency_key_in_use"`)
+
+* `IDEMPOTENCY_KEY_REUSED` (value: `"idempotency_key_reused"`)
+
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

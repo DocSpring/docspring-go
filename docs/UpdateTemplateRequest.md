@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 **AllowSkippingOptionalFields** | Pointer to **bool** | Visual forms and signature request forms show the Continue button as soon as the required fields are filled in, without visiting each optional field. The `allowSkippingOptionalFields` embed option overrides it. | [optional] 
 **DefaultFormMode** | Pointer to [**TemplateFormMode**](TemplateFormMode.md) | The hosted form that /templates/{template_id}/form shows when its URL has no `mode` parameter: `web` (the web form), `visual` (the visual form, where fields are filled in on the PDF) or `dual` (both, in tabs). HTML templates have no visual form, so `web` is the only value they accept. | [optional] 
 **EditableSubmissions** | Pointer to **bool** | Generate PDFs whose text and check fields stay fillable ("Generate Editable PDFs"). A submission's `editable` overrides it. | [optional] 
-**EmbedDomains** | Pointer to **[]string** | The sites where the template's signature requests, forms and embedded template editor can be loaded: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work). When it's empty, live signature requests don't load on any site, and the embedded template editor loads on every site. | [optional] 
+**EmbedDomains** | Pointer to **[]string** | The sites that can embed the template's live signature requests and its embedded template editor: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work). Browsers open a live signature request in a frame only on these sites (and DocSpring's), so with an empty list it can't be embedded anywhere; a test signature request can be embedded on any site. The embedded template editor loads only for a page on one of these sites (by its Referer or Origin header), and on any site when the list is empty. Forms embedded on a page (Visual Forms JS and the simple form) aren't restricted. | [optional] 
 **EmbedEditAllowSettings** | Pointer to **bool** | Allow the embedded template editor to change sensitive template settings (webhooks, redirect URL, encryption, public access, expiration and so on). | [optional] 
 **EmbedEditAllowVersioning** | Pointer to **bool** | Allow the embedded template editor to publish, restore, compare and delete published versions. | [optional] 
 **EmbedEditAllowDocumentReplacement** | Pointer to **bool** | Allow the embedded template editor to replace the template's PDF. | [optional] 
@@ -39,6 +39,7 @@ Name | Type | Description | Notes
 **HeaderHtml** | Pointer to **NullableString** | The HTML printed at the top of each page of an HTML template. | [optional] 
 **FooterHtml** | Pointer to **NullableString** | The HTML printed at the bottom of each page of an HTML template. | [optional] 
 **HtmlEngineOptions** | Pointer to [**NullableHtmlEngineOptionsInput**](HtmlEngineOptionsInput.md) | Null resets the options to their defaults. | [optional] 
+**HtmlEscapeData** | Pointer to **bool** | Whether an HTML template HTML-escapes the values it prints. When true, `{{ value }}` prints a value as text, so a `&lt;` or `&amp;` in it is printed as that character, and `{{ value | raw }}` prints a value as HTML. New HTML templates default to true. Templates created before October 2026, or with API v1, default to false, which prints every value as HTML. Null for PDF templates. | [optional] 
 
 ## Methods
 
@@ -1044,6 +1045,31 @@ HasHtmlEngineOptions returns a boolean if a field has been set.
 `func (o *UpdateTemplateRequest) UnsetHtmlEngineOptions()`
 
 UnsetHtmlEngineOptions ensures that no value is present for HtmlEngineOptions, not even an explicit nil
+### GetHtmlEscapeData
+
+`func (o *UpdateTemplateRequest) GetHtmlEscapeData() bool`
+
+GetHtmlEscapeData returns the HtmlEscapeData field if non-nil, zero value otherwise.
+
+### GetHtmlEscapeDataOk
+
+`func (o *UpdateTemplateRequest) GetHtmlEscapeDataOk() (*bool, bool)`
+
+GetHtmlEscapeDataOk returns a tuple with the HtmlEscapeData field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetHtmlEscapeData
+
+`func (o *UpdateTemplateRequest) SetHtmlEscapeData(v bool)`
+
+SetHtmlEscapeData sets HtmlEscapeData field to given value.
+
+### HasHtmlEscapeData
+
+`func (o *UpdateTemplateRequest) HasHtmlEscapeData() bool`
+
+HasHtmlEscapeData returns a boolean if a field has been set.
+
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

@@ -29,7 +29,7 @@ type Template struct {
 	Description NullableString `json:"description"`
 	// `pdf`: fields placed on an uploaded PDF. `html`: a PDF rendered from HTML and SCSS. It can't be changed after the template is created.
 	TemplateType TemplateType `json:"template_type"`
-	// Whether the template can generate PDFs. HTML templates are always ready. A PDF template is ready once its document has been processed (`document.state` is `processed`).
+	// Whether the template can generate PDFs. HTML templates are always ready. A PDF template is ready once DocSpring has stored its PDF, made an image of each page and finished looking for fields on each page, which can be after `document.state` becomes `processed`. A PDF template with no PDF (`document` is null) isn't ready.
 	Ready bool `json:"ready"`
 	// The PDF of a PDF template. Null for HTML templates, and for a PDF template that has no PDF yet.
 	Document NullableTemplateDocument `json:"document"`
@@ -37,14 +37,20 @@ type Template struct {
 	ParentFolderId NullableString `json:"parent_folder_id"`
 	// The path of the folder the template is in, such as `/Contracts`. `/` for a template at the root.
 	Path string `json:"path"`
-	// The published version this is, such as `1.2.0`. Null for the draft.
-	Version NullableString `json:"version"`
 	// The template's latest published version. Null if no version has been published.
 	LatestVersion NullableString `json:"latest_version"`
 	// When this version was published. Null for the draft.
 	VersionPublishedAt NullableTime `json:"version_published_at"`
 	// A locked template can't be changed or deleted until it's unlocked (`locked` can always be changed).
 	Locked bool `json:"locked"`
+	// When the draft was last changed.
+	LastChangedAt NullableTime `json:"last_changed_at"`
+	// When the template was created.
+	CreatedAt time.Time `json:"created_at"`
+	// When the template was last updated.
+	UpdatedAt time.Time `json:"updated_at"`
+	// The published version this is, such as `1.2.0`. Null for the draft.
+	Version NullableString `json:"version"`
 	// Print the submission ID in the footer of each page of PDFs signed through signature requests.
 	AddSignatureRequestSubmissionIdFooters bool `json:"add_signature_request_submission_id_footers"`
 	// The language AI field setup names fields in: `auto` uses the form's language when it's written in the Latin alphabet without accents, and English otherwise; `english` always uses English; `form_language` uses the form's language and script. New templates take it from your account's template settings. Null for HTML templates.
@@ -57,7 +63,7 @@ type Template struct {
 	DefaultFormMode TemplateFormMode `json:"default_form_mode"`
 	// Generate PDFs whose text and check fields stay fillable ("Generate Editable PDFs"). A submission's `editable` overrides it.
 	EditableSubmissions bool `json:"editable_submissions"`
-	// The sites where the template's signature requests, forms and embedded template editor can be loaded: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work). When it's empty, live signature requests don't load on any site, and the embedded template editor loads on every site.
+	// The sites that can embed the template's live signature requests and its embedded template editor: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work). Browsers open a live signature request in a frame only on these sites (and DocSpring's), so with an empty list it can't be embedded anywhere; a test signature request can be embedded on any site. The embedded template editor loads only for a page on one of these sites (by its Referer or Origin header), and on any site when the list is empty. Forms embedded on a page (Visual Forms JS and the simple form) aren't restricted.
 	EmbedDomains []string `json:"embed_domains"`
 	// Allow the embedded template editor to change sensitive template settings (webhooks, redirect URL, encryption, public access, expiration and so on).
 	EmbedEditAllowSettings bool `json:"embed_edit_allow_settings"`
@@ -87,14 +93,8 @@ type Template struct {
 	RedirectUrl NullableString `json:"redirect_url"`
 	// Whether `slack_webhook_url` is set.
 	HasSlackWebhookUrl bool `json:"has_slack_webhook_url"`
-	// When the draft was last changed.
-	LastChangedAt NullableTime `json:"last_changed_at"`
 	// Who last changed the draft: a user in your account, an API token, or someone using the embedded template editor. Null if no change has been recorded.
 	LastChangedBy NullableTemplateActor `json:"last_changed_by"`
-	// When the template was created.
-	CreatedAt time.Time `json:"created_at"`
-	// When the template was last updated.
-	UpdatedAt time.Time `json:"updated_at"`
 	Defaults TemplateDefaults `json:"defaults"`
 	// Conditional logic: each rule shows or hides its target fields, or makes them required, depending on the values of other fields.
 	FieldDependencies []TemplateFieldDependency `json:"field_dependencies"`
@@ -114,6 +114,8 @@ type Template struct {
 	FooterHtml NullableString `json:"footer_html"`
 	// How an HTML template's PDFs are printed. Null for PDF templates. Setting it replaces the whole object: options left out use their defaults.
 	HtmlEngineOptions NullableHtmlEngineOptions `json:"html_engine_options"`
+	// Whether an HTML template HTML-escapes the values it prints. When true, `{{ value }}` prints a value as text, so a `<` or `&` in it is printed as that character, and `{{ value | raw }}` prints a value as HTML. New HTML templates default to true. Templates created before October 2026, or with API v1, default to false, which prints every value as HTML. Null for PDF templates.
+	HtmlEscapeData NullableBool `json:"html_escape_data"`
 	// The token that opens the template in the embedded template editor.
 	EmbedEditToken NullableString `json:"embed_edit_token"`
 	// The template's published versions, newest first (up to 100).
@@ -127,7 +129,7 @@ type _Template Template
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewTemplate(id string, name NullableString, description NullableString, templateType TemplateType, ready bool, document NullableTemplateDocument, parentFolderId NullableString, path string, version NullableString, latestVersion NullableString, versionPublishedAt NullableTime, locked bool, addSignatureRequestSubmissionIdFooters bool, aiFieldNamingLanguage NullableAiFieldNamingLanguage, allowAdditionalProperties bool, allowSkippingOptionalFields bool, defaultFormMode TemplateFormMode, editableSubmissions bool, embedDomains []string, embedEditAllowSettings bool, embedEditAllowVersioning bool, embedEditAllowDocumentReplacement bool, encryptPdfs bool, hasEncryptPdfsPassword bool, expireSubmissions bool, expireAfter int32, expirationInterval ExpirationInterval, mergeAuditTrailPdf bool, parseDatesUsingTemplateDateFormat bool, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, hasSlackWebhookUrl bool, lastChangedAt NullableTime, lastChangedBy NullableTemplateActor, createdAt time.Time, updatedAt time.Time, defaults TemplateDefaults, fieldDependencies []TemplateFieldDependency, fieldGroups []FieldGroup, predefinedFields []PredefinedField, predefinedFieldsSampleData map[string]interface{}, html NullableString, scss NullableString, headerHtml NullableString, footerHtml NullableString, htmlEngineOptions NullableHtmlEngineOptions, embedEditToken NullableString, versions []TemplateVersion) *Template {
+func NewTemplate(id string, name NullableString, description NullableString, templateType TemplateType, ready bool, document NullableTemplateDocument, parentFolderId NullableString, path string, latestVersion NullableString, versionPublishedAt NullableTime, locked bool, lastChangedAt NullableTime, createdAt time.Time, updatedAt time.Time, version NullableString, addSignatureRequestSubmissionIdFooters bool, aiFieldNamingLanguage NullableAiFieldNamingLanguage, allowAdditionalProperties bool, allowSkippingOptionalFields bool, defaultFormMode TemplateFormMode, editableSubmissions bool, embedDomains []string, embedEditAllowSettings bool, embedEditAllowVersioning bool, embedEditAllowDocumentReplacement bool, encryptPdfs bool, hasEncryptPdfsPassword bool, expireSubmissions bool, expireAfter int32, expirationInterval ExpirationInterval, mergeAuditTrailPdf bool, parseDatesUsingTemplateDateFormat bool, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, hasSlackWebhookUrl bool, lastChangedBy NullableTemplateActor, defaults TemplateDefaults, fieldDependencies []TemplateFieldDependency, fieldGroups []FieldGroup, predefinedFields []PredefinedField, predefinedFieldsSampleData map[string]interface{}, html NullableString, scss NullableString, headerHtml NullableString, footerHtml NullableString, htmlEngineOptions NullableHtmlEngineOptions, htmlEscapeData NullableBool, embedEditToken NullableString, versions []TemplateVersion) *Template {
 	this := Template{}
 	this.Id = id
 	this.Name = name
@@ -137,10 +139,13 @@ func NewTemplate(id string, name NullableString, description NullableString, tem
 	this.Document = document
 	this.ParentFolderId = parentFolderId
 	this.Path = path
-	this.Version = version
 	this.LatestVersion = latestVersion
 	this.VersionPublishedAt = versionPublishedAt
 	this.Locked = locked
+	this.LastChangedAt = lastChangedAt
+	this.CreatedAt = createdAt
+	this.UpdatedAt = updatedAt
+	this.Version = version
 	this.AddSignatureRequestSubmissionIdFooters = addSignatureRequestSubmissionIdFooters
 	this.AiFieldNamingLanguage = aiFieldNamingLanguage
 	this.AllowAdditionalProperties = allowAdditionalProperties
@@ -162,10 +167,7 @@ func NewTemplate(id string, name NullableString, description NullableString, tem
 	this.PublicWebForm = publicWebForm
 	this.RedirectUrl = redirectUrl
 	this.HasSlackWebhookUrl = hasSlackWebhookUrl
-	this.LastChangedAt = lastChangedAt
 	this.LastChangedBy = lastChangedBy
-	this.CreatedAt = createdAt
-	this.UpdatedAt = updatedAt
 	this.Defaults = defaults
 	this.FieldDependencies = fieldDependencies
 	this.FieldGroups = fieldGroups
@@ -176,6 +178,7 @@ func NewTemplate(id string, name NullableString, description NullableString, tem
 	this.HeaderHtml = headerHtml
 	this.FooterHtml = footerHtml
 	this.HtmlEngineOptions = htmlEngineOptions
+	this.HtmlEscapeData = htmlEscapeData
 	this.EmbedEditToken = embedEditToken
 	this.Versions = versions
 	return &this
@@ -389,32 +392,6 @@ func (o *Template) SetPath(v string) {
 	o.Path = v
 }
 
-// GetVersion returns the Version field value
-// If the value is explicit nil, the zero value for string will be returned
-func (o *Template) GetVersion() string {
-	if o == nil || o.Version.Get() == nil {
-		var ret string
-		return ret
-	}
-
-	return *o.Version.Get()
-}
-
-// GetVersionOk returns a tuple with the Version field value
-// and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *Template) GetVersionOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.Version.Get(), o.Version.IsSet()
-}
-
-// SetVersion sets field value
-func (o *Template) SetVersion(v string) {
-	o.Version.Set(&v)
-}
-
 // GetLatestVersion returns the LatestVersion field value
 // If the value is explicit nil, the zero value for string will be returned
 func (o *Template) GetLatestVersion() string {
@@ -489,6 +466,106 @@ func (o *Template) GetLockedOk() (*bool, bool) {
 // SetLocked sets field value
 func (o *Template) SetLocked(v bool) {
 	o.Locked = v
+}
+
+// GetLastChangedAt returns the LastChangedAt field value
+// If the value is explicit nil, the zero value for time.Time will be returned
+func (o *Template) GetLastChangedAt() time.Time {
+	if o == nil || o.LastChangedAt.Get() == nil {
+		var ret time.Time
+		return ret
+	}
+
+	return *o.LastChangedAt.Get()
+}
+
+// GetLastChangedAtOk returns a tuple with the LastChangedAt field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *Template) GetLastChangedAtOk() (*time.Time, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.LastChangedAt.Get(), o.LastChangedAt.IsSet()
+}
+
+// SetLastChangedAt sets field value
+func (o *Template) SetLastChangedAt(v time.Time) {
+	o.LastChangedAt.Set(&v)
+}
+
+// GetCreatedAt returns the CreatedAt field value
+func (o *Template) GetCreatedAt() time.Time {
+	if o == nil {
+		var ret time.Time
+		return ret
+	}
+
+	return o.CreatedAt
+}
+
+// GetCreatedAtOk returns a tuple with the CreatedAt field value
+// and a boolean to check if the value has been set.
+func (o *Template) GetCreatedAtOk() (*time.Time, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.CreatedAt, true
+}
+
+// SetCreatedAt sets field value
+func (o *Template) SetCreatedAt(v time.Time) {
+	o.CreatedAt = v
+}
+
+// GetUpdatedAt returns the UpdatedAt field value
+func (o *Template) GetUpdatedAt() time.Time {
+	if o == nil {
+		var ret time.Time
+		return ret
+	}
+
+	return o.UpdatedAt
+}
+
+// GetUpdatedAtOk returns a tuple with the UpdatedAt field value
+// and a boolean to check if the value has been set.
+func (o *Template) GetUpdatedAtOk() (*time.Time, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.UpdatedAt, true
+}
+
+// SetUpdatedAt sets field value
+func (o *Template) SetUpdatedAt(v time.Time) {
+	o.UpdatedAt = v
+}
+
+// GetVersion returns the Version field value
+// If the value is explicit nil, the zero value for string will be returned
+func (o *Template) GetVersion() string {
+	if o == nil || o.Version.Get() == nil {
+		var ret string
+		return ret
+	}
+
+	return *o.Version.Get()
+}
+
+// GetVersionOk returns a tuple with the Version field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *Template) GetVersionOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Version.Get(), o.Version.IsSet()
+}
+
+// SetVersion sets field value
+func (o *Template) SetVersion(v string) {
+	o.Version.Set(&v)
 }
 
 // GetAddSignatureRequestSubmissionIdFooters returns the AddSignatureRequestSubmissionIdFooters field value
@@ -999,32 +1076,6 @@ func (o *Template) SetHasSlackWebhookUrl(v bool) {
 	o.HasSlackWebhookUrl = v
 }
 
-// GetLastChangedAt returns the LastChangedAt field value
-// If the value is explicit nil, the zero value for time.Time will be returned
-func (o *Template) GetLastChangedAt() time.Time {
-	if o == nil || o.LastChangedAt.Get() == nil {
-		var ret time.Time
-		return ret
-	}
-
-	return *o.LastChangedAt.Get()
-}
-
-// GetLastChangedAtOk returns a tuple with the LastChangedAt field value
-// and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *Template) GetLastChangedAtOk() (*time.Time, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.LastChangedAt.Get(), o.LastChangedAt.IsSet()
-}
-
-// SetLastChangedAt sets field value
-func (o *Template) SetLastChangedAt(v time.Time) {
-	o.LastChangedAt.Set(&v)
-}
-
 // GetLastChangedBy returns the LastChangedBy field value
 // If the value is explicit nil, the zero value for TemplateActor will be returned
 func (o *Template) GetLastChangedBy() TemplateActor {
@@ -1049,54 +1100,6 @@ func (o *Template) GetLastChangedByOk() (*TemplateActor, bool) {
 // SetLastChangedBy sets field value
 func (o *Template) SetLastChangedBy(v TemplateActor) {
 	o.LastChangedBy.Set(&v)
-}
-
-// GetCreatedAt returns the CreatedAt field value
-func (o *Template) GetCreatedAt() time.Time {
-	if o == nil {
-		var ret time.Time
-		return ret
-	}
-
-	return o.CreatedAt
-}
-
-// GetCreatedAtOk returns a tuple with the CreatedAt field value
-// and a boolean to check if the value has been set.
-func (o *Template) GetCreatedAtOk() (*time.Time, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.CreatedAt, true
-}
-
-// SetCreatedAt sets field value
-func (o *Template) SetCreatedAt(v time.Time) {
-	o.CreatedAt = v
-}
-
-// GetUpdatedAt returns the UpdatedAt field value
-func (o *Template) GetUpdatedAt() time.Time {
-	if o == nil {
-		var ret time.Time
-		return ret
-	}
-
-	return o.UpdatedAt
-}
-
-// GetUpdatedAtOk returns a tuple with the UpdatedAt field value
-// and a boolean to check if the value has been set.
-func (o *Template) GetUpdatedAtOk() (*time.Time, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.UpdatedAt, true
-}
-
-// SetUpdatedAt sets field value
-func (o *Template) SetUpdatedAt(v time.Time) {
-	o.UpdatedAt = v
 }
 
 // GetDefaults returns the Defaults field value
@@ -1351,6 +1354,32 @@ func (o *Template) SetHtmlEngineOptions(v HtmlEngineOptions) {
 	o.HtmlEngineOptions.Set(&v)
 }
 
+// GetHtmlEscapeData returns the HtmlEscapeData field value
+// If the value is explicit nil, the zero value for bool will be returned
+func (o *Template) GetHtmlEscapeData() bool {
+	if o == nil || o.HtmlEscapeData.Get() == nil {
+		var ret bool
+		return ret
+	}
+
+	return *o.HtmlEscapeData.Get()
+}
+
+// GetHtmlEscapeDataOk returns a tuple with the HtmlEscapeData field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *Template) GetHtmlEscapeDataOk() (*bool, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.HtmlEscapeData.Get(), o.HtmlEscapeData.IsSet()
+}
+
+// SetHtmlEscapeData sets field value
+func (o *Template) SetHtmlEscapeData(v bool) {
+	o.HtmlEscapeData.Set(&v)
+}
+
 // GetEmbedEditToken returns the EmbedEditToken field value
 // If the value is explicit nil, the zero value for string will be returned
 func (o *Template) GetEmbedEditToken() string {
@@ -1419,10 +1448,13 @@ func (o Template) ToMap() (map[string]interface{}, error) {
 	toSerialize["document"] = o.Document.Get()
 	toSerialize["parent_folder_id"] = o.ParentFolderId.Get()
 	toSerialize["path"] = o.Path
-	toSerialize["version"] = o.Version.Get()
 	toSerialize["latest_version"] = o.LatestVersion.Get()
 	toSerialize["version_published_at"] = o.VersionPublishedAt.Get()
 	toSerialize["locked"] = o.Locked
+	toSerialize["last_changed_at"] = o.LastChangedAt.Get()
+	toSerialize["created_at"] = o.CreatedAt
+	toSerialize["updated_at"] = o.UpdatedAt
+	toSerialize["version"] = o.Version.Get()
 	toSerialize["add_signature_request_submission_id_footers"] = o.AddSignatureRequestSubmissionIdFooters
 	toSerialize["ai_field_naming_language"] = o.AiFieldNamingLanguage.Get()
 	toSerialize["allow_additional_properties"] = o.AllowAdditionalProperties
@@ -1444,10 +1476,7 @@ func (o Template) ToMap() (map[string]interface{}, error) {
 	toSerialize["public_web_form"] = o.PublicWebForm
 	toSerialize["redirect_url"] = o.RedirectUrl.Get()
 	toSerialize["has_slack_webhook_url"] = o.HasSlackWebhookUrl
-	toSerialize["last_changed_at"] = o.LastChangedAt.Get()
 	toSerialize["last_changed_by"] = o.LastChangedBy.Get()
-	toSerialize["created_at"] = o.CreatedAt
-	toSerialize["updated_at"] = o.UpdatedAt
 	toSerialize["defaults"] = o.Defaults
 	toSerialize["field_dependencies"] = o.FieldDependencies
 	toSerialize["field_groups"] = o.FieldGroups
@@ -1460,6 +1489,7 @@ func (o Template) ToMap() (map[string]interface{}, error) {
 	toSerialize["header_html"] = o.HeaderHtml.Get()
 	toSerialize["footer_html"] = o.FooterHtml.Get()
 	toSerialize["html_engine_options"] = o.HtmlEngineOptions.Get()
+	toSerialize["html_escape_data"] = o.HtmlEscapeData.Get()
 	toSerialize["embed_edit_token"] = o.EmbedEditToken.Get()
 	toSerialize["versions"] = o.Versions
 
@@ -1483,10 +1513,13 @@ func (o *Template) UnmarshalJSON(data []byte) (err error) {
 		"document",
 		"parent_folder_id",
 		"path",
-		"version",
 		"latest_version",
 		"version_published_at",
 		"locked",
+		"last_changed_at",
+		"created_at",
+		"updated_at",
+		"version",
 		"add_signature_request_submission_id_footers",
 		"ai_field_naming_language",
 		"allow_additional_properties",
@@ -1508,10 +1541,7 @@ func (o *Template) UnmarshalJSON(data []byte) (err error) {
 		"public_web_form",
 		"redirect_url",
 		"has_slack_webhook_url",
-		"last_changed_at",
 		"last_changed_by",
-		"created_at",
-		"updated_at",
 		"defaults",
 		"field_dependencies",
 		"field_groups",
@@ -1522,6 +1552,7 @@ func (o *Template) UnmarshalJSON(data []byte) (err error) {
 		"header_html",
 		"footer_html",
 		"html_engine_options",
+		"html_escape_data",
 		"embed_edit_token",
 		"versions",
 	}
@@ -1561,10 +1592,13 @@ func (o *Template) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "document")
 		delete(additionalProperties, "parent_folder_id")
 		delete(additionalProperties, "path")
-		delete(additionalProperties, "version")
 		delete(additionalProperties, "latest_version")
 		delete(additionalProperties, "version_published_at")
 		delete(additionalProperties, "locked")
+		delete(additionalProperties, "last_changed_at")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "version")
 		delete(additionalProperties, "add_signature_request_submission_id_footers")
 		delete(additionalProperties, "ai_field_naming_language")
 		delete(additionalProperties, "allow_additional_properties")
@@ -1586,10 +1620,7 @@ func (o *Template) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "public_web_form")
 		delete(additionalProperties, "redirect_url")
 		delete(additionalProperties, "has_slack_webhook_url")
-		delete(additionalProperties, "last_changed_at")
 		delete(additionalProperties, "last_changed_by")
-		delete(additionalProperties, "created_at")
-		delete(additionalProperties, "updated_at")
 		delete(additionalProperties, "defaults")
 		delete(additionalProperties, "field_dependencies")
 		delete(additionalProperties, "field_groups")
@@ -1600,6 +1631,7 @@ func (o *Template) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "header_html")
 		delete(additionalProperties, "footer_html")
 		delete(additionalProperties, "html_engine_options")
+		delete(additionalProperties, "html_escape_data")
 		delete(additionalProperties, "embed_edit_token")
 		delete(additionalProperties, "versions")
 		o.AdditionalProperties = additionalProperties

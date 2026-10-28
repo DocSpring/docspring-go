@@ -20,7 +20,7 @@ var _ MappedNullable = &TemplateActor{}
 
 // TemplateActor A user in your account, an API token, or someone using the embedded template editor.
 type TemplateActor struct {
-	// `user`: a user in your account. `api`: an API token. `external_user`: someone using the embedded template editor, as identified by your app.
+	// `user`: a user in your account, also when they make the change with an app they connected (an OAuth access token). `api`: an API token. `external_user`: someone using the embedded template editor, as identified by your app.
 	Type TemplateActorType `json:"type"`
 	// The user's ID, for `user`.
 	UserId NullableString `json:"user_id"`

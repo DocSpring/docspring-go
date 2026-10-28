@@ -39,28 +39,16 @@ type Submission struct {
 	Test bool `json:"test"`
 	// `true` keeps the PDF's text and check fields fillable, and `false` flattens every field. Left out, the template decides: its `editable_submissions` setting, or each field's own Editable option. A response shows the template's setting when the request left this out. Can't be `true` with `signature_requests`.
 	Editable bool `json:"editable"`
-	// The submission's data, with the values entered in completed signature requests. Lists leave it out (null) unless you pass `include_data=true`. Empty once the submission has expired.
+	// The submission's data, with the values entered in completed signature requests. Empty once the submission has expired. Null in a batch's submissions unless you pass `include_data=true`, and in the events of a webhook that leaves out submission data.
 	Data map[string]interface{} `json:"data"`
 	// Why the data doesn't match the template's fields, when `state` is `invalid_data`: the same details as the 422 response that recorded it, with pointers into the request that created the submission (`/data/name`). Cleared once the submission has expired.
 	DataErrors []ErrorDetail `json:"data_errors"`
 	// Why the PDF couldn't be generated, when `state` is `error`.
 	ErrorMessage NullableString `json:"error_message"`
-	// Your own data about the submission, such as an ID from your app. It isn't printed on the PDF.
+	// Your own data about the submission, such as an ID from your app. It isn't printed on the PDF. Two keys also change the PDF: `pdf_filename` names its file (`files.pdf.filename`, and its download), and `pdf_title` is its title in the PDF's document properties (and an HTML template's `<title>`, unless its HTML has one). Without `pdf_title`, the title is the template's name. In `pdf_filename`, a `.pdf` ending is removed, each run of characters other than letters, digits, `-`, `_` and `.` becomes one `_`, and the first 128 characters are kept, then `.pdf` is added. Without it, the file is named after the submission's ID (`sub_1234567890abcdef01.pdf`).
 	Metadata map[string]interface{} `json:"metadata"`
-	// Whether the PDF needs a password to open (`password`).
-	HasPassword bool `json:"has_password"`
-	// The people asked to sign the submission (and fill in their fields), in order.
-	SignatureRequests []SignatureRequest `json:"signature_requests"`
-	// The uploads of the submission's PDF to your storage (account integrations).
-	Actions []SubmissionAction `json:"actions"`
-	// The text of each field that didn't fit in it, by field name. Left out (null) with `data`, and empty once the submission has expired.
-	TruncatedText map[string][]string `json:"truncated_text"`
-	// What the submission makes: `pdf`, and `png` (an image of each page of the PDF, up to 100 pages) when you ask for it. Default `["pdf"]`. POST /submissions/{submission_id}/generate_files adds `png` to a processed submission.
-	OutputFormats []OutputFormat `json:"output_formats"`
 	// The generated files: `pdf` once the submission has been processed, `png` (the images of the PDF's pages, when `output_formats` has it: `files.png.pages[0]` is page 1), `audit_trail` once its signature requests are completed, and `preview` once a preview PDF has been generated. Empty once the submission has expired.
 	Files SubmissionFiles `json:"files"`
-	// When the preview PDF was generated. Null if there is no preview.
-	PreviewGeneratedAt NullableTime `json:"preview_generated_at"`
 	// An expired submission's data, metadata, password and PDF have been deleted.
 	Expired bool `json:"expired"`
 	// When the submission expires. Null if it's kept until you delete it.
@@ -71,6 +59,18 @@ type Submission struct {
 	CreatedAt time.Time `json:"created_at"`
 	// When the submission was last updated.
 	UpdatedAt time.Time `json:"updated_at"`
+	// Whether the PDF needs a password to open (`password`).
+	HasPassword bool `json:"has_password"`
+	// The people asked to sign the submission (and fill in their fields), in order.
+	SignatureRequests []SignatureRequest `json:"signature_requests"`
+	// The uploads of the submission's PDF to your storage (account integrations).
+	Actions []SubmissionAction `json:"actions"`
+	// The text of each field that didn't fit in it, by field name. Left out (null) with `data`, and empty once the submission has expired.
+	TruncatedText map[string][]string `json:"truncated_text"`
+	// What the submission makes: `pdf`, and `png` (an image of each page of the PDF, up to 100 pages) when you ask for it. Default `["pdf"]`. POST /submissions/{submission_id}/generate_files adds `png` to a processed submission.
+	OutputFormats []OutputFormat `json:"output_formats"`
+	// When the preview PDF was generated. Null if there is no preview.
+	PreviewGeneratedAt NullableTime `json:"preview_generated_at"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -80,7 +80,7 @@ type _Submission Submission
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewSubmission(id string, templateId NullableString, templateType TemplateType, templateVersion NullableString, batchId NullableString, source SubmissionSource, state SubmissionState, test bool, editable bool, data map[string]interface{}, dataErrors []ErrorDetail, errorMessage NullableString, metadata map[string]interface{}, hasPassword bool, signatureRequests []SignatureRequest, actions []SubmissionAction, truncatedText map[string][]string, outputFormats []OutputFormat, files SubmissionFiles, previewGeneratedAt NullableTime, expired bool, expiresAt NullableTime, processedAt NullableTime, createdAt time.Time, updatedAt time.Time) *Submission {
+func NewSubmission(id string, templateId NullableString, templateType TemplateType, templateVersion NullableString, batchId NullableString, source SubmissionSource, state SubmissionState, test bool, editable bool, data map[string]interface{}, dataErrors []ErrorDetail, errorMessage NullableString, metadata map[string]interface{}, files SubmissionFiles, expired bool, expiresAt NullableTime, processedAt NullableTime, createdAt time.Time, updatedAt time.Time, hasPassword bool, signatureRequests []SignatureRequest, actions []SubmissionAction, truncatedText map[string][]string, outputFormats []OutputFormat, previewGeneratedAt NullableTime) *Submission {
 	this := Submission{}
 	this.Id = id
 	this.TemplateId = templateId
@@ -95,18 +95,18 @@ func NewSubmission(id string, templateId NullableString, templateType TemplateTy
 	this.DataErrors = dataErrors
 	this.ErrorMessage = errorMessage
 	this.Metadata = metadata
-	this.HasPassword = hasPassword
-	this.SignatureRequests = signatureRequests
-	this.Actions = actions
-	this.TruncatedText = truncatedText
-	this.OutputFormats = outputFormats
 	this.Files = files
-	this.PreviewGeneratedAt = previewGeneratedAt
 	this.Expired = expired
 	this.ExpiresAt = expiresAt
 	this.ProcessedAt = processedAt
 	this.CreatedAt = createdAt
 	this.UpdatedAt = updatedAt
+	this.HasPassword = hasPassword
+	this.SignatureRequests = signatureRequests
+	this.Actions = actions
+	this.TruncatedText = truncatedText
+	this.OutputFormats = outputFormats
+	this.PreviewGeneratedAt = previewGeneratedAt
 	return &this
 }
 
@@ -440,128 +440,6 @@ func (o *Submission) SetMetadata(v map[string]interface{}) {
 	o.Metadata = v
 }
 
-// GetHasPassword returns the HasPassword field value
-func (o *Submission) GetHasPassword() bool {
-	if o == nil {
-		var ret bool
-		return ret
-	}
-
-	return o.HasPassword
-}
-
-// GetHasPasswordOk returns a tuple with the HasPassword field value
-// and a boolean to check if the value has been set.
-func (o *Submission) GetHasPasswordOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.HasPassword, true
-}
-
-// SetHasPassword sets field value
-func (o *Submission) SetHasPassword(v bool) {
-	o.HasPassword = v
-}
-
-// GetSignatureRequests returns the SignatureRequests field value
-func (o *Submission) GetSignatureRequests() []SignatureRequest {
-	if o == nil {
-		var ret []SignatureRequest
-		return ret
-	}
-
-	return o.SignatureRequests
-}
-
-// GetSignatureRequestsOk returns a tuple with the SignatureRequests field value
-// and a boolean to check if the value has been set.
-func (o *Submission) GetSignatureRequestsOk() ([]SignatureRequest, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.SignatureRequests, true
-}
-
-// SetSignatureRequests sets field value
-func (o *Submission) SetSignatureRequests(v []SignatureRequest) {
-	o.SignatureRequests = v
-}
-
-// GetActions returns the Actions field value
-func (o *Submission) GetActions() []SubmissionAction {
-	if o == nil {
-		var ret []SubmissionAction
-		return ret
-	}
-
-	return o.Actions
-}
-
-// GetActionsOk returns a tuple with the Actions field value
-// and a boolean to check if the value has been set.
-func (o *Submission) GetActionsOk() ([]SubmissionAction, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.Actions, true
-}
-
-// SetActions sets field value
-func (o *Submission) SetActions(v []SubmissionAction) {
-	o.Actions = v
-}
-
-// GetTruncatedText returns the TruncatedText field value
-// If the value is explicit nil, the zero value for map[string][]string will be returned
-func (o *Submission) GetTruncatedText() map[string][]string {
-	if o == nil {
-		var ret map[string][]string
-		return ret
-	}
-
-	return o.TruncatedText
-}
-
-// GetTruncatedTextOk returns a tuple with the TruncatedText field value
-// and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *Submission) GetTruncatedTextOk() (map[string][]string, bool) {
-	if o == nil || IsNil(o.TruncatedText) {
-		return map[string][]string{}, false
-	}
-	return o.TruncatedText, true
-}
-
-// SetTruncatedText sets field value
-func (o *Submission) SetTruncatedText(v map[string][]string) {
-	o.TruncatedText = v
-}
-
-// GetOutputFormats returns the OutputFormats field value
-func (o *Submission) GetOutputFormats() []OutputFormat {
-	if o == nil {
-		var ret []OutputFormat
-		return ret
-	}
-
-	return o.OutputFormats
-}
-
-// GetOutputFormatsOk returns a tuple with the OutputFormats field value
-// and a boolean to check if the value has been set.
-func (o *Submission) GetOutputFormatsOk() ([]OutputFormat, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.OutputFormats, true
-}
-
-// SetOutputFormats sets field value
-func (o *Submission) SetOutputFormats(v []OutputFormat) {
-	o.OutputFormats = v
-}
-
 // GetFiles returns the Files field value
 func (o *Submission) GetFiles() SubmissionFiles {
 	if o == nil {
@@ -584,32 +462,6 @@ func (o *Submission) GetFilesOk() (*SubmissionFiles, bool) {
 // SetFiles sets field value
 func (o *Submission) SetFiles(v SubmissionFiles) {
 	o.Files = v
-}
-
-// GetPreviewGeneratedAt returns the PreviewGeneratedAt field value
-// If the value is explicit nil, the zero value for time.Time will be returned
-func (o *Submission) GetPreviewGeneratedAt() time.Time {
-	if o == nil || o.PreviewGeneratedAt.Get() == nil {
-		var ret time.Time
-		return ret
-	}
-
-	return *o.PreviewGeneratedAt.Get()
-}
-
-// GetPreviewGeneratedAtOk returns a tuple with the PreviewGeneratedAt field value
-// and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *Submission) GetPreviewGeneratedAtOk() (*time.Time, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.PreviewGeneratedAt.Get(), o.PreviewGeneratedAt.IsSet()
-}
-
-// SetPreviewGeneratedAt sets field value
-func (o *Submission) SetPreviewGeneratedAt(v time.Time) {
-	o.PreviewGeneratedAt.Set(&v)
 }
 
 // GetExpired returns the Expired field value
@@ -736,6 +588,154 @@ func (o *Submission) SetUpdatedAt(v time.Time) {
 	o.UpdatedAt = v
 }
 
+// GetHasPassword returns the HasPassword field value
+func (o *Submission) GetHasPassword() bool {
+	if o == nil {
+		var ret bool
+		return ret
+	}
+
+	return o.HasPassword
+}
+
+// GetHasPasswordOk returns a tuple with the HasPassword field value
+// and a boolean to check if the value has been set.
+func (o *Submission) GetHasPasswordOk() (*bool, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.HasPassword, true
+}
+
+// SetHasPassword sets field value
+func (o *Submission) SetHasPassword(v bool) {
+	o.HasPassword = v
+}
+
+// GetSignatureRequests returns the SignatureRequests field value
+func (o *Submission) GetSignatureRequests() []SignatureRequest {
+	if o == nil {
+		var ret []SignatureRequest
+		return ret
+	}
+
+	return o.SignatureRequests
+}
+
+// GetSignatureRequestsOk returns a tuple with the SignatureRequests field value
+// and a boolean to check if the value has been set.
+func (o *Submission) GetSignatureRequestsOk() ([]SignatureRequest, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.SignatureRequests, true
+}
+
+// SetSignatureRequests sets field value
+func (o *Submission) SetSignatureRequests(v []SignatureRequest) {
+	o.SignatureRequests = v
+}
+
+// GetActions returns the Actions field value
+func (o *Submission) GetActions() []SubmissionAction {
+	if o == nil {
+		var ret []SubmissionAction
+		return ret
+	}
+
+	return o.Actions
+}
+
+// GetActionsOk returns a tuple with the Actions field value
+// and a boolean to check if the value has been set.
+func (o *Submission) GetActionsOk() ([]SubmissionAction, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Actions, true
+}
+
+// SetActions sets field value
+func (o *Submission) SetActions(v []SubmissionAction) {
+	o.Actions = v
+}
+
+// GetTruncatedText returns the TruncatedText field value
+// If the value is explicit nil, the zero value for map[string][]string will be returned
+func (o *Submission) GetTruncatedText() map[string][]string {
+	if o == nil {
+		var ret map[string][]string
+		return ret
+	}
+
+	return o.TruncatedText
+}
+
+// GetTruncatedTextOk returns a tuple with the TruncatedText field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *Submission) GetTruncatedTextOk() (map[string][]string, bool) {
+	if o == nil || IsNil(o.TruncatedText) {
+		return map[string][]string{}, false
+	}
+	return o.TruncatedText, true
+}
+
+// SetTruncatedText sets field value
+func (o *Submission) SetTruncatedText(v map[string][]string) {
+	o.TruncatedText = v
+}
+
+// GetOutputFormats returns the OutputFormats field value
+func (o *Submission) GetOutputFormats() []OutputFormat {
+	if o == nil {
+		var ret []OutputFormat
+		return ret
+	}
+
+	return o.OutputFormats
+}
+
+// GetOutputFormatsOk returns a tuple with the OutputFormats field value
+// and a boolean to check if the value has been set.
+func (o *Submission) GetOutputFormatsOk() ([]OutputFormat, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.OutputFormats, true
+}
+
+// SetOutputFormats sets field value
+func (o *Submission) SetOutputFormats(v []OutputFormat) {
+	o.OutputFormats = v
+}
+
+// GetPreviewGeneratedAt returns the PreviewGeneratedAt field value
+// If the value is explicit nil, the zero value for time.Time will be returned
+func (o *Submission) GetPreviewGeneratedAt() time.Time {
+	if o == nil || o.PreviewGeneratedAt.Get() == nil {
+		var ret time.Time
+		return ret
+	}
+
+	return *o.PreviewGeneratedAt.Get()
+}
+
+// GetPreviewGeneratedAtOk returns a tuple with the PreviewGeneratedAt field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *Submission) GetPreviewGeneratedAtOk() (*time.Time, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.PreviewGeneratedAt.Get(), o.PreviewGeneratedAt.IsSet()
+}
+
+// SetPreviewGeneratedAt sets field value
+func (o *Submission) SetPreviewGeneratedAt(v time.Time) {
+	o.PreviewGeneratedAt.Set(&v)
+}
+
 func (o Submission) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -761,6 +761,12 @@ func (o Submission) ToMap() (map[string]interface{}, error) {
 	toSerialize["data_errors"] = o.DataErrors
 	toSerialize["error_message"] = o.ErrorMessage.Get()
 	toSerialize["metadata"] = o.Metadata
+	toSerialize["files"] = o.Files
+	toSerialize["expired"] = o.Expired
+	toSerialize["expires_at"] = o.ExpiresAt.Get()
+	toSerialize["processed_at"] = o.ProcessedAt.Get()
+	toSerialize["created_at"] = o.CreatedAt
+	toSerialize["updated_at"] = o.UpdatedAt
 	toSerialize["has_password"] = o.HasPassword
 	toSerialize["signature_requests"] = o.SignatureRequests
 	toSerialize["actions"] = o.Actions
@@ -768,13 +774,7 @@ func (o Submission) ToMap() (map[string]interface{}, error) {
 		toSerialize["truncated_text"] = o.TruncatedText
 	}
 	toSerialize["output_formats"] = o.OutputFormats
-	toSerialize["files"] = o.Files
 	toSerialize["preview_generated_at"] = o.PreviewGeneratedAt.Get()
-	toSerialize["expired"] = o.Expired
-	toSerialize["expires_at"] = o.ExpiresAt.Get()
-	toSerialize["processed_at"] = o.ProcessedAt.Get()
-	toSerialize["created_at"] = o.CreatedAt
-	toSerialize["updated_at"] = o.UpdatedAt
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -801,18 +801,18 @@ func (o *Submission) UnmarshalJSON(data []byte) (err error) {
 		"data_errors",
 		"error_message",
 		"metadata",
-		"has_password",
-		"signature_requests",
-		"actions",
-		"truncated_text",
-		"output_formats",
 		"files",
-		"preview_generated_at",
 		"expired",
 		"expires_at",
 		"processed_at",
 		"created_at",
 		"updated_at",
+		"has_password",
+		"signature_requests",
+		"actions",
+		"truncated_text",
+		"output_formats",
+		"preview_generated_at",
 	}
 
 	allProperties := make(map[string]interface{})
@@ -855,18 +855,18 @@ func (o *Submission) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "data_errors")
 		delete(additionalProperties, "error_message")
 		delete(additionalProperties, "metadata")
-		delete(additionalProperties, "has_password")
-		delete(additionalProperties, "signature_requests")
-		delete(additionalProperties, "actions")
-		delete(additionalProperties, "truncated_text")
-		delete(additionalProperties, "output_formats")
 		delete(additionalProperties, "files")
-		delete(additionalProperties, "preview_generated_at")
 		delete(additionalProperties, "expired")
 		delete(additionalProperties, "expires_at")
 		delete(additionalProperties, "processed_at")
 		delete(additionalProperties, "created_at")
 		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "has_password")
+		delete(additionalProperties, "signature_requests")
+		delete(additionalProperties, "actions")
+		delete(additionalProperties, "truncated_text")
+		delete(additionalProperties, "output_formats")
+		delete(additionalProperties, "preview_generated_at")
 		o.AdditionalProperties = additionalProperties
 	}
 

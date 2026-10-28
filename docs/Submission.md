@@ -13,28 +13,28 @@ Name | Type | Description | Notes
 **State** | [**SubmissionState**](SubmissionState.md) | `pending` until the PDF has been generated, then `processed`. `waiting_for_signature_requests` until every signature request is completed. `insufficient_credits`: waiting for credits; `error_message` says whether the PDF is generated once you add them. `account_suspended`: waiting for the account to be reactivated, for up to 30 days. Waiting ends in `error` if it's discarded or takes over 30 days. Every other state is final, with no PDF: `invalid_data` (the data doesn't match the template's fields: see `data_errors`), `declined` (a signature request was declined), and the states where generating the PDF failed, which have an `error_message`: `syntax_error` (a mistake in an HTML template's Liquid or SCSS), `image_download_failed` or `image_processing_failed` (an image in the data or the template couldn't be downloaded or read) and `error` (anything else). Older submissions can also be `license_revoked` or `accidental`. | 
 **Test** | **bool** | Test PDFs have a watermark and are free. Live PDFs use credits. Submissions made with a test API token are always test submissions. | 
 **Editable** | **bool** | `true` keeps the PDF's text and check fields fillable, and `false` flattens every field. Left out, the template decides: its `editable_submissions` setting, or each field's own Editable option. A response shows the template's setting when the request left this out. Can't be `true` with `signature_requests`. | 
-**Data** | **map[string]interface{}** | The submission's data, with the values entered in completed signature requests. Lists leave it out (null) unless you pass `include_data=true`. Empty once the submission has expired. | 
+**Data** | **map[string]interface{}** | The submission's data, with the values entered in completed signature requests. Empty once the submission has expired. Null in a batch's submissions unless you pass `include_data=true`, and in the events of a webhook that leaves out submission data. | 
 **DataErrors** | [**[]ErrorDetail**](ErrorDetail.md) | Why the data doesn't match the template's fields, when `state` is `invalid_data`: the same details as the 422 response that recorded it, with pointers into the request that created the submission (`/data/name`). Cleared once the submission has expired. | 
 **ErrorMessage** | **NullableString** | Why the PDF couldn't be generated, when `state` is `error`. | 
-**Metadata** | **map[string]interface{}** | Your own data about the submission, such as an ID from your app. It isn't printed on the PDF. | 
-**HasPassword** | **bool** | Whether the PDF needs a password to open (`password`). | 
-**SignatureRequests** | [**[]SignatureRequest**](SignatureRequest.md) | The people asked to sign the submission (and fill in their fields), in order. | 
-**Actions** | [**[]SubmissionAction**](SubmissionAction.md) | The uploads of the submission's PDF to your storage (account integrations). | 
-**TruncatedText** | **map[string][]string** | The text of each field that didn't fit in it, by field name. Left out (null) with `data`, and empty once the submission has expired. | 
-**OutputFormats** | [**[]OutputFormat**](OutputFormat.md) | What the submission makes: `pdf`, and `png` (an image of each page of the PDF, up to 100 pages) when you ask for it. Default `["pdf"]`. POST /submissions/{submission_id}/generate_files adds `png` to a processed submission. | 
+**Metadata** | **map[string]interface{}** | Your own data about the submission, such as an ID from your app. It isn't printed on the PDF. Two keys also change the PDF: `pdf_filename` names its file (`files.pdf.filename`, and its download), and `pdf_title` is its title in the PDF's document properties (and an HTML template's `&lt;title&gt;`, unless its HTML has one). Without `pdf_title`, the title is the template's name. In `pdf_filename`, a `.pdf` ending is removed, each run of characters other than letters, digits, `-`, `_` and `.` becomes one `_`, and the first 128 characters are kept, then `.pdf` is added. Without it, the file is named after the submission's ID (`sub_1234567890abcdef01.pdf`). | 
 **Files** | [**SubmissionFiles**](SubmissionFiles.md) | The generated files: `pdf` once the submission has been processed, `png` (the images of the PDF's pages, when `output_formats` has it: `files.png.pages[0]` is page 1), `audit_trail` once its signature requests are completed, and `preview` once a preview PDF has been generated. Empty once the submission has expired. | 
-**PreviewGeneratedAt** | **NullableTime** | When the preview PDF was generated. Null if there is no preview. | 
 **Expired** | **bool** | An expired submission's data, metadata, password and PDF have been deleted. | 
 **ExpiresAt** | **NullableTime** | When the submission expires. Null if it's kept until you delete it. | 
 **ProcessedAt** | **NullableTime** | When the PDF was generated. Null until then. | 
 **CreatedAt** | **time.Time** | When the submission was created. | 
 **UpdatedAt** | **time.Time** | When the submission was last updated. | 
+**HasPassword** | **bool** | Whether the PDF needs a password to open (`password`). | 
+**SignatureRequests** | [**[]SignatureRequest**](SignatureRequest.md) | The people asked to sign the submission (and fill in their fields), in order. | 
+**Actions** | [**[]SubmissionAction**](SubmissionAction.md) | The uploads of the submission's PDF to your storage (account integrations). | 
+**TruncatedText** | **map[string][]string** | The text of each field that didn't fit in it, by field name. Left out (null) with `data`, and empty once the submission has expired. | 
+**OutputFormats** | [**[]OutputFormat**](OutputFormat.md) | What the submission makes: `pdf`, and `png` (an image of each page of the PDF, up to 100 pages) when you ask for it. Default `["pdf"]`. POST /submissions/{submission_id}/generate_files adds `png` to a processed submission. | 
+**PreviewGeneratedAt** | **NullableTime** | When the preview PDF was generated. Null if there is no preview. | 
 
 ## Methods
 
 ### NewSubmission
 
-`func NewSubmission(id string, templateId NullableString, templateType TemplateType, templateVersion NullableString, batchId NullableString, source SubmissionSource, state SubmissionState, test bool, editable bool, data map[string]interface{}, dataErrors []ErrorDetail, errorMessage NullableString, metadata map[string]interface{}, hasPassword bool, signatureRequests []SignatureRequest, actions []SubmissionAction, truncatedText map[string][]string, outputFormats []OutputFormat, files SubmissionFiles, previewGeneratedAt NullableTime, expired bool, expiresAt NullableTime, processedAt NullableTime, createdAt time.Time, updatedAt time.Time, ) *Submission`
+`func NewSubmission(id string, templateId NullableString, templateType TemplateType, templateVersion NullableString, batchId NullableString, source SubmissionSource, state SubmissionState, test bool, editable bool, data map[string]interface{}, dataErrors []ErrorDetail, errorMessage NullableString, metadata map[string]interface{}, files SubmissionFiles, expired bool, expiresAt NullableTime, processedAt NullableTime, createdAt time.Time, updatedAt time.Time, hasPassword bool, signatureRequests []SignatureRequest, actions []SubmissionAction, truncatedText map[string][]string, outputFormats []OutputFormat, previewGeneratedAt NullableTime, ) *Submission`
 
 NewSubmission instantiates a new Submission object
 This constructor will assign default values to properties that have it defined,
@@ -359,116 +359,6 @@ and a boolean to check if the value has been set.
 SetMetadata sets Metadata field to given value.
 
 
-### GetHasPassword
-
-`func (o *Submission) GetHasPassword() bool`
-
-GetHasPassword returns the HasPassword field if non-nil, zero value otherwise.
-
-### GetHasPasswordOk
-
-`func (o *Submission) GetHasPasswordOk() (*bool, bool)`
-
-GetHasPasswordOk returns a tuple with the HasPassword field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetHasPassword
-
-`func (o *Submission) SetHasPassword(v bool)`
-
-SetHasPassword sets HasPassword field to given value.
-
-
-### GetSignatureRequests
-
-`func (o *Submission) GetSignatureRequests() []SignatureRequest`
-
-GetSignatureRequests returns the SignatureRequests field if non-nil, zero value otherwise.
-
-### GetSignatureRequestsOk
-
-`func (o *Submission) GetSignatureRequestsOk() (*[]SignatureRequest, bool)`
-
-GetSignatureRequestsOk returns a tuple with the SignatureRequests field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetSignatureRequests
-
-`func (o *Submission) SetSignatureRequests(v []SignatureRequest)`
-
-SetSignatureRequests sets SignatureRequests field to given value.
-
-
-### GetActions
-
-`func (o *Submission) GetActions() []SubmissionAction`
-
-GetActions returns the Actions field if non-nil, zero value otherwise.
-
-### GetActionsOk
-
-`func (o *Submission) GetActionsOk() (*[]SubmissionAction, bool)`
-
-GetActionsOk returns a tuple with the Actions field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetActions
-
-`func (o *Submission) SetActions(v []SubmissionAction)`
-
-SetActions sets Actions field to given value.
-
-
-### GetTruncatedText
-
-`func (o *Submission) GetTruncatedText() map[string][]string`
-
-GetTruncatedText returns the TruncatedText field if non-nil, zero value otherwise.
-
-### GetTruncatedTextOk
-
-`func (o *Submission) GetTruncatedTextOk() (*map[string][]string, bool)`
-
-GetTruncatedTextOk returns a tuple with the TruncatedText field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetTruncatedText
-
-`func (o *Submission) SetTruncatedText(v map[string][]string)`
-
-SetTruncatedText sets TruncatedText field to given value.
-
-
-### SetTruncatedTextNil
-
-`func (o *Submission) SetTruncatedTextNil(b bool)`
-
- SetTruncatedTextNil sets the value for TruncatedText to be an explicit nil
-
-### UnsetTruncatedText
-`func (o *Submission) UnsetTruncatedText()`
-
-UnsetTruncatedText ensures that no value is present for TruncatedText, not even an explicit nil
-### GetOutputFormats
-
-`func (o *Submission) GetOutputFormats() []OutputFormat`
-
-GetOutputFormats returns the OutputFormats field if non-nil, zero value otherwise.
-
-### GetOutputFormatsOk
-
-`func (o *Submission) GetOutputFormatsOk() (*[]OutputFormat, bool)`
-
-GetOutputFormatsOk returns a tuple with the OutputFormats field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetOutputFormats
-
-`func (o *Submission) SetOutputFormats(v []OutputFormat)`
-
-SetOutputFormats sets OutputFormats field to given value.
-
-
 ### GetFiles
 
 `func (o *Submission) GetFiles() SubmissionFiles`
@@ -489,36 +379,6 @@ and a boolean to check if the value has been set.
 SetFiles sets Files field to given value.
 
 
-### GetPreviewGeneratedAt
-
-`func (o *Submission) GetPreviewGeneratedAt() time.Time`
-
-GetPreviewGeneratedAt returns the PreviewGeneratedAt field if non-nil, zero value otherwise.
-
-### GetPreviewGeneratedAtOk
-
-`func (o *Submission) GetPreviewGeneratedAtOk() (*time.Time, bool)`
-
-GetPreviewGeneratedAtOk returns a tuple with the PreviewGeneratedAt field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetPreviewGeneratedAt
-
-`func (o *Submission) SetPreviewGeneratedAt(v time.Time)`
-
-SetPreviewGeneratedAt sets PreviewGeneratedAt field to given value.
-
-
-### SetPreviewGeneratedAtNil
-
-`func (o *Submission) SetPreviewGeneratedAtNil(b bool)`
-
- SetPreviewGeneratedAtNil sets the value for PreviewGeneratedAt to be an explicit nil
-
-### UnsetPreviewGeneratedAt
-`func (o *Submission) UnsetPreviewGeneratedAt()`
-
-UnsetPreviewGeneratedAt ensures that no value is present for PreviewGeneratedAt, not even an explicit nil
 ### GetExpired
 
 `func (o *Submission) GetExpired() bool`
@@ -639,6 +499,146 @@ and a boolean to check if the value has been set.
 SetUpdatedAt sets UpdatedAt field to given value.
 
 
+### GetHasPassword
+
+`func (o *Submission) GetHasPassword() bool`
+
+GetHasPassword returns the HasPassword field if non-nil, zero value otherwise.
+
+### GetHasPasswordOk
+
+`func (o *Submission) GetHasPasswordOk() (*bool, bool)`
+
+GetHasPasswordOk returns a tuple with the HasPassword field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetHasPassword
+
+`func (o *Submission) SetHasPassword(v bool)`
+
+SetHasPassword sets HasPassword field to given value.
+
+
+### GetSignatureRequests
+
+`func (o *Submission) GetSignatureRequests() []SignatureRequest`
+
+GetSignatureRequests returns the SignatureRequests field if non-nil, zero value otherwise.
+
+### GetSignatureRequestsOk
+
+`func (o *Submission) GetSignatureRequestsOk() (*[]SignatureRequest, bool)`
+
+GetSignatureRequestsOk returns a tuple with the SignatureRequests field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSignatureRequests
+
+`func (o *Submission) SetSignatureRequests(v []SignatureRequest)`
+
+SetSignatureRequests sets SignatureRequests field to given value.
+
+
+### GetActions
+
+`func (o *Submission) GetActions() []SubmissionAction`
+
+GetActions returns the Actions field if non-nil, zero value otherwise.
+
+### GetActionsOk
+
+`func (o *Submission) GetActionsOk() (*[]SubmissionAction, bool)`
+
+GetActionsOk returns a tuple with the Actions field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetActions
+
+`func (o *Submission) SetActions(v []SubmissionAction)`
+
+SetActions sets Actions field to given value.
+
+
+### GetTruncatedText
+
+`func (o *Submission) GetTruncatedText() map[string][]string`
+
+GetTruncatedText returns the TruncatedText field if non-nil, zero value otherwise.
+
+### GetTruncatedTextOk
+
+`func (o *Submission) GetTruncatedTextOk() (*map[string][]string, bool)`
+
+GetTruncatedTextOk returns a tuple with the TruncatedText field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetTruncatedText
+
+`func (o *Submission) SetTruncatedText(v map[string][]string)`
+
+SetTruncatedText sets TruncatedText field to given value.
+
+
+### SetTruncatedTextNil
+
+`func (o *Submission) SetTruncatedTextNil(b bool)`
+
+ SetTruncatedTextNil sets the value for TruncatedText to be an explicit nil
+
+### UnsetTruncatedText
+`func (o *Submission) UnsetTruncatedText()`
+
+UnsetTruncatedText ensures that no value is present for TruncatedText, not even an explicit nil
+### GetOutputFormats
+
+`func (o *Submission) GetOutputFormats() []OutputFormat`
+
+GetOutputFormats returns the OutputFormats field if non-nil, zero value otherwise.
+
+### GetOutputFormatsOk
+
+`func (o *Submission) GetOutputFormatsOk() (*[]OutputFormat, bool)`
+
+GetOutputFormatsOk returns a tuple with the OutputFormats field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetOutputFormats
+
+`func (o *Submission) SetOutputFormats(v []OutputFormat)`
+
+SetOutputFormats sets OutputFormats field to given value.
+
+
+### GetPreviewGeneratedAt
+
+`func (o *Submission) GetPreviewGeneratedAt() time.Time`
+
+GetPreviewGeneratedAt returns the PreviewGeneratedAt field if non-nil, zero value otherwise.
+
+### GetPreviewGeneratedAtOk
+
+`func (o *Submission) GetPreviewGeneratedAtOk() (*time.Time, bool)`
+
+GetPreviewGeneratedAtOk returns a tuple with the PreviewGeneratedAt field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPreviewGeneratedAt
+
+`func (o *Submission) SetPreviewGeneratedAt(v time.Time)`
+
+SetPreviewGeneratedAt sets PreviewGeneratedAt field to given value.
+
+
+### SetPreviewGeneratedAtNil
+
+`func (o *Submission) SetPreviewGeneratedAtNil(b bool)`
+
+ SetPreviewGeneratedAtNil sets the value for PreviewGeneratedAt to be an explicit nil
+
+### UnsetPreviewGeneratedAt
+`func (o *Submission) UnsetPreviewGeneratedAt()`
+
+UnsetPreviewGeneratedAt ensures that no value is present for PreviewGeneratedAt, not even an explicit nil
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

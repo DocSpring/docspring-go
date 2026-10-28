@@ -14,6 +14,7 @@ Method | HTTP request | Description
 [**CreateSubmission**](ClientAPI.md#CreateSubmission) | **Post** /templates/{template_id}/submissions | Generate a PDF
 [**CreateSubmissionBatch**](ClientAPI.md#CreateSubmissionBatch) | **Post** /submissions/batches | Generate PDFs in a batch
 [**CreateTemplate**](ClientAPI.md#CreateTemplate) | **Post** /templates | Create a template
+[**CreateTemplatePreview**](ClientAPI.md#CreateTemplatePreview) | **Post** /templates/{template_id}/previews | Preview a template with data
 [**CreateWebhook**](ClientAPI.md#CreateWebhook) | **Post** /webhooks | Create a webhook
 [**DeleteCustomFile**](ClientAPI.md#DeleteCustomFile) | **Delete** /custom_files/{custom_file_id} | Delete a custom file
 [**DeleteFolder**](ClientAPI.md#DeleteFolder) | **Delete** /folders/{folder_id} | Delete a folder
@@ -34,6 +35,7 @@ Method | HTTP request | Description
 [**GetTemplateDiff**](ClientAPI.md#GetTemplateDiff) | **Get** /templates/{template_id}/diff | Compare a version of a template with the one before it
 [**GetTemplateModelCode**](ClientAPI.md#GetTemplateModelCode) | **Get** /templates/{template_id}/model_code | Generate typed code for a template's submission data
 [**GetTemplatePageImages**](ClientAPI.md#GetTemplatePageImages) | **Get** /templates/{template_id}/page_images | Get images of a template's pages
+[**GetTemplatePreview**](ClientAPI.md#GetTemplatePreview) | **Get** /templates/{template_id}/previews/{preview_id} | Get a template preview
 [**GetTemplateSchema**](ClientAPI.md#GetTemplateSchema) | **Get** /templates/{template_id}/schema | Get the JSON Schema of a template's submission data
 [**GetWebhook**](ClientAPI.md#GetWebhook) | **Get** /webhooks/{webhook_id} | Get a webhook
 [**ListCombinedPdfs**](ClientAPI.md#ListCombinedPdfs) | **Get** /combined_pdfs | List combined PDFs
@@ -209,7 +211,7 @@ Name | Type | Description  | Notes
 
 ## CreateCombinedPdf
 
-> CombinedPdf CreateCombinedPdf(ctx).Body(body).Wait(wait).Execute()
+> CombinedPdf CreateCombinedPdf(ctx).Body(body).Wait(wait).IdempotencyKey(idempotencyKey).Execute()
 
 Combine PDFs
 
@@ -230,10 +232,11 @@ import (
 func main() {
 	body := *openapiclient.NewCreateCombinedPdfRequest([]openapiclient.CombinedPdfSourceInput{openapiclient.CombinedPdfSourceInput{CombinedPdfSourcePdf: openapiclient.NewCombinedPdfSourcePdf("Type_example", "Id_example")}}) // CreateCombinedPdfRequest | The PDFs to merge, and the combined PDF's settings.
 	wait := true // bool | Wait until the PDF has been generated before responding. Default true on sync.api hosts. (optional)
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another combined PDF. Send a new key with each new combined PDF, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.CreateCombinedPdf(context.Background()).Body(body).Wait(wait).Execute()
+	resp, r, err := apiClient.ClientAPI.CreateCombinedPdf(context.Background()).Body(body).Wait(wait).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateCombinedPdf``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -256,6 +259,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **body** | [**CreateCombinedPdfRequest**](CreateCombinedPdfRequest.md) | The PDFs to merge, and the combined PDF's settings. | 
  **wait** | **bool** | Wait until the PDF has been generated before responding. Default true on sync.api hosts. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another combined PDF. Send a new key with each new combined PDF, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds. | 
 
 ### Return type
 
@@ -553,7 +557,7 @@ Name | Type | Description  | Notes
 
 ## CreateSubmission
 
-> Submission CreateSubmission(ctx, templateId).Body(body).Version(version).Wait(wait).Execute()
+> Submission CreateSubmission(ctx, templateId).Body(body).Version(version).Wait(wait).IdempotencyKey(idempotencyKey).Execute()
 
 Generate a PDF
 
@@ -576,10 +580,11 @@ func main() {
 	body := *openapiclient.NewCreateSubmissionRequest() // CreateSubmissionRequest | The submission's data and settings.
 	version := "version_example" // string | The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published). (optional)
 	wait := true // bool | Wait until the files have been generated before responding. Default true on sync.api hosts. (optional)
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another submission. Send a new key with each new submission, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.CreateSubmission(context.Background(), templateId).Body(body).Version(version).Wait(wait).Execute()
+	resp, r, err := apiClient.ClientAPI.CreateSubmission(context.Background(), templateId).Body(body).Version(version).Wait(wait).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateSubmission``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -608,6 +613,7 @@ Name | Type | Description  | Notes
  **body** | [**CreateSubmissionRequest**](CreateSubmissionRequest.md) | The submission's data and settings. | 
  **version** | **string** | The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published). | 
  **wait** | **bool** | Wait until the files have been generated before responding. Default true on sync.api hosts. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another submission. Send a new key with each new submission, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds. | 
 
 ### Return type
 
@@ -629,7 +635,7 @@ Name | Type | Description  | Notes
 
 ## CreateSubmissionBatch
 
-> SubmissionBatch CreateSubmissionBatch(ctx).Body(body).Wait(wait).Execute()
+> SubmissionBatch CreateSubmissionBatch(ctx).Body(body).Wait(wait).IdempotencyKey(idempotencyKey).Execute()
 
 Generate PDFs in a batch
 
@@ -650,10 +656,11 @@ import (
 func main() {
 	body := *openapiclient.NewCreateSubmissionBatchRequest([]openapiclient.SubmissionInput{*openapiclient.NewSubmissionInput()}) // CreateSubmissionBatchRequest | The submissions to create, and the settings they share.
 	wait := true // bool | Wait until every PDF in the batch has been generated before responding. Default true on sync.api hosts. (optional)
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another batch. Send a new key with each new batch, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.CreateSubmissionBatch(context.Background()).Body(body).Wait(wait).Execute()
+	resp, r, err := apiClient.ClientAPI.CreateSubmissionBatch(context.Background()).Body(body).Wait(wait).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateSubmissionBatch``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -676,6 +683,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **body** | [**CreateSubmissionBatchRequest**](CreateSubmissionBatchRequest.md) | The submissions to create, and the settings they share. | 
  **wait** | **bool** | Wait until every PDF in the batch has been generated before responding. Default true on sync.api hosts. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another batch. Send a new key with each new batch, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds. | 
 
 ### Return type
 
@@ -748,6 +756,80 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**Template**](Template.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## CreateTemplatePreview
+
+> TemplatePreview CreateTemplatePreview(ctx, templateId).Body(body).Version(version).Execute()
+
+Preview a template with data
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	templateId := "tpl_1234567890abcdef02" // string | The template's ID.
+	body := *openapiclient.NewCreateTemplatePreviewRequest(map[string]interface{}{"key": interface{}(123)}) // CreateTemplatePreviewRequest | The data to render the template with.
+	version := "version_example" // string | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.CreateTemplatePreview(context.Background(), templateId).Body(body).Version(version).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateTemplatePreview``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `CreateTemplatePreview`: TemplatePreview
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.CreateTemplatePreview`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**templateId** | **string** | The template's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCreateTemplatePreviewRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **body** | [**CreateTemplatePreviewRequest**](CreateTemplatePreviewRequest.md) | The data to render the template with. | 
+ **version** | **string** | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`. | 
+
+### Return type
+
+[**TemplatePreview**](TemplatePreview.md)
 
 ### Authorization
 
@@ -2024,7 +2106,7 @@ Name | Type | Description  | Notes
 
 ## GetTemplateModelCode
 
-> TemplateModelCode GetTemplateModelCode(ctx, templateId).Lang(lang).Version(version).Execute()
+> TemplateModelCode GetTemplateModelCode(ctx, templateId).Lang(lang).Version(version).JustTypes(justTypes).Execute()
 
 Generate typed code for a template's submission data
 
@@ -2046,10 +2128,11 @@ func main() {
 	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
 	lang := openapiclient.ModelCodeLanguage("typescript") // ModelCodeLanguage | The language to generate the code in.
 	version := "draft" // string | The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default. (optional)
+	justTypes := true // bool | Return only the types (interfaces, classes or structs), without the code that converts JSON to and from them. Default false. JavaScript has no types and PHP no types-only code, so theirs is the same either way. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.GetTemplateModelCode(context.Background(), templateId).Lang(lang).Version(version).Execute()
+	resp, r, err := apiClient.ClientAPI.GetTemplateModelCode(context.Background(), templateId).Lang(lang).Version(version).JustTypes(justTypes).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetTemplateModelCode``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -2077,6 +2160,7 @@ Name | Type | Description  | Notes
 
  **lang** | [**ModelCodeLanguage**](ModelCodeLanguage.md) | The language to generate the code in. | 
  **version** | **string** | The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default. | 
+ **justTypes** | **bool** | Return only the types (interfaces, classes or structs), without the code that converts JSON to and from them. Default false. JavaScript has no types and PHP no types-only code, so theirs is the same either way. | 
 
 ### Return type
 
@@ -2153,6 +2237,79 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**TemplatePageImages**](TemplatePageImages.md)
+
+### Authorization
+
+[api_token_basic](../README.md#api_token_basic)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## GetTemplatePreview
+
+> TemplatePreview GetTemplatePreview(ctx, templateId, previewId).Execute()
+
+Get a template preview
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	templateId := "tpl_1234567890abcdef02" // string | The template's ID.
+	previewId := "tpv_1234567890abcdef0123" // string | The preview's ID.
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.GetTemplatePreview(context.Background(), templateId, previewId).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetTemplatePreview``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetTemplatePreview`: TemplatePreview
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetTemplatePreview`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**templateId** | **string** | The template's ID. | 
+**previewId** | **string** | The preview's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetTemplatePreviewRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+
+### Return type
+
+[**TemplatePreview**](TemplatePreview.md)
 
 ### Authorization
 
@@ -2518,7 +2675,7 @@ Name | Type | Description  | Notes
 
 ## ListSubmissions
 
-> SubmissionList ListSubmissions(ctx).TemplateId(templateId).Test(test).CreatedAfter(createdAfter).CreatedBefore(createdBefore).IncludeData(includeData).Limit(limit).Cursor(cursor).Execute()
+> SubmissionList ListSubmissions(ctx).TemplateId(templateId).Test(test).CreatedAfter(createdAfter).CreatedBefore(createdBefore).IncludeData(includeData).Limit(limit).Cursor(cursor).State(state).IncludeFiles(includeFiles).Execute()
 
 List submissions
 
@@ -2545,10 +2702,12 @@ func main() {
 	includeData := true // bool | Include each submission's `data` (null without it). (optional)
 	limit := int32(56) // int32 | How many items to return (1-100, default 50). (optional) (default to 50)
 	cursor := "cursor_example" // string | The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one. (optional)
+	state := openapiclient.SubmissionState("pending") // SubmissionState | Only list submissions in this state (one state per request). The ones that failed are `invalid_data`, `error`, `syntax_error`, `image_download_failed` and `image_processing_failed`, and one still `pending` an hour after it was created is stuck. (optional)
+	includeFiles := true // bool | Include each submission's generated files and their download links (`files`, empty without it), without the page images' links. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.ListSubmissions(context.Background()).TemplateId(templateId).Test(test).CreatedAfter(createdAfter).CreatedBefore(createdBefore).IncludeData(includeData).Limit(limit).Cursor(cursor).Execute()
+	resp, r, err := apiClient.ClientAPI.ListSubmissions(context.Background()).TemplateId(templateId).Test(test).CreatedAfter(createdAfter).CreatedBefore(createdBefore).IncludeData(includeData).Limit(limit).Cursor(cursor).State(state).IncludeFiles(includeFiles).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ListSubmissions``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -2576,6 +2735,8 @@ Name | Type | Description  | Notes
  **includeData** | **bool** | Include each submission's `data` (null without it). | 
  **limit** | **int32** | How many items to return (1-100, default 50). | [default to 50]
  **cursor** | **string** | The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one. | 
+ **state** | [**SubmissionState**](SubmissionState.md) | Only list submissions in this state (one state per request). The ones that failed are `invalid_data`, `error`, `syntax_error`, `image_download_failed` and `image_processing_failed`, and one still `pending` an hour after it was created is stuck. | 
+ **includeFiles** | **bool** | Include each submission's generated files and their download links (`files`, empty without it), without the page images' links. | 
 
 ### Return type
 
@@ -2669,7 +2830,7 @@ Name | Type | Description  | Notes
 
 ## ListTemplateSubmissions
 
-> SubmissionList ListTemplateSubmissions(ctx, templateId).Test(test).CreatedAfter(createdAfter).CreatedBefore(createdBefore).IncludeData(includeData).Limit(limit).Cursor(cursor).Execute()
+> SubmissionList ListTemplateSubmissions(ctx, templateId).Test(test).CreatedAfter(createdAfter).CreatedBefore(createdBefore).IncludeData(includeData).Limit(limit).Cursor(cursor).State(state).IncludeFiles(includeFiles).Execute()
 
 List a template's submissions
 
@@ -2696,10 +2857,12 @@ func main() {
 	includeData := true // bool | Include each submission's `data` (null without it). (optional)
 	limit := int32(56) // int32 | How many items to return (1-100, default 50). (optional) (default to 50)
 	cursor := "cursor_example" // string | The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one. (optional)
+	state := openapiclient.SubmissionState("pending") // SubmissionState | Only list submissions in this state (one state per request). The ones that failed are `invalid_data`, `error`, `syntax_error`, `image_download_failed` and `image_processing_failed`, and one still `pending` an hour after it was created is stuck. (optional)
+	includeFiles := true // bool | Include each submission's generated files and their download links (`files`, empty without it), without the page images' links. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.ListTemplateSubmissions(context.Background(), templateId).Test(test).CreatedAfter(createdAfter).CreatedBefore(createdBefore).IncludeData(includeData).Limit(limit).Cursor(cursor).Execute()
+	resp, r, err := apiClient.ClientAPI.ListTemplateSubmissions(context.Background(), templateId).Test(test).CreatedAfter(createdAfter).CreatedBefore(createdBefore).IncludeData(includeData).Limit(limit).Cursor(cursor).State(state).IncludeFiles(includeFiles).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ListTemplateSubmissions``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -2731,6 +2894,8 @@ Name | Type | Description  | Notes
  **includeData** | **bool** | Include each submission's `data` (null without it). | 
  **limit** | **int32** | How many items to return (1-100, default 50). | [default to 50]
  **cursor** | **string** | The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one. | 
+ **state** | [**SubmissionState**](SubmissionState.md) | Only list submissions in this state (one state per request). The ones that failed are `invalid_data`, `error`, `syntax_error`, `image_download_failed` and `image_processing_failed`, and one still `pending` an hour after it was created is stuck. | 
+ **includeFiles** | **bool** | Include each submission's generated files and their download links (`files`, empty without it), without the page images' links. | 
 
 ### Return type
 

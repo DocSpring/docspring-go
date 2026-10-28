@@ -28,6 +28,7 @@ docs/CreateSignatureRequestEventRequest.md
 docs/CreateSignatureRequestTokenRequest.md
 docs/CreateSubmissionBatchRequest.md
 docs/CreateSubmissionRequest.md
+docs/CreateTemplatePreviewRequest.md
 docs/CreateTemplateRequest.md
 docs/CreateWebhookRequest.md
 docs/CustomFile.md
@@ -109,6 +110,7 @@ docs/SubmissionList.md
 docs/SubmissionSource.md
 docs/SubmissionSourcePdf.md
 docs/SubmissionState.md
+docs/SubmissionSummary.md
 docs/SubmissionValidation.md
 docs/Template.md
 docs/TemplateActor.md
@@ -119,6 +121,7 @@ docs/TemplateDiff.md
 docs/TemplateDiffSummary.md
 docs/TemplateDocument.md
 docs/TemplateDocumentState.md
+docs/TemplateDocumentSummary.md
 docs/TemplateFieldChange.md
 docs/TemplateFieldChanges.md
 docs/TemplateFieldDependency.md
@@ -139,6 +142,8 @@ docs/TemplatePageFieldsStatus.md
 docs/TemplatePageImageStatus.md
 docs/TemplatePageImages.md
 docs/TemplatePageProcessingStatus.md
+docs/TemplatePreview.md
+docs/TemplatePreviewState.md
 docs/TemplateSourcePdf.md
 docs/TemplateSummary.md
 docs/TemplateSummaryList.md
@@ -187,6 +192,7 @@ model_create_signature_request_event_request.go
 model_create_signature_request_token_request.go
 model_create_submission_batch_request.go
 model_create_submission_request.go
+model_create_template_preview_request.go
 model_create_template_request.go
 model_create_webhook_request.go
 model_custom_file.go
@@ -268,6 +274,7 @@ model_submission_list.go
 model_submission_source.go
 model_submission_source_pdf.go
 model_submission_state.go
+model_submission_summary.go
 model_submission_validation.go
 model_template.go
 model_template_actor.go
@@ -278,6 +285,7 @@ model_template_diff.go
 model_template_diff_summary.go
 model_template_document.go
 model_template_document_state.go
+model_template_document_summary.go
 model_template_field_change.go
 model_template_field_changes.go
 model_template_field_dependency.go
@@ -298,6 +306,8 @@ model_template_page_fields_status.go
 model_template_page_image_status.go
 model_template_page_images.go
 model_template_page_processing_status.go
+model_template_preview.go
+model_template_preview_state.go
 model_template_source_pdf.go
 model_template_summary.go
 model_template_summary_list.go
