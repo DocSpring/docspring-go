@@ -125,15 +125,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: application/json
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -197,15 +197,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: application/json
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -267,15 +267,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: application/json
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -333,15 +333,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: application/json
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -399,15 +399,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: application/json
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -471,15 +471,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: application/json
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -543,15 +543,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: application/json
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -621,15 +621,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: application/json
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -691,15 +691,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: application/json
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -759,15 +759,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: application/json
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -833,15 +833,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: application/json
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -899,15 +899,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: application/json
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -969,15 +969,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -1039,15 +1039,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -1111,15 +1111,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -1181,15 +1181,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -1251,15 +1251,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -1321,15 +1321,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -1395,15 +1395,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: application/json
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -1465,15 +1465,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -1535,15 +1535,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -1605,15 +1605,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -1675,15 +1675,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -1736,15 +1736,15 @@ Other parameters are passed through a pointer to a apiGetPresignUrlRequest struc
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -1806,15 +1806,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -1876,15 +1876,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -1948,15 +1948,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -2020,15 +2020,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -2092,15 +2092,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -2128,7 +2128,7 @@ func main() {
 	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
 	lang := openapiclient.ModelCodeLanguage("typescript") // ModelCodeLanguage | The language to generate the code in.
 	version := "draft" // string | The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default. (optional)
-	justTypes := true // bool | Return only the types (interfaces, classes or structs), without the code that converts JSON to and from them. Default false. JavaScript has no types and PHP no types-only code, so theirs is the same either way. (optional)
+	justTypes := true // bool | Return only the types (interfaces, classes or structs), without the code that converts JSON to and from them. Default false. JavaScript has no types, PHP has no types-only code, and Rust's code is only types (serde converts the JSON), so theirs is the same either way. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -2160,7 +2160,7 @@ Name | Type | Description  | Notes
 
  **lang** | [**ModelCodeLanguage**](ModelCodeLanguage.md) | The language to generate the code in. | 
  **version** | **string** | The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default. | 
- **justTypes** | **bool** | Return only the types (interfaces, classes or structs), without the code that converts JSON to and from them. Default false. JavaScript has no types and PHP no types-only code, so theirs is the same either way. | 
+ **justTypes** | **bool** | Return only the types (interfaces, classes or structs), without the code that converts JSON to and from them. Default false. JavaScript has no types, PHP has no types-only code, and Rust's code is only types (serde converts the JSON), so theirs is the same either way. | 
 
 ### Return type
 
@@ -2168,15 +2168,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -2240,15 +2240,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -2313,15 +2313,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -2385,15 +2385,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -2455,15 +2455,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -2523,15 +2523,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -2591,15 +2591,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -2661,15 +2661,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -2744,15 +2744,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -2816,15 +2816,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -2903,15 +2903,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -2975,15 +2975,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -3053,15 +3053,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -3125,15 +3125,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: application/json
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -3197,15 +3197,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: application/json
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -3269,15 +3269,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: application/json
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -3341,15 +3341,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: application/json
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -3413,15 +3413,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: application/json
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -3485,15 +3485,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: application/json
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -3557,15 +3557,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: application/json
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -3618,15 +3618,15 @@ Other parameters are passed through a pointer to a apiTestAuthenticationRequest 
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -3690,15 +3690,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: application/json
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -3762,15 +3762,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: application/json
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -3836,15 +3836,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: application/json
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -3908,15 +3908,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: application/json
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -3980,15 +3980,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: application/json
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -4064,15 +4064,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: multipart/form-data
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -4140,15 +4140,15 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: multipart/form-data
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 
 
@@ -4214,14 +4214,14 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](../README.md#api_token_basic)
+[api_token_basic](../README.md#install-and-configure)
 
 ### HTTP request headers
 
 - **Content-Type**: application/json
 - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
 [[Back to README]](../README.md)
 

@@ -122,8 +122,12 @@ func NewClientWithBaseURL(apiTokenID, apiTokenSecret string, baseURL *string) *C
     return api.ClientAPI
 }
 
-// NewClientWithRegion creates a new ClientAPI for a given region (e.g., "US", "EU", "Staging")
+// NewClientWithRegion creates a new ClientAPI for a region ("US" or "EU"). DOCSPRING_HOST wins over it, as a host
+// wins over a region in every SDK.
 func NewClientWithRegion(apiTokenID, apiTokenSecret, region string) *ClientAPIService {
+    if strings.TrimSpace(os.Getenv("DOCSPRING_HOST")) != "" {
+        return NewClient(apiTokenID, apiTokenSecret)
+    }
     host := mapRegionToHost(region)
     if strings.TrimSpace(region) != "" && host == "" {
         panic(region + " is not a valid region. Valid regions: US, EU")

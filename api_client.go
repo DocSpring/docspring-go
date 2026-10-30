@@ -2195,6 +2195,17 @@ func (a *ClientAPIService) CreateWebhookExecute(r ApiCreateWebhookRequest) (*Web
 					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
 		if localVarHTTPResponse.StatusCode == 401 {
 			var v ErrorResponse
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
@@ -4800,7 +4811,7 @@ func (r ApiGetTemplateModelCodeRequest) Version(version string) ApiGetTemplateMo
 	return r
 }
 
-// Return only the types (interfaces, classes or structs), without the code that converts JSON to and from them. Default false. JavaScript has no types and PHP no types-only code, so theirs is the same either way.
+// Return only the types (interfaces, classes or structs), without the code that converts JSON to and from them. Default false. JavaScript has no types, PHP has no types-only code, and Rust's code is only types (serde converts the JSON), so theirs is the same either way.
 func (r ApiGetTemplateModelCodeRequest) JustTypes(justTypes bool) ApiGetTemplateModelCodeRequest {
 	r.justTypes = &justTypes
 	return r
@@ -4814,8 +4825,8 @@ func (r ApiGetTemplateModelCodeRequest) Execute() (*TemplateModelCode, *http.Res
 GetTemplateModelCode Generate typed code for a template's submission data
 
 Generates types for a template's submission data in TypeScript, JavaScript, Ruby, Python, PHP, Java, C#,
-Elixir or Go, so your app catches mistakes before it calls the API. `root_type_name` is the type of the whole
-`data` object, and `just_types=true` leaves out the code that converts JSON to and from the types. Java
+Elixir, Go or Rust, so your app catches mistakes before it calls the API. `root_type_name` is the type of the
+whole `data` object, and `just_types=true` leaves out the code that converts JSON to and from the types. Java
 returns every class in `code`, each under a `// ClassName.java` comment. A template with no named fields
 returns 422.
 
@@ -7397,9 +7408,10 @@ func (r ApiPublishTemplateVersionRequest) Execute() (*TemplateVersion, *http.Res
 /*
 PublishTemplateVersion Publish a template version
 
-Publishes the template's draft as a new version that doesn't change. `version_type` says which part of the
-latest version number goes up. While the template's PDF is downloading or being processed, or DocSpring is
-setting up its fields, it returns a 409 that says so.
+Publishes the template's draft as a new version. Its content (the PDF or HTML, fields, name and description)
+never changes, while settings such as `webhook_url` and `public_submissions` keep following the draft.
+`version_type` says which part of the latest version number goes up. While the template's PDF is downloading
+or being processed, or DocSpring is setting up its fields, it returns a 409 that says so.
 
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -8069,7 +8081,7 @@ func (r ApiRestoreTemplateVersionRequest) Execute() (*Template, *http.Response, 
 /*
 RestoreTemplateVersion Restore a template version
 
-Replaces the template's draft with a copy of one of its published versions.
+Replaces the template's draft with a copy of one of its published versions. The draft keeps its settings that apply to every version, such as `webhook_url`.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param templateId The template's ID.
@@ -8546,8 +8558,9 @@ func (r ApiUpdateTemplateRequest) Execute() (*Template, *http.Response, error) {
 UpdateTemplate Update a template
 
 Changes a template's draft. Properties left out keep their values. `defaults` and `html_engine_options`
-replace the whole object, and `field_groups` changes only the groups it lists. Setting `parent_folder_id`
-moves the template and all of its published versions.
+replace the whole object, and `field_groups` changes only the groups it lists. Settings such as
+`webhook_url`, `public_submissions` and `expire_after` apply to every published version too, and setting
+`parent_folder_id` moves the template and all of its published versions.
 
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -9170,6 +9183,17 @@ func (a *ClientAPIService) UpdateWebhookExecute(r ApiUpdateWebhookRequest) (*Web
 		newErr := &GenericOpenAPIError{
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
 			var v ErrorResponse

@@ -6796,8 +6796,9 @@ paths:
     put:
       description: |
         Changes a template's draft. Properties left out keep their values. `defaults` and `html_engine_options`
-        replace the whole object, and `field_groups` changes only the groups it lists. Setting `parent_folder_id`
-        moves the template and all of its published versions.
+        replace the whole object, and `field_groups` changes only the groups it lists. Settings such as
+        `webhook_url`, `public_submissions` and `expire_after` apply to every published version too, and setting
+        `parent_folder_id` moves the template and all of its published versions.
       operationId: updateTemplate
       parameters:
       - description: The template's ID.
@@ -8127,9 +8128,10 @@ paths:
   /templates/{template_id}/publish_version:
     post:
       description: |
-        Publishes the template's draft as a new version that doesn't change. `version_type` says which part of the
-        latest version number goes up. While the template's PDF is downloading or being processed, or DocSpring is
-        setting up its fields, it returns a 409 that says so.
+        Publishes the template's draft as a new version. Its content (the PDF or HTML, fields, name and description)
+        never changes, while settings such as `webhook_url` and `public_submissions` keep following the draft.
+        `version_type` says which part of the latest version number goes up. While the template's PDF is downloading
+        or being processed, or DocSpring is setting up its fields, it returns a 409 that says so.
       operationId: publishTemplateVersion
       parameters:
       - description: The template's ID.
@@ -8287,8 +8289,9 @@ paths:
       x-codegen-request-body-name: body
   /templates/{template_id}/restore_version:
     post:
-      description: Replaces the template's draft with a copy of one of its published
-        versions.
+      description: "Replaces the template's draft with a copy of one of its published\
+        \ versions. The draft keeps its settings that apply to every version, such\
+        \ as `webhook_url`."
       operationId: restoreTemplateVersion
       parameters:
       - description: The template's ID.
@@ -9411,7 +9414,7 @@ paths:
                       reordered: []
                     changed_settings:
                     - name
-                    - expire_after
+                    - description
                     document_changed: false
               schema:
                 $ref: "#/components/schemas/TemplateDiff"
@@ -11633,8 +11636,8 @@ paths:
     get:
       description: |
         Generates types for a template's submission data in TypeScript, JavaScript, Ruby, Python, PHP, Java, C#,
-        Elixir or Go, so your app catches mistakes before it calls the API. `root_type_name` is the type of the whole
-        `data` object, and `just_types=true` leaves out the code that converts JSON to and from the types. Java
+        Elixir, Go or Rust, so your app catches mistakes before it calls the API. `root_type_name` is the type of the
+        whole `data` object, and `just_types=true` leaves out the code that converts JSON to and from the types. Java
         returns every class in `code`, each under a `// ClassName.java` comment. A template with no named fields
         returns 422.
       operationId: getTemplateModelCode
@@ -11671,8 +11674,8 @@ paths:
         style: form
       - description: "Return only the types (interfaces, classes or structs), without\
           \ the code that converts JSON to and from them. Default false. JavaScript\
-          \ has no types and PHP no types-only code, so theirs is the same either\
-          \ way."
+          \ has no types, PHP has no types-only code, and Rust's code is only types\
+          \ (serde converts the JSON), so theirs is the same either way."
         example: true
         explode: true
         in: query
@@ -11909,12 +11912,12 @@ paths:
                       code: validation_failed
                       message: "Invalid request: lang must be one of: \"typescript\"\
                         , \"javascript\", \"ruby\", \"python\", \"php\", \"java\"\
-                        , \"csharp\", \"elixir\", \"go\""
+                        , \"csharp\", \"elixir\", \"go\", \"rust\""
                       details:
                       - code: enum
                         message: "must be one of: \"typescript\", \"javascript\",\
                           \ \"ruby\", \"python\", \"php\", \"java\", \"csharp\", \"\
-                          elixir\", \"go\""
+                          elixir\", \"go\", \"rust\""
                         parameter: lang
                       request_id: req_1234567890abcdef01
               schema:
@@ -12364,6 +12367,25 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
           description: invalid webhook
+        "403":
+          content:
+            application/json:
+              examples:
+                the plan's integration limit is reached:
+                  summary: the plan's integration limit is reached
+                  value:
+                    error:
+                      code: upgrade_required
+                      message: "Your Developer plan includes 2 active integrations\
+                        \ (storage destinations, webhooks and Slack notifications),\
+                        \ and this account has 2: 1 storage destination and 1 webhook.\
+                        \ To add another, turn one off or upgrade to Starter or higher.\
+                        \ You can try Starter free for 14 days from the Billing page."
+                      details: []
+                      request_id: req_1234567890abcdef01
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: the plan's integration limit is reached
         "401":
           content:
             application/json:
@@ -12681,6 +12703,27 @@ paths:
               schema:
                 $ref: "#/components/schemas/Webhook"
           description: webhook updated
+        "403":
+          content:
+            application/json:
+              examples:
+                turning the webhook on would go over the plan's integration limit:
+                  summary: turning the webhook on would go over the plan's integration
+                    limit
+                  value:
+                    error:
+                      code: upgrade_required
+                      message: "Your Developer plan includes 2 active integrations\
+                        \ (storage destinations, webhooks and Slack notifications),\
+                        \ and this account has 2: 2 webhooks. To add another, turn\
+                        \ one off or upgrade to Starter or higher. You can try Starter\
+                        \ free for 14 days from the Billing page."
+                      details: []
+                      request_id: req_1234567890abcdef01
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: turning the webhook on would go over the plan's integration
+            limit
         "404":
           content:
             application/json:
@@ -13148,17 +13191,18 @@ components:
             \ PDF. The record was saved and waits for credits in the `insufficient_credits`\
             \ state: its ID is in `submission_id`, `submission_batch_id` or `combined_pdf_id`.\
             \ `upgrade_required` (403): your plan doesn't include this, such as more\
-            \ templates or the embedded template editor. `account_suspended` (403):\
-            \ the account is suspended, so it can't create submissions. `polling_timeout`:\
-            \ on a sync.api host, the PDF wasn't ready in time. The record was created\
-            \ and is still being processed: its ID is in `submission_id`, `submission_batch_id`,\
-            \ `combined_pdf_id` or `template_id`. Without one of these IDs, the request\
-            \ itself got no answer in time, and the record may or may not have been\
-            \ created. `idempotency_key_in_use` (409): a request with the same Idempotency-Key\
-            \ is still being processed. Send the request again in a few seconds; when\
-            \ the first request has already created its record, its ID is in `submission_id`,\
-            \ `submission_batch_id` or `combined_pdf_id`. `idempotency_key_reused`\
-            \ (422): the Idempotency-Key was already used for a different request."
+            \ templates, another active integration (webhooks count) or the embedded\
+            \ template editor. `account_suspended` (403): the account is suspended,\
+            \ so it can't create submissions. `polling_timeout`: on a sync.api host,\
+            \ the PDF wasn't ready in time. The record was created and is still being\
+            \ processed: its ID is in `submission_id`, `submission_batch_id`, `combined_pdf_id`\
+            \ or `template_id`. Without one of these IDs, the request itself got no\
+            \ answer in time, and the record may or may not have been created. `idempotency_key_in_use`\
+            \ (409): a request with the same Idempotency-Key is still being processed.\
+            \ Send the request again in a few seconds; when the first request has\
+            \ already created its record, its ID is in `submission_id`, `submission_batch_id`\
+            \ or `combined_pdf_id`. `idempotency_key_reused` (422): the Idempotency-Key\
+            \ was already used for a different request."
           x-open-enum: true
         message:
           description: "A human-readable explanation, safe to show to developers."
@@ -17234,9 +17278,11 @@ components:
           description: The fields that changed.
         changed_settings:
           description: "The names of the template's settings that changed, as they're\
-            \ named on the Template (`name`, `html`, `defaults`, `expire_after`, ...).\
-            \ Values aren't included, and secrets like `encrypt_pdfs_password` are\
-            \ named when they change."
+            \ named on the Template (`name`, `html`, `defaults`, `merge_audit_trail_pdf`,\
+            \ ...). Values aren't included. Settings that apply to every version,\
+            \ such as `webhook_url` and `encrypt_pdfs_password`, are the same on every\
+            \ version, so they're named only when there's no earlier version to compare\
+            \ with; a secret is named without its value."
           items:
             type: string
           type: array
@@ -18751,6 +18797,7 @@ components:
       - csharp
       - elixir
       - go
+      - rust
       title: ModelCodeLanguage
       type: string
     TemplateDiffSummary:

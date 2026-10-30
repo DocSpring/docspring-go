@@ -29,6 +29,7 @@ const (
 	MODELCODELANGUAGE_CSHARP ModelCodeLanguage = "csharp"
 	MODELCODELANGUAGE_ELIXIR ModelCodeLanguage = "elixir"
 	MODELCODELANGUAGE_GO ModelCodeLanguage = "go"
+	MODELCODELANGUAGE_RUST ModelCodeLanguage = "rust"
 )
 
 // All allowed values of ModelCodeLanguage enum
@@ -42,6 +43,7 @@ var AllowedModelCodeLanguageEnumValues = []ModelCodeLanguage{
 	"csharp",
 	"elixir",
 	"go",
+	"rust",
 }
 
 func (v *ModelCodeLanguage) UnmarshalJSON(src []byte) error {

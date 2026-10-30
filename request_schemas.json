@@ -2023,7 +2023,8 @@
               "java",
               "csharp",
               "elixir",
-              "go"
+              "go",
+              "rust"
             ]
           }
         },

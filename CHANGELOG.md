@@ -1,3 +1,9 @@
+### 4.3.0 [October 30, 2026]
+
+- New: get_template_model_code takes `rust` as its `lang`, for Rust structs that serde reads and writes.
+- Fixed: `NewClientWithRegion` used its region even when `DOCSPRING_HOST` was set. `DOCSPRING_HOST` now wins, as a
+  host wins over a region in every DocSpring SDK.
+
 ### 4.2.0 [October 29, 2026]
 
 - **BREAKING CHANGE**: list_templates returns a shorter `TemplateSummary`: a template's name, description, type, folder

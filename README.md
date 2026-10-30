@@ -9,7 +9,7 @@ templates with your data, generates PDFs from HTML templates, combines PDFs and 
 The code in this repository is generated from DocSpring's OpenAPI spec ([About this SDK](#about-this-sdk)). Issues and
 pull requests are welcome.
 
-Version 4.2.0. Requires Go 1.23 or later.
+Version 4.3.0. Requires Go 1.23 or later.
 
 ## Install and configure
 
@@ -158,7 +158,7 @@ existing code, such as removing or renaming a field, go in a new API version
 responses that are newer than it is:
 
 - The model keeps a response field added to the API after this release in its `AdditionalProperties` map. The objects defined inside a model, such as a template's `document`, leave it out.
-- Enum values in responses are strings, so a value added to the API after this release comes back as it is: handle values you don't recognize.
+- An enum value added to the API after this release comes back as the API sent it: handle values you don't recognize.
 
 Upgrade the SDK to read new fields and enum values. The [changelog](https://github.com/DocSpring/docspring-go/blob/main/CHANGELOG.md) lists
 what each release adds.

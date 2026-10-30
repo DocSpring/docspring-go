@@ -2236,6 +2236,6 @@ SetDependencies sets Dependencies field to given value.
 
 UnsetDependencies ensures that no value is present for Dependencies, not even an explicit nil
 
-[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+[[Back to Model list]](../README.md#methods) [[Back to API list]](../README.md#methods) [[Back to README]](../README.md)
 
 

@@ -30,7 +30,7 @@ type TemplateDiff struct {
 	Summary TemplateDiffSummary `json:"summary"`
 	// The fields that changed.
 	Fields TemplateFieldChanges `json:"fields"`
-	// The names of the template's settings that changed, as they're named on the Template (`name`, `html`, `defaults`, `expire_after`, ...). Values aren't included, and secrets like `encrypt_pdfs_password` are named when they change.
+	// The names of the template's settings that changed, as they're named on the Template (`name`, `html`, `defaults`, `merge_audit_trail_pdf`, ...). Values aren't included. Settings that apply to every version, such as `webhook_url` and `encrypt_pdfs_password`, are the same on every version, so they're named only when there's no earlier version to compare with; a secret is named without its value.
 	ChangedSettings []string `json:"changed_settings"`
 	// The template's PDF was replaced (or added, when there's no `from_version`).
 	DocumentChanged bool `json:"document_changed"`
