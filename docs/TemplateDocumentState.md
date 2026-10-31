@@ -17,6 +17,10 @@
 
 * `DOWNLOAD_FAILED` (value: `"download_failed"`)
 
+* `CONVERTING` (value: `"converting"`)
+
+* `CONVERSION_FAILED` (value: `"conversion_failed"`)
+
 
 [[Back to Model list]](../README.md#methods) [[Back to API list]](../README.md#methods) [[Back to README]](../README.md)
 

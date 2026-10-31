@@ -5,11 +5,11 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Id** | **string** | The batch's ID. | 
-**State** | [**SubmissionBatchState**](SubmissionBatchState.md) | `pending` while the PDFs are being generated, then `processed`. `error` as soon as a submission fails, while the others can still be pending: the batch has finished once `processed_at` is set. | 
+**State** | [**SubmissionBatchState**](SubmissionBatchState.md) | `pending` while the files are being generated, then `processed`. `error` as soon as a submission fails, while the others can still be pending: the batch has finished once `processed_at` is set. | 
 **Metadata** | **map[string]interface{}** | Your own data about the batch, such as an ID from your app. | 
 **TotalCount** | **int32** | The number of submissions in the request. | 
-**PendingCount** | **int32** | The submissions whose PDFs haven't been generated yet. | 
-**ErrorCount** | **int32** | The submissions that were invalid or whose PDFs couldn't be generated. | 
+**PendingCount** | **int32** | The submissions whose files haven't been generated yet. | 
+**ErrorCount** | **int32** | The submissions that were invalid or whose files couldn't be generated. | 
 **CompletionPercentage** | **int32** | The percentage of the batch's submissions that have finished, from 0 to 100. | 
 **Submissions** | [**[]Submission**](Submission.md) | The batch's submissions, in the order of the request. Their `data` is null unless you pass `include_data=true`. A batch that failed validation only has the submissions that were recorded as `invalid_data`. | 
 **ProcessedAt** | **NullableTime** | When every submission had finished. | 

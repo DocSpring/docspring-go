@@ -7,9 +7,10 @@ Name | Type | Description | Notes
 **Id** | **string** | The template's ID. | 
 **Name** | **NullableString** | The template's name. | 
 **Description** | **NullableString** | Shown under the template's name at the top of its hosted forms, and used as their meta description. Not shown on embedded forms or signature requests. | 
-**TemplateType** | [**TemplateType**](TemplateType.md) | `pdf`: fields placed on an uploaded PDF. `html`: a PDF rendered from HTML and SCSS. It can't be changed after the template is created. | 
-**Ready** | **bool** | Whether the template can generate PDFs. HTML templates are always ready. A PDF template is ready once DocSpring has stored its PDF, made an image of each page and finished looking for fields on each page, which can be after `document.state` becomes `processed`. A PDF template with no PDF (`document` is null) isn't ready. | 
-**Document** | [**NullableTemplateDocumentSummary**](TemplateDocumentSummary.md) | The PDF of a PDF template: its file name, page count and processing state. Null for HTML templates, and for a PDF template that has no PDF yet. | 
+**TemplateType** | [**TemplateType**](TemplateType.md) | `pdf`: fields placed on an uploaded PDF. `html`: a PDF rendered from HTML and SCSS. `docx`: a Word document with tags where the data goes, which makes Word documents or PDFs. It can't be changed after the template is created. | 
+**OutputFormat** | [**OutputFormat**](OutputFormat.md) | What each submission makes unless its request sets `output_formats`: `docx` (a Word document), `odt` (an OpenDocument file, converted from the Word document) or `pdf`. A Word template's is chosen when it's created; PDF and HTML templates always make PDFs. A Word template that encrypts its PDFs makes PDFs, because Word documents and OpenDocument files can't be password-protected. | 
+**Ready** | **bool** | Whether the template can make documents. HTML templates are always ready. A PDF template is ready once DocSpring has stored its PDF, made an image of each page and finished looking for fields on each page, which can be after `document.state` becomes `processed`. A PDF template with no PDF (`document` is null) isn't ready. A Word template is ready once it has a Word document (a `document_url`'s has been downloaded). | 
+**Document** | [**NullableTemplateDocumentSummary**](TemplateDocumentSummary.md) | The PDF of a PDF template, or the Word document of a Word template: its file name, page count and processing state. Null for HTML templates, and for a PDF template that has no PDF yet. A template created from a `document_url`, or a Word template created from an OpenDocument file (.odt), has one, with no file, while it's downloaded or converted. | 
 **ParentFolderId** | **NullableString** | The ID of the folder the template is in. Null for a template at the root. Setting it moves the template and all of its published versions. | 
 **Path** | **string** | The path of the folder the template is in, such as `/Contracts`. `/` for a template at the root. | 
 **LatestVersion** | **NullableString** | The template's latest published version. Null if no version has been published. | 
@@ -23,7 +24,7 @@ Name | Type | Description | Notes
 
 ### NewTemplateSummary
 
-`func NewTemplateSummary(id string, name NullableString, description NullableString, templateType TemplateType, ready bool, document NullableTemplateDocumentSummary, parentFolderId NullableString, path string, latestVersion NullableString, versionPublishedAt NullableTime, locked bool, lastChangedAt NullableTime, createdAt time.Time, updatedAt time.Time, ) *TemplateSummary`
+`func NewTemplateSummary(id string, name NullableString, description NullableString, templateType TemplateType, outputFormat OutputFormat, ready bool, document NullableTemplateDocumentSummary, parentFolderId NullableString, path string, latestVersion NullableString, versionPublishedAt NullableTime, locked bool, lastChangedAt NullableTime, createdAt time.Time, updatedAt time.Time, ) *TemplateSummary`
 
 NewTemplateSummary instantiates a new TemplateSummary object
 This constructor will assign default values to properties that have it defined,
@@ -136,6 +137,26 @@ and a boolean to check if the value has been set.
 `func (o *TemplateSummary) SetTemplateType(v TemplateType)`
 
 SetTemplateType sets TemplateType field to given value.
+
+
+### GetOutputFormat
+
+`func (o *TemplateSummary) GetOutputFormat() OutputFormat`
+
+GetOutputFormat returns the OutputFormat field if non-nil, zero value otherwise.
+
+### GetOutputFormatOk
+
+`func (o *TemplateSummary) GetOutputFormatOk() (*OutputFormat, bool)`
+
+GetOutputFormatOk returns a tuple with the OutputFormat field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetOutputFormat
+
+`func (o *TemplateSummary) SetOutputFormat(v OutputFormat)`
+
+SetOutputFormat sets OutputFormat field to given value.
 
 
 ### GetReady

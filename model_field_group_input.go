@@ -1,7 +1,7 @@
 /*
 DocSpring API
 
-Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
+Use DocSpring's API to fill PDF forms, generate PDFs and Word documents from HTML or Word templates, merge PDFs, and request legally binding e-signatures.
 
 API version: v2
 */
@@ -30,7 +30,7 @@ type FieldGroupInput struct {
 	Metadata *string `json:"metadata,omitempty"`
 	// Lists only (`type` `array`): the fewest items submission data must have. Null for no minimum.
 	MinItems NullableInt32 `json:"min_items,omitempty"`
-	// HTML templates' lists only: the most items submission data can have. Null for no limit. A PDF template's list takes as many items as its fields are numbered for, or more with `allow_additional_items`.
+	// HTML and Word templates' lists only: the most items submission data can have. Null for no limit. A PDF template's list takes as many items as its fields are numbered for, or more with `allow_additional_items`.
 	MaxItems NullableInt32 `json:"max_items,omitempty"`
 	// PDF templates' lists only: submission data can have more items than the list's fields are numbered for. Default false.
 	AllowAdditionalItems *bool `json:"allow_additional_items,omitempty"`

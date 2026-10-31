@@ -1,7 +1,7 @@
 /*
 DocSpring API
 
-Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
+Use DocSpring's API to fill PDF forms, generate PDFs and Word documents from HTML or Word templates, merge PDFs, and request legally binding e-signatures.
 
 API version: v2
 */
@@ -15,18 +15,22 @@ import (
 	"fmt"
 )
 
-// OutputFormat A file format DocSpring makes: `pdf`, or `png` (images of a PDF's pages).
+// OutputFormat A file format DocSpring makes: `pdf`, `docx` (a Word document), `odt` (an OpenDocument file), or `png` (images of a PDF's pages).
 type OutputFormat string
 
 // List of OutputFormat
 const (
 	OUTPUTFORMAT_PDF OutputFormat = "pdf"
+	OUTPUTFORMAT_DOCX OutputFormat = "docx"
+	OUTPUTFORMAT_ODT OutputFormat = "odt"
 	OUTPUTFORMAT_PNG OutputFormat = "png"
 )
 
 // All allowed values of OutputFormat enum
 var AllowedOutputFormatEnumValues = []OutputFormat{
 	"pdf",
+	"docx",
+	"odt",
 	"png",
 }
 

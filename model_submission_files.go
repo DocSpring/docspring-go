@@ -1,7 +1,7 @@
 /*
 DocSpring API
 
-Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
+Use DocSpring's API to fill PDF forms, generate PDFs and Word documents from HTML or Word templates, merge PDFs, and request legally binding e-signatures.
 
 API version: v2
 */
@@ -25,6 +25,10 @@ type SubmissionFiles struct {
 	AuditTrail *GeneratedFile `json:"audit_trail,omitempty"`
 	// The preview PDF from POST /submissions/{submission_id}/generate_preview, such as for a submission still waiting for its signature requests.
 	Preview *GeneratedFile `json:"preview,omitempty"`
+	// The Word document of a Word template's submission, when the submission makes one (`output_formats`).
+	Docx *GeneratedFile `json:"docx,omitempty"`
+	// The OpenDocument file (.odt, the format LibreOffice uses) of a Word template's submission, converted from its Word document, when the submission makes one (`output_formats`).
+	Odt *GeneratedFile `json:"odt,omitempty"`
 	Png *PageImages `json:"png,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
@@ -144,6 +148,70 @@ func (o *SubmissionFiles) SetPreview(v GeneratedFile) {
 	o.Preview = &v
 }
 
+// GetDocx returns the Docx field value if set, zero value otherwise.
+func (o *SubmissionFiles) GetDocx() GeneratedFile {
+	if o == nil || IsNil(o.Docx) {
+		var ret GeneratedFile
+		return ret
+	}
+	return *o.Docx
+}
+
+// GetDocxOk returns a tuple with the Docx field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SubmissionFiles) GetDocxOk() (*GeneratedFile, bool) {
+	if o == nil || IsNil(o.Docx) {
+		return nil, false
+	}
+	return o.Docx, true
+}
+
+// HasDocx returns a boolean if a field has been set.
+func (o *SubmissionFiles) HasDocx() bool {
+	if o != nil && !IsNil(o.Docx) {
+		return true
+	}
+
+	return false
+}
+
+// SetDocx gets a reference to the given GeneratedFile and assigns it to the Docx field.
+func (o *SubmissionFiles) SetDocx(v GeneratedFile) {
+	o.Docx = &v
+}
+
+// GetOdt returns the Odt field value if set, zero value otherwise.
+func (o *SubmissionFiles) GetOdt() GeneratedFile {
+	if o == nil || IsNil(o.Odt) {
+		var ret GeneratedFile
+		return ret
+	}
+	return *o.Odt
+}
+
+// GetOdtOk returns a tuple with the Odt field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SubmissionFiles) GetOdtOk() (*GeneratedFile, bool) {
+	if o == nil || IsNil(o.Odt) {
+		return nil, false
+	}
+	return o.Odt, true
+}
+
+// HasOdt returns a boolean if a field has been set.
+func (o *SubmissionFiles) HasOdt() bool {
+	if o != nil && !IsNil(o.Odt) {
+		return true
+	}
+
+	return false
+}
+
+// SetOdt gets a reference to the given GeneratedFile and assigns it to the Odt field.
+func (o *SubmissionFiles) SetOdt(v GeneratedFile) {
+	o.Odt = &v
+}
+
 // GetPng returns the Png field value if set, zero value otherwise.
 func (o *SubmissionFiles) GetPng() PageImages {
 	if o == nil || IsNil(o.Png) {
@@ -195,6 +263,12 @@ func (o SubmissionFiles) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Preview) {
 		toSerialize["preview"] = o.Preview
 	}
+	if !IsNil(o.Docx) {
+		toSerialize["docx"] = o.Docx
+	}
+	if !IsNil(o.Odt) {
+		toSerialize["odt"] = o.Odt
+	}
 	if !IsNil(o.Png) {
 		toSerialize["png"] = o.Png
 	}
@@ -223,6 +297,8 @@ func (o *SubmissionFiles) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "pdf")
 		delete(additionalProperties, "audit_trail")
 		delete(additionalProperties, "preview")
+		delete(additionalProperties, "docx")
+		delete(additionalProperties, "odt")
 		delete(additionalProperties, "png")
 		o.AdditionalProperties = additionalProperties
 	}

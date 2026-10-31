@@ -1,7 +1,7 @@
 /*
 DocSpring API
 
-Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
+Use DocSpring's API to fill PDF forms, generate PDFs and Word documents from HTML or Word templates, merge PDFs, and request legally binding e-signatures.
 
 API version: v2
 */
@@ -18,7 +18,7 @@ import (
 // checks if the GeneratedFile type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &GeneratedFile{}
 
-// GeneratedFile A file that DocSpring generated, such as a submission's PDF. A file made after its submission was processed is listed while it's being made: check its `state` before using its links.
+// GeneratedFile A file that DocSpring generated, such as a submission's PDF or Word document. A file made after its submission was processed is listed while it's being made: check its `state` before using its links.
 type GeneratedFile struct {
 	// `processed` once the file has been made. `pending` while it's being made, and `error` if it couldn't be made (see `error_message`).
 	State GeneratedFileState `json:"state"`
@@ -28,9 +28,9 @@ type GeneratedFile struct {
 	DownloadUrl NullableString `json:"download_url"`
 	// A link to download the file that doesn't expire: it redirects to a new temporary link. It needs your API token or a signed-in session, except for a submission of a template that makes its submissions public. Null until the file has been made.
 	PermanentUrl NullableString `json:"permanent_url"`
-	// The file's name, such as `sub_123.pdf`.
+	// The file's name, such as `sub_123.pdf`, `sub_123.docx` or `sub_123.odt`.
 	Filename string `json:"filename"`
-	// The file's media type, such as `application/pdf`.
+	// The file's media type: `application/pdf`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document` for a Word document, or `application/vnd.oasis.opendocument.text` for an OpenDocument file.
 	ContentType string `json:"content_type"`
 	// The file's size in bytes. Null until the file has been made.
 	Size NullableInt32 `json:"size"`

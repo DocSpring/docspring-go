@@ -1,7 +1,7 @@
 /*
 DocSpring API
 
-Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
+Use DocSpring's API to fill PDF forms, generate PDFs and Word documents from HTML or Word templates, merge PDFs, and request legally binding e-signatures.
 
 API version: v2
 */
@@ -19,19 +19,19 @@ import (
 // checks if the SubmissionBatch type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &SubmissionBatch{}
 
-// SubmissionBatch Submissions created together in one request. Their PDFs are only generated when every submission in the batch is valid.
+// SubmissionBatch Submissions created together in one request. Their files are only generated when every submission in the batch is valid.
 type SubmissionBatch struct {
 	// The batch's ID.
 	Id string `json:"id"`
-	// `pending` while the PDFs are being generated, then `processed`. `error` as soon as a submission fails, while the others can still be pending: the batch has finished once `processed_at` is set.
+	// `pending` while the files are being generated, then `processed`. `error` as soon as a submission fails, while the others can still be pending: the batch has finished once `processed_at` is set.
 	State SubmissionBatchState `json:"state"`
 	// Your own data about the batch, such as an ID from your app.
 	Metadata map[string]interface{} `json:"metadata"`
 	// The number of submissions in the request.
 	TotalCount int32 `json:"total_count"`
-	// The submissions whose PDFs haven't been generated yet.
+	// The submissions whose files haven't been generated yet.
 	PendingCount int32 `json:"pending_count"`
-	// The submissions that were invalid or whose PDFs couldn't be generated.
+	// The submissions that were invalid or whose files couldn't be generated.
 	ErrorCount int32 `json:"error_count"`
 	// The percentage of the batch's submissions that have finished, from 0 to 100.
 	CompletionPercentage int32 `json:"completion_percentage"`

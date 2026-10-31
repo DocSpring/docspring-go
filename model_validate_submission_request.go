@@ -1,7 +1,7 @@
 /*
 DocSpring API
 
-Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
+Use DocSpring's API to fill PDF forms, generate PDFs and Word documents from HTML or Word templates, merge PDFs, and request legally binding e-signatures.
 
 API version: v2
 */
@@ -23,13 +23,13 @@ type ValidateSubmissionRequest struct {
 	Test *bool `json:"test,omitempty"`
 	// `true` keeps the PDF's text and check fields fillable, and `false` flattens every field. Left out, the template decides: its `editable_submissions` setting, or each field's own Editable option. A response shows the template's setting when the request left this out. Can't be `true` with `signature_requests`.
 	Editable *bool `json:"editable,omitempty"`
-	// The values of the template's fields, by field name. Required for a PDF template, unless `signature_requests` collects the values.
+	// The values of the template's fields, by field name. Required for PDF and Word templates, unless `signature_requests` collects them (PDF templates only).
 	Data map[string]interface{} `json:"data,omitempty"`
 	// Your own data about the submission, such as an ID from your app. It isn't printed on the PDF. Two keys also change the PDF: `pdf_filename` names its file (`files.pdf.filename`, and its download), and `pdf_title` is its title in the PDF's document properties (and an HTML template's `<title>`, unless its HTML has one). Without `pdf_title`, the title is the template's name. In `pdf_filename`, a `.pdf` ending is removed, each run of characters other than letters, digits, `-`, `_` and `.` becomes one `_`, and the first 128 characters are kept, then `.pdf` is added. Without it, the file is named after the submission's ID (`sub_1234567890abcdef01.pdf`).
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
-	// A password that the PDF needs to be opened with. It's never returned; `has_password` says if it's set.
+	// A password that the PDF needs to be opened with. It's never returned; `has_password` says if it's set. Word documents and OpenDocument files can't be password-protected, so a submission with a password can't make them.
 	Password *string `json:"password,omitempty"`
-	// What the submission makes: `pdf`, and `png` (an image of each page of the PDF, up to 100 pages) when you ask for it. Default `["pdf"]`. POST /submissions/{submission_id}/generate_files adds `png` to a processed submission.
+	// What the submission makes: `pdf`, `docx` (a Word document, from a Word template), `odt` (an OpenDocument file, the format LibreOffice uses, converted from a Word template's Word document), and `png` (an image of each page of the PDF, up to 100 pages, which adds `pdf`) when you ask for it. Default `["pdf"]`, or a Word template's `output_format`. POST /submissions/{submission_id}/generate_files adds `png`, and a Word template's submission's `pdf`, `docx` or `odt`, to a processed submission.
 	OutputFormats []OutputFormat `json:"output_formats,omitempty"`
 	// Seconds after the PDF is generated until the submission expires, up to 10 years (315360000). Default the template's expiration setting. A submission that isn't processed, such as one with invalid data, is kept for at least 48 hours.
 	ExpiresIn *int32 `json:"expires_in,omitempty"`

@@ -1,7 +1,7 @@
 /*
 DocSpring API
 
-Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
+Use DocSpring's API to fill PDF forms, generate PDFs and Word documents from HTML or Word templates, merge PDFs, and request legally binding e-signatures.
 
 API version: v2
 */
@@ -27,11 +27,13 @@ type Template struct {
 	Name NullableString `json:"name"`
 	// Shown under the template's name at the top of its hosted forms, and used as their meta description. Not shown on embedded forms or signature requests.
 	Description NullableString `json:"description"`
-	// `pdf`: fields placed on an uploaded PDF. `html`: a PDF rendered from HTML and SCSS. It can't be changed after the template is created.
+	// `pdf`: fields placed on an uploaded PDF. `html`: a PDF rendered from HTML and SCSS. `docx`: a Word document with tags where the data goes, which makes Word documents or PDFs. It can't be changed after the template is created.
 	TemplateType TemplateType `json:"template_type"`
-	// Whether the template can generate PDFs. HTML templates are always ready. A PDF template is ready once DocSpring has stored its PDF, made an image of each page and finished looking for fields on each page, which can be after `document.state` becomes `processed`. A PDF template with no PDF (`document` is null) isn't ready.
+	// What each submission makes unless its request sets `output_formats`: `docx` (a Word document), `odt` (an OpenDocument file, converted from the Word document) or `pdf`. A Word template's is chosen when it's created; PDF and HTML templates always make PDFs. A Word template that encrypts its PDFs makes PDFs, because Word documents and OpenDocument files can't be password-protected.
+	OutputFormat OutputFormat `json:"output_format"`
+	// Whether the template can make documents. HTML templates are always ready. A PDF template is ready once DocSpring has stored its PDF, made an image of each page and finished looking for fields on each page, which can be after `document.state` becomes `processed`. A PDF template with no PDF (`document` is null) isn't ready. A Word template is ready once it has a Word document (a `document_url`'s has been downloaded).
 	Ready bool `json:"ready"`
-	// The PDF of a PDF template. Null for HTML templates, and for a PDF template that has no PDF yet.
+	// The PDF of a PDF template, or the Word document of a Word template. Null for HTML templates, and for a PDF template that has no PDF yet. A template created from a `document_url` has one, with no file, while it's downloaded.
 	Document NullableTemplateDocument `json:"document"`
 	// The ID of the folder the template is in. Null for a template at the root. Setting it moves the template and all of its published versions.
 	ParentFolderId NullableString `json:"parent_folder_id"`
@@ -59,7 +61,7 @@ type Template struct {
 	AllowAdditionalProperties bool `json:"allow_additional_properties"`
 	// Visual forms and signature request forms show the Continue button as soon as the required fields are filled in, without visiting each optional field. The `allowSkippingOptionalFields` embed option overrides it.
 	AllowSkippingOptionalFields bool `json:"allow_skipping_optional_fields"`
-	// The hosted form that /templates/{template_id}/form shows when its URL has no `mode` parameter: `web` (the web form), `visual` (the visual form, where fields are filled in on the PDF) or `dual` (both, in tabs). HTML templates have no visual form, so `web` is the only value they accept.
+	// The hosted form that /templates/{template_id}/form shows when its URL has no `mode` parameter: `web` (the web form), `visual` (the visual form, where fields are filled in on the PDF) or `dual` (both, in tabs). Only PDF templates have a visual form, so other templates accept only `web`.
 	DefaultFormMode TemplateFormMode `json:"default_form_mode"`
 	// Generate PDFs whose text and check fields stay fillable ("Generate Editable PDFs"). A submission's `editable` overrides it.
 	EditableSubmissions bool `json:"editable_submissions"`
@@ -71,7 +73,7 @@ type Template struct {
 	EmbedEditAllowVersioning bool `json:"embed_edit_allow_versioning"`
 	// Allow the embedded template editor to replace the template's PDF.
 	EmbedEditAllowDocumentReplacement bool `json:"embed_edit_allow_document_replacement"`
-	// Encrypt generated PDFs with `encrypt_pdfs_password`.
+	// Encrypt generated PDFs with `encrypt_pdfs_password`. A Word template can only encrypt its PDFs when its `output_format` is `pdf`, because Word documents and OpenDocument files can't be password-protected.
 	EncryptPdfs bool `json:"encrypt_pdfs"`
 	// Whether `encrypt_pdfs_password` is set.
 	HasEncryptPdfsPassword bool `json:"has_encrypt_pdfs_password"`
@@ -83,7 +85,7 @@ type Template struct {
 	ExpirationInterval ExpirationInterval `json:"expiration_interval"`
 	// Add the audit trail to the end of PDFs signed through signature requests.
 	MergeAuditTrailPdf bool `json:"merge_audit_trail_pdf"`
-	// Date fields also accept NN/NN/YYYY dates (with slashes, dashes or dots), read in the order of the template's default date format: month first for %m/%d/%Y, day first for %d/%m/%Y. When false, date fields only accept YYYY-MM-DD. Applies to PDF templates: an HTML template's date fields only accept YYYY-MM-DD. Date fields that include a time take RFC 3339 date-times either way.
+	// Date fields also accept NN/NN/YYYY dates (with slashes, dashes or dots), read in the order of the template's default date format: month first for %m/%d/%Y, day first for %d/%m/%Y. When false, date fields only accept YYYY-MM-DD. Applies to PDF templates: an HTML or Word template's date fields only accept YYYY-MM-DD. Date fields that include a time take RFC 3339 date-times either way.
 	ParseDatesUsingTemplateDateFormat bool `json:"parse_dates_using_template_date_format"`
 	// Allow anyone with a submission's ID to download its PDF.
 	PublicSubmissions bool `json:"public_submissions"`
@@ -104,7 +106,7 @@ type Template struct {
 	PredefinedFields []PredefinedField `json:"predefined_fields"`
 	// Sample submission data that sets `predefined_fields`: each value becomes a predefined field, with a type that fits it (`string`, `number`, `boolean`, `date`, `email` or `url`) and `required_in_template` true. Nested objects and arrays become names with `/`, such as `customer/email`. Without `predefined_fields` in the same request, it replaces them; with them, it adds to them and sets the types of the ones it has values for.
 	PredefinedFieldsSampleData map[string]interface{} `json:"predefined_fields_sample_data"`
-	// The HTML of an HTML template, as a Liquid template. Null for PDF templates.
+	// The HTML of an HTML template, as a Liquid template. Null for PDF and Word templates.
 	Html NullableString `json:"html"`
 	// The SCSS of an HTML template.
 	Scss NullableString `json:"scss"`
@@ -112,7 +114,7 @@ type Template struct {
 	HeaderHtml NullableString `json:"header_html"`
 	// The HTML printed at the bottom of each page of an HTML template.
 	FooterHtml NullableString `json:"footer_html"`
-	// How an HTML template's PDFs are printed. Null for PDF templates. Setting it replaces the whole object: options left out use their defaults.
+	// How an HTML template's PDFs are printed. Null for PDF and Word templates. Setting it replaces the whole object: options left out use their defaults.
 	HtmlEngineOptions NullableHtmlEngineOptions `json:"html_engine_options"`
 	// Whether an HTML template HTML-escapes the values it prints. When true, `{{ value }}` prints a value as text, so a `<` or `&` in it is printed as that character, and `{{ value | raw }}` prints a value as HTML. New HTML templates default to true. Templates created before October 2026, or with API v1, default to false, which prints every value as HTML. Null for PDF templates.
 	HtmlEscapeData NullableBool `json:"html_escape_data"`
@@ -129,12 +131,13 @@ type _Template Template
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewTemplate(id string, name NullableString, description NullableString, templateType TemplateType, ready bool, document NullableTemplateDocument, parentFolderId NullableString, path string, latestVersion NullableString, versionPublishedAt NullableTime, locked bool, lastChangedAt NullableTime, createdAt time.Time, updatedAt time.Time, version NullableString, addSignatureRequestSubmissionIdFooters bool, aiFieldNamingLanguage NullableAiFieldNamingLanguage, allowAdditionalProperties bool, allowSkippingOptionalFields bool, defaultFormMode TemplateFormMode, editableSubmissions bool, embedDomains []string, embedEditAllowSettings bool, embedEditAllowVersioning bool, embedEditAllowDocumentReplacement bool, encryptPdfs bool, hasEncryptPdfsPassword bool, expireSubmissions bool, expireAfter int32, expirationInterval ExpirationInterval, mergeAuditTrailPdf bool, parseDatesUsingTemplateDateFormat bool, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, hasSlackWebhookUrl bool, lastChangedBy NullableTemplateActor, defaults TemplateDefaults, fieldDependencies []TemplateFieldDependency, fieldGroups []FieldGroup, predefinedFields []PredefinedField, predefinedFieldsSampleData map[string]interface{}, html NullableString, scss NullableString, headerHtml NullableString, footerHtml NullableString, htmlEngineOptions NullableHtmlEngineOptions, htmlEscapeData NullableBool, embedEditToken NullableString, versions []TemplateVersion) *Template {
+func NewTemplate(id string, name NullableString, description NullableString, templateType TemplateType, outputFormat OutputFormat, ready bool, document NullableTemplateDocument, parentFolderId NullableString, path string, latestVersion NullableString, versionPublishedAt NullableTime, locked bool, lastChangedAt NullableTime, createdAt time.Time, updatedAt time.Time, version NullableString, addSignatureRequestSubmissionIdFooters bool, aiFieldNamingLanguage NullableAiFieldNamingLanguage, allowAdditionalProperties bool, allowSkippingOptionalFields bool, defaultFormMode TemplateFormMode, editableSubmissions bool, embedDomains []string, embedEditAllowSettings bool, embedEditAllowVersioning bool, embedEditAllowDocumentReplacement bool, encryptPdfs bool, hasEncryptPdfsPassword bool, expireSubmissions bool, expireAfter int32, expirationInterval ExpirationInterval, mergeAuditTrailPdf bool, parseDatesUsingTemplateDateFormat bool, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, hasSlackWebhookUrl bool, lastChangedBy NullableTemplateActor, defaults TemplateDefaults, fieldDependencies []TemplateFieldDependency, fieldGroups []FieldGroup, predefinedFields []PredefinedField, predefinedFieldsSampleData map[string]interface{}, html NullableString, scss NullableString, headerHtml NullableString, footerHtml NullableString, htmlEngineOptions NullableHtmlEngineOptions, htmlEscapeData NullableBool, embedEditToken NullableString, versions []TemplateVersion) *Template {
 	this := Template{}
 	this.Id = id
 	this.Name = name
 	this.Description = description
 	this.TemplateType = templateType
+	this.OutputFormat = outputFormat
 	this.Ready = ready
 	this.Document = document
 	this.ParentFolderId = parentFolderId
@@ -290,6 +293,30 @@ func (o *Template) GetTemplateTypeOk() (*TemplateType, bool) {
 // SetTemplateType sets field value
 func (o *Template) SetTemplateType(v TemplateType) {
 	o.TemplateType = v
+}
+
+// GetOutputFormat returns the OutputFormat field value
+func (o *Template) GetOutputFormat() OutputFormat {
+	if o == nil {
+		var ret OutputFormat
+		return ret
+	}
+
+	return o.OutputFormat
+}
+
+// GetOutputFormatOk returns a tuple with the OutputFormat field value
+// and a boolean to check if the value has been set.
+func (o *Template) GetOutputFormatOk() (*OutputFormat, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.OutputFormat, true
+}
+
+// SetOutputFormat sets field value
+func (o *Template) SetOutputFormat(v OutputFormat) {
+	o.OutputFormat = v
 }
 
 // GetReady returns the Ready field value
@@ -1444,6 +1471,7 @@ func (o Template) ToMap() (map[string]interface{}, error) {
 	toSerialize["name"] = o.Name.Get()
 	toSerialize["description"] = o.Description.Get()
 	toSerialize["template_type"] = o.TemplateType
+	toSerialize["output_format"] = o.OutputFormat
 	toSerialize["ready"] = o.Ready
 	toSerialize["document"] = o.Document.Get()
 	toSerialize["parent_folder_id"] = o.ParentFolderId.Get()
@@ -1509,6 +1537,7 @@ func (o *Template) UnmarshalJSON(data []byte) (err error) {
 		"name",
 		"description",
 		"template_type",
+		"output_format",
 		"ready",
 		"document",
 		"parent_folder_id",
@@ -1588,6 +1617,7 @@ func (o *Template) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "name")
 		delete(additionalProperties, "description")
 		delete(additionalProperties, "template_type")
+		delete(additionalProperties, "output_format")
 		delete(additionalProperties, "ready")
 		delete(additionalProperties, "document")
 		delete(additionalProperties, "parent_folder_id")

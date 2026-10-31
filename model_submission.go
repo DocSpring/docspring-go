@@ -1,7 +1,7 @@
 /*
 DocSpring API
 
-Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
+Use DocSpring's API to fill PDF forms, generate PDFs and Word documents from HTML or Word templates, merge PDFs, and request legally binding e-signatures.
 
 API version: v2
 */
@@ -19,13 +19,13 @@ import (
 // checks if the Submission type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &Submission{}
 
-// Submission Data submitted to a template, and the PDF generated from it.
+// Submission Data submitted to a template, and the files generated from it (a PDF, a Word document, an OpenDocument file, or more than one of them).
 type Submission struct {
 	// The submission's ID.
 	Id string `json:"id"`
 	// Null once the template has been permanently deleted.
 	TemplateId NullableString `json:"template_id"`
-	// The template's type: `pdf` or `html`.
+	// The template's type: `pdf`, `html` or `docx`.
 	TemplateType TemplateType `json:"template_type"`
 	// The published version of the template the submission used. Null for the draft.
 	TemplateVersion NullableString `json:"template_version"`
@@ -33,7 +33,7 @@ type Submission struct {
 	BatchId NullableString `json:"batch_id"`
 	// `api`: created with the API. `web`: a web form. `reprocess`: a copy of another submission, made to generate its PDF again.
 	Source SubmissionSource `json:"source"`
-	// `pending` until the PDF has been generated, then `processed`. `waiting_for_signature_requests` until every signature request is completed. `insufficient_credits`: waiting for credits; `error_message` says whether the PDF is generated once you add them. `account_suspended`: waiting for the account to be reactivated, for up to 30 days. Waiting ends in `error` if it's discarded or takes over 30 days. Every other state is final, with no PDF: `invalid_data` (the data doesn't match the template's fields: see `data_errors`), `declined` (a signature request was declined), and the states where generating the PDF failed, which have an `error_message`: `syntax_error` (a mistake in an HTML template's Liquid or SCSS), `image_download_failed` or `image_processing_failed` (an image in the data or the template couldn't be downloaded or read) and `error` (anything else). Older submissions can also be `license_revoked` or `accidental`.
+	// `pending` until the files have been generated, then `processed`. `waiting_for_signature_requests` until every signature request is completed. `insufficient_credits`: waiting for credits; `error_message` says whether the files are generated once you add them. `account_suspended`: waiting for the account to be reactivated, for up to 30 days. Waiting ends in `error` if it's discarded or takes over 30 days. Every other state is final, with no files: `invalid_data` (the data doesn't match the template's fields: see `data_errors`), `declined` (a signature request was declined), and the states where generating the files failed, which have an `error_message`: `syntax_error` (a mistake in an HTML template's Liquid or SCSS, or in a Word template's tags), `image_download_failed` or `image_processing_failed` (an image in the data or the template couldn't be downloaded or read) and `error` (anything else). Older submissions can also be `license_revoked` or `accidental`.
 	State SubmissionState `json:"state"`
 	// Test PDFs have a watermark and are free. Live PDFs use credits. Submissions made with a test API token are always test submissions.
 	Test bool `json:"test"`
@@ -47,7 +47,7 @@ type Submission struct {
 	ErrorMessage NullableString `json:"error_message"`
 	// Your own data about the submission, such as an ID from your app. It isn't printed on the PDF. Two keys also change the PDF: `pdf_filename` names its file (`files.pdf.filename`, and its download), and `pdf_title` is its title in the PDF's document properties (and an HTML template's `<title>`, unless its HTML has one). Without `pdf_title`, the title is the template's name. In `pdf_filename`, a `.pdf` ending is removed, each run of characters other than letters, digits, `-`, `_` and `.` becomes one `_`, and the first 128 characters are kept, then `.pdf` is added. Without it, the file is named after the submission's ID (`sub_1234567890abcdef01.pdf`).
 	Metadata map[string]interface{} `json:"metadata"`
-	// The generated files: `pdf` once the submission has been processed, `png` (the images of the PDF's pages, when `output_formats` has it: `files.png.pages[0]` is page 1), `audit_trail` once its signature requests are completed, and `preview` once a preview PDF has been generated. Empty once the submission has expired.
+	// The generated files: `pdf`, `docx` and `odt` (by `output_formats`) once the submission has been processed, `png` (the images of the PDF's pages, when `output_formats` has it: `files.png.pages[0]` is page 1), `audit_trail` once its signature requests are completed, and `preview` once a preview PDF has been generated. Empty once the submission has expired.
 	Files SubmissionFiles `json:"files"`
 	// An expired submission's data, metadata, password and PDF have been deleted.
 	Expired bool `json:"expired"`
@@ -67,7 +67,7 @@ type Submission struct {
 	Actions []SubmissionAction `json:"actions"`
 	// The text of each field that didn't fit in it, by field name. Left out (null) with `data`, and empty once the submission has expired.
 	TruncatedText map[string][]string `json:"truncated_text"`
-	// What the submission makes: `pdf`, and `png` (an image of each page of the PDF, up to 100 pages) when you ask for it. Default `["pdf"]`. POST /submissions/{submission_id}/generate_files adds `png` to a processed submission.
+	// What the submission makes: `pdf`, `docx` (a Word document, from a Word template), `odt` (an OpenDocument file, the format LibreOffice uses, converted from a Word template's Word document), and `png` (an image of each page of the PDF, up to 100 pages, which adds `pdf`) when you ask for it. Default `["pdf"]`, or a Word template's `output_format`. POST /submissions/{submission_id}/generate_files adds `png`, and a Word template's submission's `pdf`, `docx` or `odt`, to a processed submission.
 	OutputFormats []OutputFormat `json:"output_formats"`
 	// When the preview PDF was generated. Null if there is no preview.
 	PreviewGeneratedAt NullableTime `json:"preview_generated_at"`

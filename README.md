@@ -1,7 +1,8 @@
 # DocSpring Go SDK
 
 The official Go client for the [DocSpring API](https://docspring.com/docs/api/). DocSpring fills PDF
-templates with your data, generates PDFs from HTML templates, combines PDFs and collects e-signatures.
+forms with your data, generates PDFs and Word documents from HTML and Word templates, combines PDFs and collects
+e-signatures.
 
 [Documentation](https://docspring.com/docs/) · [API reference](https://docspring.com/docs/api/) ·
 [pkg.go.dev](https://pkg.go.dev/github.com/docspring/docspring-go/v4) · [Changelog](https://github.com/DocSpring/docspring-go/blob/main/CHANGELOG.md)
@@ -9,7 +10,7 @@ templates with your data, generates PDFs from HTML templates, combines PDFs and 
 The code in this repository is generated from DocSpring's OpenAPI spec ([About this SDK](#about-this-sdk)). Issues and
 pull requests are welcome.
 
-Version 4.3.0. Requires Go 1.23 or later.
+Version 4.4.0. Requires Go 1.23 or later.
 
 ## Install and configure
 
@@ -136,11 +137,11 @@ Go code for every method.
 | [`TestAuthentication`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#testauthentication) | Test authentication |
 | [`UpdateSignatureRequest`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#updatesignaturerequest) | Update a signature request |
 | [`UpdateTemplate`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#updatetemplate) | Update a template |
-| [`UpdateTemplateDocument`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#updatetemplatedocument) | Replace a template's PDF |
+| [`UpdateTemplateDocument`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#updatetemplatedocument) | Replace a template's document |
 | [`UpdateTemplateFields`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#updatetemplatefields) | Update a template's fields |
 | [`UpdateWebhook`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#updatewebhook) | Update a webhook |
-| [`UploadTemplate`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#uploadtemplate) | Create a PDF template from an uploaded PDF |
-| [`UploadTemplateDocument`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#uploadtemplatedocument) | Replace a template's PDF with an uploaded PDF |
+| [`UploadTemplate`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#uploadtemplate) | Create a template from an uploaded PDF or Word document |
+| [`UploadTemplateDocument`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#uploadtemplatedocument) | Replace a template's document with an uploaded file |
 | [`ValidateSubmission`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#validatesubmission) | Check a submission without creating it |
 
 ## Errors

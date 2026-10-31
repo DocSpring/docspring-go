@@ -7,9 +7,10 @@ Name | Type | Description | Notes
 **Id** | **string** | The template's ID. | 
 **Name** | **NullableString** | The template's name. | 
 **Description** | **NullableString** | Shown under the template's name at the top of its hosted forms, and used as their meta description. Not shown on embedded forms or signature requests. | 
-**TemplateType** | [**TemplateType**](TemplateType.md) | `pdf`: fields placed on an uploaded PDF. `html`: a PDF rendered from HTML and SCSS. It can't be changed after the template is created. | 
-**Ready** | **bool** | Whether the template can generate PDFs. HTML templates are always ready. A PDF template is ready once DocSpring has stored its PDF, made an image of each page and finished looking for fields on each page, which can be after `document.state` becomes `processed`. A PDF template with no PDF (`document` is null) isn't ready. | 
-**Document** | [**NullableTemplateDocument**](TemplateDocument.md) | The PDF of a PDF template. Null for HTML templates, and for a PDF template that has no PDF yet. | 
+**TemplateType** | [**TemplateType**](TemplateType.md) | `pdf`: fields placed on an uploaded PDF. `html`: a PDF rendered from HTML and SCSS. `docx`: a Word document with tags where the data goes, which makes Word documents or PDFs. It can't be changed after the template is created. | 
+**OutputFormat** | [**OutputFormat**](OutputFormat.md) | What each submission makes unless its request sets `output_formats`: `docx` (a Word document), `odt` (an OpenDocument file, converted from the Word document) or `pdf`. A Word template's is chosen when it's created; PDF and HTML templates always make PDFs. A Word template that encrypts its PDFs makes PDFs, because Word documents and OpenDocument files can't be password-protected. | 
+**Ready** | **bool** | Whether the template can make documents. HTML templates are always ready. A PDF template is ready once DocSpring has stored its PDF, made an image of each page and finished looking for fields on each page, which can be after `document.state` becomes `processed`. A PDF template with no PDF (`document` is null) isn't ready. A Word template is ready once it has a Word document (a `document_url`'s has been downloaded). | 
+**Document** | [**NullableTemplateDocument**](TemplateDocument.md) | The PDF of a PDF template, or the Word document of a Word template. Null for HTML templates, and for a PDF template that has no PDF yet. A template created from a `document_url` has one, with no file, while it's downloaded. | 
 **ParentFolderId** | **NullableString** | The ID of the folder the template is in. Null for a template at the root. Setting it moves the template and all of its published versions. | 
 **Path** | **string** | The path of the folder the template is in, such as `/Contracts`. `/` for a template at the root. | 
 **LatestVersion** | **NullableString** | The template's latest published version. Null if no version has been published. | 
@@ -23,19 +24,19 @@ Name | Type | Description | Notes
 **AiFieldNamingLanguage** | [**NullableAiFieldNamingLanguage**](AiFieldNamingLanguage.md) | The language AI field setup names fields in: `auto` uses the form's language when it's written in the Latin alphabet without accents, and English otherwise; `english` always uses English; `form_language` uses the form's language and script. New templates take it from your account's template settings. Null for HTML templates. | 
 **AllowAdditionalProperties** | **bool** | Accept submission data with properties that aren't fields of the template. | 
 **AllowSkippingOptionalFields** | **bool** | Visual forms and signature request forms show the Continue button as soon as the required fields are filled in, without visiting each optional field. The `allowSkippingOptionalFields` embed option overrides it. | 
-**DefaultFormMode** | [**TemplateFormMode**](TemplateFormMode.md) | The hosted form that /templates/{template_id}/form shows when its URL has no `mode` parameter: `web` (the web form), `visual` (the visual form, where fields are filled in on the PDF) or `dual` (both, in tabs). HTML templates have no visual form, so `web` is the only value they accept. | 
+**DefaultFormMode** | [**TemplateFormMode**](TemplateFormMode.md) | The hosted form that /templates/{template_id}/form shows when its URL has no `mode` parameter: `web` (the web form), `visual` (the visual form, where fields are filled in on the PDF) or `dual` (both, in tabs). Only PDF templates have a visual form, so other templates accept only `web`. | 
 **EditableSubmissions** | **bool** | Generate PDFs whose text and check fields stay fillable ("Generate Editable PDFs"). A submission's `editable` overrides it. | 
 **EmbedDomains** | **[]string** | The sites that can embed the template's live signature requests and its embedded template editor: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work). Browsers open a live signature request in a frame only on these sites (and DocSpring's), so with an empty list it can't be embedded anywhere; a test signature request can be embedded on any site. The embedded template editor loads only for a page on one of these sites (by its Referer or Origin header), and on any site when the list is empty. Forms embedded on a page (Visual Forms JS and the simple form) aren't restricted. | 
 **EmbedEditAllowSettings** | **bool** | Allow the embedded template editor to change sensitive template settings (webhooks, redirect URL, encryption, public access, expiration and so on). | 
 **EmbedEditAllowVersioning** | **bool** | Allow the embedded template editor to publish, restore, compare and delete published versions. | 
 **EmbedEditAllowDocumentReplacement** | **bool** | Allow the embedded template editor to replace the template's PDF. | 
-**EncryptPdfs** | **bool** | Encrypt generated PDFs with `encrypt_pdfs_password`. | 
+**EncryptPdfs** | **bool** | Encrypt generated PDFs with `encrypt_pdfs_password`. A Word template can only encrypt its PDFs when its `output_format` is `pdf`, because Word documents and OpenDocument files can't be password-protected. | 
 **HasEncryptPdfsPassword** | **bool** | Whether `encrypt_pdfs_password` is set. | 
 **ExpireSubmissions** | **bool** | Delete each submission's data and PDF after `expire_after` `expiration_interval`. | 
 **ExpireAfter** | **int32** | How many `expiration_interval`s a submission's data and PDF are kept for, when `expire_submissions` is on. At most 5256000 (10 years in minutes). | 
 **ExpirationInterval** | [**ExpirationInterval**](ExpirationInterval.md) | The unit of `expire_after`. | 
 **MergeAuditTrailPdf** | **bool** | Add the audit trail to the end of PDFs signed through signature requests. | 
-**ParseDatesUsingTemplateDateFormat** | **bool** | Date fields also accept NN/NN/YYYY dates (with slashes, dashes or dots), read in the order of the template's default date format: month first for %m/%d/%Y, day first for %d/%m/%Y. When false, date fields only accept YYYY-MM-DD. Applies to PDF templates: an HTML template's date fields only accept YYYY-MM-DD. Date fields that include a time take RFC 3339 date-times either way. | 
+**ParseDatesUsingTemplateDateFormat** | **bool** | Date fields also accept NN/NN/YYYY dates (with slashes, dashes or dots), read in the order of the template's default date format: month first for %m/%d/%Y, day first for %d/%m/%Y. When false, date fields only accept YYYY-MM-DD. Applies to PDF templates: an HTML or Word template's date fields only accept YYYY-MM-DD. Date fields that include a time take RFC 3339 date-times either way. | 
 **PublicSubmissions** | **bool** | Allow anyone with a submission's ID to download its PDF. | 
 **PublicWebForm** | **bool** | Allow anyone to fill in the template's web form. | 
 **RedirectUrl** | **NullableString** | Where the web form sends people after they submit it. | 
@@ -46,11 +47,11 @@ Name | Type | Description | Notes
 **FieldGroups** | [**[]FieldGroup**](FieldGroup.md) | The groups of the template's fields, with their settings. A field's name puts it in groups: `address/city` is in the group `address`, and `items/0/price` is in the list `items` and its items' group `items/~`. | 
 **PredefinedFields** | [**[]PredefinedField**](PredefinedField.md) | The field names that people using the embedded template editor choose from, each with the data type and settings a field gets when it's given that name. Setting it replaces the whole list; an empty list turns them off. | 
 **PredefinedFieldsSampleData** | **map[string]interface{}** | Sample submission data that sets `predefined_fields`: each value becomes a predefined field, with a type that fits it (`string`, `number`, `boolean`, `date`, `email` or `url`) and `required_in_template` true. Nested objects and arrays become names with `/`, such as `customer/email`. Without `predefined_fields` in the same request, it replaces them; with them, it adds to them and sets the types of the ones it has values for. | 
-**Html** | **NullableString** | The HTML of an HTML template, as a Liquid template. Null for PDF templates. | 
+**Html** | **NullableString** | The HTML of an HTML template, as a Liquid template. Null for PDF and Word templates. | 
 **Scss** | **NullableString** | The SCSS of an HTML template. | 
 **HeaderHtml** | **NullableString** | The HTML printed at the top of each page of an HTML template. | 
 **FooterHtml** | **NullableString** | The HTML printed at the bottom of each page of an HTML template. | 
-**HtmlEngineOptions** | [**NullableHtmlEngineOptions**](HtmlEngineOptions.md) | How an HTML template's PDFs are printed. Null for PDF templates. Setting it replaces the whole object: options left out use their defaults. | 
+**HtmlEngineOptions** | [**NullableHtmlEngineOptions**](HtmlEngineOptions.md) | How an HTML template's PDFs are printed. Null for PDF and Word templates. Setting it replaces the whole object: options left out use their defaults. | 
 **HtmlEscapeData** | **NullableBool** | Whether an HTML template HTML-escapes the values it prints. When true, `{{ value }}` prints a value as text, so a `&lt;` or `&amp;` in it is printed as that character, and `{{ value | raw }}` prints a value as HTML. New HTML templates default to true. Templates created before October 2026, or with API v1, default to false, which prints every value as HTML. Null for PDF templates. | 
 **EmbedEditToken** | **NullableString** | The token that opens the template in the embedded template editor. | 
 **Versions** | [**[]TemplateVersion**](TemplateVersion.md) | The template's published versions, newest first (up to 100). | 
@@ -59,7 +60,7 @@ Name | Type | Description | Notes
 
 ### NewTemplate
 
-`func NewTemplate(id string, name NullableString, description NullableString, templateType TemplateType, ready bool, document NullableTemplateDocument, parentFolderId NullableString, path string, latestVersion NullableString, versionPublishedAt NullableTime, locked bool, lastChangedAt NullableTime, createdAt time.Time, updatedAt time.Time, version NullableString, addSignatureRequestSubmissionIdFooters bool, aiFieldNamingLanguage NullableAiFieldNamingLanguage, allowAdditionalProperties bool, allowSkippingOptionalFields bool, defaultFormMode TemplateFormMode, editableSubmissions bool, embedDomains []string, embedEditAllowSettings bool, embedEditAllowVersioning bool, embedEditAllowDocumentReplacement bool, encryptPdfs bool, hasEncryptPdfsPassword bool, expireSubmissions bool, expireAfter int32, expirationInterval ExpirationInterval, mergeAuditTrailPdf bool, parseDatesUsingTemplateDateFormat bool, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, hasSlackWebhookUrl bool, lastChangedBy NullableTemplateActor, defaults TemplateDefaults, fieldDependencies []TemplateFieldDependency, fieldGroups []FieldGroup, predefinedFields []PredefinedField, predefinedFieldsSampleData map[string]interface{}, html NullableString, scss NullableString, headerHtml NullableString, footerHtml NullableString, htmlEngineOptions NullableHtmlEngineOptions, htmlEscapeData NullableBool, embedEditToken NullableString, versions []TemplateVersion, ) *Template`
+`func NewTemplate(id string, name NullableString, description NullableString, templateType TemplateType, outputFormat OutputFormat, ready bool, document NullableTemplateDocument, parentFolderId NullableString, path string, latestVersion NullableString, versionPublishedAt NullableTime, locked bool, lastChangedAt NullableTime, createdAt time.Time, updatedAt time.Time, version NullableString, addSignatureRequestSubmissionIdFooters bool, aiFieldNamingLanguage NullableAiFieldNamingLanguage, allowAdditionalProperties bool, allowSkippingOptionalFields bool, defaultFormMode TemplateFormMode, editableSubmissions bool, embedDomains []string, embedEditAllowSettings bool, embedEditAllowVersioning bool, embedEditAllowDocumentReplacement bool, encryptPdfs bool, hasEncryptPdfsPassword bool, expireSubmissions bool, expireAfter int32, expirationInterval ExpirationInterval, mergeAuditTrailPdf bool, parseDatesUsingTemplateDateFormat bool, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, hasSlackWebhookUrl bool, lastChangedBy NullableTemplateActor, defaults TemplateDefaults, fieldDependencies []TemplateFieldDependency, fieldGroups []FieldGroup, predefinedFields []PredefinedField, predefinedFieldsSampleData map[string]interface{}, html NullableString, scss NullableString, headerHtml NullableString, footerHtml NullableString, htmlEngineOptions NullableHtmlEngineOptions, htmlEscapeData NullableBool, embedEditToken NullableString, versions []TemplateVersion, ) *Template`
 
 NewTemplate instantiates a new Template object
 This constructor will assign default values to properties that have it defined,
@@ -172,6 +173,26 @@ and a boolean to check if the value has been set.
 `func (o *Template) SetTemplateType(v TemplateType)`
 
 SetTemplateType sets TemplateType field to given value.
+
+
+### GetOutputFormat
+
+`func (o *Template) GetOutputFormat() OutputFormat`
+
+GetOutputFormat returns the OutputFormat field if non-nil, zero value otherwise.
+
+### GetOutputFormatOk
+
+`func (o *Template) GetOutputFormatOk() (*OutputFormat, bool)`
+
+GetOutputFormatOk returns a tuple with the OutputFormat field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetOutputFormat
+
+`func (o *Template) SetOutputFormat(v OutputFormat)`
+
+SetOutputFormat sets OutputFormat field to given value.
 
 
 ### GetReady

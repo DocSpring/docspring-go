@@ -8,8 +8,8 @@ Name | Type | Description | Notes
 **ErrorMessage** | **NullableString** | Why the file couldn't be made, when `state` is `error`. | 
 **DownloadUrl** | **NullableString** | A temporary link to download the file. Null until the file has been made, and when your account turns off download links for submissions. | 
 **PermanentUrl** | **NullableString** | A link to download the file that doesn't expire: it redirects to a new temporary link. It needs your API token or a signed-in session, except for a submission of a template that makes its submissions public. Null until the file has been made. | 
-**Filename** | **string** | The file's name, such as `sub_123.pdf`. | 
-**ContentType** | **string** | The file's media type, such as `application/pdf`. | 
+**Filename** | **string** | The file's name, such as `sub_123.pdf`, `sub_123.docx` or `sub_123.odt`. | 
+**ContentType** | **string** | The file's media type: `application/pdf`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document` for a Word document, or `application/vnd.oasis.opendocument.text` for an OpenDocument file. | 
 **Size** | **NullableInt32** | The file's size in bytes. Null until the file has been made. | 
 **Sha256** | **NullableString** | The SHA-256 hash of the file. Null until the file has been made. | 
 

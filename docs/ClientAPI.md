@@ -56,11 +56,11 @@ Method | HTTP request | Description
 [**TestAuthentication**](ClientAPI.md#TestAuthentication) | **Get** /authentication | Test authentication
 [**UpdateSignatureRequest**](ClientAPI.md#UpdateSignatureRequest) | **Put** /signature_requests/{signature_request_id} | Update a signature request
 [**UpdateTemplate**](ClientAPI.md#UpdateTemplate) | **Put** /templates/{template_id} | Update a template
-[**UpdateTemplateDocument**](ClientAPI.md#UpdateTemplateDocument) | **Put** /templates/{template_id}/document | Replace a template's PDF
+[**UpdateTemplateDocument**](ClientAPI.md#UpdateTemplateDocument) | **Put** /templates/{template_id}/document | Replace a template's document
 [**UpdateTemplateFields**](ClientAPI.md#UpdateTemplateFields) | **Put** /templates/{template_id}/fields | Update a template's fields
 [**UpdateWebhook**](ClientAPI.md#UpdateWebhook) | **Put** /webhooks/{webhook_id} | Update a webhook
-[**UploadTemplate**](ClientAPI.md#UploadTemplate) | **Post** /templates/upload | Create a PDF template from an uploaded PDF
-[**UploadTemplateDocument**](ClientAPI.md#UploadTemplateDocument) | **Put** /templates/{template_id}/document/upload | Replace a template's PDF with an uploaded PDF
+[**UploadTemplate**](ClientAPI.md#UploadTemplate) | **Post** /templates/upload | Create a template from an uploaded PDF or Word document
+[**UploadTemplateDocument**](ClientAPI.md#UploadTemplateDocument) | **Put** /templates/{template_id}/document/upload | Replace a template's document with an uploaded file
 [**ValidateSubmission**](ClientAPI.md#ValidateSubmission) | **Post** /templates/{template_id}/submissions/validate | Check a submission without creating it
 
 
@@ -655,7 +655,7 @@ import (
 
 func main() {
 	body := *openapiclient.NewCreateSubmissionBatchRequest([]openapiclient.SubmissionInput{*openapiclient.NewSubmissionInput()}) // CreateSubmissionBatchRequest | The submissions to create, and the settings they share.
-	wait := true // bool | Wait until every PDF in the batch has been generated before responding. Default true on sync.api hosts. (optional)
+	wait := true // bool | Wait until every file in the batch has been generated before responding. Default true on sync.api hosts. (optional)
 	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another batch. Send a new key with each new batch, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds. (optional)
 
 	configuration := openapiclient.NewConfiguration()
@@ -682,7 +682,7 @@ Other parameters are passed through a pointer to a apiCreateSubmissionBatchReque
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **body** | [**CreateSubmissionBatchRequest**](CreateSubmissionBatchRequest.md) | The submissions to create, and the settings they share. | 
- **wait** | **bool** | Wait until every PDF in the batch has been generated before responding. Default true on sync.api hosts. | 
+ **wait** | **bool** | Wait until every file in the batch has been generated before responding. Default true on sync.api hosts. | 
  **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another batch. Send a new key with each new batch, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds. | 
 
 ### Return type
@@ -725,7 +725,7 @@ import (
 
 func main() {
 	body := *openapiclient.NewCreateTemplateRequest(openapiclient.TemplateType("pdf")) // CreateTemplateRequest | The template to create.
-	wait := true // bool | Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. (optional)
+	wait := true // bool | Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -751,7 +751,7 @@ Other parameters are passed through a pointer to a apiCreateTemplateRequest stru
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **body** | [**CreateTemplateRequest**](CreateTemplateRequest.md) | The template to create. | 
- **wait** | **bool** | Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. | 
+ **wait** | **bool** | Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts. | 
 
 ### Return type
 
@@ -1355,7 +1355,7 @@ import (
 
 func main() {
 	submissionId := "sub_1234567890abcdef01" // string | The submission's ID.
-	body := *openapiclient.NewGenerateSubmissionFilesRequest([]openapiclient.GenerateFilesFormat{openapiclient.GenerateFilesFormat("png")}) // GenerateSubmissionFilesRequest | The formats to make.
+	body := *openapiclient.NewGenerateSubmissionFilesRequest([]openapiclient.GenerateFilesFormat{openapiclient.GenerateFilesFormat("pdf")}) // GenerateSubmissionFilesRequest | The formats to make.
 	wait := true // bool | Wait until the files have been generated before responding. Default true on sync.api hosts. (optional)
 
 	configuration := openapiclient.NewConfiguration()
@@ -3778,7 +3778,7 @@ Name | Type | Description  | Notes
 
 > Template UpdateTemplateDocument(ctx, templateId).Body(body).Wait(wait).Execute()
 
-Replace a template's PDF
+Replace a template's document
 
 
 
@@ -3796,8 +3796,8 @@ import (
 
 func main() {
 	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
-	body := *openapiclient.NewUpdateTemplateDocumentRequest() // UpdateTemplateDocumentRequest | The new PDF, as one of `cache_id`, `document_url` and `document_base64`.
-	wait := true // bool | Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. (optional)
+	body := *openapiclient.NewUpdateTemplateDocumentRequest() // UpdateTemplateDocumentRequest | The new PDF, or a Word template's new Word document, as one of `cache_id`, `document_url` and `document_base64`.
+	wait := true // bool | Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -3827,8 +3827,8 @@ Other parameters are passed through a pointer to a apiUpdateTemplateDocumentRequ
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **body** | [**UpdateTemplateDocumentRequest**](UpdateTemplateDocumentRequest.md) | The new PDF, as one of `cache_id`, `document_url` and `document_base64`. | 
- **wait** | **bool** | Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. | 
+ **body** | [**UpdateTemplateDocumentRequest**](UpdateTemplateDocumentRequest.md) | The new PDF, or a Word template's new Word document, as one of `cache_id`, `document_url` and `document_base64`. | 
+ **wait** | **bool** | Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts. | 
 
 ### Return type
 
@@ -3994,9 +3994,9 @@ Name | Type | Description  | Notes
 
 ## UploadTemplate
 
-> Template UploadTemplate(ctx).Document(document).Wait(wait).Name(name).Description(description).ParentFolderId(parentFolderId).AiFieldNamingLanguage(aiFieldNamingLanguage).DetectFields(detectFields).FieldSource(fieldSource).FieldNaming(fieldNaming).FieldLogic(fieldLogic).Execute()
+> Template UploadTemplate(ctx).Document(document).Wait(wait).Name(name).Description(description).ParentFolderId(parentFolderId).AiFieldNamingLanguage(aiFieldNamingLanguage).DetectFields(detectFields).FieldSource(fieldSource).FieldNaming(fieldNaming).FieldLogic(fieldLogic).OutputFormat(outputFormat).Execute()
 
-Create a PDF template from an uploaded PDF
+Create a template from an uploaded PDF or Word document
 
 
 
@@ -4013,8 +4013,8 @@ import (
 )
 
 func main() {
-	document := os.NewFile(1234, "some_file") // *os.File | The PDF.
-	wait := true // bool | Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. (optional)
+	document := os.NewFile(1234, "some_file") // *os.File | A PDF (for a PDF template) or a Word document (.docx or .odt, for a Word template). DocSpring converts an OpenDocument text file (.odt) to a Word document after responding: the template's `document.state` is `converting` until then (sync.api hosts wait for it).
+	wait := true // bool | Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts. (optional)
 	name := "name_example" // string | The template's name. (optional)
 	description := "description_example" // string | The template's description. (optional)
 	parentFolderId := "parentFolderId_example" // string | The folder to put the template in. Left out, it's created at the root. (optional)
@@ -4023,10 +4023,11 @@ func main() {
 	fieldSource := openapiclient.FieldSetupSource("auto") // FieldSetupSource | With `detect_fields`, where the fields come from. `auto` (the default) imports the form fields of a fillable PDF and detects the fields of a PDF without them; `pdf_detection` detects the fields from the page layout, even on a fillable PDF; `pdf_form_fields` only imports the PDF's form fields. (optional)
 	fieldNaming := openapiclient.FieldSetupNaming("ai") // FieldSetupNaming | With `detect_fields`, how the fields are named. `ai` (the default) names them and sets their types and settings with AI; `preserve` keeps the names of the PDF's form fields, and AI only names the fields it detected. `preserve` needs `field_source` `auto` or `pdf_form_fields`. (optional)
 	fieldLogic := openapiclient.FieldSetupLogic("ai") // FieldSetupLogic | With `detect_fields`, whether AI reads the whole form once the fields are named and sets up conditional logic and required fields (`ai`) or not (`none`). Default: your account's template settings. (optional)
+	outputFormat := openapiclient.OutputFormat("pdf") // OutputFormat | What each submission of a Word template makes unless its request sets `output_formats`: `docx` (a Word document), `odt` (an OpenDocument file, converted from the Word document) or `pdf`. Required when `document` is a Word document. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.UploadTemplate(context.Background()).Document(document).Wait(wait).Name(name).Description(description).ParentFolderId(parentFolderId).AiFieldNamingLanguage(aiFieldNamingLanguage).DetectFields(detectFields).FieldSource(fieldSource).FieldNaming(fieldNaming).FieldLogic(fieldLogic).Execute()
+	resp, r, err := apiClient.ClientAPI.UploadTemplate(context.Background()).Document(document).Wait(wait).Name(name).Description(description).ParentFolderId(parentFolderId).AiFieldNamingLanguage(aiFieldNamingLanguage).DetectFields(detectFields).FieldSource(fieldSource).FieldNaming(fieldNaming).FieldLogic(fieldLogic).OutputFormat(outputFormat).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.UploadTemplate``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -4047,8 +4048,8 @@ Other parameters are passed through a pointer to a apiUploadTemplateRequest stru
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **document** | ***os.File** | The PDF. | 
- **wait** | **bool** | Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. | 
+ **document** | ***os.File** | A PDF (for a PDF template) or a Word document (.docx or .odt, for a Word template). DocSpring converts an OpenDocument text file (.odt) to a Word document after responding: the template's `document.state` is `converting` until then (sync.api hosts wait for it). | 
+ **wait** | **bool** | Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts. | 
  **name** | **string** | The template's name. | 
  **description** | **string** | The template's description. | 
  **parentFolderId** | **string** | The folder to put the template in. Left out, it's created at the root. | 
@@ -4057,6 +4058,7 @@ Name | Type | Description  | Notes
  **fieldSource** | [**FieldSetupSource**](FieldSetupSource.md) | With `detect_fields`, where the fields come from. `auto` (the default) imports the form fields of a fillable PDF and detects the fields of a PDF without them; `pdf_detection` detects the fields from the page layout, even on a fillable PDF; `pdf_form_fields` only imports the PDF's form fields. | 
  **fieldNaming** | [**FieldSetupNaming**](FieldSetupNaming.md) | With `detect_fields`, how the fields are named. `ai` (the default) names them and sets their types and settings with AI; `preserve` keeps the names of the PDF's form fields, and AI only names the fields it detected. `preserve` needs `field_source` `auto` or `pdf_form_fields`. | 
  **fieldLogic** | [**FieldSetupLogic**](FieldSetupLogic.md) | With `detect_fields`, whether AI reads the whole form once the fields are named and sets up conditional logic and required fields (`ai`) or not (`none`). Default: your account's template settings. | 
+ **outputFormat** | [**OutputFormat**](OutputFormat.md) | What each submission of a Word template makes unless its request sets `output_formats`: `docx` (a Word document), `odt` (an OpenDocument file, converted from the Word document) or `pdf`. Required when `document` is a Word document. | 
 
 ### Return type
 
@@ -4080,7 +4082,7 @@ Name | Type | Description  | Notes
 
 > Template UploadTemplateDocument(ctx, templateId).Document(document).Wait(wait).ReimportFields(reimportFields).Execute()
 
-Replace a template's PDF with an uploaded PDF
+Replace a template's document with an uploaded file
 
 
 
@@ -4098,9 +4100,9 @@ import (
 
 func main() {
 	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
-	document := os.NewFile(1234, "some_file") // *os.File | The new PDF.
-	wait := true // bool | Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. (optional)
-	reimportFields := true // bool | Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. (optional)
+	document := os.NewFile(1234, "some_file") // *os.File | The new PDF, or the new Word document (.docx or .odt) of a Word template.
+	wait := true // bool | Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts. (optional)
+	reimportFields := true // bool | Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. Only for PDF templates: a Word template adds a field for each new tag. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -4130,9 +4132,9 @@ Other parameters are passed through a pointer to a apiUploadTemplateDocumentRequ
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **document** | ***os.File** | The new PDF. | 
- **wait** | **bool** | Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. | 
- **reimportFields** | **bool** | Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. | 
+ **document** | ***os.File** | The new PDF, or the new Word document (.docx or .odt) of a Word template. | 
+ **wait** | **bool** | Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts. | 
+ **reimportFields** | **bool** | Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. Only for PDF templates: a Word template adds a field for each new tag. | 
 
 ### Return type
 

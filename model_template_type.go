@@ -1,7 +1,7 @@
 /*
 DocSpring API
 
-Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
+Use DocSpring's API to fill PDF forms, generate PDFs and Word documents from HTML or Word templates, merge PDFs, and request legally binding e-signatures.
 
 API version: v2
 */
@@ -15,19 +15,21 @@ import (
 	"fmt"
 )
 
-// TemplateType The kind of template: `pdf` (fields placed on an uploaded PDF) or `html` (a PDF rendered from HTML).
+// TemplateType The kind of template: `pdf` (fields placed on an uploaded PDF), `html` (a PDF rendered from HTML) or `docx` (a Word document with tags where the data goes).
 type TemplateType string
 
 // List of TemplateType
 const (
 	TEMPLATETYPE_PDF TemplateType = "pdf"
 	TEMPLATETYPE_HTML TemplateType = "html"
+	TEMPLATETYPE_DOCX TemplateType = "docx"
 )
 
 // All allowed values of TemplateType enum
 var AllowedTemplateTypeEnumValues = []TemplateType{
 	"pdf",
 	"html",
+	"docx",
 }
 
 func (v *TemplateType) UnmarshalJSON(src []byte) error {

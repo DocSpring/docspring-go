@@ -1,7 +1,7 @@
 /*
 DocSpring API
 
-Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
+Use DocSpring's API to fill PDF forms, generate PDFs and Word documents from HTML or Word templates, merge PDFs, and request legally binding e-signatures.
 
 API version: v2
 */
@@ -1523,7 +1523,7 @@ func (r ApiCreateSubmissionBatchRequest) Body(body CreateSubmissionBatchRequest)
 	return r
 }
 
-// Wait until every PDF in the batch has been generated before responding. Default true on sync.api hosts.
+// Wait until every file in the batch has been generated before responding. Default true on sync.api hosts.
 func (r ApiCreateSubmissionBatchRequest) Wait(wait bool) ApiCreateSubmissionBatchRequest {
 	r.wait = &wait
 	return r
@@ -1741,7 +1741,7 @@ func (r ApiCreateTemplateRequest) Body(body CreateTemplateRequest) ApiCreateTemp
 	return r
 }
 
-// Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts.
+// Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts.
 func (r ApiCreateTemplateRequest) Wait(wait bool) ApiCreateTemplateRequest {
 	r.wait = &wait
 	return r
@@ -1754,12 +1754,16 @@ func (r ApiCreateTemplateRequest) Execute() (*Template, *http.Response, error) {
 /*
 CreateTemplate Create a template
 
-Creates an HTML template, or a PDF template from a PDF you uploaded with the presigned upload (GET
-/uploads/presign): pass its `fields.key` as `cache_id`. To send the PDF with the request instead, use POST
-/templates/upload.
+Creates an HTML template, or a PDF or Word template from a file you uploaded with the presigned upload (GET
+/uploads/presign): pass its `fields.key` as `cache_id`. You can send a link to the file (`document_url`) or
+the file in base64 (`document_base64`) instead, or send the file with the request with POST
+/templates/upload. A Word template is made from a Word document (.docx) or an OpenDocument text file (.odt),
+which DocSpring converts to a Word document. It needs its `output_format`: what each submission makes, a Word
+document (`docx`), an OpenDocument file (`odt`) or a PDF.
 
-A PDF template is ready to generate PDFs once DocSpring has processed its PDF (`ready` is true). On sync.api
-hosts the request waits for that unless you pass `wait=false`.
+A PDF template is ready to generate PDFs once DocSpring has processed its PDF, a template created from a
+`document_url` once its document has been downloaded, and one created from an .odt once it has been converted
+(`ready` is true). On sync.api hosts the request waits for that unless you pass `wait=false`.
 
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -1942,9 +1946,10 @@ func (r ApiCreateTemplatePreviewRequest) Execute() (*TemplatePreview, *http.Resp
 CreateTemplatePreview Preview a template with data
 
 Makes PNG images of a template's pages filled in with the data you send (not a PDF), so you can check how an
-HTML or PDF template prints with your data before you publish a version or send live data. It renders the
-template's draft, or the published `version` you ask for. A preview makes no submission and uses no credits,
-and its pages are watermarked like a test submission's PDF. It's `pending` while it renders: get it with GET
+HTML, PDF or Word template prints with your data before you publish a version or send live data. A Word
+template's pages are its PDF's, whatever its `output_format`. It renders the template's draft, or the
+published `version` you ask for. A preview makes no submission and uses no credits, and its pages are
+watermarked like a test submission's PDF. It's `pending` while it renders: get it with GET
 /templates/{template_id}/previews/{preview_id} until it's `processed`, with an image of each page, or `error`.
 
 
@@ -3177,8 +3182,13 @@ func (r ApiGenerateSubmissionFilesRequest) Execute() (*Submission, *http.Respons
 /*
 GenerateSubmissionFiles Generate more files
 
-Adds formats to a processed submission's files, in the background: `png`, a PNG image of each page of the
-PDF (up to 100 pages). To make them with the submission, add them to `output_formats` when you create it.
+Adds formats to a processed submission's files, in the background, without using credits again: `pdf`, the
+PDF of a Word template's submission that made only its Word document (converted from that document), `docx`,
+the Word document of a Word template's submission that made only its PDF (made again from its data and the
+template version it used), `odt`, a Word template's submission's OpenDocument file (converted from its Word
+document, or from one made again when it didn't keep one), and `png`, a PNG image of each page of the PDF (up
+to 100 pages), which makes the PDF first when the submission doesn't have one. To make them with the submission, add them to
+`output_formats` when you create it.
 
 Each new file is listed in `files` while it's made: on sync.api hosts the request waits for them (unless you
 pass `wait=false`), otherwise poll GET /submissions/{submission_id} until none of their `state` is `pending`.
@@ -8723,13 +8733,13 @@ type ApiUpdateTemplateDocumentRequest struct {
 	wait *bool
 }
 
-// The new PDF, as one of `cache_id`, `document_url` and `document_base64`.
+// The new PDF, or a Word template's new Word document, as one of `cache_id`, `document_url` and `document_base64`.
 func (r ApiUpdateTemplateDocumentRequest) Body(body UpdateTemplateDocumentRequest) ApiUpdateTemplateDocumentRequest {
 	r.body = &body
 	return r
 }
 
-// Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts.
+// Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts.
 func (r ApiUpdateTemplateDocumentRequest) Wait(wait bool) ApiUpdateTemplateDocumentRequest {
 	r.wait = &wait
 	return r
@@ -8740,12 +8750,14 @@ func (r ApiUpdateTemplateDocumentRequest) Execute() (*Template, *http.Response, 
 }
 
 /*
-UpdateTemplateDocument Replace a template's PDF
+UpdateTemplateDocument Replace a template's document
 
-Replaces a PDF template's PDF with one you uploaded with the presigned upload (GET /uploads/presign)
-(`cache_id`), a link to download it from (`document_url`), or the file in base64 (`document_base64`). The
-fields stay where they are, unless `reimport_fields` replaces them with the new PDF's fillable fields. To send
-the PDF as `multipart/form-data` instead, use PUT /templates/{template_id}/document/upload.
+Replaces a PDF template's PDF, or a Word template's Word document (from a .docx or an .odt), with one you
+uploaded with the presigned upload (GET /uploads/presign) (`cache_id`), a link to download it from
+(`document_url`), or the file in base64 (`document_base64`). A PDF template's fields stay where they are,
+unless `reimport_fields` replaces them with the new PDF's fillable fields, and a Word template gets a field
+for each new tag. To send the file as `multipart/form-data` instead, use PUT
+/templates/{template_id}/document/upload.
 
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -9266,15 +9278,16 @@ type ApiUploadTemplateRequest struct {
 	fieldSource *FieldSetupSource
 	fieldNaming *FieldSetupNaming
 	fieldLogic *FieldSetupLogic
+	outputFormat *OutputFormat
 }
 
-// The PDF.
+// A PDF (for a PDF template) or a Word document (.docx or .odt, for a Word template). DocSpring converts an OpenDocument text file (.odt) to a Word document after responding: the template's `document.state` is `converting` until then (sync.api hosts wait for it).
 func (r ApiUploadTemplateRequest) Document(document *os.File) ApiUploadTemplateRequest {
 	r.document = document
 	return r
 }
 
-// Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts.
+// Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts.
 func (r ApiUploadTemplateRequest) Wait(wait bool) ApiUploadTemplateRequest {
 	r.wait = &wait
 	return r
@@ -9328,15 +9341,23 @@ func (r ApiUploadTemplateRequest) FieldLogic(fieldLogic FieldSetupLogic) ApiUplo
 	return r
 }
 
+// What each submission of a Word template makes unless its request sets `output_formats`: `docx` (a Word document), `odt` (an OpenDocument file, converted from the Word document) or `pdf`. Required when `document` is a Word document.
+func (r ApiUploadTemplateRequest) OutputFormat(outputFormat OutputFormat) ApiUploadTemplateRequest {
+	r.outputFormat = &outputFormat
+	return r
+}
+
 func (r ApiUploadTemplateRequest) Execute() (*Template, *http.Response, error) {
 	return r.ApiService.UploadTemplateExecute(r)
 }
 
 /*
-UploadTemplate Create a PDF template from an uploaded PDF
+UploadTemplate Create a template from an uploaded PDF or Word document
 
-Creates a PDF template from a PDF sent with the request (`multipart/form-data`). For large files, upload the
-PDF with the presigned upload (GET /uploads/presign) and create the template with POST /templates.
+Creates a PDF template from a PDF, or a Word template from a Word document (.docx) or an OpenDocument text
+file (.odt), sent with the request (`multipart/form-data`). A Word template needs its `output_format`. For
+large files, upload the file with the presigned upload (GET /uploads/presign) and create the template with
+POST /templates.
 
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -9431,6 +9452,9 @@ func (a *ClientAPIService) UploadTemplateExecute(r ApiUploadTemplateRequest) (*T
 	}
 	if r.fieldLogic != nil {
 		parameterAddToHeaderOrQuery(localVarFormParams, "field_logic", r.fieldLogic, "", "")
+	}
+	if r.outputFormat != nil {
+		parameterAddToHeaderOrQuery(localVarFormParams, "output_format", r.outputFormat, "", "")
 	}
 	if err := a.client.validateRequest("uploadTemplate", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
 		return localVarReturnValue, nil, err
@@ -9535,19 +9559,19 @@ type ApiUploadTemplateDocumentRequest struct {
 	reimportFields *bool
 }
 
-// The new PDF.
+// The new PDF, or the new Word document (.docx or .odt) of a Word template.
 func (r ApiUploadTemplateDocumentRequest) Document(document *os.File) ApiUploadTemplateDocumentRequest {
 	r.document = document
 	return r
 }
 
-// Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts.
+// Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts.
 func (r ApiUploadTemplateDocumentRequest) Wait(wait bool) ApiUploadTemplateDocumentRequest {
 	r.wait = &wait
 	return r
 }
 
-// Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields.
+// Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. Only for PDF templates: a Word template adds a field for each new tag.
 func (r ApiUploadTemplateDocumentRequest) ReimportFields(reimportFields bool) ApiUploadTemplateDocumentRequest {
 	r.reimportFields = &reimportFields
 	return r
@@ -9558,10 +9582,11 @@ func (r ApiUploadTemplateDocumentRequest) Execute() (*Template, *http.Response, 
 }
 
 /*
-UploadTemplateDocument Replace a template's PDF with an uploaded PDF
+UploadTemplateDocument Replace a template's document with an uploaded file
 
-Replaces a PDF template's PDF with one sent with the request (`multipart/form-data`). The fields stay where
-they are, unless `reimport_fields` replaces them with the new PDF's fillable fields.
+Replaces a PDF template's PDF, or a Word template's Word document, with one sent with the request
+(`multipart/form-data`). A PDF template's fields stay where they are, unless `reimport_fields` replaces them
+with the new PDF's fillable fields, and a Word template gets a field for each new tag.
 
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().

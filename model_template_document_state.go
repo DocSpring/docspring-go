@@ -1,7 +1,7 @@
 /*
 DocSpring API
 
-Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
+Use DocSpring's API to fill PDF forms, generate PDFs and Word documents from HTML or Word templates, merge PDFs, and request legally binding e-signatures.
 
 API version: v2
 */
@@ -15,7 +15,7 @@ import (
 	"fmt"
 )
 
-// TemplateDocumentState Where a template's PDF is in its processing.
+// TemplateDocumentState Where a template's document is in its processing.
 type TemplateDocumentState string
 
 // List of TemplateDocumentState
@@ -27,6 +27,8 @@ const (
 	TEMPLATEDOCUMENTSTATE_UNKNOWN_ERROR TemplateDocumentState = "unknown_error"
 	TEMPLATEDOCUMENTSTATE_DOWNLOADING TemplateDocumentState = "downloading"
 	TEMPLATEDOCUMENTSTATE_DOWNLOAD_FAILED TemplateDocumentState = "download_failed"
+	TEMPLATEDOCUMENTSTATE_CONVERTING TemplateDocumentState = "converting"
+	TEMPLATEDOCUMENTSTATE_CONVERSION_FAILED TemplateDocumentState = "conversion_failed"
 )
 
 // All allowed values of TemplateDocumentState enum
@@ -38,6 +40,8 @@ var AllowedTemplateDocumentStateEnumValues = []TemplateDocumentState{
 	"unknown_error",
 	"downloading",
 	"download_failed",
+	"converting",
+	"conversion_failed",
 }
 
 func (v *TemplateDocumentState) UnmarshalJSON(src []byte) error {

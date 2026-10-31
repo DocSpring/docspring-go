@@ -7,6 +7,8 @@ Name | Type | Description | Notes
 **Pdf** | Pointer to [**GeneratedFile**](GeneratedFile.md) | The submission's PDF. | [optional] 
 **AuditTrail** | Pointer to [**GeneratedFile**](GeneratedFile.md) | The audit trail of a submission with signature requests: who signed, when and how. It's also added to the end of the PDF when the template's `merge_audit_trail_pdf` is on. | [optional] 
 **Preview** | Pointer to [**GeneratedFile**](GeneratedFile.md) | The preview PDF from POST /submissions/{submission_id}/generate_preview, such as for a submission still waiting for its signature requests. | [optional] 
+**Docx** | Pointer to [**GeneratedFile**](GeneratedFile.md) | The Word document of a Word template's submission, when the submission makes one (`output_formats`). | [optional] 
+**Odt** | Pointer to [**GeneratedFile**](GeneratedFile.md) | The OpenDocument file (.odt, the format LibreOffice uses) of a Word template's submission, converted from its Word document, when the submission makes one (`output_formats`). | [optional] 
 **Png** | Pointer to [**PageImages**](PageImages.md) |  | [optional] 
 
 ## Methods
@@ -102,6 +104,56 @@ SetPreview sets Preview field to given value.
 `func (o *SubmissionFiles) HasPreview() bool`
 
 HasPreview returns a boolean if a field has been set.
+
+### GetDocx
+
+`func (o *SubmissionFiles) GetDocx() GeneratedFile`
+
+GetDocx returns the Docx field if non-nil, zero value otherwise.
+
+### GetDocxOk
+
+`func (o *SubmissionFiles) GetDocxOk() (*GeneratedFile, bool)`
+
+GetDocxOk returns a tuple with the Docx field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDocx
+
+`func (o *SubmissionFiles) SetDocx(v GeneratedFile)`
+
+SetDocx sets Docx field to given value.
+
+### HasDocx
+
+`func (o *SubmissionFiles) HasDocx() bool`
+
+HasDocx returns a boolean if a field has been set.
+
+### GetOdt
+
+`func (o *SubmissionFiles) GetOdt() GeneratedFile`
+
+GetOdt returns the Odt field if non-nil, zero value otherwise.
+
+### GetOdtOk
+
+`func (o *SubmissionFiles) GetOdtOk() (*GeneratedFile, bool)`
+
+GetOdtOk returns a tuple with the Odt field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetOdt
+
+`func (o *SubmissionFiles) SetOdt(v GeneratedFile)`
+
+SetOdt sets Odt field to given value.
+
+### HasOdt
+
+`func (o *SubmissionFiles) HasOdt() bool`
+
+HasOdt returns a boolean if a field has been set.
 
 ### GetPng
 

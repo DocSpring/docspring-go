@@ -1,7 +1,7 @@
 /*
 DocSpring API
 
-Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
+Use DocSpring's API to fill PDF forms, generate PDFs and Word documents from HTML or Word templates, merge PDFs, and request legally binding e-signatures.
 
 API version: v2
 */
@@ -15,16 +15,22 @@ import (
 	"fmt"
 )
 
-// GenerateFilesFormat A format DocSpring can add to a processed submission: `png` (images of the PDF's pages).
+// GenerateFilesFormat A format DocSpring can add to a processed submission: `pdf`, `docx` or `odt` (a Word template's submission's PDF, Word document or OpenDocument file), or `png` (images of the PDF's pages).
 type GenerateFilesFormat string
 
 // List of GenerateFilesFormat
 const (
+	GENERATEFILESFORMAT_PDF GenerateFilesFormat = "pdf"
+	GENERATEFILESFORMAT_DOCX GenerateFilesFormat = "docx"
+	GENERATEFILESFORMAT_ODT GenerateFilesFormat = "odt"
 	GENERATEFILESFORMAT_PNG GenerateFilesFormat = "png"
 )
 
 // All allowed values of GenerateFilesFormat enum
 var AllowedGenerateFilesFormatEnumValues = []GenerateFilesFormat{
+	"pdf",
+	"docx",
+	"odt",
 	"png",
 }
 

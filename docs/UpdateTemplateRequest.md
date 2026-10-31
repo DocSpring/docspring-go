@@ -6,25 +6,26 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Name** | Pointer to **string** | The template's name. | [optional] 
 **Description** | Pointer to **NullableString** | Shown under the template's name at the top of its hosted forms, and used as their meta description. Not shown on embedded forms or signature requests. | [optional] 
+**OutputFormat** | Pointer to [**OutputFormat**](OutputFormat.md) | What each submission makes unless its request sets `output_formats`: `docx` (a Word document), `odt` (an OpenDocument file, converted from the Word document) or `pdf`. A Word template's is chosen when it's created; PDF and HTML templates always make PDFs. A Word template that encrypts its PDFs makes PDFs, because Word documents and OpenDocument files can't be password-protected. | [optional] 
 **ParentFolderId** | Pointer to **NullableString** | The ID of the folder the template is in. Null for a template at the root. Setting it moves the template and all of its published versions. | [optional] 
 **Locked** | Pointer to **bool** | A locked template can't be changed or deleted until it's unlocked (`locked` can always be changed). | [optional] 
 **AddSignatureRequestSubmissionIdFooters** | Pointer to **bool** | Print the submission ID in the footer of each page of PDFs signed through signature requests. | [optional] 
 **AiFieldNamingLanguage** | Pointer to [**AiFieldNamingLanguage**](AiFieldNamingLanguage.md) | The language AI field setup names fields in: `auto` uses the form's language when it's written in the Latin alphabet without accents, and English otherwise; `english` always uses English; `form_language` uses the form's language and script. New templates take it from your account's template settings. Null for HTML templates. | [optional] 
 **AllowAdditionalProperties** | Pointer to **bool** | Accept submission data with properties that aren't fields of the template. | [optional] 
 **AllowSkippingOptionalFields** | Pointer to **bool** | Visual forms and signature request forms show the Continue button as soon as the required fields are filled in, without visiting each optional field. The `allowSkippingOptionalFields` embed option overrides it. | [optional] 
-**DefaultFormMode** | Pointer to [**TemplateFormMode**](TemplateFormMode.md) | The hosted form that /templates/{template_id}/form shows when its URL has no `mode` parameter: `web` (the web form), `visual` (the visual form, where fields are filled in on the PDF) or `dual` (both, in tabs). HTML templates have no visual form, so `web` is the only value they accept. | [optional] 
+**DefaultFormMode** | Pointer to [**TemplateFormMode**](TemplateFormMode.md) | The hosted form that /templates/{template_id}/form shows when its URL has no `mode` parameter: `web` (the web form), `visual` (the visual form, where fields are filled in on the PDF) or `dual` (both, in tabs). Only PDF templates have a visual form, so other templates accept only `web`. | [optional] 
 **EditableSubmissions** | Pointer to **bool** | Generate PDFs whose text and check fields stay fillable ("Generate Editable PDFs"). A submission's `editable` overrides it. | [optional] 
 **EmbedDomains** | Pointer to **[]string** | The sites that can embed the template's live signature requests and its embedded template editor: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work). Browsers open a live signature request in a frame only on these sites (and DocSpring's), so with an empty list it can't be embedded anywhere; a test signature request can be embedded on any site. The embedded template editor loads only for a page on one of these sites (by its Referer or Origin header), and on any site when the list is empty. Forms embedded on a page (Visual Forms JS and the simple form) aren't restricted. | [optional] 
 **EmbedEditAllowSettings** | Pointer to **bool** | Allow the embedded template editor to change sensitive template settings (webhooks, redirect URL, encryption, public access, expiration and so on). | [optional] 
 **EmbedEditAllowVersioning** | Pointer to **bool** | Allow the embedded template editor to publish, restore, compare and delete published versions. | [optional] 
 **EmbedEditAllowDocumentReplacement** | Pointer to **bool** | Allow the embedded template editor to replace the template's PDF. | [optional] 
-**EncryptPdfs** | Pointer to **bool** | Encrypt generated PDFs with `encrypt_pdfs_password`. | [optional] 
+**EncryptPdfs** | Pointer to **bool** | Encrypt generated PDFs with `encrypt_pdfs_password`. A Word template can only encrypt its PDFs when its `output_format` is `pdf`, because Word documents and OpenDocument files can't be password-protected. | [optional] 
 **EncryptPdfsPassword** | Pointer to **NullableString** | The password that opens encrypted PDFs. It's never returned; `has_encrypt_pdfs_password` says if it's set. | [optional] 
 **ExpireSubmissions** | Pointer to **bool** | Delete each submission's data and PDF after `expire_after` `expiration_interval`. | [optional] 
 **ExpireAfter** | Pointer to **int32** | How many `expiration_interval`s a submission's data and PDF are kept for, when `expire_submissions` is on. At most 5256000 (10 years in minutes). | [optional] 
 **ExpirationInterval** | Pointer to [**ExpirationInterval**](ExpirationInterval.md) | The unit of `expire_after`. | [optional] 
 **MergeAuditTrailPdf** | Pointer to **bool** | Add the audit trail to the end of PDFs signed through signature requests. | [optional] 
-**ParseDatesUsingTemplateDateFormat** | Pointer to **bool** | Date fields also accept NN/NN/YYYY dates (with slashes, dashes or dots), read in the order of the template's default date format: month first for %m/%d/%Y, day first for %d/%m/%Y. When false, date fields only accept YYYY-MM-DD. Applies to PDF templates: an HTML template's date fields only accept YYYY-MM-DD. Date fields that include a time take RFC 3339 date-times either way. | [optional] 
+**ParseDatesUsingTemplateDateFormat** | Pointer to **bool** | Date fields also accept NN/NN/YYYY dates (with slashes, dashes or dots), read in the order of the template's default date format: month first for %m/%d/%Y, day first for %d/%m/%Y. When false, date fields only accept YYYY-MM-DD. Applies to PDF templates: an HTML or Word template's date fields only accept YYYY-MM-DD. Date fields that include a time take RFC 3339 date-times either way. | [optional] 
 **PublicSubmissions** | Pointer to **bool** | Allow anyone with a submission's ID to download its PDF. | [optional] 
 **PublicWebForm** | Pointer to **bool** | Allow anyone to fill in the template's web form. | [optional] 
 **RedirectUrl** | Pointer to **NullableString** | Where the web form sends people after they submit it. | [optional] 
@@ -34,7 +35,7 @@ Name | Type | Description | Notes
 **FieldGroups** | Pointer to [**[]FieldGroupInput**](FieldGroupInput.md) | Changes to the settings of the template's field groups, each with the `name` of the group it changes. Settings left out keep their values, and groups left out are unchanged. | [optional] 
 **PredefinedFields** | Pointer to [**[]PredefinedFieldInput**](PredefinedFieldInput.md) | The field names that people using the embedded template editor choose from, each with the data type and settings a field gets when it's given that name. Setting it replaces the whole list; an empty list turns them off. | [optional] 
 **PredefinedFieldsSampleData** | Pointer to **map[string]interface{}** | Sample submission data that sets `predefined_fields`: each value becomes a predefined field, with a type that fits it (`string`, `number`, `boolean`, `date`, `email` or `url`) and `required_in_template` true. Nested objects and arrays become names with `/`, such as `customer/email`. Without `predefined_fields` in the same request, it replaces them; with them, it adds to them and sets the types of the ones it has values for. | [optional] 
-**Html** | Pointer to **NullableString** | The HTML of an HTML template, as a Liquid template. Null for PDF templates. | [optional] 
+**Html** | Pointer to **NullableString** | The HTML of an HTML template, as a Liquid template. Null for PDF and Word templates. | [optional] 
 **Scss** | Pointer to **NullableString** | The SCSS of an HTML template. | [optional] 
 **HeaderHtml** | Pointer to **NullableString** | The HTML printed at the top of each page of an HTML template. | [optional] 
 **FooterHtml** | Pointer to **NullableString** | The HTML printed at the bottom of each page of an HTML template. | [optional] 
@@ -120,6 +121,31 @@ HasDescription returns a boolean if a field has been set.
 `func (o *UpdateTemplateRequest) UnsetDescription()`
 
 UnsetDescription ensures that no value is present for Description, not even an explicit nil
+### GetOutputFormat
+
+`func (o *UpdateTemplateRequest) GetOutputFormat() OutputFormat`
+
+GetOutputFormat returns the OutputFormat field if non-nil, zero value otherwise.
+
+### GetOutputFormatOk
+
+`func (o *UpdateTemplateRequest) GetOutputFormatOk() (*OutputFormat, bool)`
+
+GetOutputFormatOk returns a tuple with the OutputFormat field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetOutputFormat
+
+`func (o *UpdateTemplateRequest) SetOutputFormat(v OutputFormat)`
+
+SetOutputFormat sets OutputFormat field to given value.
+
+### HasOutputFormat
+
+`func (o *UpdateTemplateRequest) HasOutputFormat() bool`
+
+HasOutputFormat returns a boolean if a field has been set.
+
 ### GetParentFolderId
 
 `func (o *UpdateTemplateRequest) GetParentFolderId() string`

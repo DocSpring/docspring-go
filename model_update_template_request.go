@@ -1,7 +1,7 @@
 /*
 DocSpring API
 
-Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
+Use DocSpring's API to fill PDF forms, generate PDFs and Word documents from HTML or Word templates, merge PDFs, and request legally binding e-signatures.
 
 API version: v2
 */
@@ -23,6 +23,8 @@ type UpdateTemplateRequest struct {
 	Name *string `json:"name,omitempty"`
 	// Shown under the template's name at the top of its hosted forms, and used as their meta description. Not shown on embedded forms or signature requests.
 	Description NullableString `json:"description,omitempty"`
+	// What each submission makes unless its request sets `output_formats`: `docx` (a Word document), `odt` (an OpenDocument file, converted from the Word document) or `pdf`. A Word template's is chosen when it's created; PDF and HTML templates always make PDFs. A Word template that encrypts its PDFs makes PDFs, because Word documents and OpenDocument files can't be password-protected.
+	OutputFormat *OutputFormat `json:"output_format,omitempty"`
 	// The ID of the folder the template is in. Null for a template at the root. Setting it moves the template and all of its published versions.
 	ParentFolderId NullableString `json:"parent_folder_id,omitempty"`
 	// A locked template can't be changed or deleted until it's unlocked (`locked` can always be changed).
@@ -35,7 +37,7 @@ type UpdateTemplateRequest struct {
 	AllowAdditionalProperties *bool `json:"allow_additional_properties,omitempty"`
 	// Visual forms and signature request forms show the Continue button as soon as the required fields are filled in, without visiting each optional field. The `allowSkippingOptionalFields` embed option overrides it.
 	AllowSkippingOptionalFields *bool `json:"allow_skipping_optional_fields,omitempty"`
-	// The hosted form that /templates/{template_id}/form shows when its URL has no `mode` parameter: `web` (the web form), `visual` (the visual form, where fields are filled in on the PDF) or `dual` (both, in tabs). HTML templates have no visual form, so `web` is the only value they accept.
+	// The hosted form that /templates/{template_id}/form shows when its URL has no `mode` parameter: `web` (the web form), `visual` (the visual form, where fields are filled in on the PDF) or `dual` (both, in tabs). Only PDF templates have a visual form, so other templates accept only `web`.
 	DefaultFormMode *TemplateFormMode `json:"default_form_mode,omitempty"`
 	// Generate PDFs whose text and check fields stay fillable ("Generate Editable PDFs"). A submission's `editable` overrides it.
 	EditableSubmissions *bool `json:"editable_submissions,omitempty"`
@@ -47,7 +49,7 @@ type UpdateTemplateRequest struct {
 	EmbedEditAllowVersioning *bool `json:"embed_edit_allow_versioning,omitempty"`
 	// Allow the embedded template editor to replace the template's PDF.
 	EmbedEditAllowDocumentReplacement *bool `json:"embed_edit_allow_document_replacement,omitempty"`
-	// Encrypt generated PDFs with `encrypt_pdfs_password`.
+	// Encrypt generated PDFs with `encrypt_pdfs_password`. A Word template can only encrypt its PDFs when its `output_format` is `pdf`, because Word documents and OpenDocument files can't be password-protected.
 	EncryptPdfs *bool `json:"encrypt_pdfs,omitempty"`
 	// The password that opens encrypted PDFs. It's never returned; `has_encrypt_pdfs_password` says if it's set.
 	EncryptPdfsPassword NullableString `json:"encrypt_pdfs_password,omitempty"`
@@ -59,7 +61,7 @@ type UpdateTemplateRequest struct {
 	ExpirationInterval *ExpirationInterval `json:"expiration_interval,omitempty"`
 	// Add the audit trail to the end of PDFs signed through signature requests.
 	MergeAuditTrailPdf *bool `json:"merge_audit_trail_pdf,omitempty"`
-	// Date fields also accept NN/NN/YYYY dates (with slashes, dashes or dots), read in the order of the template's default date format: month first for %m/%d/%Y, day first for %d/%m/%Y. When false, date fields only accept YYYY-MM-DD. Applies to PDF templates: an HTML template's date fields only accept YYYY-MM-DD. Date fields that include a time take RFC 3339 date-times either way.
+	// Date fields also accept NN/NN/YYYY dates (with slashes, dashes or dots), read in the order of the template's default date format: month first for %m/%d/%Y, day first for %d/%m/%Y. When false, date fields only accept YYYY-MM-DD. Applies to PDF templates: an HTML or Word template's date fields only accept YYYY-MM-DD. Date fields that include a time take RFC 3339 date-times either way.
 	ParseDatesUsingTemplateDateFormat *bool `json:"parse_dates_using_template_date_format,omitempty"`
 	// Allow anyone with a submission's ID to download its PDF.
 	PublicSubmissions *bool `json:"public_submissions,omitempty"`
@@ -79,7 +81,7 @@ type UpdateTemplateRequest struct {
 	PredefinedFields []PredefinedFieldInput `json:"predefined_fields,omitempty"`
 	// Sample submission data that sets `predefined_fields`: each value becomes a predefined field, with a type that fits it (`string`, `number`, `boolean`, `date`, `email` or `url`) and `required_in_template` true. Nested objects and arrays become names with `/`, such as `customer/email`. Without `predefined_fields` in the same request, it replaces them; with them, it adds to them and sets the types of the ones it has values for.
 	PredefinedFieldsSampleData map[string]interface{} `json:"predefined_fields_sample_data,omitempty"`
-	// The HTML of an HTML template, as a Liquid template. Null for PDF templates.
+	// The HTML of an HTML template, as a Liquid template. Null for PDF and Word templates.
 	Html NullableString `json:"html,omitempty"`
 	// The SCSS of an HTML template.
 	Scss NullableString `json:"scss,omitempty"`
@@ -185,6 +187,38 @@ func (o *UpdateTemplateRequest) SetDescriptionNil() {
 // UnsetDescription ensures that no value is present for Description, not even an explicit nil
 func (o *UpdateTemplateRequest) UnsetDescription() {
 	o.Description.Unset()
+}
+
+// GetOutputFormat returns the OutputFormat field value if set, zero value otherwise.
+func (o *UpdateTemplateRequest) GetOutputFormat() OutputFormat {
+	if o == nil || IsNil(o.OutputFormat) {
+		var ret OutputFormat
+		return ret
+	}
+	return *o.OutputFormat
+}
+
+// GetOutputFormatOk returns a tuple with the OutputFormat field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateTemplateRequest) GetOutputFormatOk() (*OutputFormat, bool) {
+	if o == nil || IsNil(o.OutputFormat) {
+		return nil, false
+	}
+	return o.OutputFormat, true
+}
+
+// HasOutputFormat returns a boolean if a field has been set.
+func (o *UpdateTemplateRequest) HasOutputFormat() bool {
+	if o != nil && !IsNil(o.OutputFormat) {
+		return true
+	}
+
+	return false
+}
+
+// SetOutputFormat gets a reference to the given OutputFormat and assigns it to the OutputFormat field.
+func (o *UpdateTemplateRequest) SetOutputFormat(v OutputFormat) {
+	o.OutputFormat = &v
 }
 
 // GetParentFolderId returns the ParentFolderId field value if set, zero value otherwise (both if not set or set to explicit null).
@@ -1382,6 +1416,9 @@ func (o UpdateTemplateRequest) ToMap() (map[string]interface{}, error) {
 	if o.Description.IsSet() {
 		toSerialize["description"] = o.Description.Get()
 	}
+	if !IsNil(o.OutputFormat) {
+		toSerialize["output_format"] = o.OutputFormat
+	}
 	if o.ParentFolderId.IsSet() {
 		toSerialize["parent_folder_id"] = o.ParentFolderId.Get()
 	}
@@ -1508,6 +1545,7 @@ func (o *UpdateTemplateRequest) UnmarshalJSON(data []byte) (err error) {
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "name")
 		delete(additionalProperties, "description")
+		delete(additionalProperties, "output_format")
 		delete(additionalProperties, "parent_folder_id")
 		delete(additionalProperties, "locked")
 		delete(additionalProperties, "add_signature_request_submission_id_footers")
