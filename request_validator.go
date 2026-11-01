@@ -437,6 +437,10 @@ func checkObject(schema map[string]interface{}, data map[string]interface{}, poi
 			}
 		}
 	}
+	// Only an update's body has minProperties, and it's always 1 (api_clients/scripts/extract_request_schemas)
+	if limit, ok := schemaNumber(schema, "minProperties"); ok && float64(len(data)) < limit {
+		*details = append(*details, validatorDetail(location, pointer, "minProperties", "must have at least one property to change"))
+	}
 
 	properties, _ := schema["properties"].(map[string]interface{})
 	names := make([]string, 0, len(data))

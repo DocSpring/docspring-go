@@ -23,9 +23,11 @@ const (
 	WEBHOOKEVENTTYPE_SUBMISSION_PROCESSED WebhookEventType = "submission.processed"
 	WEBHOOKEVENTTYPE_SUBMISSION_FAILED WebhookEventType = "submission.failed"
 	WEBHOOKEVENTTYPE_SUBMISSION_DECLINED WebhookEventType = "submission.declined"
+	WEBHOOKEVENTTYPE_SIGNATURE_REQUEST_SENT WebhookEventType = "signature_request.sent"
 	WEBHOOKEVENTTYPE_SIGNATURE_REQUEST_VIEWED WebhookEventType = "signature_request.viewed"
 	WEBHOOKEVENTTYPE_SIGNATURE_REQUEST_COMPLETED WebhookEventType = "signature_request.completed"
 	WEBHOOKEVENTTYPE_SIGNATURE_REQUEST_DECLINED WebhookEventType = "signature_request.declined"
+	WEBHOOKEVENTTYPE_SIGNATURE_REQUEST_EMAIL_BOUNCED WebhookEventType = "signature_request.email_bounced"
 	WEBHOOKEVENTTYPE_COMBINED_PDF_PROCESSED WebhookEventType = "combined_pdf.processed"
 	WEBHOOKEVENTTYPE_COMBINED_PDF_FAILED WebhookEventType = "combined_pdf.failed"
 	WEBHOOKEVENTTYPE_SUBMISSION_BATCH_PROCESSED WebhookEventType = "submission_batch.processed"
@@ -52,9 +54,11 @@ var AllowedWebhookEventTypeEnumValues = []WebhookEventType{
 	"submission.processed",
 	"submission.failed",
 	"submission.declined",
+	"signature_request.sent",
 	"signature_request.viewed",
 	"signature_request.completed",
 	"signature_request.declined",
+	"signature_request.email_bounced",
 	"combined_pdf.processed",
 	"combined_pdf.failed",
 	"submission_batch.processed",

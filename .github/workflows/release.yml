@@ -1,0 +1,59 @@
+# Written by DocSpring/docspring's api_clients/scripts/generate from api_clients/github_workflows/go/release.yml:
+# change it there.
+#
+# Builds the module on every push and pull request. Go modules are released by their tags, so a v* tag (pushed by the
+# monorepo's api_clients/scripts/release) is the release: this workflow checks the tag and waits until the Go module
+# proxy serves it, which also caches it there.
+name: Release
+
+on:
+  push:
+    branches: ['**']
+    tags: ['v*']
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+      # The client's User-Agent names its version
+      - name: Check the tag matches the package version
+        if: github.ref_type == 'tag'
+        run: |
+          VERSION="$(sed -n 's/^.*UserAgent: *"docspring-go-\(.*\)",$/\1/p' configuration.go)"
+          if [ "v$VERSION" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::The tag is $GITHUB_REF_NAME, but the package version is $VERSION"
+            exit 1
+          fi
+      - run: go build ./...
+
+  verify:
+    needs: build
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Wait until the Go module proxy serves the version
+        run: |
+          MODULE="$(sed -n 's/^module //p' go.mod)"
+          for _ in $(seq 60); do
+            if curl -fsS -o /dev/null "https://proxy.golang.org/$MODULE/@v/$GITHUB_REF_NAME.info"; then
+              echo "proxy.golang.org serves $MODULE $GITHUB_REF_NAME"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::proxy.golang.org doesn't serve $MODULE $GITHUB_REF_NAME after 10 minutes"
+          exit 1

@@ -18,17 +18,19 @@ import (
 // checks if the SubmissionAction type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &SubmissionAction{}
 
-// SubmissionAction An upload of a PDF to your storage, such as an S3 bucket.
+// SubmissionAction An upload of a PDF to your storage, such as an S3 bucket, or an email action's email.
 type SubmissionAction struct {
 	// The upload's ID.
 	Id string `json:"id"`
 	// The ID of the account integration it used.
 	IntegrationId NullableString `json:"integration_id"`
-	// `pending` until the upload has run, then `processed`. `failed`: your storage rejected it. `error`: it failed in DocSpring.
+	// The ID of the email action that sent the email. Null for an upload, or once the email action is deleted.
+	EmailActionId NullableString `json:"email_action_id"`
+	// `pending` until the upload or email has run, then `processed`. `failed`: your storage or the email service rejected it. `error`: it failed in DocSpring.
 	State SubmissionActionState `json:"state"`
-	// The kind of storage, such as `aws_s3_upload` for an S3 bucket.
+	// The kind of storage, such as `aws_s3_upload` for an S3 bucket, or `email` for an email action's email.
 	ActionType SubmissionActionType `json:"action_type"`
-	// Where the PDF was uploaded, such as the S3 bucket and key.
+	// Where the PDF was uploaded, such as the S3 bucket and key. For an email: its `subject`, `recipients`, each with its `address`, `kind` (`to`, `cc` or `bcc`), `source`, `field` or `metadata` when the address came from one, and `status` (`sent`, `delivered`, `bounced`, `complained`, `skipped` and others), `sent_at`, `delivery`, and `files` (the files it sent: `pdf`, `docx`, `odt`). An email whose submission didn't meet the email action's `send_when` conditions has only `skipped`, `conditions_not_met`, and its state is `processed`. An email whose submission made none of the files the email action sends has `skipped`, `no_files` and the action's `file_formats`, and its state is `processed` too. When the submission's data is left out (a batch, or a webhook without submission data), the subject and the addresses that came from fields or metadata are null.
 	ResultData map[string]interface{} `json:"result_data"`
 	// Why the upload failed, when `state` is `failed` or `error`.
 	ErrorMessage NullableString `json:"error_message"`
@@ -41,10 +43,11 @@ type _SubmissionAction SubmissionAction
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewSubmissionAction(id string, integrationId NullableString, state SubmissionActionState, actionType SubmissionActionType, resultData map[string]interface{}, errorMessage NullableString) *SubmissionAction {
+func NewSubmissionAction(id string, integrationId NullableString, emailActionId NullableString, state SubmissionActionState, actionType SubmissionActionType, resultData map[string]interface{}, errorMessage NullableString) *SubmissionAction {
 	this := SubmissionAction{}
 	this.Id = id
 	this.IntegrationId = integrationId
+	this.EmailActionId = emailActionId
 	this.State = state
 	this.ActionType = actionType
 	this.ResultData = resultData
@@ -108,6 +111,32 @@ func (o *SubmissionAction) GetIntegrationIdOk() (*string, bool) {
 // SetIntegrationId sets field value
 func (o *SubmissionAction) SetIntegrationId(v string) {
 	o.IntegrationId.Set(&v)
+}
+
+// GetEmailActionId returns the EmailActionId field value
+// If the value is explicit nil, the zero value for string will be returned
+func (o *SubmissionAction) GetEmailActionId() string {
+	if o == nil || o.EmailActionId.Get() == nil {
+		var ret string
+		return ret
+	}
+
+	return *o.EmailActionId.Get()
+}
+
+// GetEmailActionIdOk returns a tuple with the EmailActionId field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *SubmissionAction) GetEmailActionIdOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.EmailActionId.Get(), o.EmailActionId.IsSet()
+}
+
+// SetEmailActionId sets field value
+func (o *SubmissionAction) SetEmailActionId(v string) {
+	o.EmailActionId.Set(&v)
 }
 
 // GetState returns the State field value
@@ -220,6 +249,7 @@ func (o SubmissionAction) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["id"] = o.Id
 	toSerialize["integration_id"] = o.IntegrationId.Get()
+	toSerialize["email_action_id"] = o.EmailActionId.Get()
 	toSerialize["state"] = o.State
 	toSerialize["action_type"] = o.ActionType
 	toSerialize["result_data"] = o.ResultData
@@ -239,6 +269,7 @@ func (o *SubmissionAction) UnmarshalJSON(data []byte) (err error) {
 	requiredProperties := []string{
 		"id",
 		"integration_id",
+		"email_action_id",
 		"state",
 		"action_type",
 		"result_data",
@@ -274,6 +305,7 @@ func (o *SubmissionAction) UnmarshalJSON(data []byte) (err error) {
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "id")
 		delete(additionalProperties, "integration_id")
+		delete(additionalProperties, "email_action_id")
 		delete(additionalProperties, "state")
 		delete(additionalProperties, "action_type")
 		delete(additionalProperties, "result_data")

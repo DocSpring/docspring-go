@@ -6,8 +6,11 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**AddTemplateFields**](ClientAPI.md#AddTemplateFields) | **Post** /templates/{template_id}/fields | Add fields to a template
 [**CopyTemplate**](ClientAPI.md#CopyTemplate) | **Post** /templates/{template_id}/copy | Copy a template
+[**CreateAccountEmailAction**](ClientAPI.md#CreateAccountEmailAction) | **Post** /email_actions | Create an account email action
 [**CreateCombinedPdf**](ClientAPI.md#CreateCombinedPdf) | **Post** /combined_pdfs | Combine PDFs
 [**CreateCustomFileFromUpload**](ClientAPI.md#CreateCustomFileFromUpload) | **Post** /custom_files | Create a custom file from an upload
+[**CreateEmailAction**](ClientAPI.md#CreateEmailAction) | **Post** /templates/{template_id}/email_actions | Create an email action
+[**CreateEmailDomain**](ClientAPI.md#CreateEmailDomain) | **Post** /email_domains | Add an email domain
 [**CreateFolder**](ClientAPI.md#CreateFolder) | **Post** /folders | Create a folder
 [**CreateSignatureRequestEvent**](ClientAPI.md#CreateSignatureRequestEvent) | **Post** /signature_requests/{signature_request_id}/events | Record a signature request event
 [**CreateSignatureRequestToken**](ClientAPI.md#CreateSignatureRequestToken) | **Post** /signature_requests/{signature_request_id}/tokens | Create a signature request token
@@ -16,7 +19,11 @@ Method | HTTP request | Description
 [**CreateTemplate**](ClientAPI.md#CreateTemplate) | **Post** /templates | Create a template
 [**CreateTemplatePreview**](ClientAPI.md#CreateTemplatePreview) | **Post** /templates/{template_id}/previews | Preview a template with data
 [**CreateWebhook**](ClientAPI.md#CreateWebhook) | **Post** /webhooks | Create a webhook
+[**DeleteAccountEmailAction**](ClientAPI.md#DeleteAccountEmailAction) | **Delete** /email_actions/{email_action_id} | Delete an account email action
 [**DeleteCustomFile**](ClientAPI.md#DeleteCustomFile) | **Delete** /custom_files/{custom_file_id} | Delete a custom file
+[**DeleteEmailAction**](ClientAPI.md#DeleteEmailAction) | **Delete** /templates/{template_id}/email_actions/{email_action_id} | Delete an email action
+[**DeleteEmailActionCustomization**](ClientAPI.md#DeleteEmailActionCustomization) | **Delete** /templates/{template_id}/email_actions/{email_action_id}/customization | Reset an account email action's customization
+[**DeleteEmailDomain**](ClientAPI.md#DeleteEmailDomain) | **Delete** /email_domains/{email_domain_id} | Remove an email domain
 [**DeleteFolder**](ClientAPI.md#DeleteFolder) | **Delete** /folders/{folder_id} | Delete a folder
 [**DeleteTemplate**](ClientAPI.md#DeleteTemplate) | **Delete** /templates/{template_id} | Delete a template
 [**DeleteWebhook**](ClientAPI.md#DeleteWebhook) | **Delete** /webhooks/{webhook_id} | Delete a webhook
@@ -24,8 +31,11 @@ Method | HTTP request | Description
 [**ExpireSubmission**](ClientAPI.md#ExpireSubmission) | **Delete** /submissions/{submission_id} | Expire a submission
 [**GenerateSubmissionFiles**](ClientAPI.md#GenerateSubmissionFiles) | **Post** /submissions/{submission_id}/generate_files | Generate more files
 [**GenerateSubmissionPreview**](ClientAPI.md#GenerateSubmissionPreview) | **Post** /submissions/{submission_id}/generate_preview | Generate a preview PDF
+[**GetAccountEmailAction**](ClientAPI.md#GetAccountEmailAction) | **Get** /email_actions/{email_action_id} | Get an account email action
 [**GetCombinedPdf**](ClientAPI.md#GetCombinedPdf) | **Get** /combined_pdfs/{combined_pdf_id} | Get a combined PDF
 [**GetCustomFile**](ClientAPI.md#GetCustomFile) | **Get** /custom_files/{custom_file_id} | Get a custom file
+[**GetEmailAction**](ClientAPI.md#GetEmailAction) | **Get** /templates/{template_id}/email_actions/{email_action_id} | Get an email action
+[**GetEmailDomain**](ClientAPI.md#GetEmailDomain) | **Get** /email_domains/{email_domain_id} | Get an email domain
 [**GetFolder**](ClientAPI.md#GetFolder) | **Get** /folders/{folder_id} | Get a folder
 [**GetPresignUrl**](ClientAPI.md#GetPresignUrl) | **Get** /uploads/presign | Get a presigned URL to upload a file
 [**GetSignatureRequest**](ClientAPI.md#GetSignatureRequest) | **Get** /signature_requests/{signature_request_id} | Get a signature request
@@ -38,8 +48,11 @@ Method | HTTP request | Description
 [**GetTemplatePreview**](ClientAPI.md#GetTemplatePreview) | **Get** /templates/{template_id}/previews/{preview_id} | Get a template preview
 [**GetTemplateSchema**](ClientAPI.md#GetTemplateSchema) | **Get** /templates/{template_id}/schema | Get the JSON Schema of a template's submission data
 [**GetWebhook**](ClientAPI.md#GetWebhook) | **Get** /webhooks/{webhook_id} | Get a webhook
+[**ListAccountEmailActions**](ClientAPI.md#ListAccountEmailActions) | **Get** /email_actions | List account email actions
 [**ListCombinedPdfs**](ClientAPI.md#ListCombinedPdfs) | **Get** /combined_pdfs | List combined PDFs
 [**ListCustomFiles**](ClientAPI.md#ListCustomFiles) | **Get** /custom_files | List custom files
+[**ListEmailActions**](ClientAPI.md#ListEmailActions) | **Get** /templates/{template_id}/email_actions | List email actions
+[**ListEmailDomains**](ClientAPI.md#ListEmailDomains) | **Get** /email_domains | List email domains
 [**ListFolders**](ClientAPI.md#ListFolders) | **Get** /folders | List folders
 [**ListSubmissions**](ClientAPI.md#ListSubmissions) | **Get** /submissions | List submissions
 [**ListTemplateFields**](ClientAPI.md#ListTemplateFields) | **Get** /templates/{template_id}/fields | List a template's fields
@@ -53,7 +66,12 @@ Method | HTTP request | Description
 [**RenameFolder**](ClientAPI.md#RenameFolder) | **Post** /folders/{folder_id}/rename | Rename a folder
 [**ReorderTemplateFields**](ClientAPI.md#ReorderTemplateFields) | **Post** /templates/{template_id}/fields/reorder | Reorder a template's fields
 [**RestoreTemplateVersion**](ClientAPI.md#RestoreTemplateVersion) | **Post** /templates/{template_id}/restore_version | Restore a template version
+[**SendAccountEmailActionTestEmail**](ClientAPI.md#SendAccountEmailActionTestEmail) | **Post** /email_actions/{email_action_id}/test_email | Send a test email for an account email action
+[**SendEmailActionTestEmail**](ClientAPI.md#SendEmailActionTestEmail) | **Post** /templates/{template_id}/email_actions/{email_action_id}/test_email | Send a test email
 [**TestAuthentication**](ClientAPI.md#TestAuthentication) | **Get** /authentication | Test authentication
+[**UpdateAccountEmailAction**](ClientAPI.md#UpdateAccountEmailAction) | **Put** /email_actions/{email_action_id} | Update an account email action
+[**UpdateEmailAction**](ClientAPI.md#UpdateEmailAction) | **Put** /templates/{template_id}/email_actions/{email_action_id} | Update an email action
+[**UpdateEmailActionCustomization**](ClientAPI.md#UpdateEmailActionCustomization) | **Put** /templates/{template_id}/email_actions/{email_action_id}/customization | Customize an account email action for a template
 [**UpdateSignatureRequest**](ClientAPI.md#UpdateSignatureRequest) | **Put** /signature_requests/{signature_request_id} | Update a signature request
 [**UpdateTemplate**](ClientAPI.md#UpdateTemplate) | **Put** /templates/{template_id} | Update a template
 [**UpdateTemplateDocument**](ClientAPI.md#UpdateTemplateDocument) | **Put** /templates/{template_id}/document | Replace a template's document
@@ -62,12 +80,13 @@ Method | HTTP request | Description
 [**UploadTemplate**](ClientAPI.md#UploadTemplate) | **Post** /templates/upload | Create a template from an uploaded PDF or Word document
 [**UploadTemplateDocument**](ClientAPI.md#UploadTemplateDocument) | **Put** /templates/{template_id}/document/upload | Replace a template's document with an uploaded file
 [**ValidateSubmission**](ClientAPI.md#ValidateSubmission) | **Post** /templates/{template_id}/submissions/validate | Check a submission without creating it
+[**VerifyEmailDomain**](ClientAPI.md#VerifyEmailDomain) | **Post** /email_domains/{email_domain_id}/verify | Verify an email domain
 
 
 
 ## AddTemplateFields
 
-> TemplateFields AddTemplateFields(ctx, templateId).Body(body).Execute()
+> TemplateFields AddTemplateFields(ctx, templateId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 
 Add fields to a template
 
@@ -88,10 +107,11 @@ import (
 func main() {
 	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
 	body := *openapiclient.NewAddTemplateFieldsRequest([]openapiclient.FieldInput{*openapiclient.NewFieldInput()}) // AddTemplateFieldsRequest | The fields to add to the template's draft.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.AddTemplateFields(context.Background(), templateId).Body(body).Execute()
+	resp, r, err := apiClient.ClientAPI.AddTemplateFields(context.Background(), templateId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.AddTemplateFields``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -118,6 +138,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **body** | [**AddTemplateFieldsRequest**](AddTemplateFieldsRequest.md) | The fields to add to the template's draft. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -139,7 +160,7 @@ Name | Type | Description  | Notes
 
 ## CopyTemplate
 
-> Template CopyTemplate(ctx, templateId).Body(body).Execute()
+> Template CopyTemplate(ctx, templateId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 
 Copy a template
 
@@ -160,10 +181,11 @@ import (
 func main() {
 	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
 	body := *openapiclient.NewCopyTemplateRequest() // CopyTemplateRequest | Settings for the copy. (optional)
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.CopyTemplate(context.Background(), templateId).Body(body).Execute()
+	resp, r, err := apiClient.ClientAPI.CopyTemplate(context.Background(), templateId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CopyTemplate``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -190,10 +212,79 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **body** | [**CopyTemplateRequest**](CopyTemplateRequest.md) | Settings for the copy. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
 [**Template**](Template.md)
+
+### Authorization
+
+[api_token_basic](../README.md#install-and-configure)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
+[[Back to README]](../README.md)
+
+
+## CreateAccountEmailAction
+
+> EmailAction CreateAccountEmailAction(ctx).Body(body).IdempotencyKey(idempotencyKey).Execute()
+
+Create an account email action
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	body := *openapiclient.NewCreateAccountEmailActionRequest() // CreateAccountEmailActionRequest | The account email action to create. Properties left out get their defaults, and it sends for every template unless it lists `template_ids` or `folder_ids`.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.CreateAccountEmailAction(context.Background()).Body(body).IdempotencyKey(idempotencyKey).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateAccountEmailAction``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `CreateAccountEmailAction`: EmailAction
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.CreateAccountEmailAction`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCreateAccountEmailActionRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**CreateAccountEmailActionRequest**](CreateAccountEmailActionRequest.md) | The account email action to create. Properties left out get their defaults, and it sends for every template unless it lists `template_ids` or `folder_ids`. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
+
+### Return type
+
+[**EmailAction**](EmailAction.md)
 
 ### Authorization
 
@@ -232,7 +323,7 @@ import (
 func main() {
 	body := *openapiclient.NewCreateCombinedPdfRequest([]openapiclient.CombinedPdfSourceInput{openapiclient.CombinedPdfSourceInput{CombinedPdfSourcePdf: openapiclient.NewCombinedPdfSourcePdf("Type_example", "Id_example")}}) // CreateCombinedPdfRequest | The PDFs to merge, and the combined PDF's settings.
 	wait := true // bool | Wait until the PDF has been generated before responding. Default true on sync.api hosts. (optional)
-	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another combined PDF. Send a new key with each new combined PDF, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds. (optional)
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -259,7 +350,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **body** | [**CreateCombinedPdfRequest**](CreateCombinedPdfRequest.md) | The PDFs to merge, and the combined PDF's settings. | 
  **wait** | **bool** | Wait until the PDF has been generated before responding. Default true on sync.api hosts. | 
- **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another combined PDF. Send a new key with each new combined PDF, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -281,7 +372,7 @@ Name | Type | Description  | Notes
 
 ## CreateCustomFileFromUpload
 
-> CustomFile CreateCustomFileFromUpload(ctx).Body(body).Execute()
+> CustomFile CreateCustomFileFromUpload(ctx).Body(body).IdempotencyKey(idempotencyKey).Execute()
 
 Create a custom file from an upload
 
@@ -301,10 +392,11 @@ import (
 
 func main() {
 	body := *openapiclient.NewCreateCustomFileFromUploadRequest("CacheId_example") // CreateCustomFileFromUploadRequest | The uploaded file to create the custom file from.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.CreateCustomFileFromUpload(context.Background()).Body(body).Execute()
+	resp, r, err := apiClient.ClientAPI.CreateCustomFileFromUpload(context.Background()).Body(body).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateCustomFileFromUpload``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -326,6 +418,7 @@ Other parameters are passed through a pointer to a apiCreateCustomFileFromUpload
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **body** | [**CreateCustomFileFromUploadRequest**](CreateCustomFileFromUploadRequest.md) | The uploaded file to create the custom file from. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -345,9 +438,151 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
+## CreateEmailAction
+
+> EmailAction CreateEmailAction(ctx, templateId).Body(body).IdempotencyKey(idempotencyKey).Execute()
+
+Create an email action
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	templateId := "templateId_example" // string | The template's ID.
+	body := *openapiclient.NewCreateEmailActionRequest() // CreateEmailActionRequest | The email action to create. Properties left out get their defaults.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.CreateEmailAction(context.Background(), templateId).Body(body).IdempotencyKey(idempotencyKey).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateEmailAction``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `CreateEmailAction`: EmailAction
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.CreateEmailAction`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**templateId** | **string** | The template's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCreateEmailActionRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **body** | [**CreateEmailActionRequest**](CreateEmailActionRequest.md) | The email action to create. Properties left out get their defaults. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
+
+### Return type
+
+[**EmailAction**](EmailAction.md)
+
+### Authorization
+
+[api_token_basic](../README.md#install-and-configure)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
+[[Back to README]](../README.md)
+
+
+## CreateEmailDomain
+
+> EmailDomain CreateEmailDomain(ctx).Body(body).IdempotencyKey(idempotencyKey).Execute()
+
+Add an email domain
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	body := *openapiclient.NewCreateEmailDomainRequest("Domain_example") // CreateEmailDomainRequest | The domain to add.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.CreateEmailDomain(context.Background()).Body(body).IdempotencyKey(idempotencyKey).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateEmailDomain``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `CreateEmailDomain`: EmailDomain
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.CreateEmailDomain`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCreateEmailDomainRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**CreateEmailDomainRequest**](CreateEmailDomainRequest.md) | The domain to add. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
+
+### Return type
+
+[**EmailDomain**](EmailDomain.md)
+
+### Authorization
+
+[api_token_basic](../README.md#install-and-configure)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
+[[Back to README]](../README.md)
+
+
 ## CreateFolder
 
-> Folder CreateFolder(ctx).Body(body).Execute()
+> Folder CreateFolder(ctx).Body(body).IdempotencyKey(idempotencyKey).Execute()
 
 Create a folder
 
@@ -367,10 +602,11 @@ import (
 
 func main() {
 	body := *openapiclient.NewCreateFolderRequest("Name_example") // CreateFolderRequest | The folder to create.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.CreateFolder(context.Background()).Body(body).Execute()
+	resp, r, err := apiClient.ClientAPI.CreateFolder(context.Background()).Body(body).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateFolder``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -392,6 +628,7 @@ Other parameters are passed through a pointer to a apiCreateFolderRequest struct
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **body** | [**CreateFolderRequest**](CreateFolderRequest.md) | The folder to create. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -413,7 +650,7 @@ Name | Type | Description  | Notes
 
 ## CreateSignatureRequestEvent
 
-> SignatureRequestEvent CreateSignatureRequestEvent(ctx, signatureRequestId).Body(body).Execute()
+> SignatureRequestEvent CreateSignatureRequestEvent(ctx, signatureRequestId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 
 Record a signature request event
 
@@ -434,10 +671,11 @@ import (
 func main() {
 	signatureRequestId := "srq_1234567890abcdef01" // string | The signature request's ID.
 	body := *openapiclient.NewCreateSignatureRequestEventRequest(openapiclient.SignatureRequestEventType("send_request")) // CreateSignatureRequestEventRequest | The event to record.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.CreateSignatureRequestEvent(context.Background(), signatureRequestId).Body(body).Execute()
+	resp, r, err := apiClient.ClientAPI.CreateSignatureRequestEvent(context.Background(), signatureRequestId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateSignatureRequestEvent``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -464,6 +702,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **body** | [**CreateSignatureRequestEventRequest**](CreateSignatureRequestEventRequest.md) | The event to record. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -485,7 +724,7 @@ Name | Type | Description  | Notes
 
 ## CreateSignatureRequestToken
 
-> SignatureRequestToken CreateSignatureRequestToken(ctx, signatureRequestId).Body(body).Execute()
+> SignatureRequestToken CreateSignatureRequestToken(ctx, signatureRequestId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 
 Create a signature request token
 
@@ -506,10 +745,11 @@ import (
 func main() {
 	signatureRequestId := "srq_1234567890abcdef01" // string | The signature request's ID.
 	body := *openapiclient.NewCreateSignatureRequestTokenRequest() // CreateSignatureRequestTokenRequest | The kind of link to make. Send no body for an `api` token. (optional)
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.CreateSignatureRequestToken(context.Background(), signatureRequestId).Body(body).Execute()
+	resp, r, err := apiClient.ClientAPI.CreateSignatureRequestToken(context.Background(), signatureRequestId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateSignatureRequestToken``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -536,6 +776,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **body** | [**CreateSignatureRequestTokenRequest**](CreateSignatureRequestTokenRequest.md) | The kind of link to make. Send no body for an `api` token. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -578,9 +819,9 @@ import (
 func main() {
 	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
 	body := *openapiclient.NewCreateSubmissionRequest() // CreateSubmissionRequest | The submission's data and settings.
-	version := "version_example" // string | The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published). (optional)
+	version := "version_example" // string | The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`. (optional)
 	wait := true // bool | Wait until the files have been generated before responding. Default true on sync.api hosts. (optional)
-	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another submission. Send a new key with each new submission, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds. (optional)
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -611,9 +852,9 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **body** | [**CreateSubmissionRequest**](CreateSubmissionRequest.md) | The submission's data and settings. | 
- **version** | **string** | The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published). | 
+ **version** | **string** | The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`. | 
  **wait** | **bool** | Wait until the files have been generated before responding. Default true on sync.api hosts. | 
- **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another submission. Send a new key with each new submission, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -656,7 +897,7 @@ import (
 func main() {
 	body := *openapiclient.NewCreateSubmissionBatchRequest([]openapiclient.SubmissionInput{*openapiclient.NewSubmissionInput()}) // CreateSubmissionBatchRequest | The submissions to create, and the settings they share.
 	wait := true // bool | Wait until every file in the batch has been generated before responding. Default true on sync.api hosts. (optional)
-	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another batch. Send a new key with each new batch, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds. (optional)
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -683,7 +924,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **body** | [**CreateSubmissionBatchRequest**](CreateSubmissionBatchRequest.md) | The submissions to create, and the settings they share. | 
  **wait** | **bool** | Wait until every file in the batch has been generated before responding. Default true on sync.api hosts. | 
- **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another batch. Send a new key with each new batch, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -705,7 +946,7 @@ Name | Type | Description  | Notes
 
 ## CreateTemplate
 
-> Template CreateTemplate(ctx).Body(body).Wait(wait).Execute()
+> Template CreateTemplate(ctx).Body(body).Wait(wait).IdempotencyKey(idempotencyKey).Execute()
 
 Create a template
 
@@ -726,10 +967,11 @@ import (
 func main() {
 	body := *openapiclient.NewCreateTemplateRequest(openapiclient.TemplateType("pdf")) // CreateTemplateRequest | The template to create.
 	wait := true // bool | Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts. (optional)
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.CreateTemplate(context.Background()).Body(body).Wait(wait).Execute()
+	resp, r, err := apiClient.ClientAPI.CreateTemplate(context.Background()).Body(body).Wait(wait).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateTemplate``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -752,6 +994,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **body** | [**CreateTemplateRequest**](CreateTemplateRequest.md) | The template to create. | 
  **wait** | **bool** | Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -773,7 +1016,7 @@ Name | Type | Description  | Notes
 
 ## CreateTemplatePreview
 
-> TemplatePreview CreateTemplatePreview(ctx, templateId).Body(body).Version(version).Execute()
+> TemplatePreview CreateTemplatePreview(ctx, templateId).Body(body).Version(version).IdempotencyKey(idempotencyKey).Execute()
 
 Preview a template with data
 
@@ -794,11 +1037,12 @@ import (
 func main() {
 	templateId := "tpl_1234567890abcdef02" // string | The template's ID.
 	body := *openapiclient.NewCreateTemplatePreviewRequest(map[string]interface{}{"key": interface{}(123)}) // CreateTemplatePreviewRequest | The data to render the template with.
-	version := "version_example" // string | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`. (optional)
+	version := "version_example" // string | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`. (optional)
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.CreateTemplatePreview(context.Background(), templateId).Body(body).Version(version).Execute()
+	resp, r, err := apiClient.ClientAPI.CreateTemplatePreview(context.Background(), templateId).Body(body).Version(version).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateTemplatePreview``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -825,7 +1069,8 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **body** | [**CreateTemplatePreviewRequest**](CreateTemplatePreviewRequest.md) | The data to render the template with. | 
- **version** | **string** | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`. | 
+ **version** | **string** | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -847,7 +1092,7 @@ Name | Type | Description  | Notes
 
 ## CreateWebhook
 
-> Webhook CreateWebhook(ctx).Body(body).Execute()
+> Webhook CreateWebhook(ctx).Body(body).IdempotencyKey(idempotencyKey).Execute()
 
 Create a webhook
 
@@ -867,10 +1112,11 @@ import (
 
 func main() {
 	body := *openapiclient.NewCreateWebhookRequest("Url_example", []openapiclient.WebhookEventType{openapiclient.WebhookEventType("submission.processed")}) // CreateWebhookRequest | The webhook to create.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.CreateWebhook(context.Background()).Body(body).Execute()
+	resp, r, err := apiClient.ClientAPI.CreateWebhook(context.Background()).Body(body).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.CreateWebhook``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -892,6 +1138,7 @@ Other parameters are passed through a pointer to a apiCreateWebhookRequest struc
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **body** | [**CreateWebhookRequest**](CreateWebhookRequest.md) | The webhook to create. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -911,9 +1158,81 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
+## DeleteAccountEmailAction
+
+> EmailAction DeleteAccountEmailAction(ctx, emailActionId).IdempotencyKey(idempotencyKey).Execute()
+
+Delete an account email action
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	emailActionId := "emailActionId_example" // string | The account email action's ID.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.DeleteAccountEmailAction(context.Background(), emailActionId).IdempotencyKey(idempotencyKey).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.DeleteAccountEmailAction``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `DeleteAccountEmailAction`: EmailAction
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.DeleteAccountEmailAction`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**emailActionId** | **string** | The account email action's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiDeleteAccountEmailActionRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
+
+### Return type
+
+[**EmailAction**](EmailAction.md)
+
+### Authorization
+
+[api_token_basic](../README.md#install-and-configure)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
+[[Back to README]](../README.md)
+
+
 ## DeleteCustomFile
 
-> CustomFile DeleteCustomFile(ctx, customFileId).Execute()
+> CustomFile DeleteCustomFile(ctx, customFileId).IdempotencyKey(idempotencyKey).Execute()
 
 Delete a custom file
 
@@ -933,10 +1252,11 @@ import (
 
 func main() {
 	customFileId := "customFileId_example" // string | The custom file's ID.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.DeleteCustomFile(context.Background(), customFileId).Execute()
+	resp, r, err := apiClient.ClientAPI.DeleteCustomFile(context.Background(), customFileId).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.DeleteCustomFile``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -962,6 +1282,7 @@ Other parameters are passed through a pointer to a apiDeleteCustomFileRequest st
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -981,9 +1302,231 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
+## DeleteEmailAction
+
+> EmailAction DeleteEmailAction(ctx, templateId, emailActionId).IdempotencyKey(idempotencyKey).Execute()
+
+Delete an email action
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	templateId := "templateId_example" // string | The template's ID.
+	emailActionId := "emailActionId_example" // string | The email action's ID.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.DeleteEmailAction(context.Background(), templateId, emailActionId).IdempotencyKey(idempotencyKey).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.DeleteEmailAction``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `DeleteEmailAction`: EmailAction
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.DeleteEmailAction`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**templateId** | **string** | The template's ID. | 
+**emailActionId** | **string** | The email action's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiDeleteEmailActionRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
+
+### Return type
+
+[**EmailAction**](EmailAction.md)
+
+### Authorization
+
+[api_token_basic](../README.md#install-and-configure)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
+[[Back to README]](../README.md)
+
+
+## DeleteEmailActionCustomization
+
+> EmailAction DeleteEmailActionCustomization(ctx, templateId, emailActionId).IdempotencyKey(idempotencyKey).Execute()
+
+Reset an account email action's customization
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	templateId := "templateId_example" // string | The template's ID.
+	emailActionId := "emailActionId_example" // string | The ID of one of your account's email actions that sends for the template.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.DeleteEmailActionCustomization(context.Background(), templateId, emailActionId).IdempotencyKey(idempotencyKey).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.DeleteEmailActionCustomization``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `DeleteEmailActionCustomization`: EmailAction
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.DeleteEmailActionCustomization`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**templateId** | **string** | The template's ID. | 
+**emailActionId** | **string** | The ID of one of your account's email actions that sends for the template. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiDeleteEmailActionCustomizationRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
+
+### Return type
+
+[**EmailAction**](EmailAction.md)
+
+### Authorization
+
+[api_token_basic](../README.md#install-and-configure)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
+[[Back to README]](../README.md)
+
+
+## DeleteEmailDomain
+
+> EmailDomain DeleteEmailDomain(ctx, emailDomainId).IdempotencyKey(idempotencyKey).Execute()
+
+Remove an email domain
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	emailDomainId := "emailDomainId_example" // string | The email domain's ID.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.DeleteEmailDomain(context.Background(), emailDomainId).IdempotencyKey(idempotencyKey).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.DeleteEmailDomain``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `DeleteEmailDomain`: EmailDomain
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.DeleteEmailDomain`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**emailDomainId** | **string** | The email domain's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiDeleteEmailDomainRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
+
+### Return type
+
+[**EmailDomain**](EmailDomain.md)
+
+### Authorization
+
+[api_token_basic](../README.md#install-and-configure)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
+[[Back to README]](../README.md)
+
+
 ## DeleteFolder
 
-> Folder DeleteFolder(ctx, folderId).Execute()
+> Folder DeleteFolder(ctx, folderId).IdempotencyKey(idempotencyKey).Execute()
 
 Delete a folder
 
@@ -1003,10 +1546,11 @@ import (
 
 func main() {
 	folderId := "folderId_example" // string | The folder's ID.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.DeleteFolder(context.Background(), folderId).Execute()
+	resp, r, err := apiClient.ClientAPI.DeleteFolder(context.Background(), folderId).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.DeleteFolder``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -1032,6 +1576,7 @@ Other parameters are passed through a pointer to a apiDeleteFolderRequest struct
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -1053,7 +1598,7 @@ Name | Type | Description  | Notes
 
 ## DeleteTemplate
 
-> Template DeleteTemplate(ctx, templateId).Version(version).Execute()
+> Template DeleteTemplate(ctx, templateId).Version(version).IdempotencyKey(idempotencyKey).Execute()
 
 Delete a template
 
@@ -1074,10 +1619,11 @@ import (
 func main() {
 	templateId := "tpl_1234567890abcdef02" // string | The template's ID.
 	version := "version_example" // string | Delete only this published version (`1.2.0`) or the draft (`draft`, when no version has been published). Without it, the draft and every published version are deleted. (optional)
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.DeleteTemplate(context.Background(), templateId).Version(version).Execute()
+	resp, r, err := apiClient.ClientAPI.DeleteTemplate(context.Background(), templateId).Version(version).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.DeleteTemplate``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -1104,6 +1650,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **version** | **string** | Delete only this published version (`1.2.0`) or the draft (`draft`, when no version has been published). Without it, the draft and every published version are deleted. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -1125,7 +1672,7 @@ Name | Type | Description  | Notes
 
 ## DeleteWebhook
 
-> Webhook DeleteWebhook(ctx, webhookId).Execute()
+> Webhook DeleteWebhook(ctx, webhookId).IdempotencyKey(idempotencyKey).Execute()
 
 Delete a webhook
 
@@ -1145,10 +1692,11 @@ import (
 
 func main() {
 	webhookId := "webhookId_example" // string | The webhook's ID.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.DeleteWebhook(context.Background(), webhookId).Execute()
+	resp, r, err := apiClient.ClientAPI.DeleteWebhook(context.Background(), webhookId).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.DeleteWebhook``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -1174,6 +1722,7 @@ Other parameters are passed through a pointer to a apiDeleteWebhookRequest struc
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -1195,7 +1744,7 @@ Name | Type | Description  | Notes
 
 ## ExpireCombinedPdf
 
-> CombinedPdf ExpireCombinedPdf(ctx, combinedPdfId).Execute()
+> CombinedPdf ExpireCombinedPdf(ctx, combinedPdfId).IdempotencyKey(idempotencyKey).Execute()
 
 Expire a combined PDF
 
@@ -1215,10 +1764,11 @@ import (
 
 func main() {
 	combinedPdfId := "com_1234567890abcdef05" // string | The combined PDF's ID.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.ExpireCombinedPdf(context.Background(), combinedPdfId).Execute()
+	resp, r, err := apiClient.ClientAPI.ExpireCombinedPdf(context.Background(), combinedPdfId).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ExpireCombinedPdf``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -1244,6 +1794,7 @@ Other parameters are passed through a pointer to a apiExpireCombinedPdfRequest s
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -1265,7 +1816,7 @@ Name | Type | Description  | Notes
 
 ## ExpireSubmission
 
-> Submission ExpireSubmission(ctx, submissionId).Execute()
+> Submission ExpireSubmission(ctx, submissionId).IdempotencyKey(idempotencyKey).Execute()
 
 Expire a submission
 
@@ -1285,10 +1836,11 @@ import (
 
 func main() {
 	submissionId := "sub_1234567890abcdef01" // string | The submission's ID.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.ExpireSubmission(context.Background(), submissionId).Execute()
+	resp, r, err := apiClient.ClientAPI.ExpireSubmission(context.Background(), submissionId).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ExpireSubmission``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -1314,6 +1866,7 @@ Other parameters are passed through a pointer to a apiExpireSubmissionRequest st
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -1335,7 +1888,7 @@ Name | Type | Description  | Notes
 
 ## GenerateSubmissionFiles
 
-> Submission GenerateSubmissionFiles(ctx, submissionId).Body(body).Wait(wait).Execute()
+> Submission GenerateSubmissionFiles(ctx, submissionId).Body(body).Wait(wait).IdempotencyKey(idempotencyKey).Execute()
 
 Generate more files
 
@@ -1357,10 +1910,11 @@ func main() {
 	submissionId := "sub_1234567890abcdef01" // string | The submission's ID.
 	body := *openapiclient.NewGenerateSubmissionFilesRequest([]openapiclient.GenerateFilesFormat{openapiclient.GenerateFilesFormat("pdf")}) // GenerateSubmissionFilesRequest | The formats to make.
 	wait := true // bool | Wait until the files have been generated before responding. Default true on sync.api hosts. (optional)
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.GenerateSubmissionFiles(context.Background(), submissionId).Body(body).Wait(wait).Execute()
+	resp, r, err := apiClient.ClientAPI.GenerateSubmissionFiles(context.Background(), submissionId).Body(body).Wait(wait).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GenerateSubmissionFiles``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -1388,6 +1942,7 @@ Name | Type | Description  | Notes
 
  **body** | [**GenerateSubmissionFilesRequest**](GenerateSubmissionFilesRequest.md) | The formats to make. | 
  **wait** | **bool** | Wait until the files have been generated before responding. Default true on sync.api hosts. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -1409,7 +1964,7 @@ Name | Type | Description  | Notes
 
 ## GenerateSubmissionPreview
 
-> Submission GenerateSubmissionPreview(ctx, submissionId).Execute()
+> Submission GenerateSubmissionPreview(ctx, submissionId).IdempotencyKey(idempotencyKey).Execute()
 
 Generate a preview PDF
 
@@ -1429,10 +1984,11 @@ import (
 
 func main() {
 	submissionId := "sub_1234567890abcdef03" // string | The submission's ID.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.GenerateSubmissionPreview(context.Background(), submissionId).Execute()
+	resp, r, err := apiClient.ClientAPI.GenerateSubmissionPreview(context.Background(), submissionId).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GenerateSubmissionPreview``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -1458,10 +2014,81 @@ Other parameters are passed through a pointer to a apiGenerateSubmissionPreviewR
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
 [**Submission**](Submission.md)
+
+### Authorization
+
+[api_token_basic](../README.md#install-and-configure)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
+[[Back to README]](../README.md)
+
+
+## GetAccountEmailAction
+
+> EmailAction GetAccountEmailAction(ctx, emailActionId).Execute()
+
+Get an account email action
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	emailActionId := "emailActionId_example" // string | The account email action's ID.
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.GetAccountEmailAction(context.Background(), emailActionId).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetAccountEmailAction``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetAccountEmailAction`: EmailAction
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetAccountEmailAction`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**emailActionId** | **string** | The account email action's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetAccountEmailActionRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+### Return type
+
+[**EmailAction**](EmailAction.md)
 
 ### Authorization
 
@@ -1602,6 +2229,149 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**CustomFile**](CustomFile.md)
+
+### Authorization
+
+[api_token_basic](../README.md#install-and-configure)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
+[[Back to README]](../README.md)
+
+
+## GetEmailAction
+
+> EmailAction GetEmailAction(ctx, templateId, emailActionId).Execute()
+
+Get an email action
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	templateId := "templateId_example" // string | The template's ID.
+	emailActionId := "emailActionId_example" // string | The email action's ID.
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.GetEmailAction(context.Background(), templateId, emailActionId).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetEmailAction``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetEmailAction`: EmailAction
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetEmailAction`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**templateId** | **string** | The template's ID. | 
+**emailActionId** | **string** | The email action's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetEmailActionRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+
+### Return type
+
+[**EmailAction**](EmailAction.md)
+
+### Authorization
+
+[api_token_basic](../README.md#install-and-configure)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
+[[Back to README]](../README.md)
+
+
+## GetEmailDomain
+
+> EmailDomain GetEmailDomain(ctx, emailDomainId).Execute()
+
+Get an email domain
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	emailDomainId := "emailDomainId_example" // string | The email domain's ID.
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.GetEmailDomain(context.Background(), emailDomainId).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetEmailDomain``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetEmailDomain`: EmailDomain
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetEmailDomain`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**emailDomainId** | **string** | The email domain's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetEmailDomainRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+### Return type
+
+[**EmailDomain**](EmailDomain.md)
 
 ### Authorization
 
@@ -1982,7 +2752,7 @@ import (
 
 func main() {
 	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
-	version := "latest" // string | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`. (optional)
+	version := "latest" // string | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -2012,7 +2782,7 @@ Other parameters are passed through a pointer to a apiGetTemplateRequest struct 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **version** | **string** | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`. | 
+ **version** | **string** | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`. | 
 
 ### Return type
 
@@ -2054,7 +2824,7 @@ import (
 
 func main() {
 	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
-	version := "0.1.0" // string | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`. (optional)
+	version := "0.1.0" // string | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -2084,7 +2854,7 @@ Other parameters are passed through a pointer to a apiGetTemplateDiffRequest str
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **version** | **string** | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`. | 
+ **version** | **string** | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`. | 
 
 ### Return type
 
@@ -2127,7 +2897,7 @@ import (
 func main() {
 	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
 	lang := openapiclient.ModelCodeLanguage("typescript") // ModelCodeLanguage | The language to generate the code in.
-	version := "draft" // string | The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default. (optional)
+	version := "draft" // string | The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`, the version a submission uses by default. (optional)
 	justTypes := true // bool | Return only the types (interfaces, classes or structs), without the code that converts JSON to and from them. Default false. JavaScript has no types, PHP has no types-only code, and Rust's code is only types (serde converts the JSON), so theirs is the same either way. (optional)
 
 	configuration := openapiclient.NewConfiguration()
@@ -2159,7 +2929,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **lang** | [**ModelCodeLanguage**](ModelCodeLanguage.md) | The language to generate the code in. | 
- **version** | **string** | The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default. | 
+ **version** | **string** | The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`, the version a submission uses by default. | 
  **justTypes** | **bool** | Return only the types (interfaces, classes or structs), without the code that converts JSON to and from them. Default false. JavaScript has no types, PHP has no types-only code, and Rust's code is only types (serde converts the JSON), so theirs is the same either way. | 
 
 ### Return type
@@ -2202,7 +2972,7 @@ import (
 
 func main() {
 	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
-	version := "latest" // string | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`. (optional)
+	version := "latest" // string | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -2232,7 +3002,7 @@ Other parameters are passed through a pointer to a apiGetTemplatePageImagesReque
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **version** | **string** | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`. | 
+ **version** | **string** | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`. | 
 
 ### Return type
 
@@ -2347,7 +3117,7 @@ import (
 
 func main() {
 	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
-	version := "draft" // string | The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default. (optional)
+	version := "draft" // string | The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`, the version a submission uses by default. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -2377,7 +3147,7 @@ Other parameters are passed through a pointer to a apiGetTemplateSchemaRequest s
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **version** | **string** | The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default. | 
+ **version** | **string** | The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`, the version a submission uses by default. | 
 
 ### Return type
 
@@ -2452,6 +3222,74 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**Webhook**](Webhook.md)
+
+### Authorization
+
+[api_token_basic](../README.md#install-and-configure)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
+[[Back to README]](../README.md)
+
+
+## ListAccountEmailActions
+
+> EmailActionList ListAccountEmailActions(ctx).Limit(limit).Cursor(cursor).Execute()
+
+List account email actions
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	limit := int32(56) // int32 | How many items to return (1-100, default 50). (optional) (default to 50)
+	cursor := "cursor_example" // string | The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.ListAccountEmailActions(context.Background()).Limit(limit).Cursor(cursor).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ListAccountEmailActions``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ListAccountEmailActions`: EmailActionList
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.ListAccountEmailActions`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiListAccountEmailActionsRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **limit** | **int32** | How many items to return (1-100, default 50). | [default to 50]
+ **cursor** | **string** | The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one. | 
+
+### Return type
+
+[**EmailActionList**](EmailActionList.md)
 
 ### Authorization
 
@@ -2588,6 +3426,148 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**CustomFileList**](CustomFileList.md)
+
+### Authorization
+
+[api_token_basic](../README.md#install-and-configure)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
+[[Back to README]](../README.md)
+
+
+## ListEmailActions
+
+> EmailActionList ListEmailActions(ctx, templateId).Limit(limit).Cursor(cursor).Execute()
+
+List email actions
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	templateId := "templateId_example" // string | The template's ID.
+	limit := int32(56) // int32 | How many items to return (1-100, default 50). (optional) (default to 50)
+	cursor := "cursor_example" // string | The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.ListEmailActions(context.Background(), templateId).Limit(limit).Cursor(cursor).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ListEmailActions``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ListEmailActions`: EmailActionList
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.ListEmailActions`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**templateId** | **string** | The template's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiListEmailActionsRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **limit** | **int32** | How many items to return (1-100, default 50). | [default to 50]
+ **cursor** | **string** | The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one. | 
+
+### Return type
+
+[**EmailActionList**](EmailActionList.md)
+
+### Authorization
+
+[api_token_basic](../README.md#install-and-configure)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
+[[Back to README]](../README.md)
+
+
+## ListEmailDomains
+
+> EmailDomainList ListEmailDomains(ctx).Limit(limit).Cursor(cursor).Execute()
+
+List email domains
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	limit := int32(56) // int32 | How many items to return (1-100, default 50). (optional) (default to 50)
+	cursor := "cursor_example" // string | The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.ListEmailDomains(context.Background()).Limit(limit).Cursor(cursor).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ListEmailDomains``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ListEmailDomains`: EmailDomainList
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.ListEmailDomains`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiListEmailDomainsRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **limit** | **int32** | How many items to return (1-100, default 50). | [default to 50]
+ **cursor** | **string** | The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one. | 
+
+### Return type
+
+[**EmailDomainList**](EmailDomainList.md)
 
 ### Authorization
 
@@ -2778,7 +3758,7 @@ import (
 
 func main() {
 	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
-	version := "latest" // string | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`. (optional)
+	version := "latest" // string | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -2808,7 +3788,7 @@ Other parameters are passed through a pointer to a apiListTemplateFieldsRequest 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **version** | **string** | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`. | 
+ **version** | **string** | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`. | 
 
 ### Return type
 
@@ -2936,7 +3916,7 @@ import (
 )
 
 func main() {
-	query := "rental" // string | Only list templates whose name contains this text (ignoring case). (optional)
+	query := "rental" // string | Only list templates whose name contains this text (ignoring case). `%` and `_` match themselves. (optional)
 	parentFolderId := "fld_1234567890abcdef01" // string | Only list the templates in this folder (not in its subfolders). (optional)
 	limit := int32(1) // int32 | How many items to return (1-100, default 50). (optional) (default to 50)
 	cursor := "cursor_example" // string | The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one. (optional)
@@ -2964,7 +3944,7 @@ Other parameters are passed through a pointer to a apiListTemplatesRequest struc
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **query** | **string** | Only list templates whose name contains this text (ignoring case). | 
+ **query** | **string** | Only list templates whose name contains this text (ignoring case). `%` and `_` match themselves. | 
  **parentFolderId** | **string** | Only list the templates in this folder (not in its subfolders). | 
  **limit** | **int32** | How many items to return (1-100, default 50). | [default to 50]
  **cursor** | **string** | The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one. | 
@@ -3067,7 +4047,7 @@ Name | Type | Description  | Notes
 
 ## MoveFolder
 
-> Folder MoveFolder(ctx, folderId).Body(body).Execute()
+> Folder MoveFolder(ctx, folderId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 
 Move a folder
 
@@ -3088,10 +4068,11 @@ import (
 func main() {
 	folderId := "folderId_example" // string | The folder's ID.
 	body := *openapiclient.NewMoveFolderRequest("ParentFolderId_example") // MoveFolderRequest | Where to move the folder.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.MoveFolder(context.Background(), folderId).Body(body).Execute()
+	resp, r, err := apiClient.ClientAPI.MoveFolder(context.Background(), folderId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.MoveFolder``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -3118,6 +4099,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **body** | [**MoveFolderRequest**](MoveFolderRequest.md) | Where to move the folder. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -3139,7 +4121,7 @@ Name | Type | Description  | Notes
 
 ## MoveTemplate
 
-> Template MoveTemplate(ctx, templateId).Body(body).Execute()
+> Template MoveTemplate(ctx, templateId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 
 Move a template to a folder
 
@@ -3160,10 +4142,11 @@ import (
 func main() {
 	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
 	body := *openapiclient.NewMoveTemplateRequest("ParentFolderId_example") // MoveTemplateRequest | Where to move the template.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.MoveTemplate(context.Background(), templateId).Body(body).Execute()
+	resp, r, err := apiClient.ClientAPI.MoveTemplate(context.Background(), templateId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.MoveTemplate``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -3190,6 +4173,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **body** | [**MoveTemplateRequest**](MoveTemplateRequest.md) | Where to move the template. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -3211,7 +4195,7 @@ Name | Type | Description  | Notes
 
 ## PublishTemplateVersion
 
-> TemplateVersion PublishTemplateVersion(ctx, templateId).Body(body).Execute()
+> TemplateVersion PublishTemplateVersion(ctx, templateId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 
 Publish a template version
 
@@ -3232,10 +4216,11 @@ import (
 func main() {
 	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
 	body := *openapiclient.NewPublishTemplateVersionRequest(openapiclient.TemplateVersionType("major")) // PublishTemplateVersionRequest | The version to publish.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.PublishTemplateVersion(context.Background(), templateId).Body(body).Execute()
+	resp, r, err := apiClient.ClientAPI.PublishTemplateVersion(context.Background(), templateId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.PublishTemplateVersion``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -3262,6 +4247,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **body** | [**PublishTemplateVersionRequest**](PublishTemplateVersionRequest.md) | The version to publish. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -3283,7 +4269,7 @@ Name | Type | Description  | Notes
 
 ## RemoveTemplateFields
 
-> TemplateFields RemoveTemplateFields(ctx, templateId).Body(body).Execute()
+> TemplateFields RemoveTemplateFields(ctx, templateId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 
 Remove fields from a template
 
@@ -3304,10 +4290,11 @@ import (
 func main() {
 	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
 	body := *openapiclient.NewRemoveTemplateFieldsRequest([]int32{int32(123)}) // RemoveTemplateFieldsRequest | The fields to remove from the template's draft.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.RemoveTemplateFields(context.Background(), templateId).Body(body).Execute()
+	resp, r, err := apiClient.ClientAPI.RemoveTemplateFields(context.Background(), templateId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.RemoveTemplateFields``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -3334,6 +4321,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **body** | [**RemoveTemplateFieldsRequest**](RemoveTemplateFieldsRequest.md) | The fields to remove from the template's draft. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -3355,7 +4343,7 @@ Name | Type | Description  | Notes
 
 ## RenameFolder
 
-> Folder RenameFolder(ctx, folderId).Body(body).Execute()
+> Folder RenameFolder(ctx, folderId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 
 Rename a folder
 
@@ -3376,10 +4364,11 @@ import (
 func main() {
 	folderId := "folderId_example" // string | The folder's ID.
 	body := *openapiclient.NewRenameFolderRequest("Name_example") // RenameFolderRequest | The folder's new name.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.RenameFolder(context.Background(), folderId).Body(body).Execute()
+	resp, r, err := apiClient.ClientAPI.RenameFolder(context.Background(), folderId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.RenameFolder``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -3406,6 +4395,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **body** | [**RenameFolderRequest**](RenameFolderRequest.md) | The folder's new name. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -3427,7 +4417,7 @@ Name | Type | Description  | Notes
 
 ## ReorderTemplateFields
 
-> TemplateFields ReorderTemplateFields(ctx, templateId).Body(body).Execute()
+> TemplateFields ReorderTemplateFields(ctx, templateId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 
 Reorder a template's fields
 
@@ -3448,10 +4438,11 @@ import (
 func main() {
 	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
 	body := *openapiclient.NewReorderTemplateFieldsRequest([]int32{int32(123)}) // ReorderTemplateFieldsRequest | The new order of the fields in the template's draft.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.ReorderTemplateFields(context.Background(), templateId).Body(body).Execute()
+	resp, r, err := apiClient.ClientAPI.ReorderTemplateFields(context.Background(), templateId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ReorderTemplateFields``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -3478,6 +4469,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **body** | [**ReorderTemplateFieldsRequest**](ReorderTemplateFieldsRequest.md) | The new order of the fields in the template's draft. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -3499,7 +4491,7 @@ Name | Type | Description  | Notes
 
 ## RestoreTemplateVersion
 
-> Template RestoreTemplateVersion(ctx, templateId).Body(body).Execute()
+> Template RestoreTemplateVersion(ctx, templateId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 
 Restore a template version
 
@@ -3520,10 +4512,11 @@ import (
 func main() {
 	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
 	body := *openapiclient.NewRestoreTemplateVersionRequest("Version_example") // RestoreTemplateVersionRequest | The version to restore.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.RestoreTemplateVersion(context.Background(), templateId).Body(body).Execute()
+	resp, r, err := apiClient.ClientAPI.RestoreTemplateVersion(context.Background(), templateId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.RestoreTemplateVersion``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -3550,6 +4543,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **body** | [**RestoreTemplateVersionRequest**](RestoreTemplateVersionRequest.md) | The version to restore. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -3562,6 +4556,155 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
 - **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
+[[Back to README]](../README.md)
+
+
+## SendAccountEmailActionTestEmail
+
+> EmailActionTestEmail SendAccountEmailActionTestEmail(ctx, emailActionId).Body(body).IdempotencyKey(idempotencyKey).Execute()
+
+Send a test email for an account email action
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	emailActionId := "emailActionId_example" // string | The account email action's ID.
+	body := *openapiclient.NewSendAccountEmailActionTestEmailRequest() // SendAccountEmailActionTestEmailRequest | Which template the test email is for. (optional)
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.SendAccountEmailActionTestEmail(context.Background(), emailActionId).Body(body).IdempotencyKey(idempotencyKey).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.SendAccountEmailActionTestEmail``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `SendAccountEmailActionTestEmail`: EmailActionTestEmail
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.SendAccountEmailActionTestEmail`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**emailActionId** | **string** | The account email action's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiSendAccountEmailActionTestEmailRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **body** | [**SendAccountEmailActionTestEmailRequest**](SendAccountEmailActionTestEmailRequest.md) | Which template the test email is for. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
+
+### Return type
+
+[**EmailActionTestEmail**](EmailActionTestEmail.md)
+
+### Authorization
+
+[api_token_basic](../README.md#install-and-configure)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
+[[Back to README]](../README.md)
+
+
+## SendEmailActionTestEmail
+
+> EmailActionTestEmail SendEmailActionTestEmail(ctx, templateId, emailActionId).IdempotencyKey(idempotencyKey).Execute()
+
+Send a test email
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	templateId := "templateId_example" // string | The template's ID.
+	emailActionId := "emailActionId_example" // string | The email action's ID.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.SendEmailActionTestEmail(context.Background(), templateId, emailActionId).IdempotencyKey(idempotencyKey).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.SendEmailActionTestEmail``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `SendEmailActionTestEmail`: EmailActionTestEmail
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.SendEmailActionTestEmail`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**templateId** | **string** | The template's ID. | 
+**emailActionId** | **string** | The email action's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiSendEmailActionTestEmailRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
+
+### Return type
+
+[**EmailActionTestEmail**](EmailActionTestEmail.md)
+
+### Authorization
+
+[api_token_basic](../README.md#install-and-configure)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#methods)
@@ -3630,9 +4773,237 @@ Other parameters are passed through a pointer to a apiTestAuthenticationRequest 
 [[Back to README]](../README.md)
 
 
+## UpdateAccountEmailAction
+
+> EmailAction UpdateAccountEmailAction(ctx, emailActionId).Body(body).IdempotencyKey(idempotencyKey).Execute()
+
+Update an account email action
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	emailActionId := "emailActionId_example" // string | The account email action's ID.
+	body := *openapiclient.NewUpdateAccountEmailActionRequest() // UpdateAccountEmailActionRequest | The settings to change. Properties left out keep their values.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.UpdateAccountEmailAction(context.Background(), emailActionId).Body(body).IdempotencyKey(idempotencyKey).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.UpdateAccountEmailAction``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `UpdateAccountEmailAction`: EmailAction
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.UpdateAccountEmailAction`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**emailActionId** | **string** | The account email action's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpdateAccountEmailActionRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **body** | [**UpdateAccountEmailActionRequest**](UpdateAccountEmailActionRequest.md) | The settings to change. Properties left out keep their values. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
+
+### Return type
+
+[**EmailAction**](EmailAction.md)
+
+### Authorization
+
+[api_token_basic](../README.md#install-and-configure)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
+[[Back to README]](../README.md)
+
+
+## UpdateEmailAction
+
+> EmailAction UpdateEmailAction(ctx, templateId, emailActionId).Body(body).IdempotencyKey(idempotencyKey).Execute()
+
+Update an email action
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	templateId := "templateId_example" // string | The template's ID.
+	emailActionId := "emailActionId_example" // string | The email action's ID.
+	body := *openapiclient.NewUpdateEmailActionRequest() // UpdateEmailActionRequest | The settings to change. Properties left out keep their values.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.UpdateEmailAction(context.Background(), templateId, emailActionId).Body(body).IdempotencyKey(idempotencyKey).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.UpdateEmailAction``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `UpdateEmailAction`: EmailAction
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.UpdateEmailAction`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**templateId** | **string** | The template's ID. | 
+**emailActionId** | **string** | The email action's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpdateEmailActionRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+ **body** | [**UpdateEmailActionRequest**](UpdateEmailActionRequest.md) | The settings to change. Properties left out keep their values. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
+
+### Return type
+
+[**EmailAction**](EmailAction.md)
+
+### Authorization
+
+[api_token_basic](../README.md#install-and-configure)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
+[[Back to README]](../README.md)
+
+
+## UpdateEmailActionCustomization
+
+> EmailAction UpdateEmailActionCustomization(ctx, templateId, emailActionId).Body(body).IdempotencyKey(idempotencyKey).Execute()
+
+Customize an account email action for a template
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	templateId := "templateId_example" // string | The template's ID.
+	emailActionId := "emailActionId_example" // string | The ID of one of your account's email actions that sends for the template.
+	body := *openapiclient.NewUpdateEmailActionCustomizationRequest() // UpdateEmailActionCustomizationRequest | The template's changes to the account email action, replacing any it had. Each setting you send is changed for this template, and the ones you leave out follow the account email action. `enabled: false` stops it sending for this template; left out, it sends.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.UpdateEmailActionCustomization(context.Background(), templateId, emailActionId).Body(body).IdempotencyKey(idempotencyKey).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.UpdateEmailActionCustomization``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `UpdateEmailActionCustomization`: EmailAction
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.UpdateEmailActionCustomization`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**templateId** | **string** | The template's ID. | 
+**emailActionId** | **string** | The ID of one of your account's email actions that sends for the template. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpdateEmailActionCustomizationRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+ **body** | [**UpdateEmailActionCustomizationRequest**](UpdateEmailActionCustomizationRequest.md) | The template's changes to the account email action, replacing any it had. Each setting you send is changed for this template, and the ones you leave out follow the account email action. `enabled: false` stops it sending for this template; left out, it sends. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
+
+### Return type
+
+[**EmailAction**](EmailAction.md)
+
+### Authorization
+
+[api_token_basic](../README.md#install-and-configure)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
+[[Back to README]](../README.md)
+
+
 ## UpdateSignatureRequest
 
-> SignatureRequest UpdateSignatureRequest(ctx, signatureRequestId).Body(body).Execute()
+> SignatureRequest UpdateSignatureRequest(ctx, signatureRequestId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 
 Update a signature request
 
@@ -3653,10 +5024,11 @@ import (
 func main() {
 	signatureRequestId := "srq_1234567890abcdef01" // string | The signature request's ID.
 	body := *openapiclient.NewUpdateSignatureRequestRequest() // UpdateSignatureRequestRequest | The settings to change. Properties left out keep their values.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.UpdateSignatureRequest(context.Background(), signatureRequestId).Body(body).Execute()
+	resp, r, err := apiClient.ClientAPI.UpdateSignatureRequest(context.Background(), signatureRequestId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.UpdateSignatureRequest``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -3683,6 +5055,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **body** | [**UpdateSignatureRequestRequest**](UpdateSignatureRequestRequest.md) | The settings to change. Properties left out keep their values. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -3704,7 +5077,7 @@ Name | Type | Description  | Notes
 
 ## UpdateTemplate
 
-> Template UpdateTemplate(ctx, templateId).Body(body).Execute()
+> Template UpdateTemplate(ctx, templateId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 
 Update a template
 
@@ -3725,10 +5098,11 @@ import (
 func main() {
 	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
 	body := *openapiclient.NewUpdateTemplateRequest() // UpdateTemplateRequest | The settings to change. Properties left out keep their values.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.UpdateTemplate(context.Background(), templateId).Body(body).Execute()
+	resp, r, err := apiClient.ClientAPI.UpdateTemplate(context.Background(), templateId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.UpdateTemplate``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -3755,6 +5129,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **body** | [**UpdateTemplateRequest**](UpdateTemplateRequest.md) | The settings to change. Properties left out keep their values. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -3776,7 +5151,7 @@ Name | Type | Description  | Notes
 
 ## UpdateTemplateDocument
 
-> Template UpdateTemplateDocument(ctx, templateId).Body(body).Wait(wait).Execute()
+> Template UpdateTemplateDocument(ctx, templateId).Body(body).Wait(wait).IdempotencyKey(idempotencyKey).Execute()
 
 Replace a template's document
 
@@ -3798,10 +5173,11 @@ func main() {
 	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
 	body := *openapiclient.NewUpdateTemplateDocumentRequest() // UpdateTemplateDocumentRequest | The new PDF, or a Word template's new Word document, as one of `cache_id`, `document_url` and `document_base64`.
 	wait := true // bool | Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts. (optional)
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.UpdateTemplateDocument(context.Background(), templateId).Body(body).Wait(wait).Execute()
+	resp, r, err := apiClient.ClientAPI.UpdateTemplateDocument(context.Background(), templateId).Body(body).Wait(wait).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.UpdateTemplateDocument``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -3829,6 +5205,7 @@ Name | Type | Description  | Notes
 
  **body** | [**UpdateTemplateDocumentRequest**](UpdateTemplateDocumentRequest.md) | The new PDF, or a Word template's new Word document, as one of `cache_id`, `document_url` and `document_base64`. | 
  **wait** | **bool** | Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -3850,7 +5227,7 @@ Name | Type | Description  | Notes
 
 ## UpdateTemplateFields
 
-> TemplateFields UpdateTemplateFields(ctx, templateId).Body(body).Execute()
+> TemplateFields UpdateTemplateFields(ctx, templateId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 
 Update a template's fields
 
@@ -3871,10 +5248,11 @@ import (
 func main() {
 	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
 	body := *openapiclient.NewUpdateTemplateFieldsRequest([]openapiclient.FieldInput{*openapiclient.NewFieldInput()}) // UpdateTemplateFieldsRequest | The fields to change in the template's draft.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.UpdateTemplateFields(context.Background(), templateId).Body(body).Execute()
+	resp, r, err := apiClient.ClientAPI.UpdateTemplateFields(context.Background(), templateId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.UpdateTemplateFields``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -3901,6 +5279,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **body** | [**UpdateTemplateFieldsRequest**](UpdateTemplateFieldsRequest.md) | The fields to change in the template's draft. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -3922,7 +5301,7 @@ Name | Type | Description  | Notes
 
 ## UpdateWebhook
 
-> Webhook UpdateWebhook(ctx, webhookId).Body(body).Execute()
+> Webhook UpdateWebhook(ctx, webhookId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 
 Update a webhook
 
@@ -3943,10 +5322,11 @@ import (
 func main() {
 	webhookId := "webhookId_example" // string | The webhook's ID.
 	body := *openapiclient.NewUpdateWebhookRequest() // UpdateWebhookRequest | The settings to change. Properties left out keep their values.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.UpdateWebhook(context.Background(), webhookId).Body(body).Execute()
+	resp, r, err := apiClient.ClientAPI.UpdateWebhook(context.Background(), webhookId).Body(body).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.UpdateWebhook``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -3973,6 +5353,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **body** | [**UpdateWebhookRequest**](UpdateWebhookRequest.md) | The settings to change. Properties left out keep their values. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -3994,7 +5375,7 @@ Name | Type | Description  | Notes
 
 ## UploadTemplate
 
-> Template UploadTemplate(ctx).Document(document).Wait(wait).Name(name).Description(description).ParentFolderId(parentFolderId).AiFieldNamingLanguage(aiFieldNamingLanguage).DetectFields(detectFields).FieldSource(fieldSource).FieldNaming(fieldNaming).FieldLogic(fieldLogic).OutputFormat(outputFormat).Execute()
+> Template UploadTemplate(ctx).Document(document).Wait(wait).Name(name).Description(description).ParentFolderId(parentFolderId).AiFieldNamingLanguage(aiFieldNamingLanguage).DetectFields(detectFields).FieldSource(fieldSource).FieldNaming(fieldNaming).FieldLogic(fieldLogic).OutputFormat(outputFormat).IdempotencyKey(idempotencyKey).Execute()
 
 Create a template from an uploaded PDF or Word document
 
@@ -4024,10 +5405,11 @@ func main() {
 	fieldNaming := openapiclient.FieldSetupNaming("ai") // FieldSetupNaming | With `detect_fields`, how the fields are named. `ai` (the default) names them and sets their types and settings with AI; `preserve` keeps the names of the PDF's form fields, and AI only names the fields it detected. `preserve` needs `field_source` `auto` or `pdf_form_fields`. (optional)
 	fieldLogic := openapiclient.FieldSetupLogic("ai") // FieldSetupLogic | With `detect_fields`, whether AI reads the whole form once the fields are named and sets up conditional logic and required fields (`ai`) or not (`none`). Default: your account's template settings. (optional)
 	outputFormat := openapiclient.OutputFormat("pdf") // OutputFormat | What each submission of a Word template makes unless its request sets `output_formats`: `docx` (a Word document), `odt` (an OpenDocument file, converted from the Word document) or `pdf`. Required when `document` is a Word document. (optional)
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.UploadTemplate(context.Background()).Document(document).Wait(wait).Name(name).Description(description).ParentFolderId(parentFolderId).AiFieldNamingLanguage(aiFieldNamingLanguage).DetectFields(detectFields).FieldSource(fieldSource).FieldNaming(fieldNaming).FieldLogic(fieldLogic).OutputFormat(outputFormat).Execute()
+	resp, r, err := apiClient.ClientAPI.UploadTemplate(context.Background()).Document(document).Wait(wait).Name(name).Description(description).ParentFolderId(parentFolderId).AiFieldNamingLanguage(aiFieldNamingLanguage).DetectFields(detectFields).FieldSource(fieldSource).FieldNaming(fieldNaming).FieldLogic(fieldLogic).OutputFormat(outputFormat).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.UploadTemplate``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -4059,6 +5441,7 @@ Name | Type | Description  | Notes
  **fieldNaming** | [**FieldSetupNaming**](FieldSetupNaming.md) | With `detect_fields`, how the fields are named. `ai` (the default) names them and sets their types and settings with AI; `preserve` keeps the names of the PDF's form fields, and AI only names the fields it detected. `preserve` needs `field_source` `auto` or `pdf_form_fields`. | 
  **fieldLogic** | [**FieldSetupLogic**](FieldSetupLogic.md) | With `detect_fields`, whether AI reads the whole form once the fields are named and sets up conditional logic and required fields (`ai`) or not (`none`). Default: your account's template settings. | 
  **outputFormat** | [**OutputFormat**](OutputFormat.md) | What each submission of a Word template makes unless its request sets `output_formats`: `docx` (a Word document), `odt` (an OpenDocument file, converted from the Word document) or `pdf`. Required when `document` is a Word document. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -4080,7 +5463,7 @@ Name | Type | Description  | Notes
 
 ## UploadTemplateDocument
 
-> Template UploadTemplateDocument(ctx, templateId).Document(document).Wait(wait).ReimportFields(reimportFields).Execute()
+> Template UploadTemplateDocument(ctx, templateId).Document(document).Wait(wait).ReimportFields(reimportFields).IdempotencyKey(idempotencyKey).Execute()
 
 Replace a template's document with an uploaded file
 
@@ -4103,10 +5486,11 @@ func main() {
 	document := os.NewFile(1234, "some_file") // *os.File | The new PDF, or the new Word document (.docx or .odt) of a Word template.
 	wait := true // bool | Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts. (optional)
 	reimportFields := true // bool | Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. Only for PDF templates: a Word template adds a field for each new tag. (optional)
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.UploadTemplateDocument(context.Background(), templateId).Document(document).Wait(wait).ReimportFields(reimportFields).Execute()
+	resp, r, err := apiClient.ClientAPI.UploadTemplateDocument(context.Background(), templateId).Document(document).Wait(wait).ReimportFields(reimportFields).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.UploadTemplateDocument``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -4135,6 +5519,7 @@ Name | Type | Description  | Notes
  **document** | ***os.File** | The new PDF, or the new Word document (.docx or .odt) of a Word template. | 
  **wait** | **bool** | Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts. | 
  **reimportFields** | **bool** | Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. Only for PDF templates: a Word template adds a field for each new tag. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -4156,7 +5541,7 @@ Name | Type | Description  | Notes
 
 ## ValidateSubmission
 
-> SubmissionValidation ValidateSubmission(ctx, templateId).Body(body).Version(version).Execute()
+> SubmissionValidation ValidateSubmission(ctx, templateId).Body(body).Version(version).IdempotencyKey(idempotencyKey).Execute()
 
 Check a submission without creating it
 
@@ -4177,11 +5562,12 @@ import (
 func main() {
 	templateId := "tpl_1234567890abcdef01" // string | The template's ID.
 	body := *openapiclient.NewValidateSubmissionRequest() // ValidateSubmissionRequest | The submission's data and settings.
-	version := "latest" // string | The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published). (optional)
+	version := "latest" // string | The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`. (optional)
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.ValidateSubmission(context.Background(), templateId).Body(body).Version(version).Execute()
+	resp, r, err := apiClient.ClientAPI.ValidateSubmission(context.Background(), templateId).Body(body).Version(version).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ValidateSubmission``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -4208,7 +5594,8 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **body** | [**ValidateSubmissionRequest**](ValidateSubmissionRequest.md) | The submission's data and settings. | 
- **version** | **string** | The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published). | 
+ **version** | **string** | The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
 
 ### Return type
 
@@ -4221,6 +5608,78 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
 - **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
+[[Back to README]](../README.md)
+
+
+## VerifyEmailDomain
+
+> EmailDomain VerifyEmailDomain(ctx, emailDomainId).IdempotencyKey(idempotencyKey).Execute()
+
+Verify an email domain
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	emailDomainId := "emailDomainId_example" // string | The email domain's ID.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.VerifyEmailDomain(context.Background(), emailDomainId).IdempotencyKey(idempotencyKey).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.VerifyEmailDomain``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `VerifyEmailDomain`: EmailDomain
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.VerifyEmailDomain`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**emailDomainId** | **string** | The email domain's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiVerifyEmailDomainRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. | 
+
+### Return type
+
+[**EmailDomain**](EmailDomain.md)
+
+### Authorization
+
+[api_token_basic](../README.md#install-and-configure)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#methods)

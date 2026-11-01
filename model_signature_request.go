@@ -27,7 +27,7 @@ type SignatureRequest struct {
 	SubmissionId string `json:"submission_id"`
 	// The name of the person the request is for.
 	Name NullableString `json:"name"`
-	// Their email address.
+	// Their email address. Null when they have none.
 	Email NullableString `json:"email"`
 	// The fields this person fills in. Null for a signature request created with API v1 without a field list: it asks for every field the submission's data doesn't have.
 	Fields []string `json:"fields"`
@@ -37,6 +37,14 @@ type SignatureRequest struct {
 	Role string `json:"role"`
 	// The signer's position, from 0: `Signer 1` is 0. The template's `@@signature_requests/<sort_order>` fields print this signature request's details.
 	SortOrder int32 `json:"sort_order"`
+	// Whether DocSpring emails this person their signing link.
+	SendEmail bool `json:"send_email"`
+	// When this person signs, when the submission's `signing_order` is `sequential`: everyone in step 1 first, then step 2, and so on. Null when everyone can sign at once.
+	SigningStep NullableInt32 `json:"signing_step"`
+	// When DocSpring first emailed this person their signing link. Null until it has, and when it doesn't email them (`send_email` is false).
+	SentAt NullableTime `json:"sent_at"`
+	// What happened to the latest email DocSpring sent this person with their signing link: `sent` until the email service reports on it, then `delayed` (still trying), `delivered`, `undelivered` (it stopped trying, as with a full mailbox), `bounced` (the address doesn't exist) or `complained` (marked as spam). `failed` means DocSpring couldn't send the first email with their link, and `unknown` that it couldn't tell whether that email went: neither is sent again. Null until DocSpring has emailed them or tried to.
+	EmailStatus NullableSignatureRequestEmailStatus `json:"email_status"`
 	// `pending` until the person completes the signature request (`completed`) or declines it (`declined`).
 	State SignatureRequestState `json:"state"`
 	// The values this person entered for their own fields (`fields`). Null when their submission's data is left out: in lists without `include_data=true`, in the events of a webhook that leaves out submission data, and once the submission has expired.
@@ -80,7 +88,7 @@ type _SignatureRequest SignatureRequest
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewSignatureRequest(id string, submissionId string, name NullableString, email NullableString, fields []string, metadata map[string]interface{}, role string, sortOrder int32, state SignatureRequestState, data map[string]interface{}, viewedAt NullableTime, completedAt NullableTime, declinedAt NullableTime, authType SignatureRequestAuthType, authSecondFactorType SignatureRequestAuthSecondFactorType, authProvider NullableString, authSessionStartedAt NullableTime, authSessionIdHash NullableString, authUserIdHash NullableString, authUsernameHash NullableString, authPhoneNumberHash NullableString, ipAddress NullableString, userAgent NullableString, createdAt time.Time, updatedAt time.Time) *SignatureRequest {
+func NewSignatureRequest(id string, submissionId string, name NullableString, email NullableString, fields []string, metadata map[string]interface{}, role string, sortOrder int32, sendEmail bool, signingStep NullableInt32, sentAt NullableTime, emailStatus NullableSignatureRequestEmailStatus, state SignatureRequestState, data map[string]interface{}, viewedAt NullableTime, completedAt NullableTime, declinedAt NullableTime, authType SignatureRequestAuthType, authSecondFactorType SignatureRequestAuthSecondFactorType, authProvider NullableString, authSessionStartedAt NullableTime, authSessionIdHash NullableString, authUserIdHash NullableString, authUsernameHash NullableString, authPhoneNumberHash NullableString, ipAddress NullableString, userAgent NullableString, createdAt time.Time, updatedAt time.Time) *SignatureRequest {
 	this := SignatureRequest{}
 	this.Id = id
 	this.SubmissionId = submissionId
@@ -90,6 +98,10 @@ func NewSignatureRequest(id string, submissionId string, name NullableString, em
 	this.Metadata = metadata
 	this.Role = role
 	this.SortOrder = sortOrder
+	this.SendEmail = sendEmail
+	this.SigningStep = signingStep
+	this.SentAt = sentAt
+	this.EmailStatus = emailStatus
 	this.State = state
 	this.Data = data
 	this.ViewedAt = viewedAt
@@ -314,6 +326,108 @@ func (o *SignatureRequest) GetSortOrderOk() (*int32, bool) {
 // SetSortOrder sets field value
 func (o *SignatureRequest) SetSortOrder(v int32) {
 	o.SortOrder = v
+}
+
+// GetSendEmail returns the SendEmail field value
+func (o *SignatureRequest) GetSendEmail() bool {
+	if o == nil {
+		var ret bool
+		return ret
+	}
+
+	return o.SendEmail
+}
+
+// GetSendEmailOk returns a tuple with the SendEmail field value
+// and a boolean to check if the value has been set.
+func (o *SignatureRequest) GetSendEmailOk() (*bool, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.SendEmail, true
+}
+
+// SetSendEmail sets field value
+func (o *SignatureRequest) SetSendEmail(v bool) {
+	o.SendEmail = v
+}
+
+// GetSigningStep returns the SigningStep field value
+// If the value is explicit nil, the zero value for int32 will be returned
+func (o *SignatureRequest) GetSigningStep() int32 {
+	if o == nil || o.SigningStep.Get() == nil {
+		var ret int32
+		return ret
+	}
+
+	return *o.SigningStep.Get()
+}
+
+// GetSigningStepOk returns a tuple with the SigningStep field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *SignatureRequest) GetSigningStepOk() (*int32, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.SigningStep.Get(), o.SigningStep.IsSet()
+}
+
+// SetSigningStep sets field value
+func (o *SignatureRequest) SetSigningStep(v int32) {
+	o.SigningStep.Set(&v)
+}
+
+// GetSentAt returns the SentAt field value
+// If the value is explicit nil, the zero value for time.Time will be returned
+func (o *SignatureRequest) GetSentAt() time.Time {
+	if o == nil || o.SentAt.Get() == nil {
+		var ret time.Time
+		return ret
+	}
+
+	return *o.SentAt.Get()
+}
+
+// GetSentAtOk returns a tuple with the SentAt field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *SignatureRequest) GetSentAtOk() (*time.Time, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.SentAt.Get(), o.SentAt.IsSet()
+}
+
+// SetSentAt sets field value
+func (o *SignatureRequest) SetSentAt(v time.Time) {
+	o.SentAt.Set(&v)
+}
+
+// GetEmailStatus returns the EmailStatus field value
+// If the value is explicit nil, the zero value for SignatureRequestEmailStatus will be returned
+func (o *SignatureRequest) GetEmailStatus() SignatureRequestEmailStatus {
+	if o == nil || o.EmailStatus.Get() == nil {
+		var ret SignatureRequestEmailStatus
+		return ret
+	}
+
+	return *o.EmailStatus.Get()
+}
+
+// GetEmailStatusOk returns a tuple with the EmailStatus field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *SignatureRequest) GetEmailStatusOk() (*SignatureRequestEmailStatus, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.EmailStatus.Get(), o.EmailStatus.IsSet()
+}
+
+// SetEmailStatus sets field value
+func (o *SignatureRequest) SetEmailStatus(v SignatureRequestEmailStatus) {
+	o.EmailStatus.Set(&v)
 }
 
 // GetState returns the State field value
@@ -768,6 +882,10 @@ func (o SignatureRequest) ToMap() (map[string]interface{}, error) {
 	toSerialize["metadata"] = o.Metadata
 	toSerialize["role"] = o.Role
 	toSerialize["sort_order"] = o.SortOrder
+	toSerialize["send_email"] = o.SendEmail
+	toSerialize["signing_step"] = o.SigningStep.Get()
+	toSerialize["sent_at"] = o.SentAt.Get()
+	toSerialize["email_status"] = o.EmailStatus.Get()
 	toSerialize["state"] = o.State
 	if o.Data != nil {
 		toSerialize["data"] = o.Data
@@ -808,6 +926,10 @@ func (o *SignatureRequest) UnmarshalJSON(data []byte) (err error) {
 		"metadata",
 		"role",
 		"sort_order",
+		"send_email",
+		"signing_step",
+		"sent_at",
+		"email_status",
 		"state",
 		"data",
 		"viewed_at",
@@ -862,6 +984,10 @@ func (o *SignatureRequest) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "metadata")
 		delete(additionalProperties, "role")
 		delete(additionalProperties, "sort_order")
+		delete(additionalProperties, "send_email")
+		delete(additionalProperties, "signing_step")
+		delete(additionalProperties, "sent_at")
+		delete(additionalProperties, "email_status")
 		delete(additionalProperties, "state")
 		delete(additionalProperties, "data")
 		delete(additionalProperties, "viewed_at")

@@ -15,7 +15,7 @@ import (
 	"fmt"
 )
 
-// SubmissionActionType The kind of storage a submission action uploads the PDF to.
+// SubmissionActionType The kind of storage a submission action uploads the PDF to, or `email`.
 type SubmissionActionType string
 
 // List of SubmissionActionType

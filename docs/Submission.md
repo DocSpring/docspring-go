@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **BatchId** | **NullableString** | The ID of the batch the submission was created in. | 
 **Source** | [**SubmissionSource**](SubmissionSource.md) | `api`: created with the API. `web`: a web form. `reprocess`: a copy of another submission, made to generate its PDF again. | 
 **State** | [**SubmissionState**](SubmissionState.md) | `pending` until the files have been generated, then `processed`. `waiting_for_signature_requests` until every signature request is completed. `insufficient_credits`: waiting for credits; `error_message` says whether the files are generated once you add them. `account_suspended`: waiting for the account to be reactivated, for up to 30 days. Waiting ends in `error` if it's discarded or takes over 30 days. Every other state is final, with no files: `invalid_data` (the data doesn't match the template's fields: see `data_errors`), `declined` (a signature request was declined), and the states where generating the files failed, which have an `error_message`: `syntax_error` (a mistake in an HTML template's Liquid or SCSS, or in a Word template's tags), `image_download_failed` or `image_processing_failed` (an image in the data or the template couldn't be downloaded or read) and `error` (anything else). Older submissions can also be `license_revoked` or `accidental`. | 
-**Test** | **bool** | Test PDFs have a watermark and are free. Live PDFs use credits. Submissions made with a test API token are always test submissions. | 
+**Test** | **bool** | Test PDFs have a watermark and are free. Live PDFs use credits. Submissions made with a test API token are always test submissions, and the demo API token's are always live. | 
 **Editable** | **bool** | `true` keeps the PDF's text and check fields fillable, and `false` flattens every field. Left out, the template decides: its `editable_submissions` setting, or each field's own Editable option. A response shows the template's setting when the request left this out. Can't be `true` with `signature_requests`. | 
 **Data** | **map[string]interface{}** | The submission's data, with the values entered in completed signature requests. Empty once the submission has expired. Null in a batch's submissions unless you pass `include_data=true`, and in the events of a webhook that leaves out submission data. | 
 **DataErrors** | [**[]ErrorDetail**](ErrorDetail.md) | Why the data doesn't match the template's fields, when `state` is `invalid_data`: the same details as the 422 response that recorded it, with pointers into the request that created the submission (`/data/name`). Cleared once the submission has expired. | 
@@ -25,7 +25,8 @@ Name | Type | Description | Notes
 **UpdatedAt** | **time.Time** | When the submission was last updated. | 
 **HasPassword** | **bool** | Whether the PDF needs a password to open (`password`). | 
 **SignatureRequests** | [**[]SignatureRequest**](SignatureRequest.md) | The people asked to sign the submission (and fill in their fields), in order. | 
-**Actions** | [**[]SubmissionAction**](SubmissionAction.md) | The uploads of the submission's PDF to your storage (account integrations). | 
+**SigningOrder** | [**SigningOrder**](SigningOrder.md) | `parallel`: everyone can sign at once. `sequential`: people sign one step at a time (each signature request's `signing_step`). | 
+**Actions** | [**[]SubmissionAction**](SubmissionAction.md) | The uploads of the submission's PDF to your storage (account integrations), and the emails its template's email actions sent. | 
 **TruncatedText** | **map[string][]string** | The text of each field that didn't fit in it, by field name. Left out (null) with `data`, and empty once the submission has expired. | 
 **OutputFormats** | [**[]OutputFormat**](OutputFormat.md) | What the submission makes: `pdf`, `docx` (a Word document, from a Word template), `odt` (an OpenDocument file, the format LibreOffice uses, converted from a Word template's Word document), and `png` (an image of each page of the PDF, up to 100 pages, which adds `pdf`) when you ask for it. Default `["pdf"]`, or a Word template's `output_format`. POST /submissions/{submission_id}/generate_files adds `png`, and a Word template's submission's `pdf`, `docx` or `odt`, to a processed submission. | 
 **PreviewGeneratedAt** | **NullableTime** | When the preview PDF was generated. Null if there is no preview. | 
@@ -34,7 +35,7 @@ Name | Type | Description | Notes
 
 ### NewSubmission
 
-`func NewSubmission(id string, templateId NullableString, templateType TemplateType, templateVersion NullableString, batchId NullableString, source SubmissionSource, state SubmissionState, test bool, editable bool, data map[string]interface{}, dataErrors []ErrorDetail, errorMessage NullableString, metadata map[string]interface{}, files SubmissionFiles, expired bool, expiresAt NullableTime, processedAt NullableTime, createdAt time.Time, updatedAt time.Time, hasPassword bool, signatureRequests []SignatureRequest, actions []SubmissionAction, truncatedText map[string][]string, outputFormats []OutputFormat, previewGeneratedAt NullableTime, ) *Submission`
+`func NewSubmission(id string, templateId NullableString, templateType TemplateType, templateVersion NullableString, batchId NullableString, source SubmissionSource, state SubmissionState, test bool, editable bool, data map[string]interface{}, dataErrors []ErrorDetail, errorMessage NullableString, metadata map[string]interface{}, files SubmissionFiles, expired bool, expiresAt NullableTime, processedAt NullableTime, createdAt time.Time, updatedAt time.Time, hasPassword bool, signatureRequests []SignatureRequest, signingOrder SigningOrder, actions []SubmissionAction, truncatedText map[string][]string, outputFormats []OutputFormat, previewGeneratedAt NullableTime, ) *Submission`
 
 NewSubmission instantiates a new Submission object
 This constructor will assign default values to properties that have it defined,
@@ -537,6 +538,26 @@ and a boolean to check if the value has been set.
 `func (o *Submission) SetSignatureRequests(v []SignatureRequest)`
 
 SetSignatureRequests sets SignatureRequests field to given value.
+
+
+### GetSigningOrder
+
+`func (o *Submission) GetSigningOrder() SigningOrder`
+
+GetSigningOrder returns the SigningOrder field if non-nil, zero value otherwise.
+
+### GetSigningOrderOk
+
+`func (o *Submission) GetSigningOrderOk() (*SigningOrder, bool)`
+
+GetSigningOrderOk returns a tuple with the SigningOrder field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSigningOrder
+
+`func (o *Submission) SetSigningOrder(v SigningOrder)`
+
+SetSigningOrder sets SigningOrder field to given value.
 
 
 ### GetActions

@@ -50,6 +50,18 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
+	t.Run("Test ClientAPIService CreateAccountEmailAction", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		resp, httpRes, err := apiClient.ClientAPI.CreateAccountEmailAction(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
 	t.Run("Test ClientAPIService CreateCombinedPdf", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
@@ -67,6 +79,32 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 		t.Skip("skip test")  // remove to run test
 
 		resp, httpRes, err := apiClient.ClientAPI.CreateCustomFileFromUpload(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService CreateEmailAction", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var templateId string
+
+		resp, httpRes, err := apiClient.ClientAPI.CreateEmailAction(context.Background(), templateId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService CreateEmailDomain", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		resp, httpRes, err := apiClient.ClientAPI.CreateEmailDomain(context.Background()).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -178,6 +216,20 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
+	t.Run("Test ClientAPIService DeleteAccountEmailAction", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var emailActionId string
+
+		resp, httpRes, err := apiClient.ClientAPI.DeleteAccountEmailAction(context.Background(), emailActionId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
 	t.Run("Test ClientAPIService DeleteCustomFile", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
@@ -185,6 +237,50 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 		var customFileId string
 
 		resp, httpRes, err := apiClient.ClientAPI.DeleteCustomFile(context.Background(), customFileId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService DeleteEmailAction", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var templateId string
+		var emailActionId string
+
+		resp, httpRes, err := apiClient.ClientAPI.DeleteEmailAction(context.Background(), templateId, emailActionId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService DeleteEmailActionCustomization", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var templateId string
+		var emailActionId string
+
+		resp, httpRes, err := apiClient.ClientAPI.DeleteEmailActionCustomization(context.Background(), templateId, emailActionId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService DeleteEmailDomain", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var emailDomainId string
+
+		resp, httpRes, err := apiClient.ClientAPI.DeleteEmailDomain(context.Background(), emailDomainId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -290,6 +386,20 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
+	t.Run("Test ClientAPIService GetAccountEmailAction", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var emailActionId string
+
+		resp, httpRes, err := apiClient.ClientAPI.GetAccountEmailAction(context.Background(), emailActionId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
 	t.Run("Test ClientAPIService GetCombinedPdf", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
@@ -311,6 +421,35 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 		var customFileId string
 
 		resp, httpRes, err := apiClient.ClientAPI.GetCustomFile(context.Background(), customFileId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService GetEmailAction", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var templateId string
+		var emailActionId string
+
+		resp, httpRes, err := apiClient.ClientAPI.GetEmailAction(context.Background(), templateId, emailActionId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService GetEmailDomain", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var emailDomainId string
+
+		resp, httpRes, err := apiClient.ClientAPI.GetEmailDomain(context.Background(), emailDomainId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -485,6 +624,18 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
+	t.Run("Test ClientAPIService ListAccountEmailActions", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		resp, httpRes, err := apiClient.ClientAPI.ListAccountEmailActions(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
 	t.Run("Test ClientAPIService ListCombinedPdfs", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
@@ -502,6 +653,32 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 		t.Skip("skip test")  // remove to run test
 
 		resp, httpRes, err := apiClient.ClientAPI.ListCustomFiles(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService ListEmailActions", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var templateId string
+
+		resp, httpRes, err := apiClient.ClientAPI.ListEmailActions(context.Background(), templateId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService ListEmailDomains", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		resp, httpRes, err := apiClient.ClientAPI.ListEmailDomains(context.Background()).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -683,11 +860,84 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
+	t.Run("Test ClientAPIService SendAccountEmailActionTestEmail", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var emailActionId string
+
+		resp, httpRes, err := apiClient.ClientAPI.SendAccountEmailActionTestEmail(context.Background(), emailActionId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService SendEmailActionTestEmail", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var templateId string
+		var emailActionId string
+
+		resp, httpRes, err := apiClient.ClientAPI.SendEmailActionTestEmail(context.Background(), templateId, emailActionId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
 	t.Run("Test ClientAPIService TestAuthentication", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
 
 		resp, httpRes, err := apiClient.ClientAPI.TestAuthentication(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService UpdateAccountEmailAction", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var emailActionId string
+
+		resp, httpRes, err := apiClient.ClientAPI.UpdateAccountEmailAction(context.Background(), emailActionId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService UpdateEmailAction", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var templateId string
+		var emailActionId string
+
+		resp, httpRes, err := apiClient.ClientAPI.UpdateEmailAction(context.Background(), templateId, emailActionId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService UpdateEmailActionCustomization", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var templateId string
+		var emailActionId string
+
+		resp, httpRes, err := apiClient.ClientAPI.UpdateEmailActionCustomization(context.Background(), templateId, emailActionId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -798,6 +1048,20 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 		var templateId string
 
 		resp, httpRes, err := apiClient.ClientAPI.ValidateSubmission(context.Background(), templateId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService VerifyEmailDomain", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var emailDomainId string
+
+		resp, httpRes, err := apiClient.ClientAPI.VerifyEmailDomain(context.Background(), emailDomainId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)

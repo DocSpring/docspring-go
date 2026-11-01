@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 **Format** | Pointer to [**PageFormat**](PageFormat.md) | The paper size. `Custom` uses `width` and `height`. | [optional] 
 **Width** | Pointer to **string** | The page width for the `Custom` format, with a unit (`8.5in`, `210mm`). | [optional] 
 **Height** | Pointer to **string** | The page height for the `Custom` format, with a unit. | [optional] 
-**Scale** | Pointer to **float32** | How much to scale the page, such as `0.8`. `1` prints it at its normal size. | [optional] 
+**Scale** | Pointer to **float32** | How much to scale the page, from 0.1 to 2, such as `0.8`. `1` prints it at its normal size. | [optional] 
 **Landscape** | Pointer to **bool** | Print pages in landscape orientation. | [optional] 
 **PrintBackground** | Pointer to **bool** | Print background colors and images. | [optional] 
 **MarginTop** | Pointer to **string** | The top margin, with a unit, such as `1in` or `20mm`. | [optional] 

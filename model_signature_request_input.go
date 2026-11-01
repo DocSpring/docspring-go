@@ -23,7 +23,7 @@ var _ MappedNullable = &SignatureRequestInput{}
 type SignatureRequestInput struct {
 	// The name of the person the request is for.
 	Name NullableString `json:"name,omitempty"`
-	// Their email address.
+	// Their email address. Null when they have none.
 	Email NullableString `json:"email,omitempty"`
 	// The fields this person fills in. Each field can only be in one signature request, and a field that `data` fills in needs `prefilled_values_editable`.
 	Fields []string `json:"fields"`
@@ -32,7 +32,7 @@ type SignatureRequestInput struct {
 	// Which of the template's signers the person is: `Signer 1`, `Signer 2` and so on, up to `Signer 100`, until templates have roles of their own. Either every signature request has a `role` or none does, and each role can only have one.
 	Role *string `json:"role,omitempty"`
 	// How your app authenticated the person before it showed them the signature request.
-	AuthType SignatureRequestAuthType `json:"auth_type"`
+	AuthType *SignatureRequestAuthType `json:"auth_type,omitempty"`
 	// The second factor your app authenticated them with, if any.
 	AuthSecondFactorType *SignatureRequestAuthSecondFactorType `json:"auth_second_factor_type,omitempty"`
 	// The service that authenticated them, such as `google`. Required when `auth_type` is `oauth`.
@@ -51,6 +51,10 @@ type SignatureRequestInput struct {
 	IgnoreUnknownFields *bool `json:"ignore_unknown_fields,omitempty"`
 	// Let the person change the values that `data` already has for fields in `fields`. Without it, those fields are a 422.
 	PrefilledValuesEditable *bool `json:"prefilled_values_editable,omitempty"`
+	// Whether DocSpring emails this person their signing link. Default: the submission's `send_email`. Set it to false for someone who signs in your app (embedded signing) or whose link you send yourself. When DocSpring emails them, `email` is required and `auth_type` is `email_link` (the default). Otherwise `auth_type` is required.
+	SendEmail *bool `json:"send_email,omitempty"`
+	// When this person signs, with `signing_order: sequential`: everyone in step 1 first, then step 2, and so on. People in the same step sign in any order. Only the order of the numbers matters. Either every signature request has a `signing_step` or none does; without them, each person is a step of their own, in the order of `signature_requests`.
+	SigningStep *int32 `json:"signing_step,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -60,10 +64,9 @@ type _SignatureRequestInput SignatureRequestInput
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewSignatureRequestInput(fields []string, authType SignatureRequestAuthType) *SignatureRequestInput {
+func NewSignatureRequestInput(fields []string) *SignatureRequestInput {
 	this := SignatureRequestInput{}
 	this.Fields = fields
-	this.AuthType = authType
 	return &this
 }
 
@@ -247,28 +250,36 @@ func (o *SignatureRequestInput) SetRole(v string) {
 	o.Role = &v
 }
 
-// GetAuthType returns the AuthType field value
+// GetAuthType returns the AuthType field value if set, zero value otherwise.
 func (o *SignatureRequestInput) GetAuthType() SignatureRequestAuthType {
-	if o == nil {
+	if o == nil || IsNil(o.AuthType) {
 		var ret SignatureRequestAuthType
 		return ret
 	}
-
-	return o.AuthType
+	return *o.AuthType
 }
 
-// GetAuthTypeOk returns a tuple with the AuthType field value
+// GetAuthTypeOk returns a tuple with the AuthType field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SignatureRequestInput) GetAuthTypeOk() (*SignatureRequestAuthType, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.AuthType) {
 		return nil, false
 	}
-	return &o.AuthType, true
+	return o.AuthType, true
 }
 
-// SetAuthType sets field value
+// HasAuthType returns a boolean if a field has been set.
+func (o *SignatureRequestInput) HasAuthType() bool {
+	if o != nil && !IsNil(o.AuthType) {
+		return true
+	}
+
+	return false
+}
+
+// SetAuthType gets a reference to the given SignatureRequestAuthType and assigns it to the AuthType field.
 func (o *SignatureRequestInput) SetAuthType(v SignatureRequestAuthType) {
-	o.AuthType = v
+	o.AuthType = &v
 }
 
 // GetAuthSecondFactorType returns the AuthSecondFactorType field value if set, zero value otherwise.
@@ -619,6 +630,70 @@ func (o *SignatureRequestInput) SetPrefilledValuesEditable(v bool) {
 	o.PrefilledValuesEditable = &v
 }
 
+// GetSendEmail returns the SendEmail field value if set, zero value otherwise.
+func (o *SignatureRequestInput) GetSendEmail() bool {
+	if o == nil || IsNil(o.SendEmail) {
+		var ret bool
+		return ret
+	}
+	return *o.SendEmail
+}
+
+// GetSendEmailOk returns a tuple with the SendEmail field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SignatureRequestInput) GetSendEmailOk() (*bool, bool) {
+	if o == nil || IsNil(o.SendEmail) {
+		return nil, false
+	}
+	return o.SendEmail, true
+}
+
+// HasSendEmail returns a boolean if a field has been set.
+func (o *SignatureRequestInput) HasSendEmail() bool {
+	if o != nil && !IsNil(o.SendEmail) {
+		return true
+	}
+
+	return false
+}
+
+// SetSendEmail gets a reference to the given bool and assigns it to the SendEmail field.
+func (o *SignatureRequestInput) SetSendEmail(v bool) {
+	o.SendEmail = &v
+}
+
+// GetSigningStep returns the SigningStep field value if set, zero value otherwise.
+func (o *SignatureRequestInput) GetSigningStep() int32 {
+	if o == nil || IsNil(o.SigningStep) {
+		var ret int32
+		return ret
+	}
+	return *o.SigningStep
+}
+
+// GetSigningStepOk returns a tuple with the SigningStep field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SignatureRequestInput) GetSigningStepOk() (*int32, bool) {
+	if o == nil || IsNil(o.SigningStep) {
+		return nil, false
+	}
+	return o.SigningStep, true
+}
+
+// HasSigningStep returns a boolean if a field has been set.
+func (o *SignatureRequestInput) HasSigningStep() bool {
+	if o != nil && !IsNil(o.SigningStep) {
+		return true
+	}
+
+	return false
+}
+
+// SetSigningStep gets a reference to the given int32 and assigns it to the SigningStep field.
+func (o *SignatureRequestInput) SetSigningStep(v int32) {
+	o.SigningStep = &v
+}
+
 func (o SignatureRequestInput) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -642,7 +717,9 @@ func (o SignatureRequestInput) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Role) {
 		toSerialize["role"] = o.Role
 	}
-	toSerialize["auth_type"] = o.AuthType
+	if !IsNil(o.AuthType) {
+		toSerialize["auth_type"] = o.AuthType
+	}
 	if !IsNil(o.AuthSecondFactorType) {
 		toSerialize["auth_second_factor_type"] = o.AuthSecondFactorType
 	}
@@ -670,6 +747,12 @@ func (o SignatureRequestInput) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.PrefilledValuesEditable) {
 		toSerialize["prefilled_values_editable"] = o.PrefilledValuesEditable
 	}
+	if !IsNil(o.SendEmail) {
+		toSerialize["send_email"] = o.SendEmail
+	}
+	if !IsNil(o.SigningStep) {
+		toSerialize["signing_step"] = o.SigningStep
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -684,7 +767,6 @@ func (o *SignatureRequestInput) UnmarshalJSON(data []byte) (err error) {
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"fields",
-		"auth_type",
 	}
 
 	allProperties := make(map[string]interface{})
@@ -729,6 +811,8 @@ func (o *SignatureRequestInput) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "auth_phone_number_hash")
 		delete(additionalProperties, "ignore_unknown_fields")
 		delete(additionalProperties, "prefilled_values_editable")
+		delete(additionalProperties, "send_email")
+		delete(additionalProperties, "signing_step")
 		o.AdditionalProperties = additionalProperties
 	}
 

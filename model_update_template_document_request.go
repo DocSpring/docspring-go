@@ -23,7 +23,7 @@ type UpdateTemplateDocumentRequest struct {
 	CacheId *string `json:"cache_id,omitempty"`
 	// An https:// link to the template's document, instead of `cache_id`: a PDF template's PDF (up to 100 MB) or a Word template's Word document (.docx or .odt, up to 50 MB). DocSpring downloads it after responding, following redirects to other https:// links: the template's `document.state` is `downloading` until then, and `converting` while an .odt is converted (sync.api hosts wait for both). If it can't be downloaded, the state is `download_failed` and `document.error_message` says why.
 	DocumentUrl *string `json:"document_url,omitempty"`
-	// The template's document (a PDF, or a Word template's Word document), encoded as base64 (a `data:` URI works too), instead of `cache_id`. Up to 7 MB before it's encoded: send a larger file with `cache_id` or `document_url`.
+	// The template's document (a PDF, or a Word template's Word document), encoded as base64 (a `data:` URI works too), instead of `cache_id`. Line breaks and spaces in it are ignored. Up to 7 MB before it's encoded: send a larger file with `cache_id` or `document_url`.
 	DocumentBase64 *string `json:"document_base64,omitempty"`
 	// The file's name, for a `cache_id` (presigned uploads don't send one) or `document_base64`. A `document_url`'s is the last part of its path unless you set it.
 	Filename *string `json:"filename,omitempty"`

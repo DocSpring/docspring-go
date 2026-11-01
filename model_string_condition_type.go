@@ -21,19 +21,33 @@ type StringConditionType string
 // List of StringConditionType
 const (
 	STRINGCONDITIONTYPE_EQUALS StringConditionType = "equals"
+	STRINGCONDITIONTYPE_NOT_EQUALS StringConditionType = "not_equals"
 	STRINGCONDITIONTYPE_CONTAINS StringConditionType = "contains"
+	STRINGCONDITIONTYPE_NOT_CONTAINS StringConditionType = "not_contains"
 	STRINGCONDITIONTYPE_STARTS_WITH StringConditionType = "starts_with"
+	STRINGCONDITIONTYPE_NOT_STARTS_WITH StringConditionType = "not_starts_with"
 	STRINGCONDITIONTYPE_ENDS_WITH StringConditionType = "ends_with"
+	STRINGCONDITIONTYPE_NOT_ENDS_WITH StringConditionType = "not_ends_with"
 	STRINGCONDITIONTYPE_REGEX StringConditionType = "regex"
+	STRINGCONDITIONTYPE_NOT_REGEX StringConditionType = "not_regex"
+	STRINGCONDITIONTYPE_BLANK StringConditionType = "blank"
+	STRINGCONDITIONTYPE_NOT_BLANK StringConditionType = "not_blank"
 )
 
 // All allowed values of StringConditionType enum
 var AllowedStringConditionTypeEnumValues = []StringConditionType{
 	"equals",
+	"not_equals",
 	"contains",
+	"not_contains",
 	"starts_with",
+	"not_starts_with",
 	"ends_with",
+	"not_ends_with",
 	"regex",
+	"not_regex",
+	"blank",
+	"not_blank",
 }
 
 func (v *StringConditionType) UnmarshalJSON(src []byte) error {

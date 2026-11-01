@@ -35,7 +35,7 @@ type Submission struct {
 	Source SubmissionSource `json:"source"`
 	// `pending` until the files have been generated, then `processed`. `waiting_for_signature_requests` until every signature request is completed. `insufficient_credits`: waiting for credits; `error_message` says whether the files are generated once you add them. `account_suspended`: waiting for the account to be reactivated, for up to 30 days. Waiting ends in `error` if it's discarded or takes over 30 days. Every other state is final, with no files: `invalid_data` (the data doesn't match the template's fields: see `data_errors`), `declined` (a signature request was declined), and the states where generating the files failed, which have an `error_message`: `syntax_error` (a mistake in an HTML template's Liquid or SCSS, or in a Word template's tags), `image_download_failed` or `image_processing_failed` (an image in the data or the template couldn't be downloaded or read) and `error` (anything else). Older submissions can also be `license_revoked` or `accidental`.
 	State SubmissionState `json:"state"`
-	// Test PDFs have a watermark and are free. Live PDFs use credits. Submissions made with a test API token are always test submissions.
+	// Test PDFs have a watermark and are free. Live PDFs use credits. Submissions made with a test API token are always test submissions, and the demo API token's are always live.
 	Test bool `json:"test"`
 	// `true` keeps the PDF's text and check fields fillable, and `false` flattens every field. Left out, the template decides: its `editable_submissions` setting, or each field's own Editable option. A response shows the template's setting when the request left this out. Can't be `true` with `signature_requests`.
 	Editable bool `json:"editable"`
@@ -63,7 +63,9 @@ type Submission struct {
 	HasPassword bool `json:"has_password"`
 	// The people asked to sign the submission (and fill in their fields), in order.
 	SignatureRequests []SignatureRequest `json:"signature_requests"`
-	// The uploads of the submission's PDF to your storage (account integrations).
+	// `parallel`: everyone can sign at once. `sequential`: people sign one step at a time (each signature request's `signing_step`).
+	SigningOrder SigningOrder `json:"signing_order"`
+	// The uploads of the submission's PDF to your storage (account integrations), and the emails its template's email actions sent.
 	Actions []SubmissionAction `json:"actions"`
 	// The text of each field that didn't fit in it, by field name. Left out (null) with `data`, and empty once the submission has expired.
 	TruncatedText map[string][]string `json:"truncated_text"`
@@ -80,7 +82,7 @@ type _Submission Submission
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewSubmission(id string, templateId NullableString, templateType TemplateType, templateVersion NullableString, batchId NullableString, source SubmissionSource, state SubmissionState, test bool, editable bool, data map[string]interface{}, dataErrors []ErrorDetail, errorMessage NullableString, metadata map[string]interface{}, files SubmissionFiles, expired bool, expiresAt NullableTime, processedAt NullableTime, createdAt time.Time, updatedAt time.Time, hasPassword bool, signatureRequests []SignatureRequest, actions []SubmissionAction, truncatedText map[string][]string, outputFormats []OutputFormat, previewGeneratedAt NullableTime) *Submission {
+func NewSubmission(id string, templateId NullableString, templateType TemplateType, templateVersion NullableString, batchId NullableString, source SubmissionSource, state SubmissionState, test bool, editable bool, data map[string]interface{}, dataErrors []ErrorDetail, errorMessage NullableString, metadata map[string]interface{}, files SubmissionFiles, expired bool, expiresAt NullableTime, processedAt NullableTime, createdAt time.Time, updatedAt time.Time, hasPassword bool, signatureRequests []SignatureRequest, signingOrder SigningOrder, actions []SubmissionAction, truncatedText map[string][]string, outputFormats []OutputFormat, previewGeneratedAt NullableTime) *Submission {
 	this := Submission{}
 	this.Id = id
 	this.TemplateId = templateId
@@ -103,6 +105,7 @@ func NewSubmission(id string, templateId NullableString, templateType TemplateTy
 	this.UpdatedAt = updatedAt
 	this.HasPassword = hasPassword
 	this.SignatureRequests = signatureRequests
+	this.SigningOrder = signingOrder
 	this.Actions = actions
 	this.TruncatedText = truncatedText
 	this.OutputFormats = outputFormats
@@ -636,6 +639,30 @@ func (o *Submission) SetSignatureRequests(v []SignatureRequest) {
 	o.SignatureRequests = v
 }
 
+// GetSigningOrder returns the SigningOrder field value
+func (o *Submission) GetSigningOrder() SigningOrder {
+	if o == nil {
+		var ret SigningOrder
+		return ret
+	}
+
+	return o.SigningOrder
+}
+
+// GetSigningOrderOk returns a tuple with the SigningOrder field value
+// and a boolean to check if the value has been set.
+func (o *Submission) GetSigningOrderOk() (*SigningOrder, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.SigningOrder, true
+}
+
+// SetSigningOrder sets field value
+func (o *Submission) SetSigningOrder(v SigningOrder) {
+	o.SigningOrder = v
+}
+
 // GetActions returns the Actions field value
 func (o *Submission) GetActions() []SubmissionAction {
 	if o == nil {
@@ -769,6 +796,7 @@ func (o Submission) ToMap() (map[string]interface{}, error) {
 	toSerialize["updated_at"] = o.UpdatedAt
 	toSerialize["has_password"] = o.HasPassword
 	toSerialize["signature_requests"] = o.SignatureRequests
+	toSerialize["signing_order"] = o.SigningOrder
 	toSerialize["actions"] = o.Actions
 	if o.TruncatedText != nil {
 		toSerialize["truncated_text"] = o.TruncatedText
@@ -809,6 +837,7 @@ func (o *Submission) UnmarshalJSON(data []byte) (err error) {
 		"updated_at",
 		"has_password",
 		"signature_requests",
+		"signing_order",
 		"actions",
 		"truncated_text",
 		"output_formats",
@@ -863,6 +892,7 @@ func (o *Submission) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "updated_at")
 		delete(additionalProperties, "has_password")
 		delete(additionalProperties, "signature_requests")
+		delete(additionalProperties, "signing_order")
 		delete(additionalProperties, "actions")
 		delete(additionalProperties, "truncated_text")
 		delete(additionalProperties, "output_formats")

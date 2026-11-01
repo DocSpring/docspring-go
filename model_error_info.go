@@ -20,7 +20,7 @@ var _ MappedNullable = &ErrorInfo{}
 
 // ErrorInfo What went wrong.
 type ErrorInfo struct {
-	// A machine-readable error code. Clients should handle codes they don't know: new codes can be added. `invalid_data`: a submission's data doesn't match its template's fields. The submission is still recorded. `insufficient_credits` (402): your credit balance can't cover a live PDF. The record was saved and waits for credits in the `insufficient_credits` state: its ID is in `submission_id`, `submission_batch_id` or `combined_pdf_id`. `upgrade_required` (403): your plan doesn't include this, such as more templates, another active integration (webhooks count) or the embedded template editor. `account_suspended` (403): the account is suspended, so it can't create submissions. `polling_timeout`: on a sync.api host, the files weren't ready in time. The record was created and is still being processed: its ID is in `submission_id`, `submission_batch_id`, `combined_pdf_id` or `template_id`. Without one of these IDs, the request itself got no answer in time, and the record may or may not have been created. `idempotency_key_in_use` (409): a request with the same Idempotency-Key is still being processed. Send the request again in a few seconds; when the first request has already created its record, its ID is in `submission_id`, `submission_batch_id` or `combined_pdf_id`. `idempotency_key_reused` (422): the Idempotency-Key was already used for a different request.
+	// A machine-readable error code. Clients should handle codes they don't know: new codes can be added. `invalid_data`: a submission's data doesn't match its template's fields. The submission is still recorded. `insufficient_credits` (402): your credit balance can't cover a live PDF. The record was saved and waits for credits in the `insufficient_credits` state: its ID is in `submission_id`, `submission_batch_id` or `combined_pdf_id`. `insufficient_credits_to_send` (402): your credit balance can't cover a live signature request that DocSpring would email, so nothing was saved. Add credits and send the request again. `upgrade_required` (403): your plan doesn't include this, such as more templates, another active integration (webhooks count), the embedded template editor, email actions, or live signature requests before your account's first payment. `account_suspended` (403): the account is suspended, so it can't create submissions. `polling_timeout`: on a sync.api host, the files weren't ready in time. The record was created and is still being processed: its ID is in `submission_id`, `submission_batch_id`, `combined_pdf_id` or `template_id`. Without one of these IDs, the request itself got no answer in time, and the record may or may not have been created. `idempotency_key_in_use` (409): the first request with the same Idempotency-Key is still being processed, and the response has a `Retry-After` header: send the request again then. Without the header, the first request was processed but its response is no longer kept. When the first request created a record, its ID is in `submission_id`, `submission_batch_id`, `combined_pdf_id`, `template_id`, `folder_id`, `custom_file_id` or `webhook_id`. `idempotency_key_reused` (422): the Idempotency-Key was already used for a different request. `rate_limited` (429): too many API requests. Wait for the `Retry-After` header's seconds. `daily_email_limit_reached` (429): a submission that DocSpring would email would take your account over its daily email limit, so nothing was saved. Send it again after the `Retry-After` header's seconds (midnight UTC), or send the signing links yourself (`send_email: false`).
 	Code ErrorCode `json:"code"`
 	// A human-readable explanation, safe to show to developers.
 	Message string `json:"message"`
@@ -28,14 +28,20 @@ type ErrorInfo struct {
 	Details []ErrorDetail `json:"details"`
 	// The ID of the request. Include it when you contact support.
 	RequestId NullableString `json:"request_id"`
-	// When a submission's data fails validation, the submission is still recorded (state `invalid_data`) so you can see it in the dashboard. This is its ID. With `insufficient_credits`, the submission that waits for credits. With `polling_timeout` or `idempotency_key_in_use`, the submission that's still being processed.
+	// When a submission's data fails validation, the submission is still recorded (state `invalid_data`) so you can see it in the dashboard. This is its ID. With `insufficient_credits`, the submission that waits for credits. With `polling_timeout`, the submission that's still being processed. With `idempotency_key_in_use`, the submission the first request with the key created.
 	SubmissionId *string `json:"submission_id,omitempty"`
-	// The ID of the recorded batch, when items in a batch fail validation. With `insufficient_credits`, the batch whose submissions wait for credits. With `polling_timeout` or `idempotency_key_in_use`, the batch that's still being processed.
+	// The ID of the recorded batch, when items in a batch fail validation. With `insufficient_credits`, the batch whose submissions wait for credits. With `polling_timeout`, the batch that's still being processed. With `idempotency_key_in_use`, the batch the first request with the key created.
 	SubmissionBatchId *string `json:"submission_batch_id,omitempty"`
-	// With `insufficient_credits`, the combined PDF that waits for credits. With `polling_timeout` or `idempotency_key_in_use`, the combined PDF that's still being processed.
+	// With `insufficient_credits`, the combined PDF that waits for credits. With `polling_timeout`, the combined PDF that's still being processed. With `idempotency_key_in_use`, the combined PDF the first request with the key created.
 	CombinedPdfId *string `json:"combined_pdf_id,omitempty"`
-	// With `polling_timeout`, the template whose PDF is still being processed.
+	// With `polling_timeout`, the template whose PDF is still being processed. With `idempotency_key_in_use`, the template the first request with the key created.
 	TemplateId *string `json:"template_id,omitempty"`
+	// With `idempotency_key_in_use`, the folder the first request with the key created.
+	FolderId *string `json:"folder_id,omitempty"`
+	// With `idempotency_key_in_use`, the custom file the first request with the key created.
+	CustomFileId *string `json:"custom_file_id,omitempty"`
+	// With `idempotency_key_in_use`, the webhook the first request with the key created.
+	WebhookId *string `json:"webhook_id,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -288,6 +294,102 @@ func (o *ErrorInfo) SetTemplateId(v string) {
 	o.TemplateId = &v
 }
 
+// GetFolderId returns the FolderId field value if set, zero value otherwise.
+func (o *ErrorInfo) GetFolderId() string {
+	if o == nil || IsNil(o.FolderId) {
+		var ret string
+		return ret
+	}
+	return *o.FolderId
+}
+
+// GetFolderIdOk returns a tuple with the FolderId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ErrorInfo) GetFolderIdOk() (*string, bool) {
+	if o == nil || IsNil(o.FolderId) {
+		return nil, false
+	}
+	return o.FolderId, true
+}
+
+// HasFolderId returns a boolean if a field has been set.
+func (o *ErrorInfo) HasFolderId() bool {
+	if o != nil && !IsNil(o.FolderId) {
+		return true
+	}
+
+	return false
+}
+
+// SetFolderId gets a reference to the given string and assigns it to the FolderId field.
+func (o *ErrorInfo) SetFolderId(v string) {
+	o.FolderId = &v
+}
+
+// GetCustomFileId returns the CustomFileId field value if set, zero value otherwise.
+func (o *ErrorInfo) GetCustomFileId() string {
+	if o == nil || IsNil(o.CustomFileId) {
+		var ret string
+		return ret
+	}
+	return *o.CustomFileId
+}
+
+// GetCustomFileIdOk returns a tuple with the CustomFileId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ErrorInfo) GetCustomFileIdOk() (*string, bool) {
+	if o == nil || IsNil(o.CustomFileId) {
+		return nil, false
+	}
+	return o.CustomFileId, true
+}
+
+// HasCustomFileId returns a boolean if a field has been set.
+func (o *ErrorInfo) HasCustomFileId() bool {
+	if o != nil && !IsNil(o.CustomFileId) {
+		return true
+	}
+
+	return false
+}
+
+// SetCustomFileId gets a reference to the given string and assigns it to the CustomFileId field.
+func (o *ErrorInfo) SetCustomFileId(v string) {
+	o.CustomFileId = &v
+}
+
+// GetWebhookId returns the WebhookId field value if set, zero value otherwise.
+func (o *ErrorInfo) GetWebhookId() string {
+	if o == nil || IsNil(o.WebhookId) {
+		var ret string
+		return ret
+	}
+	return *o.WebhookId
+}
+
+// GetWebhookIdOk returns a tuple with the WebhookId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ErrorInfo) GetWebhookIdOk() (*string, bool) {
+	if o == nil || IsNil(o.WebhookId) {
+		return nil, false
+	}
+	return o.WebhookId, true
+}
+
+// HasWebhookId returns a boolean if a field has been set.
+func (o *ErrorInfo) HasWebhookId() bool {
+	if o != nil && !IsNil(o.WebhookId) {
+		return true
+	}
+
+	return false
+}
+
+// SetWebhookId gets a reference to the given string and assigns it to the WebhookId field.
+func (o *ErrorInfo) SetWebhookId(v string) {
+	o.WebhookId = &v
+}
+
 func (o ErrorInfo) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -313,6 +415,15 @@ func (o ErrorInfo) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.TemplateId) {
 		toSerialize["template_id"] = o.TemplateId
+	}
+	if !IsNil(o.FolderId) {
+		toSerialize["folder_id"] = o.FolderId
+	}
+	if !IsNil(o.CustomFileId) {
+		toSerialize["custom_file_id"] = o.CustomFileId
+	}
+	if !IsNil(o.WebhookId) {
+		toSerialize["webhook_id"] = o.WebhookId
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -368,6 +479,9 @@ func (o *ErrorInfo) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "submission_batch_id")
 		delete(additionalProperties, "combined_pdf_id")
 		delete(additionalProperties, "template_id")
+		delete(additionalProperties, "folder_id")
+		delete(additionalProperties, "custom_file_id")
+		delete(additionalProperties, "webhook_id")
 		o.AdditionalProperties = additionalProperties
 	}
 

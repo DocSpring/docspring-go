@@ -10,7 +10,7 @@ e-signatures.
 The code in this repository is generated from DocSpring's OpenAPI spec ([About this SDK](#about-this-sdk)). Issues and
 pull requests are welcome.
 
-Version 4.4.0. Requires Go 1.23 or later.
+Version 4.5.0. Requires Go 1.23 or later.
 
 ## Install and configure
 
@@ -87,8 +87,11 @@ Go code for every method.
 | ------ | ----------- |
 | [`AddTemplateFields`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#addtemplatefields) | Add fields to a template |
 | [`CopyTemplate`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#copytemplate) | Copy a template |
+| [`CreateAccountEmailAction`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#createaccountemailaction) | Create an account email action |
 | [`CreateCombinedPdf`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#createcombinedpdf) | Combine PDFs |
 | [`CreateCustomFileFromUpload`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#createcustomfilefromupload) | Create a custom file from an upload |
+| [`CreateEmailAction`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#createemailaction) | Create an email action |
+| [`CreateEmailDomain`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#createemaildomain) | Add an email domain |
 | [`CreateFolder`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#createfolder) | Create a folder |
 | [`CreateSignatureRequestEvent`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#createsignaturerequestevent) | Record a signature request event |
 | [`CreateSignatureRequestToken`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#createsignaturerequesttoken) | Create a signature request token |
@@ -97,7 +100,11 @@ Go code for every method.
 | [`CreateTemplate`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#createtemplate) | Create a template |
 | [`CreateTemplatePreview`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#createtemplatepreview) | Preview a template with data |
 | [`CreateWebhook`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#createwebhook) | Create a webhook |
+| [`DeleteAccountEmailAction`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#deleteaccountemailaction) | Delete an account email action |
 | [`DeleteCustomFile`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#deletecustomfile) | Delete a custom file |
+| [`DeleteEmailAction`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#deleteemailaction) | Delete an email action |
+| [`DeleteEmailActionCustomization`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#deleteemailactioncustomization) | Reset an account email action's customization |
+| [`DeleteEmailDomain`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#deleteemaildomain) | Remove an email domain |
 | [`DeleteFolder`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#deletefolder) | Delete a folder |
 | [`DeleteTemplate`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#deletetemplate) | Delete a template |
 | [`DeleteWebhook`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#deletewebhook) | Delete a webhook |
@@ -105,8 +112,11 @@ Go code for every method.
 | [`ExpireSubmission`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#expiresubmission) | Expire a submission |
 | [`GenerateSubmissionFiles`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#generatesubmissionfiles) | Generate more files |
 | [`GenerateSubmissionPreview`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#generatesubmissionpreview) | Generate a preview PDF |
+| [`GetAccountEmailAction`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#getaccountemailaction) | Get an account email action |
 | [`GetCombinedPdf`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#getcombinedpdf) | Get a combined PDF |
 | [`GetCustomFile`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#getcustomfile) | Get a custom file |
+| [`GetEmailAction`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#getemailaction) | Get an email action |
+| [`GetEmailDomain`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#getemaildomain) | Get an email domain |
 | [`GetFolder`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#getfolder) | Get a folder |
 | [`GetPresignUrl`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#getpresignurl) | Get a presigned URL to upload a file |
 | [`GetSignatureRequest`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#getsignaturerequest) | Get a signature request |
@@ -119,8 +129,11 @@ Go code for every method.
 | [`GetTemplatePreview`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#gettemplatepreview) | Get a template preview |
 | [`GetTemplateSchema`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#gettemplateschema) | Get the JSON Schema of a template's submission data |
 | [`GetWebhook`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#getwebhook) | Get a webhook |
+| [`ListAccountEmailActions`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#listaccountemailactions) | List account email actions |
 | [`ListCombinedPdfs`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#listcombinedpdfs) | List combined PDFs |
 | [`ListCustomFiles`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#listcustomfiles) | List custom files |
+| [`ListEmailActions`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#listemailactions) | List email actions |
+| [`ListEmailDomains`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#listemaildomains) | List email domains |
 | [`ListFolders`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#listfolders) | List folders |
 | [`ListSubmissions`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#listsubmissions) | List submissions |
 | [`ListTemplateFields`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#listtemplatefields) | List a template's fields |
@@ -134,7 +147,12 @@ Go code for every method.
 | [`RenameFolder`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#renamefolder) | Rename a folder |
 | [`ReorderTemplateFields`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#reordertemplatefields) | Reorder a template's fields |
 | [`RestoreTemplateVersion`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#restoretemplateversion) | Restore a template version |
+| [`SendAccountEmailActionTestEmail`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#sendaccountemailactiontestemail) | Send a test email for an account email action |
+| [`SendEmailActionTestEmail`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#sendemailactiontestemail) | Send a test email |
 | [`TestAuthentication`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#testauthentication) | Test authentication |
+| [`UpdateAccountEmailAction`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#updateaccountemailaction) | Update an account email action |
+| [`UpdateEmailAction`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#updateemailaction) | Update an email action |
+| [`UpdateEmailActionCustomization`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#updateemailactioncustomization) | Customize an account email action for a template |
 | [`UpdateSignatureRequest`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#updatesignaturerequest) | Update a signature request |
 | [`UpdateTemplate`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#updatetemplate) | Update a template |
 | [`UpdateTemplateDocument`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#updatetemplatedocument) | Replace a template's document |
@@ -143,6 +161,7 @@ Go code for every method.
 | [`UploadTemplate`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#uploadtemplate) | Create a template from an uploaded PDF or Word document |
 | [`UploadTemplateDocument`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#uploadtemplatedocument) | Replace a template's document with an uploaded file |
 | [`ValidateSubmission`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#validatesubmission) | Check a submission without creating it |
+| [`VerifyEmailDomain`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#verifyemaildomain) | Verify an email domain |
 
 ## Errors
 

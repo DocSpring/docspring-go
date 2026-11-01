@@ -23,7 +23,7 @@ type UpdateTemplateRequest struct {
 	Name *string `json:"name,omitempty"`
 	// Shown under the template's name at the top of its hosted forms, and used as their meta description. Not shown on embedded forms or signature requests.
 	Description NullableString `json:"description,omitempty"`
-	// What each submission makes unless its request sets `output_formats`: `docx` (a Word document), `odt` (an OpenDocument file, converted from the Word document) or `pdf`. A Word template's is chosen when it's created; PDF and HTML templates always make PDFs. A Word template that encrypts its PDFs makes PDFs, because Word documents and OpenDocument files can't be password-protected.
+	// What each submission makes unless its request sets `output_formats`: `docx` (a Word document), `odt` (an OpenDocument file, converted from the Word document) or `pdf`. A Word template's is chosen when it's created; other templates always make PDFs. A Word template that encrypts its PDFs makes PDFs, because Word documents and OpenDocument files can't be password-protected.
 	OutputFormat *OutputFormat `json:"output_format,omitempty"`
 	// The ID of the folder the template is in. Null for a template at the root. Setting it moves the template and all of its published versions.
 	ParentFolderId NullableString `json:"parent_folder_id,omitempty"`
@@ -41,7 +41,7 @@ type UpdateTemplateRequest struct {
 	DefaultFormMode *TemplateFormMode `json:"default_form_mode,omitempty"`
 	// Generate PDFs whose text and check fields stay fillable ("Generate Editable PDFs"). A submission's `editable` overrides it.
 	EditableSubmissions *bool `json:"editable_submissions,omitempty"`
-	// The sites that can embed the template's live signature requests and its embedded template editor: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work). Browsers open a live signature request in a frame only on these sites (and DocSpring's), so with an empty list it can't be embedded anywhere; a test signature request can be embedded on any site. The embedded template editor loads only for a page on one of these sites (by its Referer or Origin header), and on any site when the list is empty. Forms embedded on a page (Visual Forms JS and the simple form) aren't restricted.
+	// The sites that can embed the template's live signature requests and its embedded template editor: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work), without a path. Browsers open a live signature request in a frame only on these sites (and DocSpring's), so with an empty list it can't be embedded anywhere; a test signature request can be embedded on any site. The embedded template editor loads only for a page on one of these sites (by its Referer or Origin header), and on any site when the list is empty. Forms embedded on a page (Visual Forms JS and the simple form) aren't restricted.
 	EmbedDomains []string `json:"embed_domains,omitempty"`
 	// Allow the embedded template editor to change sensitive template settings (webhooks, redirect URL, encryption, public access, expiration and so on).
 	EmbedEditAllowSettings *bool `json:"embed_edit_allow_settings,omitempty"`
@@ -69,6 +69,20 @@ type UpdateTemplateRequest struct {
 	PublicWebForm *bool `json:"public_web_form,omitempty"`
 	// Where the web form sends people after they submit it.
 	RedirectUrl NullableString `json:"redirect_url,omitempty"`
+	// How DocSpring's completed emails send the signed PDF to your signers and CCs: `attachment` (attached, or a download link when it's too big to attach) or `link` (a download link). Null uses your account's rule: a link if your account has signed a BAA, otherwise attached. PDF templates only. A signature request uses the value it had when the request was created.
+	SignatureRequestEmailAttachments NullableSignatureRequestEmailAttachments `json:"signature_request_email_attachments,omitempty"`
+	// The address DocSpring's emails to your signers come from: an address at one of your verified email domains, on the Growth plan or higher. Null sends them from DocSpring's shared address, with "via DocSpring" after the sender name. PDF templates only.
+	SignatureRequestFromAddress NullableString `json:"signature_request_from_address,omitempty"`
+	// Puts a signing token in `signature_request_signing_url`, as `{{ token_id }}` and `{{ token_secret }}`, so your page can open the signing form without creating a token itself. The email then carries a credential: anyone who has it can open the form and sign. PDF templates only.
+	SignatureRequestIncludeSigningToken *bool `json:"signature_request_include_signing_token,omitempty"`
+	// The sender name on the emails DocSpring sends your signers, as in "Acme via DocSpring". It can't contain an email address, a website or quotes. Null uses your account's name. PDF templates only.
+	SignatureRequestFromName NullableString `json:"signature_request_from_name,omitempty"`
+	// Who DocSpring tells when a signature request's document is completed or declined, or an email bounces or can't be sent: members of your DocSpring team or addresses at your verified email domains. Empty means your account's owner. A submission's `notification_emails` replaces them. PDF templates only.
+	SignatureRequestNotificationEmails []string `json:"signature_request_notification_emails,omitempty"`
+	// Where your signers' replies to DocSpring's emails go: a member of your DocSpring team or an address at one of your verified email domains. Null means your account's owner. A submission's `reply_to` replaces it. PDF templates only.
+	SignatureRequestReplyTo NullableString `json:"signature_request_reply_to,omitempty"`
+	// A page on your own site that the button in DocSpring's email to a signer opens, instead of DocSpring's signing page: an https URL on one of your verified email domains or a subdomain of one, on the Growth plan or higher. It must include `{{ signature_request_id }}`. Your page authenticates the signer, creates a token for the signature request, and opens the signing form with it. Null links to DocSpring's signing page. PDF templates only.
+	SignatureRequestSigningUrl NullableString `json:"signature_request_signing_url,omitempty"`
 	// A Slack incoming webhook URL that is notified about the template's submissions. It's never returned; `has_slack_webhook_url` says if it's set.
 	SlackWebhookUrl NullableString `json:"slack_webhook_url,omitempty"`
 	// The default style of the template's fields. Setting it replaces the whole object.
@@ -81,7 +95,7 @@ type UpdateTemplateRequest struct {
 	PredefinedFields []PredefinedFieldInput `json:"predefined_fields,omitempty"`
 	// Sample submission data that sets `predefined_fields`: each value becomes a predefined field, with a type that fits it (`string`, `number`, `boolean`, `date`, `email` or `url`) and `required_in_template` true. Nested objects and arrays become names with `/`, such as `customer/email`. Without `predefined_fields` in the same request, it replaces them; with them, it adds to them and sets the types of the ones it has values for.
 	PredefinedFieldsSampleData map[string]interface{} `json:"predefined_fields_sample_data,omitempty"`
-	// The HTML of an HTML template, as a Liquid template. Null for PDF and Word templates.
+	// The HTML of an HTML template, as a Liquid template. Null for other templates.
 	Html NullableString `json:"html,omitempty"`
 	// The SCSS of an HTML template.
 	Scss NullableString `json:"scss,omitempty"`
@@ -91,8 +105,10 @@ type UpdateTemplateRequest struct {
 	FooterHtml NullableString `json:"footer_html,omitempty"`
 	// Null resets the options to their defaults.
 	HtmlEngineOptions NullableHtmlEngineOptionsInput `json:"html_engine_options,omitempty"`
-	// Whether an HTML template HTML-escapes the values it prints. When true, `{{ value }}` prints a value as text, so a `<` or `&` in it is printed as that character, and `{{ value | raw }}` prints a value as HTML. New HTML templates default to true. Templates created before October 2026, or with API v1, default to false, which prints every value as HTML. Null for PDF templates.
+	// Whether an HTML template HTML-escapes the values it prints. When true, `{{ value }}` prints a value as text, so a `<` or `&` in it is printed as that character, and `{{ value | raw }}` prints a value as HTML. New HTML templates default to true. Templates created before October 2026, or with API v1, default to false, which prints every value as HTML. Null for other templates.
 	HtmlEscapeData *bool `json:"html_escape_data,omitempty"`
+	// A page design's layout: its page setup, its sections and the elements placed in them, in the Page Designer layout format (https://docspring.com/docs/page-designer/layout-format/). Its JSON Schema is at https://docspring.com/schemas/page-designer/layout.v1.json. Null for other templates. Setting it replaces the whole layout, and DocSpring adds a field for each value it reads. Left out when a page design is created, it starts with an empty page.
+	Layout map[string]interface{} `json:"layout,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -955,6 +971,280 @@ func (o *UpdateTemplateRequest) UnsetRedirectUrl() {
 	o.RedirectUrl.Unset()
 }
 
+// GetSignatureRequestEmailAttachments returns the SignatureRequestEmailAttachments field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *UpdateTemplateRequest) GetSignatureRequestEmailAttachments() SignatureRequestEmailAttachments {
+	if o == nil || IsNil(o.SignatureRequestEmailAttachments.Get()) {
+		var ret SignatureRequestEmailAttachments
+		return ret
+	}
+	return *o.SignatureRequestEmailAttachments.Get()
+}
+
+// GetSignatureRequestEmailAttachmentsOk returns a tuple with the SignatureRequestEmailAttachments field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *UpdateTemplateRequest) GetSignatureRequestEmailAttachmentsOk() (*SignatureRequestEmailAttachments, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.SignatureRequestEmailAttachments.Get(), o.SignatureRequestEmailAttachments.IsSet()
+}
+
+// HasSignatureRequestEmailAttachments returns a boolean if a field has been set.
+func (o *UpdateTemplateRequest) HasSignatureRequestEmailAttachments() bool {
+	if o != nil && o.SignatureRequestEmailAttachments.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetSignatureRequestEmailAttachments gets a reference to the given NullableSignatureRequestEmailAttachments and assigns it to the SignatureRequestEmailAttachments field.
+func (o *UpdateTemplateRequest) SetSignatureRequestEmailAttachments(v SignatureRequestEmailAttachments) {
+	o.SignatureRequestEmailAttachments.Set(&v)
+}
+// SetSignatureRequestEmailAttachmentsNil sets the value for SignatureRequestEmailAttachments to be an explicit nil
+func (o *UpdateTemplateRequest) SetSignatureRequestEmailAttachmentsNil() {
+	o.SignatureRequestEmailAttachments.Set(nil)
+}
+
+// UnsetSignatureRequestEmailAttachments ensures that no value is present for SignatureRequestEmailAttachments, not even an explicit nil
+func (o *UpdateTemplateRequest) UnsetSignatureRequestEmailAttachments() {
+	o.SignatureRequestEmailAttachments.Unset()
+}
+
+// GetSignatureRequestFromAddress returns the SignatureRequestFromAddress field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *UpdateTemplateRequest) GetSignatureRequestFromAddress() string {
+	if o == nil || IsNil(o.SignatureRequestFromAddress.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.SignatureRequestFromAddress.Get()
+}
+
+// GetSignatureRequestFromAddressOk returns a tuple with the SignatureRequestFromAddress field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *UpdateTemplateRequest) GetSignatureRequestFromAddressOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.SignatureRequestFromAddress.Get(), o.SignatureRequestFromAddress.IsSet()
+}
+
+// HasSignatureRequestFromAddress returns a boolean if a field has been set.
+func (o *UpdateTemplateRequest) HasSignatureRequestFromAddress() bool {
+	if o != nil && o.SignatureRequestFromAddress.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetSignatureRequestFromAddress gets a reference to the given NullableString and assigns it to the SignatureRequestFromAddress field.
+func (o *UpdateTemplateRequest) SetSignatureRequestFromAddress(v string) {
+	o.SignatureRequestFromAddress.Set(&v)
+}
+// SetSignatureRequestFromAddressNil sets the value for SignatureRequestFromAddress to be an explicit nil
+func (o *UpdateTemplateRequest) SetSignatureRequestFromAddressNil() {
+	o.SignatureRequestFromAddress.Set(nil)
+}
+
+// UnsetSignatureRequestFromAddress ensures that no value is present for SignatureRequestFromAddress, not even an explicit nil
+func (o *UpdateTemplateRequest) UnsetSignatureRequestFromAddress() {
+	o.SignatureRequestFromAddress.Unset()
+}
+
+// GetSignatureRequestIncludeSigningToken returns the SignatureRequestIncludeSigningToken field value if set, zero value otherwise.
+func (o *UpdateTemplateRequest) GetSignatureRequestIncludeSigningToken() bool {
+	if o == nil || IsNil(o.SignatureRequestIncludeSigningToken) {
+		var ret bool
+		return ret
+	}
+	return *o.SignatureRequestIncludeSigningToken
+}
+
+// GetSignatureRequestIncludeSigningTokenOk returns a tuple with the SignatureRequestIncludeSigningToken field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateTemplateRequest) GetSignatureRequestIncludeSigningTokenOk() (*bool, bool) {
+	if o == nil || IsNil(o.SignatureRequestIncludeSigningToken) {
+		return nil, false
+	}
+	return o.SignatureRequestIncludeSigningToken, true
+}
+
+// HasSignatureRequestIncludeSigningToken returns a boolean if a field has been set.
+func (o *UpdateTemplateRequest) HasSignatureRequestIncludeSigningToken() bool {
+	if o != nil && !IsNil(o.SignatureRequestIncludeSigningToken) {
+		return true
+	}
+
+	return false
+}
+
+// SetSignatureRequestIncludeSigningToken gets a reference to the given bool and assigns it to the SignatureRequestIncludeSigningToken field.
+func (o *UpdateTemplateRequest) SetSignatureRequestIncludeSigningToken(v bool) {
+	o.SignatureRequestIncludeSigningToken = &v
+}
+
+// GetSignatureRequestFromName returns the SignatureRequestFromName field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *UpdateTemplateRequest) GetSignatureRequestFromName() string {
+	if o == nil || IsNil(o.SignatureRequestFromName.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.SignatureRequestFromName.Get()
+}
+
+// GetSignatureRequestFromNameOk returns a tuple with the SignatureRequestFromName field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *UpdateTemplateRequest) GetSignatureRequestFromNameOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.SignatureRequestFromName.Get(), o.SignatureRequestFromName.IsSet()
+}
+
+// HasSignatureRequestFromName returns a boolean if a field has been set.
+func (o *UpdateTemplateRequest) HasSignatureRequestFromName() bool {
+	if o != nil && o.SignatureRequestFromName.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetSignatureRequestFromName gets a reference to the given NullableString and assigns it to the SignatureRequestFromName field.
+func (o *UpdateTemplateRequest) SetSignatureRequestFromName(v string) {
+	o.SignatureRequestFromName.Set(&v)
+}
+// SetSignatureRequestFromNameNil sets the value for SignatureRequestFromName to be an explicit nil
+func (o *UpdateTemplateRequest) SetSignatureRequestFromNameNil() {
+	o.SignatureRequestFromName.Set(nil)
+}
+
+// UnsetSignatureRequestFromName ensures that no value is present for SignatureRequestFromName, not even an explicit nil
+func (o *UpdateTemplateRequest) UnsetSignatureRequestFromName() {
+	o.SignatureRequestFromName.Unset()
+}
+
+// GetSignatureRequestNotificationEmails returns the SignatureRequestNotificationEmails field value if set, zero value otherwise.
+func (o *UpdateTemplateRequest) GetSignatureRequestNotificationEmails() []string {
+	if o == nil || IsNil(o.SignatureRequestNotificationEmails) {
+		var ret []string
+		return ret
+	}
+	return o.SignatureRequestNotificationEmails
+}
+
+// GetSignatureRequestNotificationEmailsOk returns a tuple with the SignatureRequestNotificationEmails field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateTemplateRequest) GetSignatureRequestNotificationEmailsOk() ([]string, bool) {
+	if o == nil || IsNil(o.SignatureRequestNotificationEmails) {
+		return nil, false
+	}
+	return o.SignatureRequestNotificationEmails, true
+}
+
+// HasSignatureRequestNotificationEmails returns a boolean if a field has been set.
+func (o *UpdateTemplateRequest) HasSignatureRequestNotificationEmails() bool {
+	if o != nil && !IsNil(o.SignatureRequestNotificationEmails) {
+		return true
+	}
+
+	return false
+}
+
+// SetSignatureRequestNotificationEmails gets a reference to the given []string and assigns it to the SignatureRequestNotificationEmails field.
+func (o *UpdateTemplateRequest) SetSignatureRequestNotificationEmails(v []string) {
+	o.SignatureRequestNotificationEmails = v
+}
+
+// GetSignatureRequestReplyTo returns the SignatureRequestReplyTo field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *UpdateTemplateRequest) GetSignatureRequestReplyTo() string {
+	if o == nil || IsNil(o.SignatureRequestReplyTo.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.SignatureRequestReplyTo.Get()
+}
+
+// GetSignatureRequestReplyToOk returns a tuple with the SignatureRequestReplyTo field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *UpdateTemplateRequest) GetSignatureRequestReplyToOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.SignatureRequestReplyTo.Get(), o.SignatureRequestReplyTo.IsSet()
+}
+
+// HasSignatureRequestReplyTo returns a boolean if a field has been set.
+func (o *UpdateTemplateRequest) HasSignatureRequestReplyTo() bool {
+	if o != nil && o.SignatureRequestReplyTo.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetSignatureRequestReplyTo gets a reference to the given NullableString and assigns it to the SignatureRequestReplyTo field.
+func (o *UpdateTemplateRequest) SetSignatureRequestReplyTo(v string) {
+	o.SignatureRequestReplyTo.Set(&v)
+}
+// SetSignatureRequestReplyToNil sets the value for SignatureRequestReplyTo to be an explicit nil
+func (o *UpdateTemplateRequest) SetSignatureRequestReplyToNil() {
+	o.SignatureRequestReplyTo.Set(nil)
+}
+
+// UnsetSignatureRequestReplyTo ensures that no value is present for SignatureRequestReplyTo, not even an explicit nil
+func (o *UpdateTemplateRequest) UnsetSignatureRequestReplyTo() {
+	o.SignatureRequestReplyTo.Unset()
+}
+
+// GetSignatureRequestSigningUrl returns the SignatureRequestSigningUrl field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *UpdateTemplateRequest) GetSignatureRequestSigningUrl() string {
+	if o == nil || IsNil(o.SignatureRequestSigningUrl.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.SignatureRequestSigningUrl.Get()
+}
+
+// GetSignatureRequestSigningUrlOk returns a tuple with the SignatureRequestSigningUrl field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *UpdateTemplateRequest) GetSignatureRequestSigningUrlOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.SignatureRequestSigningUrl.Get(), o.SignatureRequestSigningUrl.IsSet()
+}
+
+// HasSignatureRequestSigningUrl returns a boolean if a field has been set.
+func (o *UpdateTemplateRequest) HasSignatureRequestSigningUrl() bool {
+	if o != nil && o.SignatureRequestSigningUrl.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetSignatureRequestSigningUrl gets a reference to the given NullableString and assigns it to the SignatureRequestSigningUrl field.
+func (o *UpdateTemplateRequest) SetSignatureRequestSigningUrl(v string) {
+	o.SignatureRequestSigningUrl.Set(&v)
+}
+// SetSignatureRequestSigningUrlNil sets the value for SignatureRequestSigningUrl to be an explicit nil
+func (o *UpdateTemplateRequest) SetSignatureRequestSigningUrlNil() {
+	o.SignatureRequestSigningUrl.Set(nil)
+}
+
+// UnsetSignatureRequestSigningUrl ensures that no value is present for SignatureRequestSigningUrl, not even an explicit nil
+func (o *UpdateTemplateRequest) UnsetSignatureRequestSigningUrl() {
+	o.SignatureRequestSigningUrl.Unset()
+}
+
 // GetSlackWebhookUrl returns the SlackWebhookUrl field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *UpdateTemplateRequest) GetSlackWebhookUrl() string {
 	if o == nil || IsNil(o.SlackWebhookUrl.Get()) {
@@ -1400,6 +1690,39 @@ func (o *UpdateTemplateRequest) SetHtmlEscapeData(v bool) {
 	o.HtmlEscapeData = &v
 }
 
+// GetLayout returns the Layout field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *UpdateTemplateRequest) GetLayout() map[string]interface{} {
+	if o == nil {
+		var ret map[string]interface{}
+		return ret
+	}
+	return o.Layout
+}
+
+// GetLayoutOk returns a tuple with the Layout field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *UpdateTemplateRequest) GetLayoutOk() (map[string]interface{}, bool) {
+	if o == nil || IsNil(o.Layout) {
+		return map[string]interface{}{}, false
+	}
+	return o.Layout, true
+}
+
+// HasLayout returns a boolean if a field has been set.
+func (o *UpdateTemplateRequest) HasLayout() bool {
+	if o != nil && !IsNil(o.Layout) {
+		return true
+	}
+
+	return false
+}
+
+// SetLayout gets a reference to the given map[string]interface{} and assigns it to the Layout field.
+func (o *UpdateTemplateRequest) SetLayout(v map[string]interface{}) {
+	o.Layout = v
+}
+
 func (o UpdateTemplateRequest) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -1485,6 +1808,27 @@ func (o UpdateTemplateRequest) ToMap() (map[string]interface{}, error) {
 	if o.RedirectUrl.IsSet() {
 		toSerialize["redirect_url"] = o.RedirectUrl.Get()
 	}
+	if o.SignatureRequestEmailAttachments.IsSet() {
+		toSerialize["signature_request_email_attachments"] = o.SignatureRequestEmailAttachments.Get()
+	}
+	if o.SignatureRequestFromAddress.IsSet() {
+		toSerialize["signature_request_from_address"] = o.SignatureRequestFromAddress.Get()
+	}
+	if !IsNil(o.SignatureRequestIncludeSigningToken) {
+		toSerialize["signature_request_include_signing_token"] = o.SignatureRequestIncludeSigningToken
+	}
+	if o.SignatureRequestFromName.IsSet() {
+		toSerialize["signature_request_from_name"] = o.SignatureRequestFromName.Get()
+	}
+	if !IsNil(o.SignatureRequestNotificationEmails) {
+		toSerialize["signature_request_notification_emails"] = o.SignatureRequestNotificationEmails
+	}
+	if o.SignatureRequestReplyTo.IsSet() {
+		toSerialize["signature_request_reply_to"] = o.SignatureRequestReplyTo.Get()
+	}
+	if o.SignatureRequestSigningUrl.IsSet() {
+		toSerialize["signature_request_signing_url"] = o.SignatureRequestSigningUrl.Get()
+	}
 	if o.SlackWebhookUrl.IsSet() {
 		toSerialize["slack_webhook_url"] = o.SlackWebhookUrl.Get()
 	}
@@ -1520,6 +1864,9 @@ func (o UpdateTemplateRequest) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.HtmlEscapeData) {
 		toSerialize["html_escape_data"] = o.HtmlEscapeData
+	}
+	if o.Layout != nil {
+		toSerialize["layout"] = o.Layout
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -1568,6 +1915,13 @@ func (o *UpdateTemplateRequest) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "public_submissions")
 		delete(additionalProperties, "public_web_form")
 		delete(additionalProperties, "redirect_url")
+		delete(additionalProperties, "signature_request_email_attachments")
+		delete(additionalProperties, "signature_request_from_address")
+		delete(additionalProperties, "signature_request_include_signing_token")
+		delete(additionalProperties, "signature_request_from_name")
+		delete(additionalProperties, "signature_request_notification_emails")
+		delete(additionalProperties, "signature_request_reply_to")
+		delete(additionalProperties, "signature_request_signing_url")
 		delete(additionalProperties, "slack_webhook_url")
 		delete(additionalProperties, "defaults")
 		delete(additionalProperties, "field_dependencies")
@@ -1580,6 +1934,7 @@ func (o *UpdateTemplateRequest) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "footer_html")
 		delete(additionalProperties, "html_engine_options")
 		delete(additionalProperties, "html_escape_data")
+		delete(additionalProperties, "layout")
 		o.AdditionalProperties = additionalProperties
 	}
 

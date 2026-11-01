@@ -26,6 +26,8 @@ const (
 	SIGNATUREREQUESTEVENTTYPE_DECLINE_REQUEST SignatureRequestEventType = "decline_request"
 	SIGNATUREREQUESTEVENTTYPE_SIGN_REQUEST SignatureRequestEventType = "sign_request"
 	SIGNATUREREQUESTEVENTTYPE_ALL_COMPLETED SignatureRequestEventType = "all_completed"
+	SIGNATUREREQUESTEVENTTYPE_EMAIL_BOUNCED SignatureRequestEventType = "email_bounced"
+	SIGNATUREREQUESTEVENTTYPE_EMAIL_MARKED_AS_SPAM SignatureRequestEventType = "email_marked_as_spam"
 )
 
 // All allowed values of SignatureRequestEventType enum
@@ -36,6 +38,8 @@ var AllowedSignatureRequestEventTypeEnumValues = []SignatureRequestEventType{
 	"decline_request",
 	"sign_request",
 	"all_completed",
+	"email_bounced",
+	"email_marked_as_spam",
 }
 
 func (v *SignatureRequestEventType) UnmarshalJSON(src []byte) error {

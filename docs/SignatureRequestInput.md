@@ -5,11 +5,11 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Name** | Pointer to **NullableString** | The name of the person the request is for. | [optional] 
-**Email** | Pointer to **NullableString** | Their email address. | [optional] 
+**Email** | Pointer to **NullableString** | Their email address. Null when they have none. | [optional] 
 **Fields** | **[]string** | The fields this person fills in. Each field can only be in one signature request, and a field that `data` fills in needs `prefilled_values_editable`. | 
 **Metadata** | Pointer to **map[string]interface{}** | Your own data about the signature request, such as an ID from your app. | [optional] 
 **Role** | Pointer to **string** | Which of the template's signers the person is: `Signer 1`, `Signer 2` and so on, up to `Signer 100`, until templates have roles of their own. Either every signature request has a `role` or none does, and each role can only have one. | [optional] 
-**AuthType** | [**SignatureRequestAuthType**](SignatureRequestAuthType.md) | How your app authenticated the person before it showed them the signature request. | 
+**AuthType** | Pointer to [**SignatureRequestAuthType**](SignatureRequestAuthType.md) | How your app authenticated the person before it showed them the signature request. | [optional] 
 **AuthSecondFactorType** | Pointer to [**SignatureRequestAuthSecondFactorType**](SignatureRequestAuthSecondFactorType.md) | The second factor your app authenticated them with, if any. | [optional] 
 **AuthProvider** | Pointer to **NullableString** | The service that authenticated them, such as `google`. Required when `auth_type` is `oauth`. | [optional] 
 **AuthSessionStartedAt** | Pointer to **NullableTime** | When your app authenticated them. Set for you with `email_link`. | [optional] 
@@ -19,12 +19,14 @@ Name | Type | Description | Notes
 **AuthPhoneNumberHash** | Pointer to **NullableString** | The phone number they authenticated with, or a SHA-256 hash of a salt and the phone number. | [optional] 
 **IgnoreUnknownFields** | Pointer to **bool** | Leave out names in `fields` that the template doesn't have, for one field list that you send with several templates. Without it, an unknown name makes the submission `invalid_data`. | [optional] 
 **PrefilledValuesEditable** | Pointer to **bool** | Let the person change the values that `data` already has for fields in `fields`. Without it, those fields are a 422. | [optional] 
+**SendEmail** | Pointer to **bool** | Whether DocSpring emails this person their signing link. Default: the submission's `send_email`. Set it to false for someone who signs in your app (embedded signing) or whose link you send yourself. When DocSpring emails them, `email` is required and `auth_type` is `email_link` (the default). Otherwise `auth_type` is required. | [optional] 
+**SigningStep** | Pointer to **int32** | When this person signs, with `signing_order: sequential`: everyone in step 1 first, then step 2, and so on. People in the same step sign in any order. Only the order of the numbers matters. Either every signature request has a `signing_step` or none does; without them, each person is a step of their own, in the order of `signature_requests`. | [optional] 
 
 ## Methods
 
 ### NewSignatureRequestInput
 
-`func NewSignatureRequestInput(fields []string, authType SignatureRequestAuthType, ) *SignatureRequestInput`
+`func NewSignatureRequestInput(fields []string, ) *SignatureRequestInput`
 
 NewSignatureRequestInput instantiates a new SignatureRequestInput object
 This constructor will assign default values to properties that have it defined,
@@ -198,6 +200,11 @@ and a boolean to check if the value has been set.
 
 SetAuthType sets AuthType field to given value.
 
+### HasAuthType
+
+`func (o *SignatureRequestInput) HasAuthType() bool`
+
+HasAuthType returns a boolean if a field has been set.
 
 ### GetAuthSecondFactorType
 
@@ -483,6 +490,56 @@ SetPrefilledValuesEditable sets PrefilledValuesEditable field to given value.
 `func (o *SignatureRequestInput) HasPrefilledValuesEditable() bool`
 
 HasPrefilledValuesEditable returns a boolean if a field has been set.
+
+### GetSendEmail
+
+`func (o *SignatureRequestInput) GetSendEmail() bool`
+
+GetSendEmail returns the SendEmail field if non-nil, zero value otherwise.
+
+### GetSendEmailOk
+
+`func (o *SignatureRequestInput) GetSendEmailOk() (*bool, bool)`
+
+GetSendEmailOk returns a tuple with the SendEmail field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSendEmail
+
+`func (o *SignatureRequestInput) SetSendEmail(v bool)`
+
+SetSendEmail sets SendEmail field to given value.
+
+### HasSendEmail
+
+`func (o *SignatureRequestInput) HasSendEmail() bool`
+
+HasSendEmail returns a boolean if a field has been set.
+
+### GetSigningStep
+
+`func (o *SignatureRequestInput) GetSigningStep() int32`
+
+GetSigningStep returns the SigningStep field if non-nil, zero value otherwise.
+
+### GetSigningStepOk
+
+`func (o *SignatureRequestInput) GetSigningStepOk() (*int32, bool)`
+
+GetSigningStepOk returns a tuple with the SigningStep field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSigningStep
+
+`func (o *SignatureRequestInput) SetSigningStep(v int32)`
+
+SetSigningStep sets SigningStep field to given value.
+
+### HasSigningStep
+
+`func (o *SignatureRequestInput) HasSigningStep() bool`
+
+HasSigningStep returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#methods) [[Back to API list]](../README.md#methods) [[Back to README]](../README.md)

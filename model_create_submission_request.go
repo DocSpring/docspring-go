@@ -19,11 +19,11 @@ var _ MappedNullable = &CreateSubmissionRequest{}
 
 // CreateSubmissionRequest The submission's data and settings.
 type CreateSubmissionRequest struct {
-	// Test PDFs have a watermark and are free. Live PDFs use credits. Submissions made with a test API token are always test submissions.
+	// Test PDFs have a watermark and are free. Live PDFs use credits. Submissions made with a test API token are always test submissions, and the demo API token's are always live.
 	Test *bool `json:"test,omitempty"`
 	// `true` keeps the PDF's text and check fields fillable, and `false` flattens every field. Left out, the template decides: its `editable_submissions` setting, or each field's own Editable option. A response shows the template's setting when the request left this out. Can't be `true` with `signature_requests`.
 	Editable *bool `json:"editable,omitempty"`
-	// The values of the template's fields, by field name. Required for PDF and Word templates, unless `signature_requests` collects them (PDF templates only).
+	// The values of the template's fields, by field name. Required for PDF templates, Word templates and page designs, unless `signature_requests` collects them (PDF templates only).
 	Data map[string]interface{} `json:"data,omitempty"`
 	// Your own data about the submission, such as an ID from your app. It isn't printed on the PDF. Two keys also change the PDF: `pdf_filename` names its file (`files.pdf.filename`, and its download), and `pdf_title` is its title in the PDF's document properties (and an HTML template's `<title>`, unless its HTML has one). Without `pdf_title`, the title is the template's name. In `pdf_filename`, a `.pdf` ending is removed, each run of characters other than letters, digits, `-`, `_` and `.` becomes one `_`, and the first 128 characters are kept, then `.pdf` is added. Without it, the file is named after the submission's ID (`sub_1234567890abcdef01.pdf`).
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
@@ -31,7 +31,7 @@ type CreateSubmissionRequest struct {
 	Password *string `json:"password,omitempty"`
 	// What the submission makes: `pdf`, `docx` (a Word document, from a Word template), `odt` (an OpenDocument file, the format LibreOffice uses, converted from a Word template's Word document), and `png` (an image of each page of the PDF, up to 100 pages, which adds `pdf`) when you ask for it. Default `["pdf"]`, or a Word template's `output_format`. POST /submissions/{submission_id}/generate_files adds `png`, and a Word template's submission's `pdf`, `docx` or `odt`, to a processed submission.
 	OutputFormats []OutputFormat `json:"output_formats,omitempty"`
-	// Seconds after the PDF is generated until the submission expires, up to 10 years (315360000). Default the template's expiration setting. A submission that isn't processed, such as one with invalid data, is kept for at least 48 hours.
+	// Seconds after the PDF is generated until the submission expires, up to 10 years (315360000). Default the template's expiration setting. A submission that isn't processed, such as one with invalid data, is kept for at least 48 hours. The demo API token's submissions expire within an hour: up to 3600, and that's their default.
 	ExpiresIn *int32 `json:"expires_in,omitempty"`
 	// Changes to field settings for this submission only, by field name, such as `{"name": {"required": false, "font_size": 9}}`. A setting that identifies the field (`id`, `name`, `type`), that only the template sets (such as `description`), or that doesn't apply to the field's type and display type (such as `check_character` on a field displayed as text) is a 422. With `signature_requests`, `editable: true` is a 422, and a `default` for a signature or initials field makes the submission `invalid_data`.
 	FieldOverrides map[string]FieldOverride `json:"field_overrides,omitempty"`
@@ -41,6 +41,24 @@ type CreateSubmissionRequest struct {
 	Css *string `json:"css,omitempty"`
 	// The people who sign the PDF, and fill in their fields first. The PDF is generated once every signature request is completed. PDF templates only. Without `role`s, the first signature request is `Signer 1`, the second `Signer 2`, and so on. To leave a signer out, give every signature request its `role` and leave that one's out. Only the signers sign: a value for a signature or initials field in `data` makes the submission `invalid_data`.
 	SignatureRequests []SignatureRequestInput `json:"signature_requests,omitempty"`
+	// Whether DocSpring emails the signers their signing links, and sends the reminders and the completed document. Default true. Each signature request's own `send_email` overrides it. A test submission only emails your DocSpring team: every other address is a 422. `true` needs `signature_requests`. DocSpring doesn't email the signers of a form library template: leave `send_email` out, and send them their links yourself.
+	SendEmail *bool `json:"send_email,omitempty"`
+	// `parallel` (the default): everyone can sign at once. `sequential`: people sign one step at a time (`signing_step`), and DocSpring emails each step when the one before it is done. Needs `signature_requests`.
+	SigningOrder *SigningOrder `json:"signing_order,omitempty"`
+	// The subject of the emails that ask people to sign. You can use `{{ signer.name }}`, `{{ signer.email }}`, `{{ document.name }}`, `{{ sender.name }}` and `{{ account.name }}`. Default "<sender> sent you <document> to sign" when you leave it out (a blank subject is a 422). Links and web addresses are shown as plain text (`example[.]com`).
+	EmailSubject *string `json:"email_subject,omitempty"`
+	// A message for the people who sign, shown above the signing button. It takes the same variables as `email_subject`. Links and web addresses are shown as plain text. Leave it out for none: a blank message is a 422.
+	EmailMessage *string `json:"email_message,omitempty"`
+	// People who get a copy of the completed document. They don't sign.
+	Cc []string `json:"cc,omitempty"`
+	// Where replies to the emails go: a member of your DocSpring team, or an address at one of your verified email domains. Leave it out for the template's reply-to address (the account owner when it has none).
+	ReplyTo *string `json:"reply_to,omitempty"`
+	// Who DocSpring tells when the document is completed or declined, or an email bounces or can't be sent: members of your DocSpring team or addresses at your verified email domains. Leave it out for the template's notification addresses (the account owner when it has none); an empty list means the account owner.
+	NotificationEmails []string `json:"notification_emails,omitempty"`
+	// Also email `notification_emails` each time someone signs. Default false.
+	NotifyWhenSigned *bool `json:"notify_when_signed,omitempty"`
+	// Remind people who haven't signed: every `interval_days` days, up to `max_count` times. Each reminder has a new signing link. Without it, DocSpring sends no reminders.
+	Reminders *SignatureRequestReminders `json:"reminders,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -415,6 +433,294 @@ func (o *CreateSubmissionRequest) SetSignatureRequests(v []SignatureRequestInput
 	o.SignatureRequests = v
 }
 
+// GetSendEmail returns the SendEmail field value if set, zero value otherwise.
+func (o *CreateSubmissionRequest) GetSendEmail() bool {
+	if o == nil || IsNil(o.SendEmail) {
+		var ret bool
+		return ret
+	}
+	return *o.SendEmail
+}
+
+// GetSendEmailOk returns a tuple with the SendEmail field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateSubmissionRequest) GetSendEmailOk() (*bool, bool) {
+	if o == nil || IsNil(o.SendEmail) {
+		return nil, false
+	}
+	return o.SendEmail, true
+}
+
+// HasSendEmail returns a boolean if a field has been set.
+func (o *CreateSubmissionRequest) HasSendEmail() bool {
+	if o != nil && !IsNil(o.SendEmail) {
+		return true
+	}
+
+	return false
+}
+
+// SetSendEmail gets a reference to the given bool and assigns it to the SendEmail field.
+func (o *CreateSubmissionRequest) SetSendEmail(v bool) {
+	o.SendEmail = &v
+}
+
+// GetSigningOrder returns the SigningOrder field value if set, zero value otherwise.
+func (o *CreateSubmissionRequest) GetSigningOrder() SigningOrder {
+	if o == nil || IsNil(o.SigningOrder) {
+		var ret SigningOrder
+		return ret
+	}
+	return *o.SigningOrder
+}
+
+// GetSigningOrderOk returns a tuple with the SigningOrder field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateSubmissionRequest) GetSigningOrderOk() (*SigningOrder, bool) {
+	if o == nil || IsNil(o.SigningOrder) {
+		return nil, false
+	}
+	return o.SigningOrder, true
+}
+
+// HasSigningOrder returns a boolean if a field has been set.
+func (o *CreateSubmissionRequest) HasSigningOrder() bool {
+	if o != nil && !IsNil(o.SigningOrder) {
+		return true
+	}
+
+	return false
+}
+
+// SetSigningOrder gets a reference to the given SigningOrder and assigns it to the SigningOrder field.
+func (o *CreateSubmissionRequest) SetSigningOrder(v SigningOrder) {
+	o.SigningOrder = &v
+}
+
+// GetEmailSubject returns the EmailSubject field value if set, zero value otherwise.
+func (o *CreateSubmissionRequest) GetEmailSubject() string {
+	if o == nil || IsNil(o.EmailSubject) {
+		var ret string
+		return ret
+	}
+	return *o.EmailSubject
+}
+
+// GetEmailSubjectOk returns a tuple with the EmailSubject field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateSubmissionRequest) GetEmailSubjectOk() (*string, bool) {
+	if o == nil || IsNil(o.EmailSubject) {
+		return nil, false
+	}
+	return o.EmailSubject, true
+}
+
+// HasEmailSubject returns a boolean if a field has been set.
+func (o *CreateSubmissionRequest) HasEmailSubject() bool {
+	if o != nil && !IsNil(o.EmailSubject) {
+		return true
+	}
+
+	return false
+}
+
+// SetEmailSubject gets a reference to the given string and assigns it to the EmailSubject field.
+func (o *CreateSubmissionRequest) SetEmailSubject(v string) {
+	o.EmailSubject = &v
+}
+
+// GetEmailMessage returns the EmailMessage field value if set, zero value otherwise.
+func (o *CreateSubmissionRequest) GetEmailMessage() string {
+	if o == nil || IsNil(o.EmailMessage) {
+		var ret string
+		return ret
+	}
+	return *o.EmailMessage
+}
+
+// GetEmailMessageOk returns a tuple with the EmailMessage field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateSubmissionRequest) GetEmailMessageOk() (*string, bool) {
+	if o == nil || IsNil(o.EmailMessage) {
+		return nil, false
+	}
+	return o.EmailMessage, true
+}
+
+// HasEmailMessage returns a boolean if a field has been set.
+func (o *CreateSubmissionRequest) HasEmailMessage() bool {
+	if o != nil && !IsNil(o.EmailMessage) {
+		return true
+	}
+
+	return false
+}
+
+// SetEmailMessage gets a reference to the given string and assigns it to the EmailMessage field.
+func (o *CreateSubmissionRequest) SetEmailMessage(v string) {
+	o.EmailMessage = &v
+}
+
+// GetCc returns the Cc field value if set, zero value otherwise.
+func (o *CreateSubmissionRequest) GetCc() []string {
+	if o == nil || IsNil(o.Cc) {
+		var ret []string
+		return ret
+	}
+	return o.Cc
+}
+
+// GetCcOk returns a tuple with the Cc field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateSubmissionRequest) GetCcOk() ([]string, bool) {
+	if o == nil || IsNil(o.Cc) {
+		return nil, false
+	}
+	return o.Cc, true
+}
+
+// HasCc returns a boolean if a field has been set.
+func (o *CreateSubmissionRequest) HasCc() bool {
+	if o != nil && !IsNil(o.Cc) {
+		return true
+	}
+
+	return false
+}
+
+// SetCc gets a reference to the given []string and assigns it to the Cc field.
+func (o *CreateSubmissionRequest) SetCc(v []string) {
+	o.Cc = v
+}
+
+// GetReplyTo returns the ReplyTo field value if set, zero value otherwise.
+func (o *CreateSubmissionRequest) GetReplyTo() string {
+	if o == nil || IsNil(o.ReplyTo) {
+		var ret string
+		return ret
+	}
+	return *o.ReplyTo
+}
+
+// GetReplyToOk returns a tuple with the ReplyTo field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateSubmissionRequest) GetReplyToOk() (*string, bool) {
+	if o == nil || IsNil(o.ReplyTo) {
+		return nil, false
+	}
+	return o.ReplyTo, true
+}
+
+// HasReplyTo returns a boolean if a field has been set.
+func (o *CreateSubmissionRequest) HasReplyTo() bool {
+	if o != nil && !IsNil(o.ReplyTo) {
+		return true
+	}
+
+	return false
+}
+
+// SetReplyTo gets a reference to the given string and assigns it to the ReplyTo field.
+func (o *CreateSubmissionRequest) SetReplyTo(v string) {
+	o.ReplyTo = &v
+}
+
+// GetNotificationEmails returns the NotificationEmails field value if set, zero value otherwise.
+func (o *CreateSubmissionRequest) GetNotificationEmails() []string {
+	if o == nil || IsNil(o.NotificationEmails) {
+		var ret []string
+		return ret
+	}
+	return o.NotificationEmails
+}
+
+// GetNotificationEmailsOk returns a tuple with the NotificationEmails field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateSubmissionRequest) GetNotificationEmailsOk() ([]string, bool) {
+	if o == nil || IsNil(o.NotificationEmails) {
+		return nil, false
+	}
+	return o.NotificationEmails, true
+}
+
+// HasNotificationEmails returns a boolean if a field has been set.
+func (o *CreateSubmissionRequest) HasNotificationEmails() bool {
+	if o != nil && !IsNil(o.NotificationEmails) {
+		return true
+	}
+
+	return false
+}
+
+// SetNotificationEmails gets a reference to the given []string and assigns it to the NotificationEmails field.
+func (o *CreateSubmissionRequest) SetNotificationEmails(v []string) {
+	o.NotificationEmails = v
+}
+
+// GetNotifyWhenSigned returns the NotifyWhenSigned field value if set, zero value otherwise.
+func (o *CreateSubmissionRequest) GetNotifyWhenSigned() bool {
+	if o == nil || IsNil(o.NotifyWhenSigned) {
+		var ret bool
+		return ret
+	}
+	return *o.NotifyWhenSigned
+}
+
+// GetNotifyWhenSignedOk returns a tuple with the NotifyWhenSigned field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateSubmissionRequest) GetNotifyWhenSignedOk() (*bool, bool) {
+	if o == nil || IsNil(o.NotifyWhenSigned) {
+		return nil, false
+	}
+	return o.NotifyWhenSigned, true
+}
+
+// HasNotifyWhenSigned returns a boolean if a field has been set.
+func (o *CreateSubmissionRequest) HasNotifyWhenSigned() bool {
+	if o != nil && !IsNil(o.NotifyWhenSigned) {
+		return true
+	}
+
+	return false
+}
+
+// SetNotifyWhenSigned gets a reference to the given bool and assigns it to the NotifyWhenSigned field.
+func (o *CreateSubmissionRequest) SetNotifyWhenSigned(v bool) {
+	o.NotifyWhenSigned = &v
+}
+
+// GetReminders returns the Reminders field value if set, zero value otherwise.
+func (o *CreateSubmissionRequest) GetReminders() SignatureRequestReminders {
+	if o == nil || IsNil(o.Reminders) {
+		var ret SignatureRequestReminders
+		return ret
+	}
+	return *o.Reminders
+}
+
+// GetRemindersOk returns a tuple with the Reminders field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateSubmissionRequest) GetRemindersOk() (*SignatureRequestReminders, bool) {
+	if o == nil || IsNil(o.Reminders) {
+		return nil, false
+	}
+	return o.Reminders, true
+}
+
+// HasReminders returns a boolean if a field has been set.
+func (o *CreateSubmissionRequest) HasReminders() bool {
+	if o != nil && !IsNil(o.Reminders) {
+		return true
+	}
+
+	return false
+}
+
+// SetReminders gets a reference to the given SignatureRequestReminders and assigns it to the Reminders field.
+func (o *CreateSubmissionRequest) SetReminders(v SignatureRequestReminders) {
+	o.Reminders = &v
+}
+
 func (o CreateSubmissionRequest) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -458,6 +764,33 @@ func (o CreateSubmissionRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.SignatureRequests) {
 		toSerialize["signature_requests"] = o.SignatureRequests
 	}
+	if !IsNil(o.SendEmail) {
+		toSerialize["send_email"] = o.SendEmail
+	}
+	if !IsNil(o.SigningOrder) {
+		toSerialize["signing_order"] = o.SigningOrder
+	}
+	if !IsNil(o.EmailSubject) {
+		toSerialize["email_subject"] = o.EmailSubject
+	}
+	if !IsNil(o.EmailMessage) {
+		toSerialize["email_message"] = o.EmailMessage
+	}
+	if !IsNil(o.Cc) {
+		toSerialize["cc"] = o.Cc
+	}
+	if !IsNil(o.ReplyTo) {
+		toSerialize["reply_to"] = o.ReplyTo
+	}
+	if !IsNil(o.NotificationEmails) {
+		toSerialize["notification_emails"] = o.NotificationEmails
+	}
+	if !IsNil(o.NotifyWhenSigned) {
+		toSerialize["notify_when_signed"] = o.NotifyWhenSigned
+	}
+	if !IsNil(o.Reminders) {
+		toSerialize["reminders"] = o.Reminders
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -491,6 +824,15 @@ func (o *CreateSubmissionRequest) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "html")
 		delete(additionalProperties, "css")
 		delete(additionalProperties, "signature_requests")
+		delete(additionalProperties, "send_email")
+		delete(additionalProperties, "signing_order")
+		delete(additionalProperties, "email_subject")
+		delete(additionalProperties, "email_message")
+		delete(additionalProperties, "cc")
+		delete(additionalProperties, "reply_to")
+		delete(additionalProperties, "notification_emails")
+		delete(additionalProperties, "notify_when_signed")
+		delete(additionalProperties, "reminders")
 		o.AdditionalProperties = additionalProperties
 	}
 

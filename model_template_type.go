@@ -23,6 +23,7 @@ const (
 	TEMPLATETYPE_PDF TemplateType = "pdf"
 	TEMPLATETYPE_HTML TemplateType = "html"
 	TEMPLATETYPE_DOCX TemplateType = "docx"
+	TEMPLATETYPE_PAGE_DESIGNER TemplateType = "page_designer"
 )
 
 // All allowed values of TemplateType enum
@@ -30,6 +31,7 @@ var AllowedTemplateTypeEnumValues = []TemplateType{
 	"pdf",
 	"html",
 	"docx",
+	"page_designer",
 }
 
 func (v *TemplateType) UnmarshalJSON(src []byte) error {

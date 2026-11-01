@@ -30,11 +30,18 @@ type ApiAddTemplateFieldsRequest struct {
 	ApiService *ClientAPIService
 	templateId string
 	body *AddTemplateFieldsRequest
+	idempotencyKey *string
 }
 
 // The fields to add to the template's draft.
 func (r ApiAddTemplateFieldsRequest) Body(body AddTemplateFieldsRequest) ApiAddTemplateFieldsRequest {
 	r.body = &body
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiAddTemplateFieldsRequest) IdempotencyKey(idempotencyKey string) ApiAddTemplateFieldsRequest {
+	r.idempotencyKey = &idempotencyKey
 	return r
 }
 
@@ -46,7 +53,9 @@ func (r ApiAddTemplateFieldsRequest) Execute() (*TemplateFields, *http.Response,
 AddTemplateFields Add fields to a template
 
 Adds fields to a template's draft and returns all of its fields. Publish a version for submissions of
-published versions to have them.
+published versions to have them. A field with the name of one of the template's fields shares its settings
+(`type`, `required`, `default`, ...), so a field that sets one to another value is refused: PUT
+/templates/{template_id}/fields changes them for every field with the name.
 
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -102,6 +111,9 @@ func (a *ClientAPIService) AddTemplateFieldsExecute(r ApiAddTemplateFieldsReques
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
 	}
 	// body params
 	if r.body != nil {
@@ -206,11 +218,18 @@ type ApiCopyTemplateRequest struct {
 	ApiService *ClientAPIService
 	templateId string
 	body *CopyTemplateRequest
+	idempotencyKey *string
 }
 
 // Settings for the copy.
 func (r ApiCopyTemplateRequest) Body(body CopyTemplateRequest) ApiCopyTemplateRequest {
 	r.body = &body
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiCopyTemplateRequest) IdempotencyKey(idempotencyKey string) ApiCopyTemplateRequest {
+	r.idempotencyKey = &idempotencyKey
 	return r
 }
 
@@ -273,6 +292,9 @@ func (a *ClientAPIService) CopyTemplateExecute(r ApiCopyTemplateRequest) (*Templ
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
 	}
 	// body params
 	if r.body != nil {
@@ -372,6 +394,181 @@ func (a *ClientAPIService) CopyTemplateExecute(r ApiCopyTemplateRequest) (*Templ
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiCreateAccountEmailActionRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	body *CreateAccountEmailActionRequest
+	idempotencyKey *string
+}
+
+// The account email action to create. Properties left out get their defaults, and it sends for every template unless it lists `template_ids` or `folder_ids`.
+func (r ApiCreateAccountEmailActionRequest) Body(body CreateAccountEmailActionRequest) ApiCreateAccountEmailActionRequest {
+	r.body = &body
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiCreateAccountEmailActionRequest) IdempotencyKey(idempotencyKey string) ApiCreateAccountEmailActionRequest {
+	r.idempotencyKey = &idempotencyKey
+	return r
+}
+
+func (r ApiCreateAccountEmailActionRequest) Execute() (*EmailAction, *http.Response, error) {
+	return r.ApiService.CreateAccountEmailActionExecute(r)
+}
+
+/*
+CreateAccountEmailAction Create an account email action
+
+Adds an email action to your account. It sends for every template, or only for the templates in
+`template_ids` and the templates in the folders in `folder_ids` (and the folders inside them). Each template
+can turn it off or change its settings for that template only (`PUT
+/templates/{template_id}/email_actions/{email_action_id}/customization`). Without a paid plan (Starter or
+higher), email actions only email your team: test submissions' emails go to your account's users, and live
+submissions' emails aren't sent.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @return ApiCreateAccountEmailActionRequest
+*/
+func (a *ClientAPIService) CreateAccountEmailAction(ctx context.Context) ApiCreateAccountEmailActionRequest {
+	return ApiCreateAccountEmailActionRequest{
+		ApiService: a,
+		ctx: ctx,
+	}
+}
+
+// Execute executes the request
+//  @return EmailAction
+func (a *ClientAPIService) CreateAccountEmailActionExecute(r ApiCreateAccountEmailActionRequest) (*EmailAction, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *EmailAction
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.CreateAccountEmailAction")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/email_actions"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
+	}
+	// body params
+	if r.body != nil {
+		localVarPostBody = r.body
+	}
+	if err := a.client.validateRequest("createAccountEmailAction", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
+		return localVarReturnValue, nil, err
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 422 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 429 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiCreateCombinedPdfRequest struct {
 	ctx context.Context
 	ApiService *ClientAPIService
@@ -392,7 +589,7 @@ func (r ApiCreateCombinedPdfRequest) Wait(wait bool) ApiCreateCombinedPdfRequest
 	return r
 }
 
-// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another combined PDF. Send a new key with each new combined PDF, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds.
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
 func (r ApiCreateCombinedPdfRequest) IdempotencyKey(idempotencyKey string) ApiCreateCombinedPdfRequest {
 	r.idempotencyKey = &idempotencyKey
 	return r
@@ -595,11 +792,18 @@ type ApiCreateCustomFileFromUploadRequest struct {
 	ctx context.Context
 	ApiService *ClientAPIService
 	body *CreateCustomFileFromUploadRequest
+	idempotencyKey *string
 }
 
 // The uploaded file to create the custom file from.
 func (r ApiCreateCustomFileFromUploadRequest) Body(body CreateCustomFileFromUploadRequest) ApiCreateCustomFileFromUploadRequest {
 	r.body = &body
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiCreateCustomFileFromUploadRequest) IdempotencyKey(idempotencyKey string) ApiCreateCustomFileFromUploadRequest {
+	r.idempotencyKey = &idempotencyKey
 	return r
 }
 
@@ -664,6 +868,9 @@ func (a *ClientAPIService) CreateCustomFileFromUploadExecute(r ApiCreateCustomFi
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
 	}
 	// body params
 	if r.body != nil {
@@ -741,15 +948,384 @@ func (a *ClientAPIService) CreateCustomFileFromUploadExecute(r ApiCreateCustomFi
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiCreateEmailActionRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	templateId string
+	body *CreateEmailActionRequest
+	idempotencyKey *string
+}
+
+// The email action to create. Properties left out get their defaults.
+func (r ApiCreateEmailActionRequest) Body(body CreateEmailActionRequest) ApiCreateEmailActionRequest {
+	r.body = &body
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiCreateEmailActionRequest) IdempotencyKey(idempotencyKey string) ApiCreateEmailActionRequest {
+	r.idempotencyKey = &idempotencyKey
+	return r
+}
+
+func (r ApiCreateEmailActionRequest) Execute() (*EmailAction, *http.Response, error) {
+	return r.ApiService.CreateEmailActionExecute(r)
+}
+
+/*
+CreateEmailAction Create an email action
+
+Adds an email action to a template's draft. From then on, each processed submission emails its PDF to the
+recipients in `to`, `cc` and `bcc`: addresses, and tags for the address in one of the submission's fields
+(`{{ data.tenant_email }}`) or in its metadata (`{{ metadata.agent_email }}`). With `send_when`, only the
+submissions whose values meet its conditions send one. Without a paid plan (Starter or higher), email actions
+only email your team: test submissions' emails go to your account's users, and live submissions' emails
+aren't sent.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param templateId The template's ID.
+ @return ApiCreateEmailActionRequest
+*/
+func (a *ClientAPIService) CreateEmailAction(ctx context.Context, templateId string) ApiCreateEmailActionRequest {
+	return ApiCreateEmailActionRequest{
+		ApiService: a,
+		ctx: ctx,
+		templateId: templateId,
+	}
+}
+
+// Execute executes the request
+//  @return EmailAction
+func (a *ClientAPIService) CreateEmailActionExecute(r ApiCreateEmailActionRequest) (*EmailAction, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *EmailAction
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.CreateEmailAction")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/templates/{template_id}/email_actions"
+	localVarPath = strings.Replace(localVarPath, "{"+"template_id"+"}", url.PathEscape(parameterValueToString(r.templateId, "templateId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
+	}
+	// body params
+	if r.body != nil {
+		localVarPostBody = r.body
+	}
+	if err := a.client.validateRequest("createEmailAction", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
+		return localVarReturnValue, nil, err
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 422 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 409 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 429 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiCreateEmailDomainRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	body *CreateEmailDomainRequest
+	idempotencyKey *string
+}
+
+// The domain to add.
+func (r ApiCreateEmailDomainRequest) Body(body CreateEmailDomainRequest) ApiCreateEmailDomainRequest {
+	r.body = &body
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiCreateEmailDomainRequest) IdempotencyKey(idempotencyKey string) ApiCreateEmailDomainRequest {
+	r.idempotencyKey = &idempotencyKey
+	return r
+}
+
+func (r ApiCreateEmailDomainRequest) Execute() (*EmailDomain, *http.Response, error) {
+	return r.ApiService.CreateEmailDomainExecute(r)
+}
+
+/*
+CreateEmailDomain Add an email domain
+
+Adds a domain for email actions to send from, and returns the DNS records to add to it. DocSpring checks for
+them every few minutes, and the domain is verified once its DKIM and DMARC records are found. Needs a paid
+monthly plan.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @return ApiCreateEmailDomainRequest
+*/
+func (a *ClientAPIService) CreateEmailDomain(ctx context.Context) ApiCreateEmailDomainRequest {
+	return ApiCreateEmailDomainRequest{
+		ApiService: a,
+		ctx: ctx,
+	}
+}
+
+// Execute executes the request
+//  @return EmailDomain
+func (a *ClientAPIService) CreateEmailDomainExecute(r ApiCreateEmailDomainRequest) (*EmailDomain, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *EmailDomain
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.CreateEmailDomain")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/email_domains"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
+	}
+	// body params
+	if r.body != nil {
+		localVarPostBody = r.body
+	}
+	if err := a.client.validateRequest("createEmailDomain", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
+		return localVarReturnValue, nil, err
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 422 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 429 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiCreateFolderRequest struct {
 	ctx context.Context
 	ApiService *ClientAPIService
 	body *CreateFolderRequest
+	idempotencyKey *string
 }
 
 // The folder to create.
 func (r ApiCreateFolderRequest) Body(body CreateFolderRequest) ApiCreateFolderRequest {
 	r.body = &body
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiCreateFolderRequest) IdempotencyKey(idempotencyKey string) ApiCreateFolderRequest {
+	r.idempotencyKey = &idempotencyKey
 	return r
 }
 
@@ -814,6 +1390,9 @@ func (a *ClientAPIService) CreateFolderExecute(r ApiCreateFolderRequest) (*Folde
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
 	}
 	// body params
 	if r.body != nil {
@@ -896,11 +1475,18 @@ type ApiCreateSignatureRequestEventRequest struct {
 	ApiService *ClientAPIService
 	signatureRequestId string
 	body *CreateSignatureRequestEventRequest
+	idempotencyKey *string
 }
 
 // The event to record.
 func (r ApiCreateSignatureRequestEventRequest) Body(body CreateSignatureRequestEventRequest) ApiCreateSignatureRequestEventRequest {
 	r.body = &body
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiCreateSignatureRequestEventRequest) IdempotencyKey(idempotencyKey string) ApiCreateSignatureRequestEventRequest {
+	r.idempotencyKey = &idempotencyKey
 	return r
 }
 
@@ -970,6 +1556,9 @@ func (a *ClientAPIService) CreateSignatureRequestEventExecute(r ApiCreateSignatu
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
 	}
 	// body params
 	if r.body != nil {
@@ -1085,11 +1674,18 @@ type ApiCreateSignatureRequestTokenRequest struct {
 	ApiService *ClientAPIService
 	signatureRequestId string
 	body *CreateSignatureRequestTokenRequest
+	idempotencyKey *string
 }
 
 // The kind of link to make. Send no body for an `api` token.
 func (r ApiCreateSignatureRequestTokenRequest) Body(body CreateSignatureRequestTokenRequest) ApiCreateSignatureRequestTokenRequest {
 	r.body = &body
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiCreateSignatureRequestTokenRequest) IdempotencyKey(idempotencyKey string) ApiCreateSignatureRequestTokenRequest {
+	r.idempotencyKey = &idempotencyKey
 	return r
 }
 
@@ -1156,6 +1752,9 @@ func (a *ClientAPIService) CreateSignatureRequestTokenExecute(r ApiCreateSignatu
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
 	}
 	// body params
 	if r.body != nil {
@@ -1282,7 +1881,7 @@ func (r ApiCreateSubmissionRequest) Body(body CreateSubmissionRequest) ApiCreate
 	return r
 }
 
-// The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published).
+// The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`.
 func (r ApiCreateSubmissionRequest) Version(version string) ApiCreateSubmissionRequest {
 	r.version = &version
 	return r
@@ -1294,7 +1893,7 @@ func (r ApiCreateSubmissionRequest) Wait(wait bool) ApiCreateSubmissionRequest {
 	return r
 }
 
-// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another submission. Send a new key with each new submission, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds.
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
 func (r ApiCreateSubmissionRequest) IdempotencyKey(idempotencyKey string) ApiCreateSubmissionRequest {
 	r.idempotencyKey = &idempotencyKey
 	return r
@@ -1313,6 +1912,9 @@ background: on sync.api hosts the request waits for it (unless you pass `wait=fa
 
 Data that doesn't match the template's fields returns a 422 with an `invalid_data` error. The submission
 is still saved, with its errors, so you can find it in DocSpring: the error's `submission_id` is its ID.
+
+With `signature_requests`, the PDF is generated once everyone has signed. DocSpring emails each signer a
+link to sign, unless `send_email` is false, and can send reminders and the completed document.
 
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -1529,7 +2131,7 @@ func (r ApiCreateSubmissionBatchRequest) Wait(wait bool) ApiCreateSubmissionBatc
 	return r
 }
 
-// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another batch. Send a new key with each new batch, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds.
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
 func (r ApiCreateSubmissionBatchRequest) IdempotencyKey(idempotencyKey string) ApiCreateSubmissionBatchRequest {
 	r.idempotencyKey = &idempotencyKey
 	return r
@@ -1733,6 +2335,7 @@ type ApiCreateTemplateRequest struct {
 	ApiService *ClientAPIService
 	body *CreateTemplateRequest
 	wait *bool
+	idempotencyKey *string
 }
 
 // The template to create.
@@ -1744,6 +2347,12 @@ func (r ApiCreateTemplateRequest) Body(body CreateTemplateRequest) ApiCreateTemp
 // Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts.
 func (r ApiCreateTemplateRequest) Wait(wait bool) ApiCreateTemplateRequest {
 	r.wait = &wait
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiCreateTemplateRequest) IdempotencyKey(idempotencyKey string) ApiCreateTemplateRequest {
+	r.idempotencyKey = &idempotencyKey
 	return r
 }
 
@@ -1759,7 +2368,8 @@ Creates an HTML template, or a PDF or Word template from a file you uploaded wit
 the file in base64 (`document_base64`) instead, or send the file with the request with POST
 /templates/upload. A Word template is made from a Word document (.docx) or an OpenDocument text file (.odt),
 which DocSpring converts to a Word document. It needs its `output_format`: what each submission makes, a Word
-document (`docx`), an OpenDocument file (`odt`) or a PDF.
+document (`docx`), an OpenDocument file (`odt`) or a PDF. A page design (`page_designer`) takes its `layout`
+in the Page Designer layout format, or starts with an empty page without one.
 
 A PDF template is ready to generate PDFs once DocSpring has processed its PDF, a template created from a
 `document_url` once its document has been downloaded, and one created from an .odt once it has been converted
@@ -1819,6 +2429,9 @@ func (a *ClientAPIService) CreateTemplateExecute(r ApiCreateTemplateRequest) (*T
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
 	}
 	// body params
 	if r.body != nil {
@@ -1924,6 +2537,7 @@ type ApiCreateTemplatePreviewRequest struct {
 	templateId string
 	body *CreateTemplatePreviewRequest
 	version *string
+	idempotencyKey *string
 }
 
 // The data to render the template with.
@@ -1932,9 +2546,15 @@ func (r ApiCreateTemplatePreviewRequest) Body(body CreateTemplatePreviewRequest)
 	return r
 }
 
-// A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+// A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`.
 func (r ApiCreateTemplatePreviewRequest) Version(version string) ApiCreateTemplatePreviewRequest {
 	r.version = &version
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiCreateTemplatePreviewRequest) IdempotencyKey(idempotencyKey string) ApiCreateTemplatePreviewRequest {
+	r.idempotencyKey = &idempotencyKey
 	return r
 }
 
@@ -1946,7 +2566,8 @@ func (r ApiCreateTemplatePreviewRequest) Execute() (*TemplatePreview, *http.Resp
 CreateTemplatePreview Preview a template with data
 
 Makes PNG images of a template's pages filled in with the data you send (not a PDF), so you can check how an
-HTML, PDF or Word template prints with your data before you publish a version or send live data. A Word
+HTML, PDF or Word template or a page design prints with your data before you publish a version or send live
+data. A Word
 template's pages are its PDF's, whatever its `output_format`. It renders the template's draft, or the
 published `version` you ask for. A preview makes no submission and uses no credits, and its pages are
 watermarked like a test submission's PDF. It's `pending` while it renders: get it with GET
@@ -2009,6 +2630,9 @@ func (a *ClientAPIService) CreateTemplatePreviewExecute(r ApiCreateTemplatePrevi
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
 	}
 	// body params
 	if r.body != nil {
@@ -2090,11 +2714,18 @@ type ApiCreateWebhookRequest struct {
 	ctx context.Context
 	ApiService *ClientAPIService
 	body *CreateWebhookRequest
+	idempotencyKey *string
 }
 
 // The webhook to create.
 func (r ApiCreateWebhookRequest) Body(body CreateWebhookRequest) ApiCreateWebhookRequest {
 	r.body = &body
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiCreateWebhookRequest) IdempotencyKey(idempotencyKey string) ApiCreateWebhookRequest {
+	r.idempotencyKey = &idempotencyKey
 	return r
 }
 
@@ -2159,6 +2790,9 @@ func (a *ClientAPIService) CreateWebhookExecute(r ApiCreateWebhookRequest) (*Web
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
 	}
 	// body params
 	if r.body != nil {
@@ -2247,10 +2881,156 @@ func (a *ClientAPIService) CreateWebhookExecute(r ApiCreateWebhookRequest) (*Web
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiDeleteAccountEmailActionRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	emailActionId string
+	idempotencyKey *string
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiDeleteAccountEmailActionRequest) IdempotencyKey(idempotencyKey string) ApiDeleteAccountEmailActionRequest {
+	r.idempotencyKey = &idempotencyKey
+	return r
+}
+
+func (r ApiDeleteAccountEmailActionRequest) Execute() (*EmailAction, *http.Response, error) {
+	return r.ApiService.DeleteAccountEmailActionExecute(r)
+}
+
+/*
+DeleteAccountEmailAction Delete an account email action
+
+Deletes one of your account's email actions, with every template's customization of it. Emails it has already
+queued for submissions aren't sent. Submissions keep the record of the emails it sent.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param emailActionId The account email action's ID.
+ @return ApiDeleteAccountEmailActionRequest
+*/
+func (a *ClientAPIService) DeleteAccountEmailAction(ctx context.Context, emailActionId string) ApiDeleteAccountEmailActionRequest {
+	return ApiDeleteAccountEmailActionRequest{
+		ApiService: a,
+		ctx: ctx,
+		emailActionId: emailActionId,
+	}
+}
+
+// Execute executes the request
+//  @return EmailAction
+func (a *ClientAPIService) DeleteAccountEmailActionExecute(r ApiDeleteAccountEmailActionRequest) (*EmailAction, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodDelete
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *EmailAction
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.DeleteAccountEmailAction")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/email_actions/{email_action_id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"email_action_id"+"}", url.PathEscape(parameterValueToString(r.emailActionId, "emailActionId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
+	}
+	if err := a.client.validateRequest("deleteAccountEmailAction", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
+		return localVarReturnValue, nil, err
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 429 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiDeleteCustomFileRequest struct {
 	ctx context.Context
 	ApiService *ClientAPIService
 	customFileId string
+	idempotencyKey *string
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiDeleteCustomFileRequest) IdempotencyKey(idempotencyKey string) ApiDeleteCustomFileRequest {
+	r.idempotencyKey = &idempotencyKey
+	return r
 }
 
 func (r ApiDeleteCustomFileRequest) Execute() (*CustomFile, *http.Response, error) {
@@ -2313,6 +3093,9 @@ func (a *ClientAPIService) DeleteCustomFileExecute(r ApiDeleteCustomFileRequest)
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
 	}
 	if err := a.client.validateRequest("deleteCustomFile", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
 		return localVarReturnValue, nil, err
@@ -2397,10 +3180,464 @@ func (a *ClientAPIService) DeleteCustomFileExecute(r ApiDeleteCustomFileRequest)
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiDeleteEmailActionRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	templateId string
+	emailActionId string
+	idempotencyKey *string
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiDeleteEmailActionRequest) IdempotencyKey(idempotencyKey string) ApiDeleteEmailActionRequest {
+	r.idempotencyKey = &idempotencyKey
+	return r
+}
+
+func (r ApiDeleteEmailActionRequest) Execute() (*EmailAction, *http.Response, error) {
+	return r.ApiService.DeleteEmailActionExecute(r)
+}
+
+/*
+DeleteEmailAction Delete an email action
+
+Deletes an email action. Emails it has already queued for submissions aren't sent. Submissions keep the record
+of the emails it sent.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param templateId The template's ID.
+ @param emailActionId The email action's ID.
+ @return ApiDeleteEmailActionRequest
+*/
+func (a *ClientAPIService) DeleteEmailAction(ctx context.Context, templateId string, emailActionId string) ApiDeleteEmailActionRequest {
+	return ApiDeleteEmailActionRequest{
+		ApiService: a,
+		ctx: ctx,
+		templateId: templateId,
+		emailActionId: emailActionId,
+	}
+}
+
+// Execute executes the request
+//  @return EmailAction
+func (a *ClientAPIService) DeleteEmailActionExecute(r ApiDeleteEmailActionRequest) (*EmailAction, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodDelete
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *EmailAction
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.DeleteEmailAction")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/templates/{template_id}/email_actions/{email_action_id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"template_id"+"}", url.PathEscape(parameterValueToString(r.templateId, "templateId")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"email_action_id"+"}", url.PathEscape(parameterValueToString(r.emailActionId, "emailActionId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
+	}
+	if err := a.client.validateRequest("deleteEmailAction", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
+		return localVarReturnValue, nil, err
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 409 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 429 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiDeleteEmailActionCustomizationRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	templateId string
+	emailActionId string
+	idempotencyKey *string
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiDeleteEmailActionCustomizationRequest) IdempotencyKey(idempotencyKey string) ApiDeleteEmailActionCustomizationRequest {
+	r.idempotencyKey = &idempotencyKey
+	return r
+}
+
+func (r ApiDeleteEmailActionCustomizationRequest) Execute() (*EmailAction, *http.Response, error) {
+	return r.ApiService.DeleteEmailActionCustomizationExecute(r)
+}
+
+/*
+DeleteEmailActionCustomization Reset an account email action's customization
+
+Removes the template's changes to one of your account's email actions: it sends for this template as it is,
+and again if the template had turned it off.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param templateId The template's ID.
+ @param emailActionId The ID of one of your account's email actions that sends for the template.
+ @return ApiDeleteEmailActionCustomizationRequest
+*/
+func (a *ClientAPIService) DeleteEmailActionCustomization(ctx context.Context, templateId string, emailActionId string) ApiDeleteEmailActionCustomizationRequest {
+	return ApiDeleteEmailActionCustomizationRequest{
+		ApiService: a,
+		ctx: ctx,
+		templateId: templateId,
+		emailActionId: emailActionId,
+	}
+}
+
+// Execute executes the request
+//  @return EmailAction
+func (a *ClientAPIService) DeleteEmailActionCustomizationExecute(r ApiDeleteEmailActionCustomizationRequest) (*EmailAction, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodDelete
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *EmailAction
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.DeleteEmailActionCustomization")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/templates/{template_id}/email_actions/{email_action_id}/customization"
+	localVarPath = strings.Replace(localVarPath, "{"+"template_id"+"}", url.PathEscape(parameterValueToString(r.templateId, "templateId")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"email_action_id"+"}", url.PathEscape(parameterValueToString(r.emailActionId, "emailActionId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
+	}
+	if err := a.client.validateRequest("deleteEmailActionCustomization", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
+		return localVarReturnValue, nil, err
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 409 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 429 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiDeleteEmailDomainRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	emailDomainId string
+	idempotencyKey *string
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiDeleteEmailDomainRequest) IdempotencyKey(idempotencyKey string) ApiDeleteEmailDomainRequest {
+	r.idempotencyKey = &idempotencyKey
+	return r
+}
+
+func (r ApiDeleteEmailDomainRequest) Execute() (*EmailDomain, *http.Response, error) {
+	return r.ApiService.DeleteEmailDomainExecute(r)
+}
+
+/*
+DeleteEmailDomain Remove an email domain
+
+Removes an email domain. Email actions that send from an address at it fail until you add and verify it again,
+or change their `from_address`. You can then remove its DNS records.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param emailDomainId The email domain's ID.
+ @return ApiDeleteEmailDomainRequest
+*/
+func (a *ClientAPIService) DeleteEmailDomain(ctx context.Context, emailDomainId string) ApiDeleteEmailDomainRequest {
+	return ApiDeleteEmailDomainRequest{
+		ApiService: a,
+		ctx: ctx,
+		emailDomainId: emailDomainId,
+	}
+}
+
+// Execute executes the request
+//  @return EmailDomain
+func (a *ClientAPIService) DeleteEmailDomainExecute(r ApiDeleteEmailDomainRequest) (*EmailDomain, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodDelete
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *EmailDomain
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.DeleteEmailDomain")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/email_domains/{email_domain_id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"email_domain_id"+"}", url.PathEscape(parameterValueToString(r.emailDomainId, "emailDomainId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
+	}
+	if err := a.client.validateRequest("deleteEmailDomain", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
+		return localVarReturnValue, nil, err
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 429 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiDeleteFolderRequest struct {
 	ctx context.Context
 	ApiService *ClientAPIService
 	folderId string
+	idempotencyKey *string
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiDeleteFolderRequest) IdempotencyKey(idempotencyKey string) ApiDeleteFolderRequest {
+	r.idempotencyKey = &idempotencyKey
+	return r
 }
 
 func (r ApiDeleteFolderRequest) Execute() (*Folder, *http.Response, error) {
@@ -2463,6 +3700,9 @@ func (a *ClientAPIService) DeleteFolderExecute(r ApiDeleteFolderRequest) (*Folde
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
 	}
 	if err := a.client.validateRequest("deleteFolder", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
 		return localVarReturnValue, nil, err
@@ -2552,11 +3792,18 @@ type ApiDeleteTemplateRequest struct {
 	ApiService *ClientAPIService
 	templateId string
 	version *string
+	idempotencyKey *string
 }
 
 // Delete only this published version (`1.2.0`) or the draft (`draft`, when no version has been published). Without it, the draft and every published version are deleted.
 func (r ApiDeleteTemplateRequest) Version(version string) ApiDeleteTemplateRequest {
 	r.version = &version
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiDeleteTemplateRequest) IdempotencyKey(idempotencyKey string) ApiDeleteTemplateRequest {
+	r.idempotencyKey = &idempotencyKey
 	return r
 }
 
@@ -2624,6 +3871,9 @@ func (a *ClientAPIService) DeleteTemplateExecute(r ApiDeleteTemplateRequest) (*T
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
 	}
 	if err := a.client.validateRequest("deleteTemplate", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
 		return localVarReturnValue, nil, err
@@ -2723,6 +3973,13 @@ type ApiDeleteWebhookRequest struct {
 	ctx context.Context
 	ApiService *ClientAPIService
 	webhookId string
+	idempotencyKey *string
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiDeleteWebhookRequest) IdempotencyKey(idempotencyKey string) ApiDeleteWebhookRequest {
+	r.idempotencyKey = &idempotencyKey
+	return r
 }
 
 func (r ApiDeleteWebhookRequest) Execute() (*Webhook, *http.Response, error) {
@@ -2784,6 +4041,9 @@ func (a *ClientAPIService) DeleteWebhookExecute(r ApiDeleteWebhookRequest) (*Web
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
 	}
 	if err := a.client.validateRequest("deleteWebhook", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
 		return localVarReturnValue, nil, err
@@ -2861,6 +4121,13 @@ type ApiExpireCombinedPdfRequest struct {
 	ctx context.Context
 	ApiService *ClientAPIService
 	combinedPdfId string
+	idempotencyKey *string
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiExpireCombinedPdfRequest) IdempotencyKey(idempotencyKey string) ApiExpireCombinedPdfRequest {
+	r.idempotencyKey = &idempotencyKey
+	return r
 }
 
 func (r ApiExpireCombinedPdfRequest) Execute() (*CombinedPdf, *http.Response, error) {
@@ -2922,6 +4189,9 @@ func (a *ClientAPIService) ExpireCombinedPdfExecute(r ApiExpireCombinedPdfReques
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
 	}
 	if err := a.client.validateRequest("expireCombinedPdf", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
 		return localVarReturnValue, nil, err
@@ -3010,6 +4280,13 @@ type ApiExpireSubmissionRequest struct {
 	ctx context.Context
 	ApiService *ClientAPIService
 	submissionId string
+	idempotencyKey *string
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiExpireSubmissionRequest) IdempotencyKey(idempotencyKey string) ApiExpireSubmissionRequest {
+	r.idempotencyKey = &idempotencyKey
+	return r
 }
 
 func (r ApiExpireSubmissionRequest) Execute() (*Submission, *http.Response, error) {
@@ -3071,6 +4348,9 @@ func (a *ClientAPIService) ExpireSubmissionExecute(r ApiExpireSubmissionRequest)
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
 	}
 	if err := a.client.validateRequest("expireSubmission", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
 		return localVarReturnValue, nil, err
@@ -3161,6 +4441,7 @@ type ApiGenerateSubmissionFilesRequest struct {
 	submissionId string
 	body *GenerateSubmissionFilesRequest
 	wait *bool
+	idempotencyKey *string
 }
 
 // The formats to make.
@@ -3172,6 +4453,12 @@ func (r ApiGenerateSubmissionFilesRequest) Body(body GenerateSubmissionFilesRequ
 // Wait until the files have been generated before responding. Default true on sync.api hosts.
 func (r ApiGenerateSubmissionFilesRequest) Wait(wait bool) ApiGenerateSubmissionFilesRequest {
 	r.wait = &wait
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiGenerateSubmissionFilesRequest) IdempotencyKey(idempotencyKey string) ApiGenerateSubmissionFilesRequest {
+	r.idempotencyKey = &idempotencyKey
 	return r
 }
 
@@ -3252,6 +4539,9 @@ func (a *ClientAPIService) GenerateSubmissionFilesExecute(r ApiGenerateSubmissio
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
 	}
 	// body params
 	if r.body != nil {
@@ -3366,6 +4656,13 @@ type ApiGenerateSubmissionPreviewRequest struct {
 	ctx context.Context
 	ApiService *ClientAPIService
 	submissionId string
+	idempotencyKey *string
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiGenerateSubmissionPreviewRequest) IdempotencyKey(idempotencyKey string) ApiGenerateSubmissionPreviewRequest {
+	r.idempotencyKey = &idempotencyKey
+	return r
 }
 
 func (r ApiGenerateSubmissionPreviewRequest) Execute() (*Submission, *http.Response, error) {
@@ -3430,6 +4727,9 @@ func (a *ClientAPIService) GenerateSubmissionPreviewExecute(r ApiGenerateSubmiss
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
+	}
 	if err := a.client.validateRequest("generateSubmissionPreview", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
 		return localVarReturnValue, nil, err
 	}
@@ -3465,6 +4765,144 @@ func (a *ClientAPIService) GenerateSubmissionPreviewExecute(r ApiGenerateSubmiss
 					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 429 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiGetAccountEmailActionRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	emailActionId string
+}
+
+func (r ApiGetAccountEmailActionRequest) Execute() (*EmailAction, *http.Response, error) {
+	return r.ApiService.GetAccountEmailActionExecute(r)
+}
+
+/*
+GetAccountEmailAction Get an account email action
+
+Returns one of your account's email actions, with its settings and whether its emails are failing.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param emailActionId The account email action's ID.
+ @return ApiGetAccountEmailActionRequest
+*/
+func (a *ClientAPIService) GetAccountEmailAction(ctx context.Context, emailActionId string) ApiGetAccountEmailActionRequest {
+	return ApiGetAccountEmailActionRequest{
+		ApiService: a,
+		ctx: ctx,
+		emailActionId: emailActionId,
+	}
+}
+
+// Execute executes the request
+//  @return EmailAction
+func (a *ClientAPIService) GetAccountEmailActionExecute(r ApiGetAccountEmailActionRequest) (*EmailAction, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *EmailAction
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.GetAccountEmailAction")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/email_actions/{email_action_id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"email_action_id"+"}", url.PathEscape(parameterValueToString(r.emailActionId, "emailActionId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if err := a.client.validateRequest("getAccountEmailAction", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
+		return localVarReturnValue, nil, err
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
 			var v ErrorResponse
@@ -3718,6 +5156,286 @@ func (a *ClientAPIService) GetCustomFileExecute(r ApiGetCustomFileRequest) (*Cus
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	if err := a.client.validateRequest("getCustomFile", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
+		return localVarReturnValue, nil, err
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 429 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiGetEmailActionRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	templateId string
+	emailActionId string
+}
+
+func (r ApiGetEmailActionRequest) Execute() (*EmailAction, *http.Response, error) {
+	return r.ApiService.GetEmailActionExecute(r)
+}
+
+/*
+GetEmailAction Get an email action
+
+Returns one of a template's email actions, with its settings and whether its emails are failing.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param templateId The template's ID.
+ @param emailActionId The email action's ID.
+ @return ApiGetEmailActionRequest
+*/
+func (a *ClientAPIService) GetEmailAction(ctx context.Context, templateId string, emailActionId string) ApiGetEmailActionRequest {
+	return ApiGetEmailActionRequest{
+		ApiService: a,
+		ctx: ctx,
+		templateId: templateId,
+		emailActionId: emailActionId,
+	}
+}
+
+// Execute executes the request
+//  @return EmailAction
+func (a *ClientAPIService) GetEmailActionExecute(r ApiGetEmailActionRequest) (*EmailAction, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *EmailAction
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.GetEmailAction")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/templates/{template_id}/email_actions/{email_action_id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"template_id"+"}", url.PathEscape(parameterValueToString(r.templateId, "templateId")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"email_action_id"+"}", url.PathEscape(parameterValueToString(r.emailActionId, "emailActionId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if err := a.client.validateRequest("getEmailAction", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
+		return localVarReturnValue, nil, err
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 429 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiGetEmailDomainRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	emailDomainId string
+}
+
+func (r ApiGetEmailDomainRequest) Execute() (*EmailDomain, *http.Response, error) {
+	return r.ApiService.GetEmailDomainExecute(r)
+}
+
+/*
+GetEmailDomain Get an email domain
+
+Returns an email domain, whether it's verified, and the DNS records to add to it.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param emailDomainId The email domain's ID.
+ @return ApiGetEmailDomainRequest
+*/
+func (a *ClientAPIService) GetEmailDomain(ctx context.Context, emailDomainId string) ApiGetEmailDomainRequest {
+	return ApiGetEmailDomainRequest{
+		ApiService: a,
+		ctx: ctx,
+		emailDomainId: emailDomainId,
+	}
+}
+
+// Execute executes the request
+//  @return EmailDomain
+func (a *ClientAPIService) GetEmailDomainExecute(r ApiGetEmailDomainRequest) (*EmailDomain, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *EmailDomain
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.GetEmailDomain")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/email_domains/{email_domain_id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"email_domain_id"+"}", url.PathEscape(parameterValueToString(r.emailDomainId, "emailDomainId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if err := a.client.validateRequest("getEmailDomain", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
 		return localVarReturnValue, nil, err
 	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -4486,7 +6204,7 @@ type ApiGetTemplateRequest struct {
 	version *string
 }
 
-// A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+// A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`.
 func (r ApiGetTemplateRequest) Version(version string) ApiGetTemplateRequest {
 	r.version = &version
 	return r
@@ -4645,7 +6363,7 @@ type ApiGetTemplateDiffRequest struct {
 	version *string
 }
 
-// A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+// A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`.
 func (r ApiGetTemplateDiffRequest) Version(version string) ApiGetTemplateDiffRequest {
 	r.version = &version
 	return r
@@ -4815,7 +6533,7 @@ func (r ApiGetTemplateModelCodeRequest) Lang(lang ModelCodeLanguage) ApiGetTempl
 	return r
 }
 
-// The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default.
+// The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`, the version a submission uses by default.
 func (r ApiGetTemplateModelCodeRequest) Version(version string) ApiGetTemplateModelCodeRequest {
 	r.version = &version
 	return r
@@ -4992,7 +6710,7 @@ type ApiGetTemplatePageImagesRequest struct {
 	version *string
 }
 
-// A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+// A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`.
 func (r ApiGetTemplatePageImagesRequest) Version(version string) ApiGetTemplatePageImagesRequest {
 	r.version = &version
 	return r
@@ -5287,7 +7005,7 @@ type ApiGetTemplateSchemaRequest struct {
 	version *string
 }
 
-// The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default.
+// The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`, the version a submission uses by default.
 func (r ApiGetTemplateSchemaRequest) Version(version string) ApiGetTemplateSchemaRequest {
 	r.version = &version
 	return r
@@ -5531,6 +7249,156 @@ func (a *ClientAPIService) GetWebhookExecute(r ApiGetWebhookRequest) (*Webhook, 
 					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 429 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiListAccountEmailActionsRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	limit *int32
+	cursor *string
+}
+
+// How many items to return (1-100, default 50).
+func (r ApiListAccountEmailActionsRequest) Limit(limit int32) ApiListAccountEmailActionsRequest {
+	r.limit = &limit
+	return r
+}
+
+// The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
+func (r ApiListAccountEmailActionsRequest) Cursor(cursor string) ApiListAccountEmailActionsRequest {
+	r.cursor = &cursor
+	return r
+}
+
+func (r ApiListAccountEmailActionsRequest) Execute() (*EmailActionList, *http.Response, error) {
+	return r.ApiService.ListAccountEmailActionsExecute(r)
+}
+
+/*
+ListAccountEmailActions List account email actions
+
+Returns your account's email actions, newest first, one page at a time. Each one emails the files of every
+template's processed submissions, or of the templates and folders it lists. A template's own email actions are
+listed with the template (`GET /templates/{template_id}/email_actions`).
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @return ApiListAccountEmailActionsRequest
+*/
+func (a *ClientAPIService) ListAccountEmailActions(ctx context.Context) ApiListAccountEmailActionsRequest {
+	return ApiListAccountEmailActionsRequest{
+		ApiService: a,
+		ctx: ctx,
+	}
+}
+
+// Execute executes the request
+//  @return EmailActionList
+func (a *ClientAPIService) ListAccountEmailActionsExecute(r ApiListAccountEmailActionsRequest) (*EmailActionList, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *EmailActionList
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.ListAccountEmailActions")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/email_actions"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	if r.limit != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "form", "")
+	} else {
+		var defaultValue int32 = 50
+		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", defaultValue, "form", "")
+		r.limit = &defaultValue
+	}
+	if r.cursor != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "cursor", r.cursor, "form", "")
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if err := a.client.validateRequest("listAccountEmailActions", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
+		return localVarReturnValue, nil, err
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
 			var v ErrorResponse
@@ -5847,6 +7715,321 @@ func (a *ClientAPIService) ListCustomFilesExecute(r ApiListCustomFilesRequest) (
 					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 429 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiListEmailActionsRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	templateId string
+	limit *int32
+	cursor *string
+}
+
+// How many items to return (1-100, default 50).
+func (r ApiListEmailActionsRequest) Limit(limit int32) ApiListEmailActionsRequest {
+	r.limit = &limit
+	return r
+}
+
+// The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
+func (r ApiListEmailActionsRequest) Cursor(cursor string) ApiListEmailActionsRequest {
+	r.cursor = &cursor
+	return r
+}
+
+func (r ApiListEmailActionsRequest) Execute() (*EmailActionList, *http.Response, error) {
+	return r.ApiService.ListEmailActionsExecute(r)
+}
+
+/*
+ListEmailActions List email actions
+
+Returns the email actions of a template's draft, and your account's email actions that send for it, newest
+first, one page at a time. Each one emails every processed submission's files to the people it lists. An account
+email action (`template_id` null) shows the settings it sends for this template, with the template's changes
+in `customization`.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param templateId The template's ID.
+ @return ApiListEmailActionsRequest
+*/
+func (a *ClientAPIService) ListEmailActions(ctx context.Context, templateId string) ApiListEmailActionsRequest {
+	return ApiListEmailActionsRequest{
+		ApiService: a,
+		ctx: ctx,
+		templateId: templateId,
+	}
+}
+
+// Execute executes the request
+//  @return EmailActionList
+func (a *ClientAPIService) ListEmailActionsExecute(r ApiListEmailActionsRequest) (*EmailActionList, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *EmailActionList
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.ListEmailActions")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/templates/{template_id}/email_actions"
+	localVarPath = strings.Replace(localVarPath, "{"+"template_id"+"}", url.PathEscape(parameterValueToString(r.templateId, "templateId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	if r.limit != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "form", "")
+	} else {
+		var defaultValue int32 = 50
+		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", defaultValue, "form", "")
+		r.limit = &defaultValue
+	}
+	if r.cursor != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "cursor", r.cursor, "form", "")
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if err := a.client.validateRequest("listEmailActions", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
+		return localVarReturnValue, nil, err
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 429 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiListEmailDomainsRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	limit *int32
+	cursor *string
+}
+
+// How many items to return (1-100, default 50).
+func (r ApiListEmailDomainsRequest) Limit(limit int32) ApiListEmailDomainsRequest {
+	r.limit = &limit
+	return r
+}
+
+// The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
+func (r ApiListEmailDomainsRequest) Cursor(cursor string) ApiListEmailDomainsRequest {
+	r.cursor = &cursor
+	return r
+}
+
+func (r ApiListEmailDomainsRequest) Execute() (*EmailDomainList, *http.Response, error) {
+	return r.ApiService.ListEmailDomainsExecute(r)
+}
+
+/*
+ListEmailDomains List email domains
+
+Returns the domains in your account that email actions can send from once they're verified, newest first,
+one page at a time.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @return ApiListEmailDomainsRequest
+*/
+func (a *ClientAPIService) ListEmailDomains(ctx context.Context) ApiListEmailDomainsRequest {
+	return ApiListEmailDomainsRequest{
+		ApiService: a,
+		ctx: ctx,
+	}
+}
+
+// Execute executes the request
+//  @return EmailDomainList
+func (a *ClientAPIService) ListEmailDomainsExecute(r ApiListEmailDomainsRequest) (*EmailDomainList, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *EmailDomainList
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.ListEmailDomains")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/email_domains"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	if r.limit != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "form", "")
+	} else {
+		var defaultValue int32 = 50
+		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", defaultValue, "form", "")
+		r.limit = &defaultValue
+	}
+	if r.cursor != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "cursor", r.cursor, "form", "")
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if err := a.client.validateRequest("listEmailDomains", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
+		return localVarReturnValue, nil, err
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
 			var v ErrorResponse
@@ -6292,7 +8475,7 @@ type ApiListTemplateFieldsRequest struct {
 	version *string
 }
 
-// A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+// A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`.
 func (r ApiListTemplateFieldsRequest) Version(version string) ApiListTemplateFieldsRequest {
 	r.version = &version
 	return r
@@ -6689,7 +8872,7 @@ type ApiListTemplatesRequest struct {
 	cursor *string
 }
 
-// Only list templates whose name contains this text (ignoring case).
+// Only list templates whose name contains this text (ignoring case). `%` and `_` match themselves.
 func (r ApiListTemplatesRequest) Query(query string) ApiListTemplatesRequest {
 	r.query = &query
 	return r
@@ -7075,11 +9258,18 @@ type ApiMoveFolderRequest struct {
 	ApiService *ClientAPIService
 	folderId string
 	body *MoveFolderRequest
+	idempotencyKey *string
 }
 
 // Where to move the folder.
 func (r ApiMoveFolderRequest) Body(body MoveFolderRequest) ApiMoveFolderRequest {
 	r.body = &body
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiMoveFolderRequest) IdempotencyKey(idempotencyKey string) ApiMoveFolderRequest {
+	r.idempotencyKey = &idempotencyKey
 	return r
 }
 
@@ -7147,6 +9337,9 @@ func (a *ClientAPIService) MoveFolderExecute(r ApiMoveFolderRequest) (*Folder, *
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
 	}
 	// body params
 	if r.body != nil {
@@ -7240,11 +9433,18 @@ type ApiMoveTemplateRequest struct {
 	ApiService *ClientAPIService
 	templateId string
 	body *MoveTemplateRequest
+	idempotencyKey *string
 }
 
 // Where to move the template.
 func (r ApiMoveTemplateRequest) Body(body MoveTemplateRequest) ApiMoveTemplateRequest {
 	r.body = &body
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiMoveTemplateRequest) IdempotencyKey(idempotencyKey string) ApiMoveTemplateRequest {
+	r.idempotencyKey = &idempotencyKey
 	return r
 }
 
@@ -7310,6 +9510,9 @@ func (a *ClientAPIService) MoveTemplateExecute(r ApiMoveTemplateRequest) (*Templ
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
 	}
 	// body params
 	if r.body != nil {
@@ -7403,11 +9606,18 @@ type ApiPublishTemplateVersionRequest struct {
 	ApiService *ClientAPIService
 	templateId string
 	body *PublishTemplateVersionRequest
+	idempotencyKey *string
 }
 
 // The version to publish.
 func (r ApiPublishTemplateVersionRequest) Body(body PublishTemplateVersionRequest) ApiPublishTemplateVersionRequest {
 	r.body = &body
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiPublishTemplateVersionRequest) IdempotencyKey(idempotencyKey string) ApiPublishTemplateVersionRequest {
+	r.idempotencyKey = &idempotencyKey
 	return r
 }
 
@@ -7477,6 +9687,9 @@ func (a *ClientAPIService) PublishTemplateVersionExecute(r ApiPublishTemplateVer
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
 	}
 	// body params
 	if r.body != nil {
@@ -7581,11 +9794,18 @@ type ApiRemoveTemplateFieldsRequest struct {
 	ApiService *ClientAPIService
 	templateId string
 	body *RemoveTemplateFieldsRequest
+	idempotencyKey *string
 }
 
 // The fields to remove from the template's draft.
 func (r ApiRemoveTemplateFieldsRequest) Body(body RemoveTemplateFieldsRequest) ApiRemoveTemplateFieldsRequest {
 	r.body = &body
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiRemoveTemplateFieldsRequest) IdempotencyKey(idempotencyKey string) ApiRemoveTemplateFieldsRequest {
+	r.idempotencyKey = &idempotencyKey
 	return r
 }
 
@@ -7653,6 +9873,9 @@ func (a *ClientAPIService) RemoveTemplateFieldsExecute(r ApiRemoveTemplateFields
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
 	}
 	// body params
 	if r.body != nil {
@@ -7746,11 +9969,18 @@ type ApiRenameFolderRequest struct {
 	ApiService *ClientAPIService
 	folderId string
 	body *RenameFolderRequest
+	idempotencyKey *string
 }
 
 // The folder's new name.
 func (r ApiRenameFolderRequest) Body(body RenameFolderRequest) ApiRenameFolderRequest {
 	r.body = &body
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiRenameFolderRequest) IdempotencyKey(idempotencyKey string) ApiRenameFolderRequest {
+	r.idempotencyKey = &idempotencyKey
 	return r
 }
 
@@ -7817,6 +10047,9 @@ func (a *ClientAPIService) RenameFolderExecute(r ApiRenameFolderRequest) (*Folde
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
 	}
 	// body params
 	if r.body != nil {
@@ -7910,11 +10143,18 @@ type ApiReorderTemplateFieldsRequest struct {
 	ApiService *ClientAPIService
 	templateId string
 	body *ReorderTemplateFieldsRequest
+	idempotencyKey *string
 }
 
 // The new order of the fields in the template's draft.
 func (r ApiReorderTemplateFieldsRequest) Body(body ReorderTemplateFieldsRequest) ApiReorderTemplateFieldsRequest {
 	r.body = &body
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiReorderTemplateFieldsRequest) IdempotencyKey(idempotencyKey string) ApiReorderTemplateFieldsRequest {
+	r.idempotencyKey = &idempotencyKey
 	return r
 }
 
@@ -7983,6 +10223,9 @@ func (a *ClientAPIService) ReorderTemplateFieldsExecute(r ApiReorderTemplateFiel
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
 	}
 	// body params
 	if r.body != nil {
@@ -8076,11 +10319,18 @@ type ApiRestoreTemplateVersionRequest struct {
 	ApiService *ClientAPIService
 	templateId string
 	body *RestoreTemplateVersionRequest
+	idempotencyKey *string
 }
 
 // The version to restore.
 func (r ApiRestoreTemplateVersionRequest) Body(body RestoreTemplateVersionRequest) ApiRestoreTemplateVersionRequest {
 	r.body = &body
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiRestoreTemplateVersionRequest) IdempotencyKey(idempotencyKey string) ApiRestoreTemplateVersionRequest {
+	r.idempotencyKey = &idempotencyKey
 	return r
 }
 
@@ -8147,6 +10397,9 @@ func (a *ClientAPIService) RestoreTemplateVersionExecute(r ApiRestoreTemplateVer
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
+	}
 	// body params
 	if r.body != nil {
 		localVarPostBody = r.body
@@ -8199,6 +10452,347 @@ func (a *ClientAPIService) RestoreTemplateVersionExecute(r ApiRestoreTemplateVer
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 429 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiSendAccountEmailActionTestEmailRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	emailActionId string
+	body *SendAccountEmailActionTestEmailRequest
+	idempotencyKey *string
+}
+
+// Which template the test email is for.
+func (r ApiSendAccountEmailActionTestEmailRequest) Body(body SendAccountEmailActionTestEmailRequest) ApiSendAccountEmailActionTestEmailRequest {
+	r.body = &body
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiSendAccountEmailActionTestEmailRequest) IdempotencyKey(idempotencyKey string) ApiSendAccountEmailActionTestEmailRequest {
+	r.idempotencyKey = &idempotencyKey
+	return r
+}
+
+func (r ApiSendAccountEmailActionTestEmailRequest) Execute() (*EmailActionTestEmail, *http.Response, error) {
+	return r.ApiService.SendAccountEmailActionTestEmailExecute(r)
+}
+
+/*
+SendAccountEmailActionTestEmail Send a test email for an account email action
+
+Sends the account email action's email to the API token's user only, as it would go for one template it sends
+for, with each field shown as its name in brackets, so you can check how it looks. When the email action
+attaches its files and that template is a PDF template, the test attaches the template's blank PDF. It isn't
+recorded on any submission.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param emailActionId The account email action's ID.
+ @return ApiSendAccountEmailActionTestEmailRequest
+*/
+func (a *ClientAPIService) SendAccountEmailActionTestEmail(ctx context.Context, emailActionId string) ApiSendAccountEmailActionTestEmailRequest {
+	return ApiSendAccountEmailActionTestEmailRequest{
+		ApiService: a,
+		ctx: ctx,
+		emailActionId: emailActionId,
+	}
+}
+
+// Execute executes the request
+//  @return EmailActionTestEmail
+func (a *ClientAPIService) SendAccountEmailActionTestEmailExecute(r ApiSendAccountEmailActionTestEmailRequest) (*EmailActionTestEmail, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *EmailActionTestEmail
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.SendAccountEmailActionTestEmail")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/email_actions/{email_action_id}/test_email"
+	localVarPath = strings.Replace(localVarPath, "{"+"email_action_id"+"}", url.PathEscape(parameterValueToString(r.emailActionId, "emailActionId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
+	}
+	// body params
+	if r.body != nil {
+		localVarPostBody = r.body
+	}
+	if err := a.client.validateRequest("sendAccountEmailActionTestEmail", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
+		return localVarReturnValue, nil, err
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 422 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 409 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 429 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiSendEmailActionTestEmailRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	templateId string
+	emailActionId string
+	idempotencyKey *string
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiSendEmailActionTestEmailRequest) IdempotencyKey(idempotencyKey string) ApiSendEmailActionTestEmailRequest {
+	r.idempotencyKey = &idempotencyKey
+	return r
+}
+
+func (r ApiSendEmailActionTestEmailRequest) Execute() (*EmailActionTestEmail, *http.Response, error) {
+	return r.ApiService.SendEmailActionTestEmailExecute(r)
+}
+
+/*
+SendEmailActionTestEmail Send a test email
+
+Sends the email action's email to the API token's user only, with each field and metadata value shown as its
+name in brackets, so you can check how it looks. When the email action attaches its files and the template is
+a PDF template, the test attaches the template's blank PDF. It isn't recorded on any submission. Without a paid
+plan, the user needs a confirmed email address.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param templateId The template's ID.
+ @param emailActionId The email action's ID.
+ @return ApiSendEmailActionTestEmailRequest
+*/
+func (a *ClientAPIService) SendEmailActionTestEmail(ctx context.Context, templateId string, emailActionId string) ApiSendEmailActionTestEmailRequest {
+	return ApiSendEmailActionTestEmailRequest{
+		ApiService: a,
+		ctx: ctx,
+		templateId: templateId,
+		emailActionId: emailActionId,
+	}
+}
+
+// Execute executes the request
+//  @return EmailActionTestEmail
+func (a *ClientAPIService) SendEmailActionTestEmailExecute(r ApiSendEmailActionTestEmailRequest) (*EmailActionTestEmail, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *EmailActionTestEmail
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.SendEmailActionTestEmail")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/templates/{template_id}/email_actions/{email_action_id}/test_email"
+	localVarPath = strings.Replace(localVarPath, "{"+"template_id"+"}", url.PathEscape(parameterValueToString(r.templateId, "templateId")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"email_action_id"+"}", url.PathEscape(parameterValueToString(r.emailActionId, "emailActionId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
+	}
+	if err := a.client.validateRequest("sendEmailActionTestEmail", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
+		return localVarReturnValue, nil, err
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 409 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
 			var v ErrorResponse
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
@@ -8370,16 +10964,536 @@ func (a *ClientAPIService) TestAuthenticationExecute(r ApiTestAuthenticationRequ
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiUpdateAccountEmailActionRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	emailActionId string
+	body *UpdateAccountEmailActionRequest
+	idempotencyKey *string
+}
+
+// The settings to change. Properties left out keep their values.
+func (r ApiUpdateAccountEmailActionRequest) Body(body UpdateAccountEmailActionRequest) ApiUpdateAccountEmailActionRequest {
+	r.body = &body
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiUpdateAccountEmailActionRequest) IdempotencyKey(idempotencyKey string) ApiUpdateAccountEmailActionRequest {
+	r.idempotencyKey = &idempotencyKey
+	return r
+}
+
+func (r ApiUpdateAccountEmailActionRequest) Execute() (*EmailAction, *http.Response, error) {
+	return r.ApiService.UpdateAccountEmailActionExecute(r)
+}
+
+/*
+UpdateAccountEmailAction Update an account email action
+
+Changes one of your account's email actions. Properties left out keep their values. Its templates'
+customizations keep their own changes, and follow the rest. Set `enabled` to false to stop its emails for
+every template.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param emailActionId The account email action's ID.
+ @return ApiUpdateAccountEmailActionRequest
+*/
+func (a *ClientAPIService) UpdateAccountEmailAction(ctx context.Context, emailActionId string) ApiUpdateAccountEmailActionRequest {
+	return ApiUpdateAccountEmailActionRequest{
+		ApiService: a,
+		ctx: ctx,
+		emailActionId: emailActionId,
+	}
+}
+
+// Execute executes the request
+//  @return EmailAction
+func (a *ClientAPIService) UpdateAccountEmailActionExecute(r ApiUpdateAccountEmailActionRequest) (*EmailAction, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPut
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *EmailAction
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.UpdateAccountEmailAction")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/email_actions/{email_action_id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"email_action_id"+"}", url.PathEscape(parameterValueToString(r.emailActionId, "emailActionId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
+	}
+	// body params
+	if r.body != nil {
+		localVarPostBody = r.body
+	}
+	if err := a.client.validateRequest("updateAccountEmailAction", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
+		return localVarReturnValue, nil, err
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 429 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiUpdateEmailActionRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	templateId string
+	emailActionId string
+	body *UpdateEmailActionRequest
+	idempotencyKey *string
+}
+
+// The settings to change. Properties left out keep their values.
+func (r ApiUpdateEmailActionRequest) Body(body UpdateEmailActionRequest) ApiUpdateEmailActionRequest {
+	r.body = &body
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiUpdateEmailActionRequest) IdempotencyKey(idempotencyKey string) ApiUpdateEmailActionRequest {
+	r.idempotencyKey = &idempotencyKey
+	return r
+}
+
+func (r ApiUpdateEmailActionRequest) Execute() (*EmailAction, *http.Response, error) {
+	return r.ApiService.UpdateEmailActionExecute(r)
+}
+
+/*
+UpdateEmailAction Update an email action
+
+Changes an email action's settings. Properties left out keep their values. Set `enabled` to false to stop its
+emails, or to true to turn it back on after DocSpring turned it off.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param templateId The template's ID.
+ @param emailActionId The email action's ID.
+ @return ApiUpdateEmailActionRequest
+*/
+func (a *ClientAPIService) UpdateEmailAction(ctx context.Context, templateId string, emailActionId string) ApiUpdateEmailActionRequest {
+	return ApiUpdateEmailActionRequest{
+		ApiService: a,
+		ctx: ctx,
+		templateId: templateId,
+		emailActionId: emailActionId,
+	}
+}
+
+// Execute executes the request
+//  @return EmailAction
+func (a *ClientAPIService) UpdateEmailActionExecute(r ApiUpdateEmailActionRequest) (*EmailAction, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPut
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *EmailAction
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.UpdateEmailAction")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/templates/{template_id}/email_actions/{email_action_id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"template_id"+"}", url.PathEscape(parameterValueToString(r.templateId, "templateId")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"email_action_id"+"}", url.PathEscape(parameterValueToString(r.emailActionId, "emailActionId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
+	}
+	// body params
+	if r.body != nil {
+		localVarPostBody = r.body
+	}
+	if err := a.client.validateRequest("updateEmailAction", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
+		return localVarReturnValue, nil, err
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 422 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 409 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 429 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiUpdateEmailActionCustomizationRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	templateId string
+	emailActionId string
+	body *UpdateEmailActionCustomizationRequest
+	idempotencyKey *string
+}
+
+// The template's changes to the account email action, replacing any it had. Each setting you send is changed for this template, and the ones you leave out follow the account email action. `enabled: false` stops it sending for this template; left out, it sends.
+func (r ApiUpdateEmailActionCustomizationRequest) Body(body UpdateEmailActionCustomizationRequest) ApiUpdateEmailActionCustomizationRequest {
+	r.body = &body
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiUpdateEmailActionCustomizationRequest) IdempotencyKey(idempotencyKey string) ApiUpdateEmailActionCustomizationRequest {
+	r.idempotencyKey = &idempotencyKey
+	return r
+}
+
+func (r ApiUpdateEmailActionCustomizationRequest) Execute() (*EmailAction, *http.Response, error) {
+	return r.ApiService.UpdateEmailActionCustomizationExecute(r)
+}
+
+/*
+UpdateEmailActionCustomization Customize an account email action for a template
+
+Changes one of your account's email actions for this template only, replacing any changes the template had.
+Each setting you send is changed for this template, and the ones you leave out follow the account email
+action, including later changes to it. Set `enabled` to false to stop it sending for this template.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param templateId The template's ID.
+ @param emailActionId The ID of one of your account's email actions that sends for the template.
+ @return ApiUpdateEmailActionCustomizationRequest
+*/
+func (a *ClientAPIService) UpdateEmailActionCustomization(ctx context.Context, templateId string, emailActionId string) ApiUpdateEmailActionCustomizationRequest {
+	return ApiUpdateEmailActionCustomizationRequest{
+		ApiService: a,
+		ctx: ctx,
+		templateId: templateId,
+		emailActionId: emailActionId,
+	}
+}
+
+// Execute executes the request
+//  @return EmailAction
+func (a *ClientAPIService) UpdateEmailActionCustomizationExecute(r ApiUpdateEmailActionCustomizationRequest) (*EmailAction, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPut
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *EmailAction
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.UpdateEmailActionCustomization")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/templates/{template_id}/email_actions/{email_action_id}/customization"
+	localVarPath = strings.Replace(localVarPath, "{"+"template_id"+"}", url.PathEscape(parameterValueToString(r.templateId, "templateId")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"email_action_id"+"}", url.PathEscape(parameterValueToString(r.emailActionId, "emailActionId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
+	}
+	// body params
+	if r.body != nil {
+		localVarPostBody = r.body
+	}
+	if err := a.client.validateRequest("updateEmailActionCustomization", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
+		return localVarReturnValue, nil, err
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 422 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 409 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 429 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiUpdateSignatureRequestRequest struct {
 	ctx context.Context
 	ApiService *ClientAPIService
 	signatureRequestId string
 	body *UpdateSignatureRequestRequest
+	idempotencyKey *string
 }
 
 // The settings to change. Properties left out keep their values.
 func (r ApiUpdateSignatureRequestRequest) Body(body UpdateSignatureRequestRequest) ApiUpdateSignatureRequestRequest {
 	r.body = &body
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiUpdateSignatureRequestRequest) IdempotencyKey(idempotencyKey string) ApiUpdateSignatureRequestRequest {
+	r.idempotencyKey = &idempotencyKey
 	return r
 }
 
@@ -8448,6 +11562,9 @@ func (a *ClientAPIService) UpdateSignatureRequestExecute(r ApiUpdateSignatureReq
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
 	}
 	// body params
 	if r.body != nil {
@@ -8552,11 +11669,18 @@ type ApiUpdateTemplateRequest struct {
 	ApiService *ClientAPIService
 	templateId string
 	body *UpdateTemplateRequest
+	idempotencyKey *string
 }
 
 // The settings to change. Properties left out keep their values.
 func (r ApiUpdateTemplateRequest) Body(body UpdateTemplateRequest) ApiUpdateTemplateRequest {
 	r.body = &body
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiUpdateTemplateRequest) IdempotencyKey(idempotencyKey string) ApiUpdateTemplateRequest {
+	r.idempotencyKey = &idempotencyKey
 	return r
 }
 
@@ -8567,10 +11691,11 @@ func (r ApiUpdateTemplateRequest) Execute() (*Template, *http.Response, error) {
 /*
 UpdateTemplate Update a template
 
-Changes a template's draft. Properties left out keep their values. `defaults` and `html_engine_options`
-replace the whole object, and `field_groups` changes only the groups it lists. Settings such as
-`webhook_url`, `public_submissions` and `expire_after` apply to every published version too, and setting
-`parent_folder_id` moves the template and all of its published versions.
+Changes a template's draft. Properties left out keep their values. `defaults`, `html_engine_options` and a
+page design's `layout` replace the whole object, and `field_groups` changes only the groups it lists. A new
+layout adds a field for each new value it reads. Settings such as `webhook_url`, `public_submissions` and
+`expire_after` apply to every published version too, and setting `parent_folder_id` moves the template and
+all of its published versions.
 
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -8626,6 +11751,9 @@ func (a *ClientAPIService) UpdateTemplateExecute(r ApiUpdateTemplateRequest) (*T
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
 	}
 	// body params
 	if r.body != nil {
@@ -8731,6 +11859,7 @@ type ApiUpdateTemplateDocumentRequest struct {
 	templateId string
 	body *UpdateTemplateDocumentRequest
 	wait *bool
+	idempotencyKey *string
 }
 
 // The new PDF, or a Word template's new Word document, as one of `cache_id`, `document_url` and `document_base64`.
@@ -8742,6 +11871,12 @@ func (r ApiUpdateTemplateDocumentRequest) Body(body UpdateTemplateDocumentReques
 // Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts.
 func (r ApiUpdateTemplateDocumentRequest) Wait(wait bool) ApiUpdateTemplateDocumentRequest {
 	r.wait = &wait
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiUpdateTemplateDocumentRequest) IdempotencyKey(idempotencyKey string) ApiUpdateTemplateDocumentRequest {
+	r.idempotencyKey = &idempotencyKey
 	return r
 }
 
@@ -8816,6 +11951,9 @@ func (a *ClientAPIService) UpdateTemplateDocumentExecute(r ApiUpdateTemplateDocu
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
 	}
 	// body params
 	if r.body != nil {
@@ -8931,11 +12069,18 @@ type ApiUpdateTemplateFieldsRequest struct {
 	ApiService *ClientAPIService
 	templateId string
 	body *UpdateTemplateFieldsRequest
+	idempotencyKey *string
 }
 
 // The fields to change in the template's draft.
 func (r ApiUpdateTemplateFieldsRequest) Body(body UpdateTemplateFieldsRequest) ApiUpdateTemplateFieldsRequest {
 	r.body = &body
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiUpdateTemplateFieldsRequest) IdempotencyKey(idempotencyKey string) ApiUpdateTemplateFieldsRequest {
+	r.idempotencyKey = &idempotencyKey
 	return r
 }
 
@@ -9003,6 +12148,9 @@ func (a *ClientAPIService) UpdateTemplateFieldsExecute(r ApiUpdateTemplateFields
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
 	}
 	// body params
 	if r.body != nil {
@@ -9096,11 +12244,18 @@ type ApiUpdateWebhookRequest struct {
 	ApiService *ClientAPIService
 	webhookId string
 	body *UpdateWebhookRequest
+	idempotencyKey *string
 }
 
 // The settings to change. Properties left out keep their values.
 func (r ApiUpdateWebhookRequest) Body(body UpdateWebhookRequest) ApiUpdateWebhookRequest {
 	r.body = &body
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiUpdateWebhookRequest) IdempotencyKey(idempotencyKey string) ApiUpdateWebhookRequest {
+	r.idempotencyKey = &idempotencyKey
 	return r
 }
 
@@ -9166,6 +12321,9 @@ func (a *ClientAPIService) UpdateWebhookExecute(r ApiUpdateWebhookRequest) (*Web
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
 	}
 	// body params
 	if r.body != nil {
@@ -9279,6 +12437,7 @@ type ApiUploadTemplateRequest struct {
 	fieldNaming *FieldSetupNaming
 	fieldLogic *FieldSetupLogic
 	outputFormat *OutputFormat
+	idempotencyKey *string
 }
 
 // A PDF (for a PDF template) or a Word document (.docx or .odt, for a Word template). DocSpring converts an OpenDocument text file (.odt) to a Word document after responding: the template's `document.state` is `converting` until then (sync.api hosts wait for it).
@@ -9344,6 +12503,12 @@ func (r ApiUploadTemplateRequest) FieldLogic(fieldLogic FieldSetupLogic) ApiUplo
 // What each submission of a Word template makes unless its request sets `output_formats`: `docx` (a Word document), `odt` (an OpenDocument file, converted from the Word document) or `pdf`. Required when `document` is a Word document.
 func (r ApiUploadTemplateRequest) OutputFormat(outputFormat OutputFormat) ApiUploadTemplateRequest {
 	r.outputFormat = &outputFormat
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiUploadTemplateRequest) IdempotencyKey(idempotencyKey string) ApiUploadTemplateRequest {
+	r.idempotencyKey = &idempotencyKey
 	return r
 }
 
@@ -9413,6 +12578,9 @@ func (a *ClientAPIService) UploadTemplateExecute(r ApiUploadTemplateRequest) (*T
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
 	}
 	var documentLocalVarFormFileName string
 	var documentLocalVarFileName     string
@@ -9557,6 +12725,7 @@ type ApiUploadTemplateDocumentRequest struct {
 	document *os.File
 	wait *bool
 	reimportFields *bool
+	idempotencyKey *string
 }
 
 // The new PDF, or the new Word document (.docx or .odt) of a Word template.
@@ -9574,6 +12743,12 @@ func (r ApiUploadTemplateDocumentRequest) Wait(wait bool) ApiUploadTemplateDocum
 // Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. Only for PDF templates: a Word template adds a field for each new tag.
 func (r ApiUploadTemplateDocumentRequest) ReimportFields(reimportFields bool) ApiUploadTemplateDocumentRequest {
 	r.reimportFields = &reimportFields
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiUploadTemplateDocumentRequest) IdempotencyKey(idempotencyKey string) ApiUploadTemplateDocumentRequest {
+	r.idempotencyKey = &idempotencyKey
 	return r
 }
 
@@ -9645,6 +12820,9 @@ func (a *ClientAPIService) UploadTemplateDocumentExecute(r ApiUploadTemplateDocu
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
 	}
 	var documentLocalVarFormFileName string
 	var documentLocalVarFileName     string
@@ -9764,6 +12942,7 @@ type ApiValidateSubmissionRequest struct {
 	templateId string
 	body *ValidateSubmissionRequest
 	version *string
+	idempotencyKey *string
 }
 
 // The submission's data and settings.
@@ -9772,9 +12951,15 @@ func (r ApiValidateSubmissionRequest) Body(body ValidateSubmissionRequest) ApiVa
 	return r
 }
 
-// The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published).
+// The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`.
 func (r ApiValidateSubmissionRequest) Version(version string) ApiValidateSubmissionRequest {
 	r.version = &version
+	return r
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiValidateSubmissionRequest) IdempotencyKey(idempotencyKey string) ApiValidateSubmissionRequest {
+	r.idempotencyKey = &idempotencyKey
 	return r
 }
 
@@ -9847,6 +13032,9 @@ func (a *ClientAPIService) ValidateSubmissionExecute(r ApiValidateSubmissionRequ
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
+	}
 	// body params
 	if r.body != nil {
 		localVarPostBody = r.body
@@ -9897,6 +13085,146 @@ func (a *ClientAPIService) ValidateSubmissionExecute(r ApiValidateSubmissionRequ
 					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 429 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiVerifyEmailDomainRequest struct {
+	ctx context.Context
+	ApiService *ClientAPIService
+	emailDomainId string
+	idempotencyKey *string
+}
+
+// A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+func (r ApiVerifyEmailDomainRequest) IdempotencyKey(idempotencyKey string) ApiVerifyEmailDomainRequest {
+	r.idempotencyKey = &idempotencyKey
+	return r
+}
+
+func (r ApiVerifyEmailDomainRequest) Execute() (*EmailDomain, *http.Response, error) {
+	return r.ApiService.VerifyEmailDomainExecute(r)
+}
+
+/*
+VerifyEmailDomain Verify an email domain
+
+Checks the email domain's DNS records now, instead of waiting for the next check. If DocSpring has stopped
+looking for its DKIM records (3 days after they were created), it starts again with new ones: replace the
+CNAME records with them.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param emailDomainId The email domain's ID.
+ @return ApiVerifyEmailDomainRequest
+*/
+func (a *ClientAPIService) VerifyEmailDomain(ctx context.Context, emailDomainId string) ApiVerifyEmailDomainRequest {
+	return ApiVerifyEmailDomainRequest{
+		ApiService: a,
+		ctx: ctx,
+		emailDomainId: emailDomainId,
+	}
+}
+
+// Execute executes the request
+//  @return EmailDomain
+func (a *ClientAPIService) VerifyEmailDomainExecute(r ApiVerifyEmailDomainRequest) (*EmailDomain, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *EmailDomain
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClientAPIService.VerifyEmailDomain")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/email_domains/{email_domain_id}/verify"
+	localVarPath = strings.Replace(localVarPath, "{"+"email_domain_id"+"}", url.PathEscape(parameterValueToString(r.emailDomainId, "emailDomainId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Idempotency-Key", r.idempotencyKey, "simple", "")
+	}
+	if err := a.client.validateRequest("verifyEmailDomain", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
+		return localVarReturnValue, nil, err
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
 			var v ErrorResponse

@@ -19,11 +19,11 @@ var _ MappedNullable = &SubmissionInput{}
 
 // SubmissionInput A submission to create in a batch, with its own template when it doesn't use the batch's.
 type SubmissionInput struct {
-	// Test PDFs have a watermark and are free. Live PDFs use credits. Submissions made with a test API token are always test submissions.
+	// Test PDFs have a watermark and are free. Live PDFs use credits. Submissions made with a test API token are always test submissions, and the demo API token's are always live.
 	Test *bool `json:"test,omitempty"`
 	// `true` keeps the PDF's text and check fields fillable, and `false` flattens every field. Left out, the template decides: its `editable_submissions` setting, or each field's own Editable option. A response shows the template's setting when the request left this out. Can't be `true` with `signature_requests`.
 	Editable *bool `json:"editable,omitempty"`
-	// The values of the template's fields, by field name. Required for PDF and Word templates.
+	// The values of the template's fields, by field name. Required for PDF templates, Word templates and page designs.
 	Data map[string]interface{} `json:"data,omitempty"`
 	// Your own data about the submission, such as an ID from your app. It isn't printed on the PDF. Two keys also change the PDF: `pdf_filename` names its file (`files.pdf.filename`, and its download), and `pdf_title` is its title in the PDF's document properties (and an HTML template's `<title>`, unless its HTML has one). Without `pdf_title`, the title is the template's name. In `pdf_filename`, a `.pdf` ending is removed, each run of characters other than letters, digits, `-`, `_` and `.` becomes one `_`, and the first 128 characters are kept, then `.pdf` is added. Without it, the file is named after the submission's ID (`sub_1234567890abcdef01.pdf`).
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
@@ -31,7 +31,7 @@ type SubmissionInput struct {
 	Password *string `json:"password,omitempty"`
 	// What the submission makes: `pdf`, `docx` (a Word document, from a Word template), `odt` (an OpenDocument file, the format LibreOffice uses, converted from a Word template's Word document), and `png` (an image of each page of the PDF, up to 100 pages, which adds `pdf`) when you ask for it. Default `["pdf"]`, or a Word template's `output_format`. POST /submissions/{submission_id}/generate_files adds `png`, and a Word template's submission's `pdf`, `docx` or `odt`, to a processed submission.
 	OutputFormats []OutputFormat `json:"output_formats,omitempty"`
-	// Seconds after the PDF is generated until the submission expires, up to 10 years (315360000). Default the template's expiration setting. A submission that isn't processed, such as one with invalid data, is kept for at least 48 hours.
+	// Seconds after the PDF is generated until the submission expires, up to 10 years (315360000). Default the template's expiration setting. A submission that isn't processed, such as one with invalid data, is kept for at least 48 hours. The demo API token's submissions expire within an hour: up to 3600, and that's their default.
 	ExpiresIn *int32 `json:"expires_in,omitempty"`
 	// Changes to field settings for this submission only, by field name, such as `{"name": {"required": false, "font_size": 9}}`. A setting that identifies the field (`id`, `name`, `type`), that only the template sets (such as `description`), or that doesn't apply to the field's type and display type (such as `check_character` on a field displayed as text) is a 422. With `signature_requests`, `editable: true` is a 422, and a `default` for a signature or initials field makes the submission `invalid_data`.
 	FieldOverrides map[string]FieldOverride `json:"field_overrides,omitempty"`

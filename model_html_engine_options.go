@@ -26,7 +26,7 @@ type HtmlEngineOptions struct {
 	Width *string `json:"width,omitempty"`
 	// The page height for the `Custom` format, with a unit.
 	Height *string `json:"height,omitempty"`
-	// How much to scale the page, such as `0.8`. `1` prints it at its normal size.
+	// How much to scale the page, from 0.1 to 2, such as `0.8`. `1` prints it at its normal size.
 	Scale float32 `json:"scale"`
 	// Print pages in landscape orientation.
 	Landscape bool `json:"landscape"`

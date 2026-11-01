@@ -7,11 +7,15 @@ Name | Type | Description | Notes
 **Id** | **string** | The signature request's ID. | 
 **SubmissionId** | **string** | The ID of the submission the signature request belongs to. | 
 **Name** | **NullableString** | The name of the person the request is for. | 
-**Email** | **NullableString** | Their email address. | 
+**Email** | **NullableString** | Their email address. Null when they have none. | 
 **Fields** | **[]string** | The fields this person fills in. Null for a signature request created with API v1 without a field list: it asks for every field the submission's data doesn't have. | 
 **Metadata** | **map[string]interface{}** | Your own data about the signature request, such as an ID from your app. | 
 **Role** | **string** | Which of the template's signers the person is. Until templates have roles of their own, a template's signers are `Signer 1`, `Signer 2` and so on, up to `Signer 100`: `Signer 1` is the one whose details the template's `@@signature_requests/0` fields print. | 
 **SortOrder** | **int32** | The signer's position, from 0: `Signer 1` is 0. The template's `@@signature_requests/&lt;sort_order&gt;` fields print this signature request's details. | 
+**SendEmail** | **bool** | Whether DocSpring emails this person their signing link. | 
+**SigningStep** | **NullableInt32** | When this person signs, when the submission's `signing_order` is `sequential`: everyone in step 1 first, then step 2, and so on. Null when everyone can sign at once. | 
+**SentAt** | **NullableTime** | When DocSpring first emailed this person their signing link. Null until it has, and when it doesn't email them (`send_email` is false). | 
+**EmailStatus** | [**NullableSignatureRequestEmailStatus**](SignatureRequestEmailStatus.md) | What happened to the latest email DocSpring sent this person with their signing link: `sent` until the email service reports on it, then `delayed` (still trying), `delivered`, `undelivered` (it stopped trying, as with a full mailbox), `bounced` (the address doesn't exist) or `complained` (marked as spam). `failed` means DocSpring couldn't send the first email with their link, and `unknown` that it couldn't tell whether that email went: neither is sent again. Null until DocSpring has emailed them or tried to. | 
 **State** | [**SignatureRequestState**](SignatureRequestState.md) | `pending` until the person completes the signature request (`completed`) or declines it (`declined`). | 
 **Data** | **map[string]interface{}** | The values this person entered for their own fields (`fields`). Null when their submission's data is left out: in lists without `include_data=true`, in the events of a webhook that leaves out submission data, and once the submission has expired. | 
 **ViewedAt** | **NullableTime** | When the person first opened the signature request. | 
@@ -34,7 +38,7 @@ Name | Type | Description | Notes
 
 ### NewSignatureRequest
 
-`func NewSignatureRequest(id string, submissionId string, name NullableString, email NullableString, fields []string, metadata map[string]interface{}, role string, sortOrder int32, state SignatureRequestState, data map[string]interface{}, viewedAt NullableTime, completedAt NullableTime, declinedAt NullableTime, authType SignatureRequestAuthType, authSecondFactorType SignatureRequestAuthSecondFactorType, authProvider NullableString, authSessionStartedAt NullableTime, authSessionIdHash NullableString, authUserIdHash NullableString, authUsernameHash NullableString, authPhoneNumberHash NullableString, ipAddress NullableString, userAgent NullableString, createdAt time.Time, updatedAt time.Time, ) *SignatureRequest`
+`func NewSignatureRequest(id string, submissionId string, name NullableString, email NullableString, fields []string, metadata map[string]interface{}, role string, sortOrder int32, sendEmail bool, signingStep NullableInt32, sentAt NullableTime, emailStatus NullableSignatureRequestEmailStatus, state SignatureRequestState, data map[string]interface{}, viewedAt NullableTime, completedAt NullableTime, declinedAt NullableTime, authType SignatureRequestAuthType, authSecondFactorType SignatureRequestAuthSecondFactorType, authProvider NullableString, authSessionStartedAt NullableTime, authSessionIdHash NullableString, authUserIdHash NullableString, authUsernameHash NullableString, authPhoneNumberHash NullableString, ipAddress NullableString, userAgent NullableString, createdAt time.Time, updatedAt time.Time, ) *SignatureRequest`
 
 NewSignatureRequest instantiates a new SignatureRequest object
 This constructor will assign default values to properties that have it defined,
@@ -239,6 +243,116 @@ and a boolean to check if the value has been set.
 SetSortOrder sets SortOrder field to given value.
 
 
+### GetSendEmail
+
+`func (o *SignatureRequest) GetSendEmail() bool`
+
+GetSendEmail returns the SendEmail field if non-nil, zero value otherwise.
+
+### GetSendEmailOk
+
+`func (o *SignatureRequest) GetSendEmailOk() (*bool, bool)`
+
+GetSendEmailOk returns a tuple with the SendEmail field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSendEmail
+
+`func (o *SignatureRequest) SetSendEmail(v bool)`
+
+SetSendEmail sets SendEmail field to given value.
+
+
+### GetSigningStep
+
+`func (o *SignatureRequest) GetSigningStep() int32`
+
+GetSigningStep returns the SigningStep field if non-nil, zero value otherwise.
+
+### GetSigningStepOk
+
+`func (o *SignatureRequest) GetSigningStepOk() (*int32, bool)`
+
+GetSigningStepOk returns a tuple with the SigningStep field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSigningStep
+
+`func (o *SignatureRequest) SetSigningStep(v int32)`
+
+SetSigningStep sets SigningStep field to given value.
+
+
+### SetSigningStepNil
+
+`func (o *SignatureRequest) SetSigningStepNil(b bool)`
+
+ SetSigningStepNil sets the value for SigningStep to be an explicit nil
+
+### UnsetSigningStep
+`func (o *SignatureRequest) UnsetSigningStep()`
+
+UnsetSigningStep ensures that no value is present for SigningStep, not even an explicit nil
+### GetSentAt
+
+`func (o *SignatureRequest) GetSentAt() time.Time`
+
+GetSentAt returns the SentAt field if non-nil, zero value otherwise.
+
+### GetSentAtOk
+
+`func (o *SignatureRequest) GetSentAtOk() (*time.Time, bool)`
+
+GetSentAtOk returns a tuple with the SentAt field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSentAt
+
+`func (o *SignatureRequest) SetSentAt(v time.Time)`
+
+SetSentAt sets SentAt field to given value.
+
+
+### SetSentAtNil
+
+`func (o *SignatureRequest) SetSentAtNil(b bool)`
+
+ SetSentAtNil sets the value for SentAt to be an explicit nil
+
+### UnsetSentAt
+`func (o *SignatureRequest) UnsetSentAt()`
+
+UnsetSentAt ensures that no value is present for SentAt, not even an explicit nil
+### GetEmailStatus
+
+`func (o *SignatureRequest) GetEmailStatus() SignatureRequestEmailStatus`
+
+GetEmailStatus returns the EmailStatus field if non-nil, zero value otherwise.
+
+### GetEmailStatusOk
+
+`func (o *SignatureRequest) GetEmailStatusOk() (*SignatureRequestEmailStatus, bool)`
+
+GetEmailStatusOk returns a tuple with the EmailStatus field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetEmailStatus
+
+`func (o *SignatureRequest) SetEmailStatus(v SignatureRequestEmailStatus)`
+
+SetEmailStatus sets EmailStatus field to given value.
+
+
+### SetEmailStatusNil
+
+`func (o *SignatureRequest) SetEmailStatusNil(b bool)`
+
+ SetEmailStatusNil sets the value for EmailStatus to be an explicit nil
+
+### UnsetEmailStatus
+`func (o *SignatureRequest) UnsetEmailStatus()`
+
+UnsetEmailStatus ensures that no value is present for EmailStatus, not even an explicit nil
 ### GetState
 
 `func (o *SignatureRequest) GetState() SignatureRequestState`

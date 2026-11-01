@@ -24,6 +24,7 @@ const (
 	ERRORCODE_UNAUTHORIZED ErrorCode = "unauthorized"
 	ERRORCODE_PAYMENT_REQUIRED ErrorCode = "payment_required"
 	ERRORCODE_INSUFFICIENT_CREDITS ErrorCode = "insufficient_credits"
+	ERRORCODE_INSUFFICIENT_CREDITS_TO_SEND ErrorCode = "insufficient_credits_to_send"
 	ERRORCODE_FORBIDDEN ErrorCode = "forbidden"
 	ERRORCODE_UPGRADE_REQUIRED ErrorCode = "upgrade_required"
 	ERRORCODE_ACCOUNT_SUSPENDED ErrorCode = "account_suspended"
@@ -36,6 +37,7 @@ const (
 	ERRORCODE_VALIDATION_FAILED ErrorCode = "validation_failed"
 	ERRORCODE_INVALID_DATA ErrorCode = "invalid_data"
 	ERRORCODE_RATE_LIMITED ErrorCode = "rate_limited"
+	ERRORCODE_DAILY_EMAIL_LIMIT_REACHED ErrorCode = "daily_email_limit_reached"
 	ERRORCODE_INTERNAL_ERROR ErrorCode = "internal_error"
 	ERRORCODE_BAD_GATEWAY ErrorCode = "bad_gateway"
 	ERRORCODE_SERVICE_UNAVAILABLE ErrorCode = "service_unavailable"
@@ -51,6 +53,7 @@ var AllowedErrorCodeEnumValues = []ErrorCode{
 	"unauthorized",
 	"payment_required",
 	"insufficient_credits",
+	"insufficient_credits_to_send",
 	"forbidden",
 	"upgrade_required",
 	"account_suspended",
@@ -63,6 +66,7 @@ var AllowedErrorCodeEnumValues = []ErrorCode{
 	"validation_failed",
 	"invalid_data",
 	"rate_limited",
+	"daily_email_limit_reached",
 	"internal_error",
 	"bad_gateway",
 	"service_unavailable",
