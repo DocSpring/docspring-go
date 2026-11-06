@@ -65,7 +65,7 @@ type Template struct {
 	DefaultFormMode TemplateFormMode `json:"default_form_mode"`
 	// Generate PDFs whose text and check fields stay fillable ("Generate Editable PDFs"). A submission's `editable` overrides it.
 	EditableSubmissions bool `json:"editable_submissions"`
-	// The sites that can embed the template's live signature requests and its embedded template editor: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work), without a path. Browsers open a live signature request in a frame only on these sites (and DocSpring's), so with an empty list it can't be embedded anywhere; a test signature request can be embedded on any site. The embedded template editor loads only for a page on one of these sites (by its Referer or Origin header), and on any site when the list is empty. Forms embedded on a page (Visual Forms JS and the simple form) aren't restricted.
+	// The sites that can embed the template's live signature requests and its embedded template editor: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work), without a path. Each one is stored in lowercase, without a trailing slash. Browsers open a live signature request in a frame only on these sites (and DocSpring's), so with an empty list it can't be embedded anywhere; a test signature request can be embedded on any site. The embedded template editor loads only for a page on one of these sites (by its Referer or Origin header), and on any site when the list is empty. Forms embedded on a page (Visual Forms JS and Web Forms JS) aren't restricted.
 	EmbedDomains []string `json:"embed_domains"`
 	// Allow the embedded template editor to change sensitive template settings (webhooks, redirect URL, encryption, public access, expiration and so on).
 	EmbedEditAllowSettings bool `json:"embed_edit_allow_settings"`
@@ -91,7 +91,7 @@ type Template struct {
 	PublicSubmissions bool `json:"public_submissions"`
 	// Allow anyone to fill in the template's web form.
 	PublicWebForm bool `json:"public_web_form"`
-	// Where the web form sends people after they submit it.
+	// Where the web form sends people after they submit it, instead of showing its success screen. After its `?` or `#`, it can have variables such as `{{ data.first_name }}`, which the form fills in with what they submitted.
 	RedirectUrl NullableString `json:"redirect_url"`
 	// How DocSpring's completed emails send the signed PDF to your signers and CCs: `attachment` (attached, or a download link when it's too big to attach) or `link` (a download link). Null uses your account's rule: a link if your account has signed a BAA, otherwise attached. PDF templates only. A signature request uses the value it had when the request was created.
 	SignatureRequestEmailAttachments NullableSignatureRequestEmailAttachments `json:"signature_request_email_attachments"`
@@ -107,6 +107,12 @@ type Template struct {
 	SignatureRequestReplyTo NullableString `json:"signature_request_reply_to"`
 	// A page on your own site that the button in DocSpring's email to a signer opens, instead of DocSpring's signing page: an https URL on one of your verified email domains or a subdomain of one, on the Growth plan or higher. It must include `{{ signature_request_id }}`. Your page authenticates the signer, creates a token for the signature request, and opens the signing form with it. Null links to DocSpring's signing page. PDF templates only.
 	SignatureRequestSigningUrl NullableString `json:"signature_request_signing_url"`
+	// The title of the web form's success screen. When it's null or empty, the screen says "Thanks for filling out" and the template's name. It can have variables such as `{{ data.first_name }}`.
+	SuccessTitle NullableString `json:"success_title"`
+	// A message under the title of the web form's success screen, as plain text. Line breaks show, and web addresses become links. It can have variables such as `{{ data.first_name }}`.
+	SuccessMessage NullableString `json:"success_message"`
+	// Whether the web form's success screen has a "Fill out again" button, which clears the form so someone can fill it in again.
+	ShowFillAgainButton bool `json:"show_fill_again_button"`
 	// Whether `slack_webhook_url` is set.
 	HasSlackWebhookUrl bool `json:"has_slack_webhook_url"`
 	// Who last changed the draft: a user in your account, an API token, or someone using the embedded template editor. Null if no change has been recorded.
@@ -116,6 +122,8 @@ type Template struct {
 	FieldDependencies []TemplateFieldDependency `json:"field_dependencies"`
 	// The groups of the template's fields, with their settings. A field's name puts it in groups: `address/city` is in the group `address`, and `items/0/price` is in the list `items` and its items' group `items/~`.
 	FieldGroups []FieldGroup `json:"field_groups"`
+	// The web form's sections, in order: Web Forms JS and the hosted web form show one section at a time. Empty when the template has none, and the web form shows all of its fields together, in the order the fields endpoint lists them. A field that no section lists (one added later) goes after the field before it in that order, in that field's section.
+	FormSections []TemplateFormSection `json:"form_sections"`
 	// The field names that people using the embedded template editor choose from, each with the data type and settings a field gets when it's given that name. Setting it replaces the whole list; an empty list turns them off.
 	PredefinedFields []PredefinedField `json:"predefined_fields"`
 	// Sample submission data that sets `predefined_fields`: each value becomes a predefined field, with a type that fits it (`string`, `number`, `boolean`, `date`, `email` or `url`) and `required_in_template` true. Nested objects and arrays become names with `/`, such as `customer/email`. Without `predefined_fields` in the same request, it replaces them; with them, it adds to them and sets the types of the ones it has values for.
@@ -147,7 +155,7 @@ type _Template Template
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewTemplate(id string, name NullableString, description NullableString, templateType TemplateType, outputFormat OutputFormat, ready bool, document NullableTemplateDocument, parentFolderId NullableString, path string, latestVersion NullableString, versionPublishedAt NullableTime, locked bool, lastChangedAt NullableTime, createdAt time.Time, updatedAt time.Time, version NullableString, addSignatureRequestSubmissionIdFooters bool, aiFieldNamingLanguage NullableAiFieldNamingLanguage, allowAdditionalProperties bool, allowSkippingOptionalFields bool, defaultFormMode TemplateFormMode, editableSubmissions bool, embedDomains []string, embedEditAllowSettings bool, embedEditAllowVersioning bool, embedEditAllowDocumentReplacement bool, encryptPdfs bool, hasEncryptPdfsPassword bool, expireSubmissions bool, expireAfter int32, expirationInterval ExpirationInterval, mergeAuditTrailPdf bool, parseDatesUsingTemplateDateFormat bool, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, signatureRequestEmailAttachments NullableSignatureRequestEmailAttachments, signatureRequestFromAddress NullableString, signatureRequestIncludeSigningToken bool, signatureRequestFromName NullableString, signatureRequestNotificationEmails []string, signatureRequestReplyTo NullableString, signatureRequestSigningUrl NullableString, hasSlackWebhookUrl bool, lastChangedBy NullableTemplateActor, defaults TemplateDefaults, fieldDependencies []TemplateFieldDependency, fieldGroups []FieldGroup, predefinedFields []PredefinedField, predefinedFieldsSampleData map[string]interface{}, html NullableString, scss NullableString, headerHtml NullableString, footerHtml NullableString, htmlEngineOptions NullableHtmlEngineOptions, htmlEscapeData NullableBool, layout map[string]interface{}, embedEditToken NullableString, versions []TemplateVersion) *Template {
+func NewTemplate(id string, name NullableString, description NullableString, templateType TemplateType, outputFormat OutputFormat, ready bool, document NullableTemplateDocument, parentFolderId NullableString, path string, latestVersion NullableString, versionPublishedAt NullableTime, locked bool, lastChangedAt NullableTime, createdAt time.Time, updatedAt time.Time, version NullableString, addSignatureRequestSubmissionIdFooters bool, aiFieldNamingLanguage NullableAiFieldNamingLanguage, allowAdditionalProperties bool, allowSkippingOptionalFields bool, defaultFormMode TemplateFormMode, editableSubmissions bool, embedDomains []string, embedEditAllowSettings bool, embedEditAllowVersioning bool, embedEditAllowDocumentReplacement bool, encryptPdfs bool, hasEncryptPdfsPassword bool, expireSubmissions bool, expireAfter int32, expirationInterval ExpirationInterval, mergeAuditTrailPdf bool, parseDatesUsingTemplateDateFormat bool, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, signatureRequestEmailAttachments NullableSignatureRequestEmailAttachments, signatureRequestFromAddress NullableString, signatureRequestIncludeSigningToken bool, signatureRequestFromName NullableString, signatureRequestNotificationEmails []string, signatureRequestReplyTo NullableString, signatureRequestSigningUrl NullableString, successTitle NullableString, successMessage NullableString, showFillAgainButton bool, hasSlackWebhookUrl bool, lastChangedBy NullableTemplateActor, defaults TemplateDefaults, fieldDependencies []TemplateFieldDependency, fieldGroups []FieldGroup, formSections []TemplateFormSection, predefinedFields []PredefinedField, predefinedFieldsSampleData map[string]interface{}, html NullableString, scss NullableString, headerHtml NullableString, footerHtml NullableString, htmlEngineOptions NullableHtmlEngineOptions, htmlEscapeData NullableBool, layout map[string]interface{}, embedEditToken NullableString, versions []TemplateVersion) *Template {
 	this := Template{}
 	this.Id = id
 	this.Name = name
@@ -192,11 +200,15 @@ func NewTemplate(id string, name NullableString, description NullableString, tem
 	this.SignatureRequestNotificationEmails = signatureRequestNotificationEmails
 	this.SignatureRequestReplyTo = signatureRequestReplyTo
 	this.SignatureRequestSigningUrl = signatureRequestSigningUrl
+	this.SuccessTitle = successTitle
+	this.SuccessMessage = successMessage
+	this.ShowFillAgainButton = showFillAgainButton
 	this.HasSlackWebhookUrl = hasSlackWebhookUrl
 	this.LastChangedBy = lastChangedBy
 	this.Defaults = defaults
 	this.FieldDependencies = fieldDependencies
 	this.FieldGroups = fieldGroups
+	this.FormSections = formSections
 	this.PredefinedFields = predefinedFields
 	this.PredefinedFieldsSampleData = predefinedFieldsSampleData
 	this.Html = html
@@ -1281,6 +1293,82 @@ func (o *Template) SetSignatureRequestSigningUrl(v string) {
 	o.SignatureRequestSigningUrl.Set(&v)
 }
 
+// GetSuccessTitle returns the SuccessTitle field value
+// If the value is explicit nil, the zero value for string will be returned
+func (o *Template) GetSuccessTitle() string {
+	if o == nil || o.SuccessTitle.Get() == nil {
+		var ret string
+		return ret
+	}
+
+	return *o.SuccessTitle.Get()
+}
+
+// GetSuccessTitleOk returns a tuple with the SuccessTitle field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *Template) GetSuccessTitleOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.SuccessTitle.Get(), o.SuccessTitle.IsSet()
+}
+
+// SetSuccessTitle sets field value
+func (o *Template) SetSuccessTitle(v string) {
+	o.SuccessTitle.Set(&v)
+}
+
+// GetSuccessMessage returns the SuccessMessage field value
+// If the value is explicit nil, the zero value for string will be returned
+func (o *Template) GetSuccessMessage() string {
+	if o == nil || o.SuccessMessage.Get() == nil {
+		var ret string
+		return ret
+	}
+
+	return *o.SuccessMessage.Get()
+}
+
+// GetSuccessMessageOk returns a tuple with the SuccessMessage field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *Template) GetSuccessMessageOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.SuccessMessage.Get(), o.SuccessMessage.IsSet()
+}
+
+// SetSuccessMessage sets field value
+func (o *Template) SetSuccessMessage(v string) {
+	o.SuccessMessage.Set(&v)
+}
+
+// GetShowFillAgainButton returns the ShowFillAgainButton field value
+func (o *Template) GetShowFillAgainButton() bool {
+	if o == nil {
+		var ret bool
+		return ret
+	}
+
+	return o.ShowFillAgainButton
+}
+
+// GetShowFillAgainButtonOk returns a tuple with the ShowFillAgainButton field value
+// and a boolean to check if the value has been set.
+func (o *Template) GetShowFillAgainButtonOk() (*bool, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.ShowFillAgainButton, true
+}
+
+// SetShowFillAgainButton sets field value
+func (o *Template) SetShowFillAgainButton(v bool) {
+	o.ShowFillAgainButton = v
+}
+
 // GetHasSlackWebhookUrl returns the HasSlackWebhookUrl field value
 func (o *Template) GetHasSlackWebhookUrl() bool {
 	if o == nil {
@@ -1401,6 +1489,30 @@ func (o *Template) GetFieldGroupsOk() ([]FieldGroup, bool) {
 // SetFieldGroups sets field value
 func (o *Template) SetFieldGroups(v []FieldGroup) {
 	o.FieldGroups = v
+}
+
+// GetFormSections returns the FormSections field value
+func (o *Template) GetFormSections() []TemplateFormSection {
+	if o == nil {
+		var ret []TemplateFormSection
+		return ret
+	}
+
+	return o.FormSections
+}
+
+// GetFormSectionsOk returns a tuple with the FormSections field value
+// and a boolean to check if the value has been set.
+func (o *Template) GetFormSectionsOk() ([]TemplateFormSection, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.FormSections, true
+}
+
+// SetFormSections sets field value
+func (o *Template) SetFormSections(v []TemplateFormSection) {
+	o.FormSections = v
 }
 
 // GetPredefinedFields returns the PredefinedFields field value
@@ -1738,11 +1850,15 @@ func (o Template) ToMap() (map[string]interface{}, error) {
 	toSerialize["signature_request_notification_emails"] = o.SignatureRequestNotificationEmails
 	toSerialize["signature_request_reply_to"] = o.SignatureRequestReplyTo.Get()
 	toSerialize["signature_request_signing_url"] = o.SignatureRequestSigningUrl.Get()
+	toSerialize["success_title"] = o.SuccessTitle.Get()
+	toSerialize["success_message"] = o.SuccessMessage.Get()
+	toSerialize["show_fill_again_button"] = o.ShowFillAgainButton
 	toSerialize["has_slack_webhook_url"] = o.HasSlackWebhookUrl
 	toSerialize["last_changed_by"] = o.LastChangedBy.Get()
 	toSerialize["defaults"] = o.Defaults
 	toSerialize["field_dependencies"] = o.FieldDependencies
 	toSerialize["field_groups"] = o.FieldGroups
+	toSerialize["form_sections"] = o.FormSections
 	toSerialize["predefined_fields"] = o.PredefinedFields
 	if o.PredefinedFieldsSampleData != nil {
 		toSerialize["predefined_fields_sample_data"] = o.PredefinedFieldsSampleData
@@ -1814,11 +1930,15 @@ func (o *Template) UnmarshalJSON(data []byte) (err error) {
 		"signature_request_notification_emails",
 		"signature_request_reply_to",
 		"signature_request_signing_url",
+		"success_title",
+		"success_message",
+		"show_fill_again_button",
 		"has_slack_webhook_url",
 		"last_changed_by",
 		"defaults",
 		"field_dependencies",
 		"field_groups",
+		"form_sections",
 		"predefined_fields",
 		"predefined_fields_sample_data",
 		"html",
@@ -1902,11 +2022,15 @@ func (o *Template) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "signature_request_notification_emails")
 		delete(additionalProperties, "signature_request_reply_to")
 		delete(additionalProperties, "signature_request_signing_url")
+		delete(additionalProperties, "success_title")
+		delete(additionalProperties, "success_message")
+		delete(additionalProperties, "show_fill_again_button")
 		delete(additionalProperties, "has_slack_webhook_url")
 		delete(additionalProperties, "last_changed_by")
 		delete(additionalProperties, "defaults")
 		delete(additionalProperties, "field_dependencies")
 		delete(additionalProperties, "field_groups")
+		delete(additionalProperties, "form_sections")
 		delete(additionalProperties, "predefined_fields")
 		delete(additionalProperties, "predefined_fields_sample_data")
 		delete(additionalProperties, "html")

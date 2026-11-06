@@ -44,7 +44,7 @@ type CreateTemplateRequest struct {
 	DefaultFormMode *TemplateFormMode `json:"default_form_mode,omitempty"`
 	// Generate PDFs whose text and check fields stay fillable ("Generate Editable PDFs"). A submission's `editable` overrides it.
 	EditableSubmissions *bool `json:"editable_submissions,omitempty"`
-	// The sites that can embed the template's live signature requests and its embedded template editor: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work), without a path. Browsers open a live signature request in a frame only on these sites (and DocSpring's), so with an empty list it can't be embedded anywhere; a test signature request can be embedded on any site. The embedded template editor loads only for a page on one of these sites (by its Referer or Origin header), and on any site when the list is empty. Forms embedded on a page (Visual Forms JS and the simple form) aren't restricted.
+	// The sites that can embed the template's live signature requests and its embedded template editor: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work), without a path. Each one is stored in lowercase, without a trailing slash. Browsers open a live signature request in a frame only on these sites (and DocSpring's), so with an empty list it can't be embedded anywhere; a test signature request can be embedded on any site. The embedded template editor loads only for a page on one of these sites (by its Referer or Origin header), and on any site when the list is empty. Forms embedded on a page (Visual Forms JS and Web Forms JS) aren't restricted.
 	EmbedDomains []string `json:"embed_domains,omitempty"`
 	// Allow the embedded template editor to change sensitive template settings (webhooks, redirect URL, encryption, public access, expiration and so on).
 	EmbedEditAllowSettings *bool `json:"embed_edit_allow_settings,omitempty"`
@@ -70,7 +70,7 @@ type CreateTemplateRequest struct {
 	PublicSubmissions *bool `json:"public_submissions,omitempty"`
 	// Allow anyone to fill in the template's web form.
 	PublicWebForm *bool `json:"public_web_form,omitempty"`
-	// Where the web form sends people after they submit it.
+	// Where the web form sends people after they submit it, instead of showing its success screen. After its `?` or `#`, it can have variables such as `{{ data.first_name }}`, which the form fills in with what they submitted.
 	RedirectUrl NullableString `json:"redirect_url,omitempty"`
 	// How DocSpring's completed emails send the signed PDF to your signers and CCs: `attachment` (attached, or a download link when it's too big to attach) or `link` (a download link). Null uses your account's rule: a link if your account has signed a BAA, otherwise attached. PDF templates only. A signature request uses the value it had when the request was created.
 	SignatureRequestEmailAttachments NullableSignatureRequestEmailAttachments `json:"signature_request_email_attachments,omitempty"`
@@ -86,6 +86,12 @@ type CreateTemplateRequest struct {
 	SignatureRequestReplyTo NullableString `json:"signature_request_reply_to,omitempty"`
 	// A page on your own site that the button in DocSpring's email to a signer opens, instead of DocSpring's signing page: an https URL on one of your verified email domains or a subdomain of one, on the Growth plan or higher. It must include `{{ signature_request_id }}`. Your page authenticates the signer, creates a token for the signature request, and opens the signing form with it. Null links to DocSpring's signing page. PDF templates only.
 	SignatureRequestSigningUrl NullableString `json:"signature_request_signing_url,omitempty"`
+	// The title of the web form's success screen. When it's null or empty, the screen says "Thanks for filling out" and the template's name. It can have variables such as `{{ data.first_name }}`.
+	SuccessTitle NullableString `json:"success_title,omitempty"`
+	// A message under the title of the web form's success screen, as plain text. Line breaks show, and web addresses become links. It can have variables such as `{{ data.first_name }}`.
+	SuccessMessage NullableString `json:"success_message,omitempty"`
+	// Whether the web form's success screen has a "Fill out again" button, which clears the form so someone can fill it in again.
+	ShowFillAgainButton *bool `json:"show_fill_again_button,omitempty"`
 	// A Slack incoming webhook URL that is notified about the template's submissions. It's never returned; `has_slack_webhook_url` says if it's set.
 	SlackWebhookUrl NullableString `json:"slack_webhook_url,omitempty"`
 	// The default style of the template's fields. Setting it replaces the whole object.
@@ -126,6 +132,8 @@ type CreateTemplateRequest struct {
 	FieldNaming *FieldSetupNaming `json:"field_naming,omitempty"`
 	// With `detect_fields`, whether AI reads the whole form once the fields are named and sets up conditional logic and required fields (`ai`) or not (`none`). Default: your account's template settings.
 	FieldLogic *FieldSetupLogic `json:"field_logic,omitempty"`
+	// With `detect_fields`, whether AI field setup keeps the fields that only the office receiving the form fills in, such as a "For office use only" box (`true`), or leaves them out (`false`). Default: your account's template settings.
+	IncludeOfficeUseFields *bool `json:"include_office_use_fields,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -1287,6 +1295,122 @@ func (o *CreateTemplateRequest) UnsetSignatureRequestSigningUrl() {
 	o.SignatureRequestSigningUrl.Unset()
 }
 
+// GetSuccessTitle returns the SuccessTitle field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *CreateTemplateRequest) GetSuccessTitle() string {
+	if o == nil || IsNil(o.SuccessTitle.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.SuccessTitle.Get()
+}
+
+// GetSuccessTitleOk returns a tuple with the SuccessTitle field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *CreateTemplateRequest) GetSuccessTitleOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.SuccessTitle.Get(), o.SuccessTitle.IsSet()
+}
+
+// HasSuccessTitle returns a boolean if a field has been set.
+func (o *CreateTemplateRequest) HasSuccessTitle() bool {
+	if o != nil && o.SuccessTitle.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetSuccessTitle gets a reference to the given NullableString and assigns it to the SuccessTitle field.
+func (o *CreateTemplateRequest) SetSuccessTitle(v string) {
+	o.SuccessTitle.Set(&v)
+}
+// SetSuccessTitleNil sets the value for SuccessTitle to be an explicit nil
+func (o *CreateTemplateRequest) SetSuccessTitleNil() {
+	o.SuccessTitle.Set(nil)
+}
+
+// UnsetSuccessTitle ensures that no value is present for SuccessTitle, not even an explicit nil
+func (o *CreateTemplateRequest) UnsetSuccessTitle() {
+	o.SuccessTitle.Unset()
+}
+
+// GetSuccessMessage returns the SuccessMessage field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *CreateTemplateRequest) GetSuccessMessage() string {
+	if o == nil || IsNil(o.SuccessMessage.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.SuccessMessage.Get()
+}
+
+// GetSuccessMessageOk returns a tuple with the SuccessMessage field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *CreateTemplateRequest) GetSuccessMessageOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.SuccessMessage.Get(), o.SuccessMessage.IsSet()
+}
+
+// HasSuccessMessage returns a boolean if a field has been set.
+func (o *CreateTemplateRequest) HasSuccessMessage() bool {
+	if o != nil && o.SuccessMessage.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetSuccessMessage gets a reference to the given NullableString and assigns it to the SuccessMessage field.
+func (o *CreateTemplateRequest) SetSuccessMessage(v string) {
+	o.SuccessMessage.Set(&v)
+}
+// SetSuccessMessageNil sets the value for SuccessMessage to be an explicit nil
+func (o *CreateTemplateRequest) SetSuccessMessageNil() {
+	o.SuccessMessage.Set(nil)
+}
+
+// UnsetSuccessMessage ensures that no value is present for SuccessMessage, not even an explicit nil
+func (o *CreateTemplateRequest) UnsetSuccessMessage() {
+	o.SuccessMessage.Unset()
+}
+
+// GetShowFillAgainButton returns the ShowFillAgainButton field value if set, zero value otherwise.
+func (o *CreateTemplateRequest) GetShowFillAgainButton() bool {
+	if o == nil || IsNil(o.ShowFillAgainButton) {
+		var ret bool
+		return ret
+	}
+	return *o.ShowFillAgainButton
+}
+
+// GetShowFillAgainButtonOk returns a tuple with the ShowFillAgainButton field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateTemplateRequest) GetShowFillAgainButtonOk() (*bool, bool) {
+	if o == nil || IsNil(o.ShowFillAgainButton) {
+		return nil, false
+	}
+	return o.ShowFillAgainButton, true
+}
+
+// HasShowFillAgainButton returns a boolean if a field has been set.
+func (o *CreateTemplateRequest) HasShowFillAgainButton() bool {
+	if o != nil && !IsNil(o.ShowFillAgainButton) {
+		return true
+	}
+
+	return false
+}
+
+// SetShowFillAgainButton gets a reference to the given bool and assigns it to the ShowFillAgainButton field.
+func (o *CreateTemplateRequest) SetShowFillAgainButton(v bool) {
+	o.ShowFillAgainButton = &v
+}
+
 // GetSlackWebhookUrl returns the SlackWebhookUrl field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *CreateTemplateRequest) GetSlackWebhookUrl() string {
 	if o == nil || IsNil(o.SlackWebhookUrl.Get()) {
@@ -1989,6 +2113,38 @@ func (o *CreateTemplateRequest) SetFieldLogic(v FieldSetupLogic) {
 	o.FieldLogic = &v
 }
 
+// GetIncludeOfficeUseFields returns the IncludeOfficeUseFields field value if set, zero value otherwise.
+func (o *CreateTemplateRequest) GetIncludeOfficeUseFields() bool {
+	if o == nil || IsNil(o.IncludeOfficeUseFields) {
+		var ret bool
+		return ret
+	}
+	return *o.IncludeOfficeUseFields
+}
+
+// GetIncludeOfficeUseFieldsOk returns a tuple with the IncludeOfficeUseFields field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateTemplateRequest) GetIncludeOfficeUseFieldsOk() (*bool, bool) {
+	if o == nil || IsNil(o.IncludeOfficeUseFields) {
+		return nil, false
+	}
+	return o.IncludeOfficeUseFields, true
+}
+
+// HasIncludeOfficeUseFields returns a boolean if a field has been set.
+func (o *CreateTemplateRequest) HasIncludeOfficeUseFields() bool {
+	if o != nil && !IsNil(o.IncludeOfficeUseFields) {
+		return true
+	}
+
+	return false
+}
+
+// SetIncludeOfficeUseFields gets a reference to the given bool and assigns it to the IncludeOfficeUseFields field.
+func (o *CreateTemplateRequest) SetIncludeOfficeUseFields(v bool) {
+	o.IncludeOfficeUseFields = &v
+}
+
 func (o CreateTemplateRequest) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -2096,6 +2252,15 @@ func (o CreateTemplateRequest) ToMap() (map[string]interface{}, error) {
 	if o.SignatureRequestSigningUrl.IsSet() {
 		toSerialize["signature_request_signing_url"] = o.SignatureRequestSigningUrl.Get()
 	}
+	if o.SuccessTitle.IsSet() {
+		toSerialize["success_title"] = o.SuccessTitle.Get()
+	}
+	if o.SuccessMessage.IsSet() {
+		toSerialize["success_message"] = o.SuccessMessage.Get()
+	}
+	if !IsNil(o.ShowFillAgainButton) {
+		toSerialize["show_fill_again_button"] = o.ShowFillAgainButton
+	}
 	if o.SlackWebhookUrl.IsSet() {
 		toSerialize["slack_webhook_url"] = o.SlackWebhookUrl.Get()
 	}
@@ -2155,6 +2320,9 @@ func (o CreateTemplateRequest) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.FieldLogic) {
 		toSerialize["field_logic"] = o.FieldLogic
+	}
+	if !IsNil(o.IncludeOfficeUseFields) {
+		toSerialize["include_office_use_fields"] = o.IncludeOfficeUseFields
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -2232,6 +2400,9 @@ func (o *CreateTemplateRequest) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "signature_request_notification_emails")
 		delete(additionalProperties, "signature_request_reply_to")
 		delete(additionalProperties, "signature_request_signing_url")
+		delete(additionalProperties, "success_title")
+		delete(additionalProperties, "success_message")
+		delete(additionalProperties, "show_fill_again_button")
 		delete(additionalProperties, "slack_webhook_url")
 		delete(additionalProperties, "defaults")
 		delete(additionalProperties, "field_dependencies")
@@ -2252,6 +2423,7 @@ func (o *CreateTemplateRequest) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "field_source")
 		delete(additionalProperties, "field_naming")
 		delete(additionalProperties, "field_logic")
+		delete(additionalProperties, "include_office_use_fields")
 		o.AdditionalProperties = additionalProperties
 	}
 
