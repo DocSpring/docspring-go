@@ -35,13 +35,15 @@ type UpdateTemplateRequest struct {
 	AiFieldNamingLanguage *AiFieldNamingLanguage `json:"ai_field_naming_language,omitempty"`
 	// Accept submission data with properties that aren't fields of the template.
 	AllowAdditionalProperties *bool `json:"allow_additional_properties,omitempty"`
-	// Visual forms and signature request forms show the Continue button as soon as the required fields are filled in, without visiting each optional field. The `allowSkippingOptionalFields` embed option overrides it.
+	// Visual Forms JS 2.16.0 to 2.23.0 only: with it on, Continue takes the place of Next once the required fields are filled in. Later versions use `continue_before_optional_fields`.
 	AllowSkippingOptionalFields *bool `json:"allow_skipping_optional_fields,omitempty"`
+	// Visual forms and signature request forms show the Continue button next to Next as soon as the required fields are filled in, without visiting each optional field. Turned off, Continue shows in place of Next only once every field has a value or has been visited. The `allowSkippingOptionalFields` embed option overrides it.
+	ContinueBeforeOptionalFields *bool `json:"continue_before_optional_fields,omitempty"`
 	// The hosted form that /templates/{template_id}/form shows when its URL has no `mode` parameter: `web` (the web form), `visual` (the visual form, where fields are filled in on the PDF) or `dual` (both, in tabs). Only PDF templates have a visual form, so other templates accept only `web`.
 	DefaultFormMode *TemplateFormMode `json:"default_form_mode,omitempty"`
 	// Generate PDFs whose text and check fields stay fillable ("Generate Editable PDFs"). A submission's `editable` overrides it.
 	EditableSubmissions *bool `json:"editable_submissions,omitempty"`
-	// The sites that can embed the template's live signature requests and its embedded template editor: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work), without a path. Each one is stored in lowercase, without a trailing slash. Browsers open a live signature request in a frame only on these sites (and DocSpring's), so with an empty list it can't be embedded anywhere; a test signature request can be embedded on any site. The embedded template editor loads only for a page on one of these sites (by its Referer or Origin header), and on any site when the list is empty. Forms embedded on a page (Visual Forms JS and Web Forms JS) aren't restricted.
+	// The sites that can embed the template's live signature requests, its embedded template editor and its visual form: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work), without a path. Each one is stored in lowercase, without a trailing slash. Browsers open a live signature request in a frame only on these sites (and DocSpring's), so with an empty list it can't be embedded anywhere; a test signature request can be embedded on any site. The embedded template editor loads only for a page on one of these sites (by its Referer or Origin header), and on any site when the list is empty. A visual form embedded with Visual Forms JS loads only on these sites, and on any site when the list is empty. Web Forms JS isn't restricted.
 	EmbedDomains []string `json:"embed_domains,omitempty"`
 	// Allow the embedded template editor to change sensitive template settings (webhooks, redirect URL, encryption, public access, expiration and so on).
 	EmbedEditAllowSettings *bool `json:"embed_edit_allow_settings,omitempty"`
@@ -53,9 +55,9 @@ type UpdateTemplateRequest struct {
 	EncryptPdfs *bool `json:"encrypt_pdfs,omitempty"`
 	// The password that opens encrypted PDFs. It's never returned; `has_encrypt_pdfs_password` says if it's set.
 	EncryptPdfsPassword NullableString `json:"encrypt_pdfs_password,omitempty"`
-	// Delete each submission's data and PDF after `expire_after` `expiration_interval`.
+	// Delete each submission's data and files after `expire_after` `expiration_interval`, when `override_account_expiry` is on.
 	ExpireSubmissions *bool `json:"expire_submissions,omitempty"`
-	// How many `expiration_interval`s a submission's data and PDF are kept for, when `expire_submissions` is on. At most 5256000 (10 years in minutes).
+	// How many `expiration_interval`s a submission's data and PDF are kept for, when `expire_submissions` and `override_account_expiry` are on. At most 5256000 (10 years in minutes).
 	ExpireAfter *int32 `json:"expire_after,omitempty"`
 	// The unit of `expire_after`.
 	ExpirationInterval *ExpirationInterval `json:"expiration_interval,omitempty"`
@@ -69,19 +71,19 @@ type UpdateTemplateRequest struct {
 	PublicWebForm *bool `json:"public_web_form,omitempty"`
 	// Where the web form sends people after they submit it, instead of showing its success screen. After its `?` or `#`, it can have variables such as `{{ data.first_name }}`, which the form fills in with what they submitted.
 	RedirectUrl NullableString `json:"redirect_url,omitempty"`
-	// How DocSpring's completed emails send the signed PDF to your signers and CCs: `attachment` (attached, or a download link when it's too big to attach) or `link` (a download link). Null uses your account's rule: a link if your account has signed a BAA, otherwise attached. PDF templates only. A signature request uses the value it had when the request was created.
+	// How DocSpring's completed emails send the signed PDF to your signers and CCs: `attachment` (attached, or a download link when it's too big to attach) or `link` (a download link). Null uses your account's rule: a link if your account has signed a BAA, otherwise attached. A signature request uses the value it had when the request was created.
 	SignatureRequestEmailAttachments NullableSignatureRequestEmailAttachments `json:"signature_request_email_attachments,omitempty"`
-	// The address DocSpring's emails to your signers come from: an address at one of your verified email domains, on the Growth plan or higher. Null sends them from DocSpring's shared address, with "via DocSpring" after the sender name. PDF templates only.
+	// The address DocSpring's emails to your signers come from: an address at one of your verified email domains, on the Growth plan or higher. Null sends them from DocSpring's shared address, with "via DocSpring" after the sender name.
 	SignatureRequestFromAddress NullableString `json:"signature_request_from_address,omitempty"`
-	// Puts a signing token in `signature_request_signing_url`, as `{{ token_id }}` and `{{ token_secret }}`, so your page can open the signing form without creating a token itself. The email then carries a credential: anyone who has it can open the form and sign. PDF templates only.
+	// Puts a signing token in `signature_request_signing_url`, as `{{ token_id }}` and `{{ token_secret }}`, so your page can open the signing form without creating a token itself. The email then carries a credential: anyone who has it can open the form and sign.
 	SignatureRequestIncludeSigningToken *bool `json:"signature_request_include_signing_token,omitempty"`
-	// The sender name on the emails DocSpring sends your signers, as in "Acme via DocSpring". It can't contain an email address, a website or quotes. Null uses your account's name. PDF templates only.
+	// The sender name on the emails DocSpring sends your signers, as in "Acme via DocSpring". It can't contain an email address, a website or quotes. Null uses your account's name.
 	SignatureRequestFromName NullableString `json:"signature_request_from_name,omitempty"`
-	// Who DocSpring tells when a signature request's document is completed or declined, or an email bounces or can't be sent: members of your DocSpring team or addresses at your verified email domains. Empty means your account's owner. A submission's `notification_emails` replaces them. PDF templates only.
+	// Who DocSpring tells when a signature request's document is completed or declined, or an email bounces or can't be sent: members of your DocSpring team or addresses at your verified email domains. Empty means your account's owner. A submission's `notification_emails` replaces them.
 	SignatureRequestNotificationEmails []string `json:"signature_request_notification_emails,omitempty"`
-	// Where your signers' replies to DocSpring's emails go: a member of your DocSpring team or an address at one of your verified email domains. Null means your account's owner. A submission's `reply_to` replaces it. PDF templates only.
+	// Where your signers' replies to DocSpring's emails go: a member of your DocSpring team or an address at one of your verified email domains. Null means your account's owner. A submission's `reply_to` replaces it.
 	SignatureRequestReplyTo NullableString `json:"signature_request_reply_to,omitempty"`
-	// A page on your own site that the button in DocSpring's email to a signer opens, instead of DocSpring's signing page: an https URL on one of your verified email domains or a subdomain of one, on the Growth plan or higher. It must include `{{ signature_request_id }}`. Your page authenticates the signer, creates a token for the signature request, and opens the signing form with it. Null links to DocSpring's signing page. PDF templates only.
+	// A page on your own site that the button in DocSpring's email to a signer opens, instead of DocSpring's signing page: an https URL on one of your verified email domains or a subdomain of one, on the Growth plan or higher. It must include `{{ signature_request_id }}`. Your page authenticates the signer, creates a token for the signature request, and opens the signing form with it. Null links to DocSpring's signing page.
 	SignatureRequestSigningUrl NullableString `json:"signature_request_signing_url,omitempty"`
 	// The title of the web form's success screen. When it's null or empty, the screen says "Thanks for filling out" and the template's name. It can have variables such as `{{ data.first_name }}`.
 	SuccessTitle NullableString `json:"success_title,omitempty"`
@@ -89,6 +91,8 @@ type UpdateTemplateRequest struct {
 	SuccessMessage NullableString `json:"success_message,omitempty"`
 	// Whether the web form's success screen has a "Fill out again" button, which clears the form so someone can fill it in again.
 	ShowFillAgainButton *bool `json:"show_fill_again_button,omitempty"`
+	// Whether a web form with sections makes people fill them out in order. When true, a later section stays locked until they reach it with Next. When false, they can open any section from the list, and Next and Submit still check their answers.
+	FormSectionsInOrder *bool `json:"form_sections_in_order,omitempty"`
 	// A Slack incoming webhook URL that is notified about the template's submissions. It's never returned; `has_slack_webhook_url` says if it's set.
 	SlackWebhookUrl NullableString `json:"slack_webhook_url,omitempty"`
 	// The default style of the template's fields. Setting it replaces the whole object.
@@ -99,6 +103,10 @@ type UpdateTemplateRequest struct {
 	FieldGroups []FieldGroupInput `json:"field_groups,omitempty"`
 	// The web form's sections, in order. Setting them replaces all of the sections; an empty list removes them.
 	FormSections []TemplateFormSectionInput `json:"form_sections,omitempty"`
+	// The template's signer roles, in order. Setting them replaces the whole list: a role left out is deleted, and its fields are left unassigned. Give each role you keep its `id`.
+	SignerRoles []TemplateSignerRoleInput `json:"signer_roles,omitempty"`
+	// Who gets a copy of the completed document when DocSpring emails a submission's signers, with the submission's `cc`: email addresses, or `{{ variables }}` that name an address in the submission's data, such as `{{ agent.email }}`. A value the data doesn't have prints nothing, and an address that comes out blank is left out. The data has to have the value, so it's one of the template's fields (one the sender fills in) or the template allows additional properties: setting a variable that isn't a field is a `422` otherwise. They don't sign. Setting it replaces the whole list.
+	SignatureRequestCc []string `json:"signature_request_cc,omitempty"`
 	// The field names that people using the embedded template editor choose from, each with the data type and settings a field gets when it's given that name. Setting it replaces the whole list; an empty list turns them off.
 	PredefinedFields []PredefinedFieldInput `json:"predefined_fields,omitempty"`
 	// Sample submission data that sets `predefined_fields`: each value becomes a predefined field, with a type that fits it (`string`, `number`, `boolean`, `date`, `email` or `url`) and `required_in_template` true. Nested objects and arrays become names with `/`, such as `customer/email`. Without `predefined_fields` in the same request, it replaces them; with them, it adds to them and sets the types of the ones it has values for.
@@ -117,6 +125,10 @@ type UpdateTemplateRequest struct {
 	HtmlEscapeData *bool `json:"html_escape_data,omitempty"`
 	// A page design's layout: its page setup, its sections and the elements placed in them, in the Page Designer layout format (https://docspring.com/docs/page-designer/layout-format/). Its JSON Schema is at https://docspring.com/schemas/page-designer/layout.v1.json. Null for other templates. Setting it replaces the whole layout, and DocSpring adds a field for each value it reads. Left out when a page design is created, it starts with an empty page.
 	Layout map[string]interface{} `json:"layout,omitempty"`
+	// Whether the template's own expiry (`expire_submissions`, `expire_after` and `expiration_interval`) decides when all its submissions are deleted, with or without signature requests, including keeping them until you delete them. When false, the account's expiry settings do. Turning `expire_submissions` on also turns this on, unless the same request sets it, and so does creating a template with `expire_submissions` on or off.
+	OverrideAccountExpiry *bool `json:"override_account_expiry,omitempty"`
+	// Add a field for each value the template's code or layout reads for the first time, with a type worked out from how it's used. Existing fields keep their settings, and a field you deleted while the code still read the value stays deleted. Default true. Set it to false to manage the fields yourself with the fields endpoints: a form field whose field isn't on the template then fails its submissions and previews. Only for HTML templates and page designs: a Word template takes it with its document, in PUT /templates/{template_id}/document or PUT /templates/{template_id}/document/upload.
+	SyncFields *bool `json:"sync_fields,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -445,6 +457,38 @@ func (o *UpdateTemplateRequest) HasAllowSkippingOptionalFields() bool {
 // SetAllowSkippingOptionalFields gets a reference to the given bool and assigns it to the AllowSkippingOptionalFields field.
 func (o *UpdateTemplateRequest) SetAllowSkippingOptionalFields(v bool) {
 	o.AllowSkippingOptionalFields = &v
+}
+
+// GetContinueBeforeOptionalFields returns the ContinueBeforeOptionalFields field value if set, zero value otherwise.
+func (o *UpdateTemplateRequest) GetContinueBeforeOptionalFields() bool {
+	if o == nil || IsNil(o.ContinueBeforeOptionalFields) {
+		var ret bool
+		return ret
+	}
+	return *o.ContinueBeforeOptionalFields
+}
+
+// GetContinueBeforeOptionalFieldsOk returns a tuple with the ContinueBeforeOptionalFields field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateTemplateRequest) GetContinueBeforeOptionalFieldsOk() (*bool, bool) {
+	if o == nil || IsNil(o.ContinueBeforeOptionalFields) {
+		return nil, false
+	}
+	return o.ContinueBeforeOptionalFields, true
+}
+
+// HasContinueBeforeOptionalFields returns a boolean if a field has been set.
+func (o *UpdateTemplateRequest) HasContinueBeforeOptionalFields() bool {
+	if o != nil && !IsNil(o.ContinueBeforeOptionalFields) {
+		return true
+	}
+
+	return false
+}
+
+// SetContinueBeforeOptionalFields gets a reference to the given bool and assigns it to the ContinueBeforeOptionalFields field.
+func (o *UpdateTemplateRequest) SetContinueBeforeOptionalFields(v bool) {
+	o.ContinueBeforeOptionalFields = &v
 }
 
 // GetDefaultFormMode returns the DefaultFormMode field value if set, zero value otherwise.
@@ -1369,6 +1413,38 @@ func (o *UpdateTemplateRequest) SetShowFillAgainButton(v bool) {
 	o.ShowFillAgainButton = &v
 }
 
+// GetFormSectionsInOrder returns the FormSectionsInOrder field value if set, zero value otherwise.
+func (o *UpdateTemplateRequest) GetFormSectionsInOrder() bool {
+	if o == nil || IsNil(o.FormSectionsInOrder) {
+		var ret bool
+		return ret
+	}
+	return *o.FormSectionsInOrder
+}
+
+// GetFormSectionsInOrderOk returns a tuple with the FormSectionsInOrder field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateTemplateRequest) GetFormSectionsInOrderOk() (*bool, bool) {
+	if o == nil || IsNil(o.FormSectionsInOrder) {
+		return nil, false
+	}
+	return o.FormSectionsInOrder, true
+}
+
+// HasFormSectionsInOrder returns a boolean if a field has been set.
+func (o *UpdateTemplateRequest) HasFormSectionsInOrder() bool {
+	if o != nil && !IsNil(o.FormSectionsInOrder) {
+		return true
+	}
+
+	return false
+}
+
+// SetFormSectionsInOrder gets a reference to the given bool and assigns it to the FormSectionsInOrder field.
+func (o *UpdateTemplateRequest) SetFormSectionsInOrder(v bool) {
+	o.FormSectionsInOrder = &v
+}
+
 // GetSlackWebhookUrl returns the SlackWebhookUrl field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *UpdateTemplateRequest) GetSlackWebhookUrl() string {
 	if o == nil || IsNil(o.SlackWebhookUrl.Get()) {
@@ -1537,6 +1613,70 @@ func (o *UpdateTemplateRequest) HasFormSections() bool {
 // SetFormSections gets a reference to the given []TemplateFormSectionInput and assigns it to the FormSections field.
 func (o *UpdateTemplateRequest) SetFormSections(v []TemplateFormSectionInput) {
 	o.FormSections = v
+}
+
+// GetSignerRoles returns the SignerRoles field value if set, zero value otherwise.
+func (o *UpdateTemplateRequest) GetSignerRoles() []TemplateSignerRoleInput {
+	if o == nil || IsNil(o.SignerRoles) {
+		var ret []TemplateSignerRoleInput
+		return ret
+	}
+	return o.SignerRoles
+}
+
+// GetSignerRolesOk returns a tuple with the SignerRoles field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateTemplateRequest) GetSignerRolesOk() ([]TemplateSignerRoleInput, bool) {
+	if o == nil || IsNil(o.SignerRoles) {
+		return nil, false
+	}
+	return o.SignerRoles, true
+}
+
+// HasSignerRoles returns a boolean if a field has been set.
+func (o *UpdateTemplateRequest) HasSignerRoles() bool {
+	if o != nil && !IsNil(o.SignerRoles) {
+		return true
+	}
+
+	return false
+}
+
+// SetSignerRoles gets a reference to the given []TemplateSignerRoleInput and assigns it to the SignerRoles field.
+func (o *UpdateTemplateRequest) SetSignerRoles(v []TemplateSignerRoleInput) {
+	o.SignerRoles = v
+}
+
+// GetSignatureRequestCc returns the SignatureRequestCc field value if set, zero value otherwise.
+func (o *UpdateTemplateRequest) GetSignatureRequestCc() []string {
+	if o == nil || IsNil(o.SignatureRequestCc) {
+		var ret []string
+		return ret
+	}
+	return o.SignatureRequestCc
+}
+
+// GetSignatureRequestCcOk returns a tuple with the SignatureRequestCc field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateTemplateRequest) GetSignatureRequestCcOk() ([]string, bool) {
+	if o == nil || IsNil(o.SignatureRequestCc) {
+		return nil, false
+	}
+	return o.SignatureRequestCc, true
+}
+
+// HasSignatureRequestCc returns a boolean if a field has been set.
+func (o *UpdateTemplateRequest) HasSignatureRequestCc() bool {
+	if o != nil && !IsNil(o.SignatureRequestCc) {
+		return true
+	}
+
+	return false
+}
+
+// SetSignatureRequestCc gets a reference to the given []string and assigns it to the SignatureRequestCc field.
+func (o *UpdateTemplateRequest) SetSignatureRequestCc(v []string) {
+	o.SignatureRequestCc = v
 }
 
 // GetPredefinedFields returns the PredefinedFields field value if set, zero value otherwise.
@@ -1879,6 +2019,70 @@ func (o *UpdateTemplateRequest) SetLayout(v map[string]interface{}) {
 	o.Layout = v
 }
 
+// GetOverrideAccountExpiry returns the OverrideAccountExpiry field value if set, zero value otherwise.
+func (o *UpdateTemplateRequest) GetOverrideAccountExpiry() bool {
+	if o == nil || IsNil(o.OverrideAccountExpiry) {
+		var ret bool
+		return ret
+	}
+	return *o.OverrideAccountExpiry
+}
+
+// GetOverrideAccountExpiryOk returns a tuple with the OverrideAccountExpiry field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateTemplateRequest) GetOverrideAccountExpiryOk() (*bool, bool) {
+	if o == nil || IsNil(o.OverrideAccountExpiry) {
+		return nil, false
+	}
+	return o.OverrideAccountExpiry, true
+}
+
+// HasOverrideAccountExpiry returns a boolean if a field has been set.
+func (o *UpdateTemplateRequest) HasOverrideAccountExpiry() bool {
+	if o != nil && !IsNil(o.OverrideAccountExpiry) {
+		return true
+	}
+
+	return false
+}
+
+// SetOverrideAccountExpiry gets a reference to the given bool and assigns it to the OverrideAccountExpiry field.
+func (o *UpdateTemplateRequest) SetOverrideAccountExpiry(v bool) {
+	o.OverrideAccountExpiry = &v
+}
+
+// GetSyncFields returns the SyncFields field value if set, zero value otherwise.
+func (o *UpdateTemplateRequest) GetSyncFields() bool {
+	if o == nil || IsNil(o.SyncFields) {
+		var ret bool
+		return ret
+	}
+	return *o.SyncFields
+}
+
+// GetSyncFieldsOk returns a tuple with the SyncFields field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateTemplateRequest) GetSyncFieldsOk() (*bool, bool) {
+	if o == nil || IsNil(o.SyncFields) {
+		return nil, false
+	}
+	return o.SyncFields, true
+}
+
+// HasSyncFields returns a boolean if a field has been set.
+func (o *UpdateTemplateRequest) HasSyncFields() bool {
+	if o != nil && !IsNil(o.SyncFields) {
+		return true
+	}
+
+	return false
+}
+
+// SetSyncFields gets a reference to the given bool and assigns it to the SyncFields field.
+func (o *UpdateTemplateRequest) SetSyncFields(v bool) {
+	o.SyncFields = &v
+}
+
 func (o UpdateTemplateRequest) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -1915,6 +2119,9 @@ func (o UpdateTemplateRequest) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.AllowSkippingOptionalFields) {
 		toSerialize["allow_skipping_optional_fields"] = o.AllowSkippingOptionalFields
+	}
+	if !IsNil(o.ContinueBeforeOptionalFields) {
+		toSerialize["continue_before_optional_fields"] = o.ContinueBeforeOptionalFields
 	}
 	if !IsNil(o.DefaultFormMode) {
 		toSerialize["default_form_mode"] = o.DefaultFormMode
@@ -1994,6 +2201,9 @@ func (o UpdateTemplateRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ShowFillAgainButton) {
 		toSerialize["show_fill_again_button"] = o.ShowFillAgainButton
 	}
+	if !IsNil(o.FormSectionsInOrder) {
+		toSerialize["form_sections_in_order"] = o.FormSectionsInOrder
+	}
 	if o.SlackWebhookUrl.IsSet() {
 		toSerialize["slack_webhook_url"] = o.SlackWebhookUrl.Get()
 	}
@@ -2008,6 +2218,12 @@ func (o UpdateTemplateRequest) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.FormSections) {
 		toSerialize["form_sections"] = o.FormSections
+	}
+	if !IsNil(o.SignerRoles) {
+		toSerialize["signer_roles"] = o.SignerRoles
+	}
+	if !IsNil(o.SignatureRequestCc) {
+		toSerialize["signature_request_cc"] = o.SignatureRequestCc
 	}
 	if !IsNil(o.PredefinedFields) {
 		toSerialize["predefined_fields"] = o.PredefinedFields
@@ -2035,6 +2251,12 @@ func (o UpdateTemplateRequest) ToMap() (map[string]interface{}, error) {
 	}
 	if o.Layout != nil {
 		toSerialize["layout"] = o.Layout
+	}
+	if !IsNil(o.OverrideAccountExpiry) {
+		toSerialize["override_account_expiry"] = o.OverrideAccountExpiry
+	}
+	if !IsNil(o.SyncFields) {
+		toSerialize["sync_fields"] = o.SyncFields
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -2067,6 +2289,7 @@ func (o *UpdateTemplateRequest) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "ai_field_naming_language")
 		delete(additionalProperties, "allow_additional_properties")
 		delete(additionalProperties, "allow_skipping_optional_fields")
+		delete(additionalProperties, "continue_before_optional_fields")
 		delete(additionalProperties, "default_form_mode")
 		delete(additionalProperties, "editable_submissions")
 		delete(additionalProperties, "embed_domains")
@@ -2093,11 +2316,14 @@ func (o *UpdateTemplateRequest) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "success_title")
 		delete(additionalProperties, "success_message")
 		delete(additionalProperties, "show_fill_again_button")
+		delete(additionalProperties, "form_sections_in_order")
 		delete(additionalProperties, "slack_webhook_url")
 		delete(additionalProperties, "defaults")
 		delete(additionalProperties, "field_dependencies")
 		delete(additionalProperties, "field_groups")
 		delete(additionalProperties, "form_sections")
+		delete(additionalProperties, "signer_roles")
+		delete(additionalProperties, "signature_request_cc")
 		delete(additionalProperties, "predefined_fields")
 		delete(additionalProperties, "predefined_fields_sample_data")
 		delete(additionalProperties, "html")
@@ -2107,6 +2333,8 @@ func (o *UpdateTemplateRequest) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "html_engine_options")
 		delete(additionalProperties, "html_escape_data")
 		delete(additionalProperties, "layout")
+		delete(additionalProperties, "override_account_expiry")
+		delete(additionalProperties, "sync_fields")
 		o.AdditionalProperties = additionalProperties
 	}
 

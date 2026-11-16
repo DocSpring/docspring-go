@@ -3815,7 +3815,8 @@ func (r ApiDeleteTemplateRequest) Execute() (*Template, *http.Response, error) {
 DeleteTemplate Delete a template
 
 Deletes a template's draft and all of its published versions, or one published version (`version`). Returns
-the template as it was before it was deleted.
+the template as it was before it was deleted. A deleted template can be restored from Trash in the dashboard
+for a limited time; a single deleted version can't.
 
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -4296,7 +4297,9 @@ func (r ApiExpireSubmissionRequest) Execute() (*Submission, *http.Response, erro
 /*
 ExpireSubmission Expire a submission
 
-Deletes a submission's data and PDF now, and returns the expired submission.
+Deletes a submission's data and files now, along with any signature requests and audit trail, and returns the
+expired submission.
+
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param submissionId The submission's ID.
@@ -12438,6 +12441,7 @@ type ApiUploadTemplateRequest struct {
 	fieldLogic *FieldSetupLogic
 	outputFormat *OutputFormat
 	includeOfficeUseFields *bool
+	syncFields *bool
 	idempotencyKey *string
 }
 
@@ -12510,6 +12514,12 @@ func (r ApiUploadTemplateRequest) OutputFormat(outputFormat OutputFormat) ApiUpl
 // With `detect_fields`, whether AI field setup keeps the fields that only the office receiving the form fills in, such as a "For office use only" box (`true`), or leaves them out (`false`). Default: your account's template settings.
 func (r ApiUploadTemplateRequest) IncludeOfficeUseFields(includeOfficeUseFields bool) ApiUploadTemplateRequest {
 	r.includeOfficeUseFields = &includeOfficeUseFields
+	return r
+}
+
+// Add a field for each value the template's code, Word document or layout reads for the first time, with a type worked out from how it's used. Existing fields keep their settings, and a field you deleted while the code still read the value stays deleted. Default true. Set it to false to manage the fields yourself with the fields endpoints: a form field whose field isn't on the template then fails its submissions and previews. Only for HTML templates, Word templates and page designs.
+func (r ApiUploadTemplateRequest) SyncFields(syncFields bool) ApiUploadTemplateRequest {
+	r.syncFields = &syncFields
 	return r
 }
 
@@ -12634,6 +12644,9 @@ func (a *ClientAPIService) UploadTemplateExecute(r ApiUploadTemplateRequest) (*T
 	if r.includeOfficeUseFields != nil {
 		parameterAddToHeaderOrQuery(localVarFormParams, "include_office_use_fields", r.includeOfficeUseFields, "", "")
 	}
+	if r.syncFields != nil {
+		parameterAddToHeaderOrQuery(localVarFormParams, "sync_fields", r.syncFields, "", "")
+	}
 	if err := a.client.validateRequest("uploadTemplate", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
 		return localVarReturnValue, nil, err
 	}
@@ -12735,6 +12748,7 @@ type ApiUploadTemplateDocumentRequest struct {
 	document *os.File
 	wait *bool
 	reimportFields *bool
+	syncFields *bool
 	idempotencyKey *string
 }
 
@@ -12753,6 +12767,12 @@ func (r ApiUploadTemplateDocumentRequest) Wait(wait bool) ApiUploadTemplateDocum
 // Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. Only for PDF templates: a Word template adds a field for each new tag.
 func (r ApiUploadTemplateDocumentRequest) ReimportFields(reimportFields bool) ApiUploadTemplateDocumentRequest {
 	r.reimportFields = &reimportFields
+	return r
+}
+
+// Add a field for each value the template's code, Word document or layout reads for the first time, with a type worked out from how it's used. Existing fields keep their settings, and a field you deleted while the code still read the value stays deleted. Default true. Set it to false to manage the fields yourself with the fields endpoints: a form field whose field isn't on the template then fails its submissions and previews. Only for HTML templates, Word templates and page designs.
+func (r ApiUploadTemplateDocumentRequest) SyncFields(syncFields bool) ApiUploadTemplateDocumentRequest {
+	r.syncFields = &syncFields
 	return r
 }
 
@@ -12851,6 +12871,9 @@ func (a *ClientAPIService) UploadTemplateDocumentExecute(r ApiUploadTemplateDocu
 	}
 	if r.reimportFields != nil {
 		parameterAddToHeaderOrQuery(localVarFormParams, "reimport_fields", r.reimportFields, "", "")
+	}
+	if r.syncFields != nil {
+		parameterAddToHeaderOrQuery(localVarFormParams, "sync_fields", r.syncFields, "", "")
 	}
 	if err := a.client.validateRequest("uploadTemplateDocument", localVarQueryParams, localVarPostBody, localVarFormParams, formFiles); err != nil {
 		return localVarReturnValue, nil, err

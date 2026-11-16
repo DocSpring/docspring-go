@@ -43,6 +43,10 @@ type FieldInput struct {
 	Required *bool `json:"required,omitempty"`
 	// String fields only: a comma-separated list of the values the field accepts. It's added to the template's data schema as an `enum`, forms show it as a select list, and an `editable` field becomes a dropdown. Shared by every field with the same `name`.
 	OptionList NullableString `json:"option_list,omitempty"`
+	// With `option_list`: the label forms show for each option, keyed by its value, such as `{"head_of_household": "Head of household"}`. The data, the API and webhooks keep the value, and the PDF prints it unless `print_option_labels` is set. An option without a label shows its value, or its sentence case when the options are lowercase words joined by underscores (`head_of_household` shows as "Head of household"). The template's data schema has them as `x-option-labels`. Each key must be one of the options, and each label must have some text. Shared by every field with the same `name`.
+	OptionLabels map[string]string `json:"option_labels,omitempty"`
+	// Text display, with `option_labels`: the PDF prints the chosen option's label instead of its value, and an `editable` field's dropdown lists the labels. Shared by every field with the same `name`.
+	PrintOptionLabels *bool `json:"print_option_labels,omitempty"`
 	// Combined fields only: a comma-separated list of the names of the fields whose values are combined, in order. Shared by every field with the same `name`.
 	CombinedFieldNames *string `json:"combined_field_names,omitempty"`
 	// Combined fields only: `separator` joins the values with `combined_field_separator`, and `format` puts them into `combined_field_format`. Shared by every field with the same `name`.
@@ -69,6 +73,12 @@ type FieldInput struct {
 	SignatureAllowType *bool `json:"signature_allow_type,omitempty"`
 	// Barcode fields only: the barcode format, which the value must match. `code_128` and `pdf417` take any ASCII text; `code_39` and `code_93` take capital letters, digits, spaces and `- . $ / + %`; `code_25` takes digits; `ean_13` takes 12 digits, `ean_8` 7 digits and `upc_a` 11 digits (the check digit is added). Shared by every field with the same `name`.
 	BarcodeSymbology *BarcodeSymbology `json:"barcode_symbology,omitempty"`
+	// With `comb`: the value fills the last boxes of the comb fields with this name, padded on the left with spaces, or with zeros with `comb_pad_with_zeros`, as amounts are written on paper forms. A number with `decimal_places` in one row of boxes lines up on its decimal point, which takes no box: the decimal places fill the last boxes. Date fields ignore it: a date prints in its format. Shared by every field with the same `name`.
+	CombFillFromRight *bool `json:"comb_fill_from_right,omitempty"`
+	// With `comb_fill_from_right`: pads the value on the left with zeros instead of spaces, such as `000123`. A negative number keeps its minus sign in the first box. Shared by every field with the same `name`.
+	CombPadWithZeros *bool `json:"comb_pad_with_zeros,omitempty"`
+	// With `comb`, for string fields: only the value's digits print, one in each box, and any punctuation is left out, so `123-45-6789` fills the 9 boxes of an SSN. The template's data schema accepts as many digits as the boxes hold, with anything but letters between them. Number and date fields ignore it. Shared by every field with the same `name`.
+	PrintDigitsOnly *bool `json:"print_digits_only,omitempty"`
 	// Leaves the field off the PDF. It stays in the template's data schema (marked `x-hidden`) and on forms, so other fields, such as combined fields, can use its value. A hidden static check mark or shape isn't printed.
 	Hidden *bool `json:"hidden,omitempty"`
 	// The distance from the page's left edge to the field's left edge. Positions and sizes are in units where every page is 2480 wide: one unit is the page's width in points divided by 2480 (about 0.247 points on a US Letter page).
@@ -131,9 +141,9 @@ type FieldInput struct {
 	VAlignment *TextVerticalAlignment `json:"v_alignment,omitempty"`
 	// Text display only: splits the field into `comb_number_of_cells` boxes of equal width and prints one character, centered, in each.
 	Comb *bool `json:"comb,omitempty"`
-	// With `comb`: how many boxes the field has. The value's maximum length in the template's data schema is this plus `comb_value_offset`.
+	// With `comb`: how many boxes the field has, up to 10,000. The value's maximum length in the template's data schema is the furthest that a comb field of its name reaches: its `comb_value_offset` plus its boxes. With `print_digits_only`, that many digits. A number field is split from its printed form (with `decimal_places`), and a number with a digit that no box prints (more digits than the boxes, or a digit where the offsets leave a gap) is a data error.
 	CombNumberOfCells *int32 `json:"comb_number_of_cells,omitempty"`
-	// With `comb`: the position, from 0, of the first character of the value that this field prints. For an SSN printed in boxes of 3, 2 and 4 digits, three fields named `ssn` use offsets 0, 3 and 5.
+	// With `comb`: how many boxes of the value's row come before this field, from 0 to 10,000. The comb fields that share a name make one row of boxes, and each prints the row's characters from its offset. For an SSN printed in boxes of 3, 2 and 4 digits, three fields named `ssn` use offsets 0, 3 and 5. The fields that print a number's whole part (`number_part`) make a row of their own, and so do the ones that print its decimal places.
 	CombValueOffset *int32 `json:"comb_value_offset,omitempty"`
 	// Shape display only: `square`, `rectangle`, `circle`, `ellipse`, `triangle` or `polygon`. A square or circle uses the smaller of `width` and `height`.
 	ShapeType *ShapeType `json:"shape_type,omitempty"`
@@ -191,10 +201,14 @@ type FieldInput struct {
 	Currency *bool `json:"currency,omitempty"`
 	// Number fields with text display: prints the number with this many decimal places, from 0 (rounds to a whole number) to 99. Empty prints the number as it was sent.
 	DecimalPlaces NullableInt32 `json:"decimal_places,omitempty"`
+	// Number fields with text display: which part of the number this field prints. `all` prints the whole number, `whole` only the part before the decimal point (with a minus sign) and `decimals` only the decimal places. For an amount printed as `$ ____ . __`, two fields with the same name: one `whole`, and one `decimals` with `decimal_places` 2. The number is rounded once, to the `decimals` field's decimal places (2 when it sets none).
+	NumberPart *NumberPart `json:"number_part,omitempty"`
 	// Image fields only: how the image is resized to the field. `fit` keeps its proportions and fits it inside the field, which can leave empty space; `fill` keeps its proportions and crops it to fill the field; `stretch` stretches it to the field's size. Signatures and initials always fit.
 	ImageScaleType *ImageScaleType `json:"image_scale_type,omitempty"`
 	// Image, signature and initials fields: where the image sits in the field with `fit`, or which part is kept with `fill`: `NorthWest` (top left), `North`, `NorthEast`, `West`, `Center`, `East`, `SouthWest`, `South` or `SouthEast` (bottom right). It also aligns typed signatures, and isn't used with `stretch`.
 	ImageGravity *ImageGravity `json:"image_gravity,omitempty"`
+	// Who fills in or signs the field when a submission has signature requests: one of the template's `signer_roles`, by its key, or `sender` for a field that submission data fills in, which no signer is asked for. Null when it has no role: a submission's only signer fills it in when data doesn't, and with two or more signature requests one of them has to list it in its `fields`. In an HTML or Word template, a field whose tag gives it a role (`{% form_field tenant_name, role: tenant %}`) has that one, which only the code can change. Shared by every field with the same `name`.
+	SignerRole NullableString `json:"signer_role,omitempty"`
 	// The field's own conditional logic rule: when other fields' values meet its conditions, the field is shown, made required, or both. Null when it has none. The template's rules (`field_dependencies`) can apply to the field too. Shared by every field with the same `name`.
 	Dependencies NullableFieldDependencyInput `json:"dependencies,omitempty"`
 	// The field's ID. Required when updating a field. When adding one, leave it out for the next free ID.
@@ -630,6 +644,71 @@ func (o *FieldInput) SetOptionListNil() {
 // UnsetOptionList ensures that no value is present for OptionList, not even an explicit nil
 func (o *FieldInput) UnsetOptionList() {
 	o.OptionList.Unset()
+}
+
+// GetOptionLabels returns the OptionLabels field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *FieldInput) GetOptionLabels() map[string]string {
+	if o == nil {
+		var ret map[string]string
+		return ret
+	}
+	return o.OptionLabels
+}
+
+// GetOptionLabelsOk returns a tuple with the OptionLabels field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *FieldInput) GetOptionLabelsOk() (map[string]string, bool) {
+	if o == nil || IsNil(o.OptionLabels) {
+		return map[string]string{}, false
+	}
+	return o.OptionLabels, true
+}
+
+// HasOptionLabels returns a boolean if a field has been set.
+func (o *FieldInput) HasOptionLabels() bool {
+	if o != nil && !IsNil(o.OptionLabels) {
+		return true
+	}
+
+	return false
+}
+
+// SetOptionLabels gets a reference to the given map[string]string and assigns it to the OptionLabels field.
+func (o *FieldInput) SetOptionLabels(v map[string]string) {
+	o.OptionLabels = v
+}
+
+// GetPrintOptionLabels returns the PrintOptionLabels field value if set, zero value otherwise.
+func (o *FieldInput) GetPrintOptionLabels() bool {
+	if o == nil || IsNil(o.PrintOptionLabels) {
+		var ret bool
+		return ret
+	}
+	return *o.PrintOptionLabels
+}
+
+// GetPrintOptionLabelsOk returns a tuple with the PrintOptionLabels field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FieldInput) GetPrintOptionLabelsOk() (*bool, bool) {
+	if o == nil || IsNil(o.PrintOptionLabels) {
+		return nil, false
+	}
+	return o.PrintOptionLabels, true
+}
+
+// HasPrintOptionLabels returns a boolean if a field has been set.
+func (o *FieldInput) HasPrintOptionLabels() bool {
+	if o != nil && !IsNil(o.PrintOptionLabels) {
+		return true
+	}
+
+	return false
+}
+
+// SetPrintOptionLabels gets a reference to the given bool and assigns it to the PrintOptionLabels field.
+func (o *FieldInput) SetPrintOptionLabels(v bool) {
+	o.PrintOptionLabels = &v
 }
 
 // GetCombinedFieldNames returns the CombinedFieldNames field value if set, zero value otherwise.
@@ -1076,6 +1155,102 @@ func (o *FieldInput) HasBarcodeSymbology() bool {
 // SetBarcodeSymbology gets a reference to the given BarcodeSymbology and assigns it to the BarcodeSymbology field.
 func (o *FieldInput) SetBarcodeSymbology(v BarcodeSymbology) {
 	o.BarcodeSymbology = &v
+}
+
+// GetCombFillFromRight returns the CombFillFromRight field value if set, zero value otherwise.
+func (o *FieldInput) GetCombFillFromRight() bool {
+	if o == nil || IsNil(o.CombFillFromRight) {
+		var ret bool
+		return ret
+	}
+	return *o.CombFillFromRight
+}
+
+// GetCombFillFromRightOk returns a tuple with the CombFillFromRight field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FieldInput) GetCombFillFromRightOk() (*bool, bool) {
+	if o == nil || IsNil(o.CombFillFromRight) {
+		return nil, false
+	}
+	return o.CombFillFromRight, true
+}
+
+// HasCombFillFromRight returns a boolean if a field has been set.
+func (o *FieldInput) HasCombFillFromRight() bool {
+	if o != nil && !IsNil(o.CombFillFromRight) {
+		return true
+	}
+
+	return false
+}
+
+// SetCombFillFromRight gets a reference to the given bool and assigns it to the CombFillFromRight field.
+func (o *FieldInput) SetCombFillFromRight(v bool) {
+	o.CombFillFromRight = &v
+}
+
+// GetCombPadWithZeros returns the CombPadWithZeros field value if set, zero value otherwise.
+func (o *FieldInput) GetCombPadWithZeros() bool {
+	if o == nil || IsNil(o.CombPadWithZeros) {
+		var ret bool
+		return ret
+	}
+	return *o.CombPadWithZeros
+}
+
+// GetCombPadWithZerosOk returns a tuple with the CombPadWithZeros field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FieldInput) GetCombPadWithZerosOk() (*bool, bool) {
+	if o == nil || IsNil(o.CombPadWithZeros) {
+		return nil, false
+	}
+	return o.CombPadWithZeros, true
+}
+
+// HasCombPadWithZeros returns a boolean if a field has been set.
+func (o *FieldInput) HasCombPadWithZeros() bool {
+	if o != nil && !IsNil(o.CombPadWithZeros) {
+		return true
+	}
+
+	return false
+}
+
+// SetCombPadWithZeros gets a reference to the given bool and assigns it to the CombPadWithZeros field.
+func (o *FieldInput) SetCombPadWithZeros(v bool) {
+	o.CombPadWithZeros = &v
+}
+
+// GetPrintDigitsOnly returns the PrintDigitsOnly field value if set, zero value otherwise.
+func (o *FieldInput) GetPrintDigitsOnly() bool {
+	if o == nil || IsNil(o.PrintDigitsOnly) {
+		var ret bool
+		return ret
+	}
+	return *o.PrintDigitsOnly
+}
+
+// GetPrintDigitsOnlyOk returns a tuple with the PrintDigitsOnly field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FieldInput) GetPrintDigitsOnlyOk() (*bool, bool) {
+	if o == nil || IsNil(o.PrintDigitsOnly) {
+		return nil, false
+	}
+	return o.PrintDigitsOnly, true
+}
+
+// HasPrintDigitsOnly returns a boolean if a field has been set.
+func (o *FieldInput) HasPrintDigitsOnly() bool {
+	if o != nil && !IsNil(o.PrintDigitsOnly) {
+		return true
+	}
+
+	return false
+}
+
+// SetPrintDigitsOnly gets a reference to the given bool and assigns it to the PrintDigitsOnly field.
+func (o *FieldInput) SetPrintDigitsOnly(v bool) {
+	o.PrintDigitsOnly = &v
 }
 
 // GetHidden returns the Hidden field value if set, zero value otherwise.
@@ -3250,6 +3425,38 @@ func (o *FieldInput) UnsetDecimalPlaces() {
 	o.DecimalPlaces.Unset()
 }
 
+// GetNumberPart returns the NumberPart field value if set, zero value otherwise.
+func (o *FieldInput) GetNumberPart() NumberPart {
+	if o == nil || IsNil(o.NumberPart) {
+		var ret NumberPart
+		return ret
+	}
+	return *o.NumberPart
+}
+
+// GetNumberPartOk returns a tuple with the NumberPart field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FieldInput) GetNumberPartOk() (*NumberPart, bool) {
+	if o == nil || IsNil(o.NumberPart) {
+		return nil, false
+	}
+	return o.NumberPart, true
+}
+
+// HasNumberPart returns a boolean if a field has been set.
+func (o *FieldInput) HasNumberPart() bool {
+	if o != nil && !IsNil(o.NumberPart) {
+		return true
+	}
+
+	return false
+}
+
+// SetNumberPart gets a reference to the given NumberPart and assigns it to the NumberPart field.
+func (o *FieldInput) SetNumberPart(v NumberPart) {
+	o.NumberPart = &v
+}
+
 // GetImageScaleType returns the ImageScaleType field value if set, zero value otherwise.
 func (o *FieldInput) GetImageScaleType() ImageScaleType {
 	if o == nil || IsNil(o.ImageScaleType) {
@@ -3312,6 +3519,48 @@ func (o *FieldInput) HasImageGravity() bool {
 // SetImageGravity gets a reference to the given ImageGravity and assigns it to the ImageGravity field.
 func (o *FieldInput) SetImageGravity(v ImageGravity) {
 	o.ImageGravity = &v
+}
+
+// GetSignerRole returns the SignerRole field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *FieldInput) GetSignerRole() string {
+	if o == nil || IsNil(o.SignerRole.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.SignerRole.Get()
+}
+
+// GetSignerRoleOk returns a tuple with the SignerRole field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *FieldInput) GetSignerRoleOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.SignerRole.Get(), o.SignerRole.IsSet()
+}
+
+// HasSignerRole returns a boolean if a field has been set.
+func (o *FieldInput) HasSignerRole() bool {
+	if o != nil && o.SignerRole.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetSignerRole gets a reference to the given NullableString and assigns it to the SignerRole field.
+func (o *FieldInput) SetSignerRole(v string) {
+	o.SignerRole.Set(&v)
+}
+// SetSignerRoleNil sets the value for SignerRole to be an explicit nil
+func (o *FieldInput) SetSignerRoleNil() {
+	o.SignerRole.Set(nil)
+}
+
+// UnsetSignerRole ensures that no value is present for SignerRole, not even an explicit nil
+func (o *FieldInput) UnsetSignerRole() {
+	o.SignerRole.Unset()
 }
 
 // GetDependencies returns the Dependencies field value if set, zero value otherwise (both if not set or set to explicit null).
@@ -3434,6 +3683,12 @@ func (o FieldInput) ToMap() (map[string]interface{}, error) {
 	if o.OptionList.IsSet() {
 		toSerialize["option_list"] = o.OptionList.Get()
 	}
+	if o.OptionLabels != nil {
+		toSerialize["option_labels"] = o.OptionLabels
+	}
+	if !IsNil(o.PrintOptionLabels) {
+		toSerialize["print_option_labels"] = o.PrintOptionLabels
+	}
 	if !IsNil(o.CombinedFieldNames) {
 		toSerialize["combined_field_names"] = o.CombinedFieldNames
 	}
@@ -3472,6 +3727,15 @@ func (o FieldInput) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.BarcodeSymbology) {
 		toSerialize["barcode_symbology"] = o.BarcodeSymbology
+	}
+	if !IsNil(o.CombFillFromRight) {
+		toSerialize["comb_fill_from_right"] = o.CombFillFromRight
+	}
+	if !IsNil(o.CombPadWithZeros) {
+		toSerialize["comb_pad_with_zeros"] = o.CombPadWithZeros
+	}
+	if !IsNil(o.PrintDigitsOnly) {
+		toSerialize["print_digits_only"] = o.PrintDigitsOnly
 	}
 	if !IsNil(o.Hidden) {
 		toSerialize["hidden"] = o.Hidden
@@ -3656,11 +3920,17 @@ func (o FieldInput) ToMap() (map[string]interface{}, error) {
 	if o.DecimalPlaces.IsSet() {
 		toSerialize["decimal_places"] = o.DecimalPlaces.Get()
 	}
+	if !IsNil(o.NumberPart) {
+		toSerialize["number_part"] = o.NumberPart
+	}
 	if !IsNil(o.ImageScaleType) {
 		toSerialize["image_scale_type"] = o.ImageScaleType
 	}
 	if !IsNil(o.ImageGravity) {
 		toSerialize["image_gravity"] = o.ImageGravity
+	}
+	if o.SignerRole.IsSet() {
+		toSerialize["signer_role"] = o.SignerRole.Get()
 	}
 	if o.Dependencies.IsSet() {
 		toSerialize["dependencies"] = o.Dependencies.Get()

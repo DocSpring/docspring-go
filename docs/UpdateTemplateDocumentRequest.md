@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **DocumentBase64** | Pointer to **string** | The template's document (a PDF, or a Word template's Word document), encoded as base64 (a `data:` URI works too), instead of `cache_id`. Line breaks and spaces in it are ignored. Up to 7 MB before it's encoded: send a larger file with `cache_id` or `document_url`. | [optional] 
 **Filename** | Pointer to **string** | The file's name, for a `cache_id` (presigned uploads don't send one) or `document_base64`. A `document_url`'s is the last part of its path unless you set it. | [optional] 
 **ReimportFields** | Pointer to **bool** | Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. Only for PDF templates: a Word template adds a field for each new tag. | [optional] 
+**SyncFields** | Pointer to **bool** | Add a field for each value the template's code, Word document or layout reads for the first time, with a type worked out from how it's used. Existing fields keep their settings, and a field you deleted while the code still read the value stays deleted. Default true. Set it to false to manage the fields yourself with the fields endpoints: a form field whose field isn't on the template then fails its submissions and previews. Only for HTML templates, Word templates and page designs. | [optional] 
 
 ## Methods
 
@@ -153,6 +154,31 @@ SetReimportFields sets ReimportFields field to given value.
 `func (o *UpdateTemplateDocumentRequest) HasReimportFields() bool`
 
 HasReimportFields returns a boolean if a field has been set.
+
+### GetSyncFields
+
+`func (o *UpdateTemplateDocumentRequest) GetSyncFields() bool`
+
+GetSyncFields returns the SyncFields field if non-nil, zero value otherwise.
+
+### GetSyncFieldsOk
+
+`func (o *UpdateTemplateDocumentRequest) GetSyncFieldsOk() (*bool, bool)`
+
+GetSyncFieldsOk returns a tuple with the SyncFields field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSyncFields
+
+`func (o *UpdateTemplateDocumentRequest) SetSyncFields(v bool)`
+
+SetSyncFields sets SyncFields field to given value.
+
+### HasSyncFields
+
+`func (o *UpdateTemplateDocumentRequest) HasSyncFields() bool`
+
+HasSyncFields returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#methods) [[Back to API list]](../README.md#methods) [[Back to README]](../README.md)

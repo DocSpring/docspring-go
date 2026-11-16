@@ -23,39 +23,43 @@ Name | Type | Description | Notes
 **AddSignatureRequestSubmissionIdFooters** | **bool** | Print the submission ID in the footer of each page of PDFs signed through signature requests. | 
 **AiFieldNamingLanguage** | [**NullableAiFieldNamingLanguage**](AiFieldNamingLanguage.md) | The language AI field setup names fields in: `auto` uses the form's language when it's written in the Latin alphabet without accents, and English otherwise; `english` always uses English; `form_language` uses the form's language and script. New templates take it from your account's template settings. Null for HTML templates. | 
 **AllowAdditionalProperties** | **bool** | Accept submission data with properties that aren't fields of the template. | 
-**AllowSkippingOptionalFields** | **bool** | Visual forms and signature request forms show the Continue button as soon as the required fields are filled in, without visiting each optional field. The `allowSkippingOptionalFields` embed option overrides it. | 
+**AllowSkippingOptionalFields** | **bool** | Visual Forms JS 2.16.0 to 2.23.0 only: with it on, Continue takes the place of Next once the required fields are filled in. Later versions use `continue_before_optional_fields`. | 
+**ContinueBeforeOptionalFields** | **bool** | Visual forms and signature request forms show the Continue button next to Next as soon as the required fields are filled in, without visiting each optional field. Turned off, Continue shows in place of Next only once every field has a value or has been visited. The `allowSkippingOptionalFields` embed option overrides it. | 
 **DefaultFormMode** | [**TemplateFormMode**](TemplateFormMode.md) | The hosted form that /templates/{template_id}/form shows when its URL has no `mode` parameter: `web` (the web form), `visual` (the visual form, where fields are filled in on the PDF) or `dual` (both, in tabs). Only PDF templates have a visual form, so other templates accept only `web`. | 
 **EditableSubmissions** | **bool** | Generate PDFs whose text and check fields stay fillable ("Generate Editable PDFs"). A submission's `editable` overrides it. | 
-**EmbedDomains** | **[]string** | The sites that can embed the template's live signature requests and its embedded template editor: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work), without a path. Each one is stored in lowercase, without a trailing slash. Browsers open a live signature request in a frame only on these sites (and DocSpring's), so with an empty list it can't be embedded anywhere; a test signature request can be embedded on any site. The embedded template editor loads only for a page on one of these sites (by its Referer or Origin header), and on any site when the list is empty. Forms embedded on a page (Visual Forms JS and Web Forms JS) aren't restricted. | 
+**EmbedDomains** | **[]string** | The sites that can embed the template's live signature requests, its embedded template editor and its visual form: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work), without a path. Each one is stored in lowercase, without a trailing slash. Browsers open a live signature request in a frame only on these sites (and DocSpring's), so with an empty list it can't be embedded anywhere; a test signature request can be embedded on any site. The embedded template editor loads only for a page on one of these sites (by its Referer or Origin header), and on any site when the list is empty. A visual form embedded with Visual Forms JS loads only on these sites, and on any site when the list is empty. Web Forms JS isn't restricted. | 
 **EmbedEditAllowSettings** | **bool** | Allow the embedded template editor to change sensitive template settings (webhooks, redirect URL, encryption, public access, expiration and so on). | 
 **EmbedEditAllowVersioning** | **bool** | Allow the embedded template editor to publish, restore, compare and delete published versions. | 
 **EmbedEditAllowDocumentReplacement** | **bool** | Allow the embedded template editor to replace the template's PDF. | 
 **EncryptPdfs** | **bool** | Encrypt generated PDFs with `encrypt_pdfs_password`. A Word template can only encrypt its PDFs when its `output_format` is `pdf`, because Word documents and OpenDocument files can't be password-protected. | 
 **HasEncryptPdfsPassword** | **bool** | Whether `encrypt_pdfs_password` is set. | 
-**ExpireSubmissions** | **bool** | Delete each submission's data and PDF after `expire_after` `expiration_interval`. | 
-**ExpireAfter** | **int32** | How many `expiration_interval`s a submission's data and PDF are kept for, when `expire_submissions` is on. At most 5256000 (10 years in minutes). | 
+**ExpireSubmissions** | **bool** | Delete each submission's data and files after `expire_after` `expiration_interval`, when `override_account_expiry` is on. | 
+**ExpireAfter** | **int32** | How many `expiration_interval`s a submission's data and PDF are kept for, when `expire_submissions` and `override_account_expiry` are on. At most 5256000 (10 years in minutes). | 
 **ExpirationInterval** | [**ExpirationInterval**](ExpirationInterval.md) | The unit of `expire_after`. | 
 **MergeAuditTrailPdf** | **bool** | Add the audit trail to the end of PDFs signed through signature requests. | 
 **ParseDatesUsingTemplateDateFormat** | **bool** | Date fields also accept NN/NN/YYYY dates (with slashes, dashes or dots), read in the order of the template's default date format: month first for %m/%d/%Y, day first for %d/%m/%Y. When false, date fields only accept YYYY-MM-DD. Applies to PDF templates: an HTML or Word template's date fields only accept YYYY-MM-DD. Date fields that include a time take RFC 3339 date-times either way. | 
 **PublicSubmissions** | **bool** | Allow anyone with a submission's ID to download its PDF. | 
 **PublicWebForm** | **bool** | Allow anyone to fill in the template's web form. | 
 **RedirectUrl** | **NullableString** | Where the web form sends people after they submit it, instead of showing its success screen. After its `?` or `#`, it can have variables such as `{{ data.first_name }}`, which the form fills in with what they submitted. | 
-**SignatureRequestEmailAttachments** | [**NullableSignatureRequestEmailAttachments**](SignatureRequestEmailAttachments.md) | How DocSpring's completed emails send the signed PDF to your signers and CCs: `attachment` (attached, or a download link when it's too big to attach) or `link` (a download link). Null uses your account's rule: a link if your account has signed a BAA, otherwise attached. PDF templates only. A signature request uses the value it had when the request was created. | 
-**SignatureRequestFromAddress** | **NullableString** | The address DocSpring's emails to your signers come from: an address at one of your verified email domains, on the Growth plan or higher. Null sends them from DocSpring's shared address, with "via DocSpring" after the sender name. PDF templates only. | 
-**SignatureRequestIncludeSigningToken** | **bool** | Puts a signing token in `signature_request_signing_url`, as `{{ token_id }}` and `{{ token_secret }}`, so your page can open the signing form without creating a token itself. The email then carries a credential: anyone who has it can open the form and sign. PDF templates only. | 
-**SignatureRequestFromName** | **NullableString** | The sender name on the emails DocSpring sends your signers, as in "Acme via DocSpring". It can't contain an email address, a website or quotes. Null uses your account's name. PDF templates only. | 
-**SignatureRequestNotificationEmails** | **[]string** | Who DocSpring tells when a signature request's document is completed or declined, or an email bounces or can't be sent: members of your DocSpring team or addresses at your verified email domains. Empty means your account's owner. A submission's `notification_emails` replaces them. PDF templates only. | 
-**SignatureRequestReplyTo** | **NullableString** | Where your signers' replies to DocSpring's emails go: a member of your DocSpring team or an address at one of your verified email domains. Null means your account's owner. A submission's `reply_to` replaces it. PDF templates only. | 
-**SignatureRequestSigningUrl** | **NullableString** | A page on your own site that the button in DocSpring's email to a signer opens, instead of DocSpring's signing page: an https URL on one of your verified email domains or a subdomain of one, on the Growth plan or higher. It must include `{{ signature_request_id }}`. Your page authenticates the signer, creates a token for the signature request, and opens the signing form with it. Null links to DocSpring's signing page. PDF templates only. | 
+**SignatureRequestEmailAttachments** | [**NullableSignatureRequestEmailAttachments**](SignatureRequestEmailAttachments.md) | How DocSpring's completed emails send the signed PDF to your signers and CCs: `attachment` (attached, or a download link when it's too big to attach) or `link` (a download link). Null uses your account's rule: a link if your account has signed a BAA, otherwise attached. A signature request uses the value it had when the request was created. | 
+**SignatureRequestFromAddress** | **NullableString** | The address DocSpring's emails to your signers come from: an address at one of your verified email domains, on the Growth plan or higher. Null sends them from DocSpring's shared address, with "via DocSpring" after the sender name. | 
+**SignatureRequestIncludeSigningToken** | **bool** | Puts a signing token in `signature_request_signing_url`, as `{{ token_id }}` and `{{ token_secret }}`, so your page can open the signing form without creating a token itself. The email then carries a credential: anyone who has it can open the form and sign. | 
+**SignatureRequestFromName** | **NullableString** | The sender name on the emails DocSpring sends your signers, as in "Acme via DocSpring". It can't contain an email address, a website or quotes. Null uses your account's name. | 
+**SignatureRequestNotificationEmails** | **[]string** | Who DocSpring tells when a signature request's document is completed or declined, or an email bounces or can't be sent: members of your DocSpring team or addresses at your verified email domains. Empty means your account's owner. A submission's `notification_emails` replaces them. | 
+**SignatureRequestReplyTo** | **NullableString** | Where your signers' replies to DocSpring's emails go: a member of your DocSpring team or an address at one of your verified email domains. Null means your account's owner. A submission's `reply_to` replaces it. | 
+**SignatureRequestSigningUrl** | **NullableString** | A page on your own site that the button in DocSpring's email to a signer opens, instead of DocSpring's signing page: an https URL on one of your verified email domains or a subdomain of one, on the Growth plan or higher. It must include `{{ signature_request_id }}`. Your page authenticates the signer, creates a token for the signature request, and opens the signing form with it. Null links to DocSpring's signing page. | 
 **SuccessTitle** | **NullableString** | The title of the web form's success screen. When it's null or empty, the screen says "Thanks for filling out" and the template's name. It can have variables such as `{{ data.first_name }}`. | 
 **SuccessMessage** | **NullableString** | A message under the title of the web form's success screen, as plain text. Line breaks show, and web addresses become links. It can have variables such as `{{ data.first_name }}`. | 
 **ShowFillAgainButton** | **bool** | Whether the web form's success screen has a "Fill out again" button, which clears the form so someone can fill it in again. | 
+**FormSectionsInOrder** | **bool** | Whether a web form with sections makes people fill them out in order. When true, a later section stays locked until they reach it with Next. When false, they can open any section from the list, and Next and Submit still check their answers. | 
 **HasSlackWebhookUrl** | **bool** | Whether `slack_webhook_url` is set. | 
 **LastChangedBy** | [**NullableTemplateActor**](TemplateActor.md) | Who last changed the draft: a user in your account, an API token, or someone using the embedded template editor. Null if no change has been recorded. | 
 **Defaults** | [**TemplateDefaults**](TemplateDefaults.md) |  | 
 **FieldDependencies** | [**[]TemplateFieldDependency**](TemplateFieldDependency.md) | Conditional logic: each rule shows or hides its target fields, or makes them required, depending on the values of other fields. | 
 **FieldGroups** | [**[]FieldGroup**](FieldGroup.md) | The groups of the template's fields, with their settings. A field's name puts it in groups: `address/city` is in the group `address`, and `items/0/price` is in the list `items` and its items' group `items/~`. | 
 **FormSections** | [**[]TemplateFormSection**](TemplateFormSection.md) | The web form's sections, in order: Web Forms JS and the hosted web form show one section at a time. Empty when the template has none, and the web form shows all of its fields together, in the order the fields endpoint lists them. A field that no section lists (one added later) goes after the field before it in that order, in that field's section. | 
+**SignerRoles** | [**[]TemplateSignerRole**](TemplateSignerRole.md) | The people who sign the template's submissions, in order. A field's `signer_role` says which signer fills it in or signs it, and a signature request's `role` says which signer it's for. Role N is also `Signer N`. Setting it replaces the whole list: a role left out is deleted, and its fields are left unassigned. Without roles (an empty list), a template's signers are Signer 1, Signer 2 and so on, and each signature request lists the fields its signer fills in or signs. | 
+**SignatureRequestCc** | **[]string** | Who gets a copy of the completed document when DocSpring emails a submission's signers, with the submission's `cc`: email addresses, or `{{ variables }}` that name an address in the submission's data, such as `{{ agent.email }}`. A value the data doesn't have prints nothing, and an address that comes out blank is left out. The data has to have the value, so it's one of the template's fields (one the sender fills in) or the template allows additional properties: setting a variable that isn't a field is a `422` otherwise. They don't sign. Setting it replaces the whole list. | 
 **PredefinedFields** | [**[]PredefinedField**](PredefinedField.md) | The field names that people using the embedded template editor choose from, each with the data type and settings a field gets when it's given that name. Setting it replaces the whole list; an empty list turns them off. | 
 **PredefinedFieldsSampleData** | **map[string]interface{}** | Sample submission data that sets `predefined_fields`: each value becomes a predefined field, with a type that fits it (`string`, `number`, `boolean`, `date`, `email` or `url`) and `required_in_template` true. Nested objects and arrays become names with `/`, such as `customer/email`. Without `predefined_fields` in the same request, it replaces them; with them, it adds to them and sets the types of the ones it has values for. | 
 **Html** | **NullableString** | The HTML of an HTML template, as a Liquid template. Null for other templates. | 
@@ -67,12 +71,13 @@ Name | Type | Description | Notes
 **Layout** | **map[string]interface{}** | A page design's layout: its page setup, its sections and the elements placed in them, in the Page Designer layout format (https://docspring.com/docs/page-designer/layout-format/). Its JSON Schema is at https://docspring.com/schemas/page-designer/layout.v1.json. Null for other templates. Setting it replaces the whole layout, and DocSpring adds a field for each value it reads. Left out when a page design is created, it starts with an empty page. | 
 **EmbedEditToken** | **NullableString** | The token that opens the template in the embedded template editor. | 
 **Versions** | [**[]TemplateVersion**](TemplateVersion.md) | The template's published versions, newest first (up to 100). | 
+**OverrideAccountExpiry** | **bool** | Whether the template's own expiry (`expire_submissions`, `expire_after` and `expiration_interval`) decides when all its submissions are deleted, with or without signature requests, including keeping them until you delete them. When false, the account's expiry settings do. Turning `expire_submissions` on also turns this on, unless the same request sets it, and so does creating a template with `expire_submissions` on or off. | 
 
 ## Methods
 
 ### NewTemplate
 
-`func NewTemplate(id string, name NullableString, description NullableString, templateType TemplateType, outputFormat OutputFormat, ready bool, document NullableTemplateDocument, parentFolderId NullableString, path string, latestVersion NullableString, versionPublishedAt NullableTime, locked bool, lastChangedAt NullableTime, createdAt time.Time, updatedAt time.Time, version NullableString, addSignatureRequestSubmissionIdFooters bool, aiFieldNamingLanguage NullableAiFieldNamingLanguage, allowAdditionalProperties bool, allowSkippingOptionalFields bool, defaultFormMode TemplateFormMode, editableSubmissions bool, embedDomains []string, embedEditAllowSettings bool, embedEditAllowVersioning bool, embedEditAllowDocumentReplacement bool, encryptPdfs bool, hasEncryptPdfsPassword bool, expireSubmissions bool, expireAfter int32, expirationInterval ExpirationInterval, mergeAuditTrailPdf bool, parseDatesUsingTemplateDateFormat bool, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, signatureRequestEmailAttachments NullableSignatureRequestEmailAttachments, signatureRequestFromAddress NullableString, signatureRequestIncludeSigningToken bool, signatureRequestFromName NullableString, signatureRequestNotificationEmails []string, signatureRequestReplyTo NullableString, signatureRequestSigningUrl NullableString, successTitle NullableString, successMessage NullableString, showFillAgainButton bool, hasSlackWebhookUrl bool, lastChangedBy NullableTemplateActor, defaults TemplateDefaults, fieldDependencies []TemplateFieldDependency, fieldGroups []FieldGroup, formSections []TemplateFormSection, predefinedFields []PredefinedField, predefinedFieldsSampleData map[string]interface{}, html NullableString, scss NullableString, headerHtml NullableString, footerHtml NullableString, htmlEngineOptions NullableHtmlEngineOptions, htmlEscapeData NullableBool, layout map[string]interface{}, embedEditToken NullableString, versions []TemplateVersion, ) *Template`
+`func NewTemplate(id string, name NullableString, description NullableString, templateType TemplateType, outputFormat OutputFormat, ready bool, document NullableTemplateDocument, parentFolderId NullableString, path string, latestVersion NullableString, versionPublishedAt NullableTime, locked bool, lastChangedAt NullableTime, createdAt time.Time, updatedAt time.Time, version NullableString, addSignatureRequestSubmissionIdFooters bool, aiFieldNamingLanguage NullableAiFieldNamingLanguage, allowAdditionalProperties bool, allowSkippingOptionalFields bool, continueBeforeOptionalFields bool, defaultFormMode TemplateFormMode, editableSubmissions bool, embedDomains []string, embedEditAllowSettings bool, embedEditAllowVersioning bool, embedEditAllowDocumentReplacement bool, encryptPdfs bool, hasEncryptPdfsPassword bool, expireSubmissions bool, expireAfter int32, expirationInterval ExpirationInterval, mergeAuditTrailPdf bool, parseDatesUsingTemplateDateFormat bool, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, signatureRequestEmailAttachments NullableSignatureRequestEmailAttachments, signatureRequestFromAddress NullableString, signatureRequestIncludeSigningToken bool, signatureRequestFromName NullableString, signatureRequestNotificationEmails []string, signatureRequestReplyTo NullableString, signatureRequestSigningUrl NullableString, successTitle NullableString, successMessage NullableString, showFillAgainButton bool, formSectionsInOrder bool, hasSlackWebhookUrl bool, lastChangedBy NullableTemplateActor, defaults TemplateDefaults, fieldDependencies []TemplateFieldDependency, fieldGroups []FieldGroup, formSections []TemplateFormSection, signerRoles []TemplateSignerRole, signatureRequestCc []string, predefinedFields []PredefinedField, predefinedFieldsSampleData map[string]interface{}, html NullableString, scss NullableString, headerHtml NullableString, footerHtml NullableString, htmlEngineOptions NullableHtmlEngineOptions, htmlEscapeData NullableBool, layout map[string]interface{}, embedEditToken NullableString, versions []TemplateVersion, overrideAccountExpiry bool, ) *Template`
 
 NewTemplate instantiates a new Template object
 This constructor will assign default values to properties that have it defined,
@@ -575,6 +580,26 @@ and a boolean to check if the value has been set.
 `func (o *Template) SetAllowSkippingOptionalFields(v bool)`
 
 SetAllowSkippingOptionalFields sets AllowSkippingOptionalFields field to given value.
+
+
+### GetContinueBeforeOptionalFields
+
+`func (o *Template) GetContinueBeforeOptionalFields() bool`
+
+GetContinueBeforeOptionalFields returns the ContinueBeforeOptionalFields field if non-nil, zero value otherwise.
+
+### GetContinueBeforeOptionalFieldsOk
+
+`func (o *Template) GetContinueBeforeOptionalFieldsOk() (*bool, bool)`
+
+GetContinueBeforeOptionalFieldsOk returns a tuple with the ContinueBeforeOptionalFields field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetContinueBeforeOptionalFields
+
+`func (o *Template) SetContinueBeforeOptionalFields(v bool)`
+
+SetContinueBeforeOptionalFields sets ContinueBeforeOptionalFields field to given value.
 
 
 ### GetDefaultFormMode
@@ -1177,6 +1202,26 @@ and a boolean to check if the value has been set.
 SetShowFillAgainButton sets ShowFillAgainButton field to given value.
 
 
+### GetFormSectionsInOrder
+
+`func (o *Template) GetFormSectionsInOrder() bool`
+
+GetFormSectionsInOrder returns the FormSectionsInOrder field if non-nil, zero value otherwise.
+
+### GetFormSectionsInOrderOk
+
+`func (o *Template) GetFormSectionsInOrderOk() (*bool, bool)`
+
+GetFormSectionsInOrderOk returns a tuple with the FormSectionsInOrder field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetFormSectionsInOrder
+
+`func (o *Template) SetFormSectionsInOrder(v bool)`
+
+SetFormSectionsInOrder sets FormSectionsInOrder field to given value.
+
+
 ### GetHasSlackWebhookUrl
 
 `func (o *Template) GetHasSlackWebhookUrl() bool`
@@ -1305,6 +1350,46 @@ and a boolean to check if the value has been set.
 `func (o *Template) SetFormSections(v []TemplateFormSection)`
 
 SetFormSections sets FormSections field to given value.
+
+
+### GetSignerRoles
+
+`func (o *Template) GetSignerRoles() []TemplateSignerRole`
+
+GetSignerRoles returns the SignerRoles field if non-nil, zero value otherwise.
+
+### GetSignerRolesOk
+
+`func (o *Template) GetSignerRolesOk() (*[]TemplateSignerRole, bool)`
+
+GetSignerRolesOk returns a tuple with the SignerRoles field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSignerRoles
+
+`func (o *Template) SetSignerRoles(v []TemplateSignerRole)`
+
+SetSignerRoles sets SignerRoles field to given value.
+
+
+### GetSignatureRequestCc
+
+`func (o *Template) GetSignatureRequestCc() []string`
+
+GetSignatureRequestCc returns the SignatureRequestCc field if non-nil, zero value otherwise.
+
+### GetSignatureRequestCcOk
+
+`func (o *Template) GetSignatureRequestCcOk() (*[]string, bool)`
+
+GetSignatureRequestCcOk returns a tuple with the SignatureRequestCc field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSignatureRequestCc
+
+`func (o *Template) SetSignatureRequestCc(v []string)`
+
+SetSignatureRequestCc sets SignatureRequestCc field to given value.
 
 
 ### GetPredefinedFields
@@ -1615,6 +1700,26 @@ and a boolean to check if the value has been set.
 `func (o *Template) SetVersions(v []TemplateVersion)`
 
 SetVersions sets Versions field to given value.
+
+
+### GetOverrideAccountExpiry
+
+`func (o *Template) GetOverrideAccountExpiry() bool`
+
+GetOverrideAccountExpiry returns the OverrideAccountExpiry field if non-nil, zero value otherwise.
+
+### GetOverrideAccountExpiryOk
+
+`func (o *Template) GetOverrideAccountExpiryOk() (*bool, bool)`
+
+GetOverrideAccountExpiryOk returns a tuple with the OverrideAccountExpiry field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetOverrideAccountExpiry
+
+`func (o *Template) SetOverrideAccountExpiry(v bool)`
+
+SetOverrideAccountExpiry sets OverrideAccountExpiry field to given value.
 
 
 

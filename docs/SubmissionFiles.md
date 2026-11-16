@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Pdf** | Pointer to [**GeneratedFile**](GeneratedFile.md) | The submission's PDF. | [optional] 
 **AuditTrail** | Pointer to [**GeneratedFile**](GeneratedFile.md) | The audit trail of a submission with signature requests: who signed, when and how. It's also added to the end of the PDF when the template's `merge_audit_trail_pdf` is on. | [optional] 
+**SigningManifest** | Pointer to [**GeneratedFile**](GeneratedFile.md) | The audit data behind the audit trail of a submission with signature requests, as JSON: the hashes of the document and the audit trail, and each signing event with the salt and hash that DocSpring's signing record holds for it. It has who signed, like the audit trail, and goes when the submission expires, so keep it with the PDF and the audit trail. | [optional] 
 **Preview** | Pointer to [**GeneratedFile**](GeneratedFile.md) | The preview PDF from POST /submissions/{submission_id}/generate_preview, such as for a submission still waiting for its signature requests. | [optional] 
 **Docx** | Pointer to [**GeneratedFile**](GeneratedFile.md) | The Word document of a Word template's submission, when the submission makes one (`output_formats`). | [optional] 
 **Odt** | Pointer to [**GeneratedFile**](GeneratedFile.md) | The OpenDocument file (.odt, the format LibreOffice uses) of a Word template's submission, converted from its Word document, when the submission makes one (`output_formats`). | [optional] 
@@ -79,6 +80,31 @@ SetAuditTrail sets AuditTrail field to given value.
 `func (o *SubmissionFiles) HasAuditTrail() bool`
 
 HasAuditTrail returns a boolean if a field has been set.
+
+### GetSigningManifest
+
+`func (o *SubmissionFiles) GetSigningManifest() GeneratedFile`
+
+GetSigningManifest returns the SigningManifest field if non-nil, zero value otherwise.
+
+### GetSigningManifestOk
+
+`func (o *SubmissionFiles) GetSigningManifestOk() (*GeneratedFile, bool)`
+
+GetSigningManifestOk returns a tuple with the SigningManifest field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSigningManifest
+
+`func (o *SubmissionFiles) SetSigningManifest(v GeneratedFile)`
+
+SetSigningManifest sets SigningManifest field to given value.
+
+### HasSigningManifest
+
+`func (o *SubmissionFiles) HasSigningManifest() bool`
+
+HasSigningManifest returns a boolean if a field has been set.
 
 ### GetPreview
 

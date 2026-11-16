@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 **Alignment** | Pointer to [**TextAlignment**](TextAlignment.md) | How text is aligned in its field. `justify` lines up both edges of every line of multiline text except the last of each paragraph. | [optional] 
 **Opacity** | Pointer to **float32** | The opacity of the field's content, from 0 (invisible) to 1. | [optional] 
 **DateFormat** | Pointer to **NullableString** | How date fields are printed, as a strftime format such as `%m/%d/%Y`. | [optional] 
-**DateTimeFormat** | Pointer to **NullableString** | How date-time fields are printed, as a strftime format such as `%m/%d/%Y %H:%M:%S`. | [optional] 
+**DateTimeFormat** | Pointer to **NullableString** | How date-time fields are printed, as a strftime format such as `%m/%d/%Y %H:%M`. | [optional] 
 **CheckColor** | Pointer to **NullableString** | The color of check marks, as 6 hex digits. | [optional] 
 **CheckCharacter** | Pointer to [**NullableCheckCharacter**](CheckCharacter.md) | The character that a ticked check box prints. | [optional] 
 **CheckBackgroundColor** | Pointer to **NullableString** | The check box's background color, as 6 hex digits. | [optional] 

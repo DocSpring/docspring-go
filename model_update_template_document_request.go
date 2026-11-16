@@ -29,6 +29,8 @@ type UpdateTemplateDocumentRequest struct {
 	Filename *string `json:"filename,omitempty"`
 	// Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. Only for PDF templates: a Word template adds a field for each new tag.
 	ReimportFields *bool `json:"reimport_fields,omitempty"`
+	// Add a field for each value the template's code, Word document or layout reads for the first time, with a type worked out from how it's used. Existing fields keep their settings, and a field you deleted while the code still read the value stays deleted. Default true. Set it to false to manage the fields yourself with the fields endpoints: a form field whose field isn't on the template then fails its submissions and previews. Only for HTML templates, Word templates and page designs.
+	SyncFields *bool `json:"sync_fields,omitempty"`
 }
 
 // NewUpdateTemplateDocumentRequest instantiates a new UpdateTemplateDocumentRequest object
@@ -208,6 +210,38 @@ func (o *UpdateTemplateDocumentRequest) SetReimportFields(v bool) {
 	o.ReimportFields = &v
 }
 
+// GetSyncFields returns the SyncFields field value if set, zero value otherwise.
+func (o *UpdateTemplateDocumentRequest) GetSyncFields() bool {
+	if o == nil || IsNil(o.SyncFields) {
+		var ret bool
+		return ret
+	}
+	return *o.SyncFields
+}
+
+// GetSyncFieldsOk returns a tuple with the SyncFields field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateTemplateDocumentRequest) GetSyncFieldsOk() (*bool, bool) {
+	if o == nil || IsNil(o.SyncFields) {
+		return nil, false
+	}
+	return o.SyncFields, true
+}
+
+// HasSyncFields returns a boolean if a field has been set.
+func (o *UpdateTemplateDocumentRequest) HasSyncFields() bool {
+	if o != nil && !IsNil(o.SyncFields) {
+		return true
+	}
+
+	return false
+}
+
+// SetSyncFields gets a reference to the given bool and assigns it to the SyncFields field.
+func (o *UpdateTemplateDocumentRequest) SetSyncFields(v bool) {
+	o.SyncFields = &v
+}
+
 func (o UpdateTemplateDocumentRequest) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -232,6 +266,9 @@ func (o UpdateTemplateDocumentRequest) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ReimportFields) {
 		toSerialize["reimport_fields"] = o.ReimportFields
+	}
+	if !IsNil(o.SyncFields) {
+		toSerialize["sync_fields"] = o.SyncFields
 	}
 	return toSerialize, nil
 }

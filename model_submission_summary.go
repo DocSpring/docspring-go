@@ -49,7 +49,7 @@ type SubmissionSummary struct {
 	Metadata map[string]interface{} `json:"metadata"`
 	// Empty unless you pass `include_files=true`: then the generated files, as when you get the submission, without the `png` pages' links (`files.png.pages` is null). Get the submission for its page images.
 	Files SubmissionFiles `json:"files"`
-	// An expired submission's data, metadata, password and PDF have been deleted.
+	// An expired submission's data, metadata, password and files have been deleted, along with its signature requests and audit trail.
 	Expired bool `json:"expired"`
 	// When the submission expires. Null if it's kept until you delete it.
 	ExpiresAt NullableTime `json:"expires_at"`

@@ -10,6 +10,8 @@ Name | Type | Description | Notes
 **Title** | Pointer to **string** | The field's label on the signing form. | [optional] 
 **Required** | Pointer to **bool** | Whether `data` must have a value for the field. | [optional] 
 **OptionList** | Pointer to **NullableString** | The values the field can take, separated by commas, such as `Yes,No`. Null allows any value. | [optional] 
+**OptionLabels** | Pointer to **map[string]string** | The label forms show for each option, keyed by its value, such as `{"no": "No, I don't"}`. Each key must be one of the options. | [optional] 
+**PrintOptionLabels** | Pointer to **bool** | Print the chosen option's label instead of its value. | [optional] 
 **CombinedFieldNames** | Pointer to **string** | The names of the fields a combined field joins, separated by commas. | [optional] 
 **CombinedFieldType** | Pointer to [**CombinedFieldType**](CombinedFieldType.md) | How a combined field joins its fields' values. | [optional] 
 **CombinedFieldSeparator** | Pointer to **string** | The text between the values of a combined field, such as `, `. | [optional] 
@@ -19,6 +21,8 @@ Name | Type | Description | Notes
 **SignatureAllowDraw** | Pointer to **bool** | Let the person draw their signature or initials on the signing form. | [optional] 
 **SignatureAllowType** | Pointer to **bool** | Let the person type their signature or initials on the signing form. | [optional] 
 **BarcodeSymbology** | Pointer to [**BarcodeSymbology**](BarcodeSymbology.md) | The kind of barcode a field with display_type `barcode` prints. | [optional] 
+**CombFillFromRight** | Pointer to **bool** | Fill the last boxes of the field's comb fields, padding the value on the left, as amounts are written on paper forms. | [optional] 
+**CombPadWithZeros** | Pointer to **bool** | With `comb_fill_from_right`, pad the value with zeros instead of spaces. | [optional] 
 **Hidden** | Pointer to **bool** | Leave the field off the PDF. Its value is still in the data, and combined fields can use it. | [optional] 
 **X** | Pointer to **float32** | The distance from the left edge of the page, in the template editor's page units. | [optional] 
 **Y** | Pointer to **float32** | The distance from the top of the page, in the template editor's page units. | [optional] 
@@ -45,7 +49,7 @@ Name | Type | Description | Notes
 **VAlignment** | Pointer to [**TextVerticalAlignment**](TextVerticalAlignment.md) | How text is aligned vertically in its field. | [optional] 
 **Comb** | Pointer to **bool** | Print one character in each of the field's equally spaced boxes (combs). | [optional] 
 **CombNumberOfCells** | Pointer to **int32** | The number of boxes in a comb field. | [optional] 
-**CombValueOffset** | Pointer to **int32** | The character of the value that the first box starts from, for a value split over several comb fields (such as the parts of a Social Security number). | [optional] 
+**CombValueOffset** | Pointer to **int32** | How many boxes of the value's row come before this field, for a value split over several comb fields (such as the parts of a Social Security number). | [optional] 
 **ShapeType** | Pointer to [**ShapeType**](ShapeType.md) | The shape a field with display_type `shape` draws. | [optional] 
 **ShapeSides** | Pointer to **int32** | The number of sides of a `polygon` shape. | [optional] 
 **ShapeBorderWidth** | Pointer to **int32** | The width of a shape's border, in points, a whole number. | [optional] 
@@ -65,6 +69,7 @@ Name | Type | Description | Notes
 **NumberConditionRangeExclusiveMax** | Pointer to **bool** | Leave the upper end itself out of a `range` condition. | [optional] 
 **InvertBooleanCondition** | Pointer to **bool** | Draw a boolean field's check mark or shape for `false` instead of `true`. | [optional] 
 **DecimalPlaces** | Pointer to **NullableInt32** | The number of decimal places a number field prints. Null prints the value as it was sent. | [optional] 
+**NumberPart** | Pointer to [**NumberPart**](NumberPart.md) | Which part of a number field's number this field prints: the whole number, only the part before the decimal point, or only the decimal places. | [optional] 
 **ImageScaleType** | Pointer to [**ImageScaleType**](ImageScaleType.md) | How an image is resized to its field. | [optional] 
 **ImageGravity** | Pointer to [**ImageGravity**](ImageGravity.md) | Where an image sits in its field when it doesn't fill it, or which part is kept when it's cropped. | [optional] 
 
@@ -257,6 +262,66 @@ HasOptionList returns a boolean if a field has been set.
 `func (o *FieldOverride) UnsetOptionList()`
 
 UnsetOptionList ensures that no value is present for OptionList, not even an explicit nil
+### GetOptionLabels
+
+`func (o *FieldOverride) GetOptionLabels() map[string]string`
+
+GetOptionLabels returns the OptionLabels field if non-nil, zero value otherwise.
+
+### GetOptionLabelsOk
+
+`func (o *FieldOverride) GetOptionLabelsOk() (*map[string]string, bool)`
+
+GetOptionLabelsOk returns a tuple with the OptionLabels field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetOptionLabels
+
+`func (o *FieldOverride) SetOptionLabels(v map[string]string)`
+
+SetOptionLabels sets OptionLabels field to given value.
+
+### HasOptionLabels
+
+`func (o *FieldOverride) HasOptionLabels() bool`
+
+HasOptionLabels returns a boolean if a field has been set.
+
+### SetOptionLabelsNil
+
+`func (o *FieldOverride) SetOptionLabelsNil(b bool)`
+
+ SetOptionLabelsNil sets the value for OptionLabels to be an explicit nil
+
+### UnsetOptionLabels
+`func (o *FieldOverride) UnsetOptionLabels()`
+
+UnsetOptionLabels ensures that no value is present for OptionLabels, not even an explicit nil
+### GetPrintOptionLabels
+
+`func (o *FieldOverride) GetPrintOptionLabels() bool`
+
+GetPrintOptionLabels returns the PrintOptionLabels field if non-nil, zero value otherwise.
+
+### GetPrintOptionLabelsOk
+
+`func (o *FieldOverride) GetPrintOptionLabelsOk() (*bool, bool)`
+
+GetPrintOptionLabelsOk returns a tuple with the PrintOptionLabels field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPrintOptionLabels
+
+`func (o *FieldOverride) SetPrintOptionLabels(v bool)`
+
+SetPrintOptionLabels sets PrintOptionLabels field to given value.
+
+### HasPrintOptionLabels
+
+`func (o *FieldOverride) HasPrintOptionLabels() bool`
+
+HasPrintOptionLabels returns a boolean if a field has been set.
+
 ### GetCombinedFieldNames
 
 `func (o *FieldOverride) GetCombinedFieldNames() string`
@@ -491,6 +556,56 @@ SetBarcodeSymbology sets BarcodeSymbology field to given value.
 `func (o *FieldOverride) HasBarcodeSymbology() bool`
 
 HasBarcodeSymbology returns a boolean if a field has been set.
+
+### GetCombFillFromRight
+
+`func (o *FieldOverride) GetCombFillFromRight() bool`
+
+GetCombFillFromRight returns the CombFillFromRight field if non-nil, zero value otherwise.
+
+### GetCombFillFromRightOk
+
+`func (o *FieldOverride) GetCombFillFromRightOk() (*bool, bool)`
+
+GetCombFillFromRightOk returns a tuple with the CombFillFromRight field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetCombFillFromRight
+
+`func (o *FieldOverride) SetCombFillFromRight(v bool)`
+
+SetCombFillFromRight sets CombFillFromRight field to given value.
+
+### HasCombFillFromRight
+
+`func (o *FieldOverride) HasCombFillFromRight() bool`
+
+HasCombFillFromRight returns a boolean if a field has been set.
+
+### GetCombPadWithZeros
+
+`func (o *FieldOverride) GetCombPadWithZeros() bool`
+
+GetCombPadWithZeros returns the CombPadWithZeros field if non-nil, zero value otherwise.
+
+### GetCombPadWithZerosOk
+
+`func (o *FieldOverride) GetCombPadWithZerosOk() (*bool, bool)`
+
+GetCombPadWithZerosOk returns a tuple with the CombPadWithZeros field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetCombPadWithZeros
+
+`func (o *FieldOverride) SetCombPadWithZeros(v bool)`
+
+SetCombPadWithZeros sets CombPadWithZeros field to given value.
+
+### HasCombPadWithZeros
+
+`func (o *FieldOverride) HasCombPadWithZeros() bool`
+
+HasCombPadWithZeros returns a boolean if a field has been set.
 
 ### GetHidden
 
@@ -1802,6 +1917,31 @@ HasDecimalPlaces returns a boolean if a field has been set.
 `func (o *FieldOverride) UnsetDecimalPlaces()`
 
 UnsetDecimalPlaces ensures that no value is present for DecimalPlaces, not even an explicit nil
+### GetNumberPart
+
+`func (o *FieldOverride) GetNumberPart() NumberPart`
+
+GetNumberPart returns the NumberPart field if non-nil, zero value otherwise.
+
+### GetNumberPartOk
+
+`func (o *FieldOverride) GetNumberPartOk() (*NumberPart, bool)`
+
+GetNumberPartOk returns a tuple with the NumberPart field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetNumberPart
+
+`func (o *FieldOverride) SetNumberPart(v NumberPart)`
+
+SetNumberPart sets NumberPart field to given value.
+
+### HasNumberPart
+
+`func (o *FieldOverride) HasNumberPart() bool`
+
+HasNumberPart returns a boolean if a field has been set.
+
 ### GetImageScaleType
 
 `func (o *FieldOverride) GetImageScaleType() ImageScaleType`

@@ -47,9 +47,9 @@ type Submission struct {
 	ErrorMessage NullableString `json:"error_message"`
 	// Your own data about the submission, such as an ID from your app. It isn't printed on the PDF. Two keys also change the PDF: `pdf_filename` names its file (`files.pdf.filename`, and its download), and `pdf_title` is its title in the PDF's document properties (and an HTML template's `<title>`, unless its HTML has one). Without `pdf_title`, the title is the template's name. In `pdf_filename`, a `.pdf` ending is removed, each run of characters other than letters, digits, `-`, `_` and `.` becomes one `_`, and the first 128 characters are kept, then `.pdf` is added. Without it, the file is named after the submission's ID (`sub_1234567890abcdef01.pdf`).
 	Metadata map[string]interface{} `json:"metadata"`
-	// The generated files: `pdf`, `docx` and `odt` (by `output_formats`) once the submission has been processed, `png` (the images of the PDF's pages, when `output_formats` has it: `files.png.pages[0]` is page 1), `audit_trail` once its signature requests are completed, and `preview` once a preview PDF has been generated. Empty once the submission has expired.
+	// The generated files: `pdf`, `docx` and `odt` (by `output_formats`) once the submission has been processed, `png` (the images of the PDF's pages, when `output_formats` has it: `files.png.pages[0]` is page 1), `audit_trail` and `signing_manifest` once its signature requests are completed, and `preview` once a preview PDF has been generated. Empty once the submission has expired.
 	Files SubmissionFiles `json:"files"`
-	// An expired submission's data, metadata, password and PDF have been deleted.
+	// An expired submission's data, metadata, password and files have been deleted, along with its signature requests and audit trail.
 	Expired bool `json:"expired"`
 	// When the submission expires. Null if it's kept until you delete it.
 	ExpiresAt NullableTime `json:"expires_at"`
@@ -69,7 +69,7 @@ type Submission struct {
 	Actions []SubmissionAction `json:"actions"`
 	// The text of each field that didn't fit in it, by field name. Left out (null) with `data`, and empty once the submission has expired.
 	TruncatedText map[string][]string `json:"truncated_text"`
-	// What the submission makes: `pdf`, `docx` (a Word document, from a Word template), `odt` (an OpenDocument file, the format LibreOffice uses, converted from a Word template's Word document), and `png` (an image of each page of the PDF, up to 100 pages, which adds `pdf`) when you ask for it. Default `["pdf"]`, or a Word template's `output_format`. POST /submissions/{submission_id}/generate_files adds `png`, and a Word template's submission's `pdf`, `docx` or `odt`, to a processed submission.
+	// What the submission makes: `pdf`, `docx` (a Word document, from a Word template), `odt` (an OpenDocument file, the format LibreOffice uses, converted from a Word template's Word document), and `png` (an image of each page of the PDF, up to 100 pages, which adds `pdf`) when you ask for it. Default `["pdf"]`, or a Word template's `output_format`. A Word template's submission with signature requests makes only `pdf`, which its signers sign. POST /submissions/{submission_id}/generate_files adds `png`, and a Word template's submission's `pdf`, `docx` or `odt`, to a processed submission.
 	OutputFormats []OutputFormat `json:"output_formats"`
 	// When the preview PDF was generated. Null if there is no preview.
 	PreviewGeneratedAt NullableTime `json:"preview_generated_at"`

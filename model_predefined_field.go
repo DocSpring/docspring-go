@@ -30,6 +30,8 @@ type PredefinedField struct {
 	Type FieldType `json:"type"`
 	// String fields only: the values allowed, separated by commas, such as `Yes,No`. Null allows any value.
 	OptionList NullableString `json:"option_list,omitempty"`
+	// The labels forms show for `option_list`'s values, by value, as a field's `option_labels`, such as `{"married_filing_jointly": "Married filing jointly"}`. Each key must be one of `option_list`'s values. A value without a label shows the value, or its sentence case when the values are lowercase words joined by underscores. Null gives no value a label of its own.
+	OptionLabels map[string]string `json:"option_labels,omitempty"`
 	// Whether the template must have a field with this name. The embedded editor shows the names that are missing, and with `disableDoneButtonIfPredefinedFieldsMissing` keeps its Done button disabled until the template has them. Default false.
 	RequiredInTemplate *bool `json:"required_in_template,omitempty"`
 	// The Required setting a field gets when it's given this name. Default true.
@@ -231,6 +233,39 @@ func (o *PredefinedField) UnsetOptionList() {
 	o.OptionList.Unset()
 }
 
+// GetOptionLabels returns the OptionLabels field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *PredefinedField) GetOptionLabels() map[string]string {
+	if o == nil {
+		var ret map[string]string
+		return ret
+	}
+	return o.OptionLabels
+}
+
+// GetOptionLabelsOk returns a tuple with the OptionLabels field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *PredefinedField) GetOptionLabelsOk() (map[string]string, bool) {
+	if o == nil || IsNil(o.OptionLabels) {
+		return map[string]string{}, false
+	}
+	return o.OptionLabels, true
+}
+
+// HasOptionLabels returns a boolean if a field has been set.
+func (o *PredefinedField) HasOptionLabels() bool {
+	if o != nil && !IsNil(o.OptionLabels) {
+		return true
+	}
+
+	return false
+}
+
+// SetOptionLabels gets a reference to the given map[string]string and assigns it to the OptionLabels field.
+func (o *PredefinedField) SetOptionLabels(v map[string]string) {
+	o.OptionLabels = v
+}
+
 // GetRequiredInTemplate returns the RequiredInTemplate field value if set, zero value otherwise.
 func (o *PredefinedField) GetRequiredInTemplate() bool {
 	if o == nil || IsNil(o.RequiredInTemplate) {
@@ -315,6 +350,9 @@ func (o PredefinedField) ToMap() (map[string]interface{}, error) {
 	toSerialize["type"] = o.Type
 	if o.OptionList.IsSet() {
 		toSerialize["option_list"] = o.OptionList.Get()
+	}
+	if o.OptionLabels != nil {
+		toSerialize["option_labels"] = o.OptionLabels
 	}
 	if !IsNil(o.RequiredInTemplate) {
 		toSerialize["required_in_template"] = o.RequiredInTemplate

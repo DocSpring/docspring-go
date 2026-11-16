@@ -48,6 +48,10 @@ type Field struct {
 	Required bool `json:"required"`
 	// String fields only: a comma-separated list of the values the field accepts. It's added to the template's data schema as an `enum`, forms show it as a select list, and an `editable` field becomes a dropdown. Shared by every field with the same `name`.
 	OptionList NullableString `json:"option_list"`
+	// With `option_list`: the label forms show for each option, keyed by its value, such as `{"head_of_household": "Head of household"}`. The data, the API and webhooks keep the value, and the PDF prints it unless `print_option_labels` is set. An option without a label shows its value, or its sentence case when the options are lowercase words joined by underscores (`head_of_household` shows as "Head of household"). The template's data schema has them as `x-option-labels`. Each key must be one of the options, and each label must have some text. Shared by every field with the same `name`.
+	OptionLabels map[string]string `json:"option_labels"`
+	// Text display, with `option_labels`: the PDF prints the chosen option's label instead of its value, and an `editable` field's dropdown lists the labels. Shared by every field with the same `name`.
+	PrintOptionLabels bool `json:"print_option_labels"`
 	// Combined fields only: a comma-separated list of the names of the fields whose values are combined, in order. Shared by every field with the same `name`.
 	CombinedFieldNames string `json:"combined_field_names"`
 	// Combined fields only: `separator` joins the values with `combined_field_separator`, and `format` puts them into `combined_field_format`. Shared by every field with the same `name`.
@@ -74,6 +78,12 @@ type Field struct {
 	SignatureAllowType bool `json:"signature_allow_type"`
 	// Barcode fields only: the barcode format, which the value must match. `code_128` and `pdf417` take any ASCII text; `code_39` and `code_93` take capital letters, digits, spaces and `- . $ / + %`; `code_25` takes digits; `ean_13` takes 12 digits, `ean_8` 7 digits and `upc_a` 11 digits (the check digit is added). Shared by every field with the same `name`.
 	BarcodeSymbology BarcodeSymbology `json:"barcode_symbology"`
+	// With `comb`: the value fills the last boxes of the comb fields with this name, padded on the left with spaces, or with zeros with `comb_pad_with_zeros`, as amounts are written on paper forms. A number with `decimal_places` in one row of boxes lines up on its decimal point, which takes no box: the decimal places fill the last boxes. Date fields ignore it: a date prints in its format. Shared by every field with the same `name`.
+	CombFillFromRight bool `json:"comb_fill_from_right"`
+	// With `comb_fill_from_right`: pads the value on the left with zeros instead of spaces, such as `000123`. A negative number keeps its minus sign in the first box. Shared by every field with the same `name`.
+	CombPadWithZeros bool `json:"comb_pad_with_zeros"`
+	// With `comb`, for string fields: only the value's digits print, one in each box, and any punctuation is left out, so `123-45-6789` fills the 9 boxes of an SSN. The template's data schema accepts as many digits as the boxes hold, with anything but letters between them. Number and date fields ignore it. Shared by every field with the same `name`.
+	PrintDigitsOnly bool `json:"print_digits_only"`
 	// Leaves the field off the PDF. It stays in the template's data schema (marked `x-hidden`) and on forms, so other fields, such as combined fields, can use its value. A hidden static check mark or shape isn't printed.
 	Hidden bool `json:"hidden"`
 	// The distance from the page's left edge to the field's left edge. Positions and sizes are in units where every page is 2480 wide: one unit is the page's width in points divided by 2480 (about 0.247 points on a US Letter page).
@@ -136,9 +146,9 @@ type Field struct {
 	VAlignment TextVerticalAlignment `json:"v_alignment"`
 	// Text display only: splits the field into `comb_number_of_cells` boxes of equal width and prints one character, centered, in each.
 	Comb bool `json:"comb"`
-	// With `comb`: how many boxes the field has. The value's maximum length in the template's data schema is this plus `comb_value_offset`.
+	// With `comb`: how many boxes the field has, up to 10,000. The value's maximum length in the template's data schema is the furthest that a comb field of its name reaches: its `comb_value_offset` plus its boxes. With `print_digits_only`, that many digits. A number field is split from its printed form (with `decimal_places`), and a number with a digit that no box prints (more digits than the boxes, or a digit where the offsets leave a gap) is a data error.
 	CombNumberOfCells int32 `json:"comb_number_of_cells"`
-	// With `comb`: the position, from 0, of the first character of the value that this field prints. For an SSN printed in boxes of 3, 2 and 4 digits, three fields named `ssn` use offsets 0, 3 and 5.
+	// With `comb`: how many boxes of the value's row come before this field, from 0 to 10,000. The comb fields that share a name make one row of boxes, and each prints the row's characters from its offset. For an SSN printed in boxes of 3, 2 and 4 digits, three fields named `ssn` use offsets 0, 3 and 5. The fields that print a number's whole part (`number_part`) make a row of their own, and so do the ones that print its decimal places.
 	CombValueOffset int32 `json:"comb_value_offset"`
 	// Shape display only: `square`, `rectangle`, `circle`, `ellipse`, `triangle` or `polygon`. A square or circle uses the smaller of `width` and `height`.
 	ShapeType ShapeType `json:"shape_type"`
@@ -196,10 +206,14 @@ type Field struct {
 	Currency bool `json:"currency"`
 	// Number fields with text display: prints the number with this many decimal places, from 0 (rounds to a whole number) to 99. Empty prints the number as it was sent.
 	DecimalPlaces NullableInt32 `json:"decimal_places"`
+	// Number fields with text display: which part of the number this field prints. `all` prints the whole number, `whole` only the part before the decimal point (with a minus sign) and `decimals` only the decimal places. For an amount printed as `$ ____ . __`, two fields with the same name: one `whole`, and one `decimals` with `decimal_places` 2. The number is rounded once, to the `decimals` field's decimal places (2 when it sets none).
+	NumberPart NumberPart `json:"number_part"`
 	// Image fields only: how the image is resized to the field. `fit` keeps its proportions and fits it inside the field, which can leave empty space; `fill` keeps its proportions and crops it to fill the field; `stretch` stretches it to the field's size. Signatures and initials always fit.
 	ImageScaleType ImageScaleType `json:"image_scale_type"`
 	// Image, signature and initials fields: where the image sits in the field with `fit`, or which part is kept with `fill`: `NorthWest` (top left), `North`, `NorthEast`, `West`, `Center`, `East`, `SouthWest`, `South` or `SouthEast` (bottom right). It also aligns typed signatures, and isn't used with `stretch`.
 	ImageGravity ImageGravity `json:"image_gravity"`
+	// Who fills in or signs the field when a submission has signature requests: one of the template's `signer_roles`, by its key, or `sender` for a field that submission data fills in, which no signer is asked for. Null when it has no role: a submission's only signer fills it in when data doesn't, and with two or more signature requests one of them has to list it in its `fields`. In an HTML or Word template, a field whose tag gives it a role (`{% form_field tenant_name, role: tenant %}`) has that one, which only the code can change. Shared by every field with the same `name`.
+	SignerRole NullableString `json:"signer_role"`
 	// The field's own conditional logic rule: when other fields' values meet its conditions, the field is shown, made required, or both. Null when it has none. The template's rules (`field_dependencies`) can apply to the field too. Shared by every field with the same `name`.
 	Dependencies NullableFieldDependency `json:"dependencies"`
 	AdditionalProperties map[string]interface{}
@@ -211,7 +225,7 @@ type _Field Field
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewField(id int32, name NullableString, page int32, acroformName NullableString, type_ FieldType, static bool, editable bool, default_ NullableString, title string, description string, placeholder string, metadata string, required bool, optionList NullableString, combinedFieldNames string, combinedFieldType CombinedFieldType, combinedFieldSeparator string, combinedFieldFormat string, integer bool, minimum NullableFloat32, maximum NullableFloat32, exclusiveMinimum bool, exclusiveMaximum bool, includeTime NullableBool, signatureAllowDraw bool, signatureAllowType bool, barcodeSymbology BarcodeSymbology, hidden bool, x float32, y float32, width float32, height float32, rotation float32, displayType FieldDisplayType, opacity float32, dateTimeFormat NullableString, typeface NullableTypeface, fontSize NullableInt32, characterSpacing float32, bold bool, uppercase bool, strikethrough bool, keepLeadingSpaces bool, overflow TextOverflow, multiline bool, multilineLines NullableInt32, minLength float32, maxLength NullableInt32, autoCalculateMaxLength bool, color NullableString, colorFieldName NullableString, colorFieldRequired bool, backgroundColor NullableString, backgroundColorFieldName NullableString, backgroundColorFieldRequired bool, alignment TextAlignment, vAlignment TextVerticalAlignment, comb bool, combNumberOfCells int32, combValueOffset int32, shapeType ShapeType, shapeSides int32, shapeBorderWidth int32, shapeBorderColor string, shapeBorderColorFieldName NullableString, shapeBorderColorFieldRequired bool, shapeFillColor NullableString, shapeFillColorFieldName NullableString, shapeFillColorFieldRequired bool, checkCharacter CheckCharacter, checkColor NullableString, checkColorFieldName NullableString, checkColorFieldRequired bool, qrcodeColor NullableString, qrcodeColorFieldName NullableString, qrcodeColorFieldRequired bool, trueText NullableString, falseText NullableString, condition NullableString, stringConditionType StringConditionType, numberConditionType NumberConditionType, numberConditionRangeMin NullableFloat32, numberConditionRangeMax NullableFloat32, numberConditionRangeExclusiveMin bool, numberConditionRangeExclusiveMax bool, invertBooleanCondition bool, currency bool, decimalPlaces NullableInt32, imageScaleType ImageScaleType, imageGravity ImageGravity, dependencies NullableFieldDependency) *Field {
+func NewField(id int32, name NullableString, page int32, acroformName NullableString, type_ FieldType, static bool, editable bool, default_ NullableString, title string, description string, placeholder string, metadata string, required bool, optionList NullableString, optionLabels map[string]string, printOptionLabels bool, combinedFieldNames string, combinedFieldType CombinedFieldType, combinedFieldSeparator string, combinedFieldFormat string, integer bool, minimum NullableFloat32, maximum NullableFloat32, exclusiveMinimum bool, exclusiveMaximum bool, includeTime NullableBool, signatureAllowDraw bool, signatureAllowType bool, barcodeSymbology BarcodeSymbology, combFillFromRight bool, combPadWithZeros bool, printDigitsOnly bool, hidden bool, x float32, y float32, width float32, height float32, rotation float32, displayType FieldDisplayType, opacity float32, dateTimeFormat NullableString, typeface NullableTypeface, fontSize NullableInt32, characterSpacing float32, bold bool, uppercase bool, strikethrough bool, keepLeadingSpaces bool, overflow TextOverflow, multiline bool, multilineLines NullableInt32, minLength float32, maxLength NullableInt32, autoCalculateMaxLength bool, color NullableString, colorFieldName NullableString, colorFieldRequired bool, backgroundColor NullableString, backgroundColorFieldName NullableString, backgroundColorFieldRequired bool, alignment TextAlignment, vAlignment TextVerticalAlignment, comb bool, combNumberOfCells int32, combValueOffset int32, shapeType ShapeType, shapeSides int32, shapeBorderWidth int32, shapeBorderColor string, shapeBorderColorFieldName NullableString, shapeBorderColorFieldRequired bool, shapeFillColor NullableString, shapeFillColorFieldName NullableString, shapeFillColorFieldRequired bool, checkCharacter CheckCharacter, checkColor NullableString, checkColorFieldName NullableString, checkColorFieldRequired bool, qrcodeColor NullableString, qrcodeColorFieldName NullableString, qrcodeColorFieldRequired bool, trueText NullableString, falseText NullableString, condition NullableString, stringConditionType StringConditionType, numberConditionType NumberConditionType, numberConditionRangeMin NullableFloat32, numberConditionRangeMax NullableFloat32, numberConditionRangeExclusiveMin bool, numberConditionRangeExclusiveMax bool, invertBooleanCondition bool, currency bool, decimalPlaces NullableInt32, numberPart NumberPart, imageScaleType ImageScaleType, imageGravity ImageGravity, signerRole NullableString, dependencies NullableFieldDependency) *Field {
 	this := Field{}
 	this.Id = id
 	this.Name = name
@@ -227,6 +241,8 @@ func NewField(id int32, name NullableString, page int32, acroformName NullableSt
 	this.Metadata = metadata
 	this.Required = required
 	this.OptionList = optionList
+	this.OptionLabels = optionLabels
+	this.PrintOptionLabels = printOptionLabels
 	this.CombinedFieldNames = combinedFieldNames
 	this.CombinedFieldType = combinedFieldType
 	this.CombinedFieldSeparator = combinedFieldSeparator
@@ -240,6 +256,9 @@ func NewField(id int32, name NullableString, page int32, acroformName NullableSt
 	this.SignatureAllowDraw = signatureAllowDraw
 	this.SignatureAllowType = signatureAllowType
 	this.BarcodeSymbology = barcodeSymbology
+	this.CombFillFromRight = combFillFromRight
+	this.CombPadWithZeros = combPadWithZeros
+	this.PrintDigitsOnly = printDigitsOnly
 	this.Hidden = hidden
 	this.X = x
 	this.Y = y
@@ -301,8 +320,10 @@ func NewField(id int32, name NullableString, page int32, acroformName NullableSt
 	this.InvertBooleanCondition = invertBooleanCondition
 	this.Currency = currency
 	this.DecimalPlaces = decimalPlaces
+	this.NumberPart = numberPart
 	this.ImageScaleType = imageScaleType
 	this.ImageGravity = imageGravity
+	this.SignerRole = signerRole
 	this.Dependencies = dependencies
 	return &this
 }
@@ -659,6 +680,56 @@ func (o *Field) SetOptionList(v string) {
 	o.OptionList.Set(&v)
 }
 
+// GetOptionLabels returns the OptionLabels field value
+// If the value is explicit nil, the zero value for map[string]string will be returned
+func (o *Field) GetOptionLabels() map[string]string {
+	if o == nil {
+		var ret map[string]string
+		return ret
+	}
+
+	return o.OptionLabels
+}
+
+// GetOptionLabelsOk returns a tuple with the OptionLabels field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *Field) GetOptionLabelsOk() (map[string]string, bool) {
+	if o == nil || IsNil(o.OptionLabels) {
+		return map[string]string{}, false
+	}
+	return o.OptionLabels, true
+}
+
+// SetOptionLabels sets field value
+func (o *Field) SetOptionLabels(v map[string]string) {
+	o.OptionLabels = v
+}
+
+// GetPrintOptionLabels returns the PrintOptionLabels field value
+func (o *Field) GetPrintOptionLabels() bool {
+	if o == nil {
+		var ret bool
+		return ret
+	}
+
+	return o.PrintOptionLabels
+}
+
+// GetPrintOptionLabelsOk returns a tuple with the PrintOptionLabels field value
+// and a boolean to check if the value has been set.
+func (o *Field) GetPrintOptionLabelsOk() (*bool, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.PrintOptionLabels, true
+}
+
+// SetPrintOptionLabels sets field value
+func (o *Field) SetPrintOptionLabels(v bool) {
+	o.PrintOptionLabels = v
+}
+
 // GetCombinedFieldNames returns the CombinedFieldNames field value
 func (o *Field) GetCombinedFieldNames() string {
 	if o == nil {
@@ -975,6 +1046,78 @@ func (o *Field) GetBarcodeSymbologyOk() (*BarcodeSymbology, bool) {
 // SetBarcodeSymbology sets field value
 func (o *Field) SetBarcodeSymbology(v BarcodeSymbology) {
 	o.BarcodeSymbology = v
+}
+
+// GetCombFillFromRight returns the CombFillFromRight field value
+func (o *Field) GetCombFillFromRight() bool {
+	if o == nil {
+		var ret bool
+		return ret
+	}
+
+	return o.CombFillFromRight
+}
+
+// GetCombFillFromRightOk returns a tuple with the CombFillFromRight field value
+// and a boolean to check if the value has been set.
+func (o *Field) GetCombFillFromRightOk() (*bool, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.CombFillFromRight, true
+}
+
+// SetCombFillFromRight sets field value
+func (o *Field) SetCombFillFromRight(v bool) {
+	o.CombFillFromRight = v
+}
+
+// GetCombPadWithZeros returns the CombPadWithZeros field value
+func (o *Field) GetCombPadWithZeros() bool {
+	if o == nil {
+		var ret bool
+		return ret
+	}
+
+	return o.CombPadWithZeros
+}
+
+// GetCombPadWithZerosOk returns a tuple with the CombPadWithZeros field value
+// and a boolean to check if the value has been set.
+func (o *Field) GetCombPadWithZerosOk() (*bool, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.CombPadWithZeros, true
+}
+
+// SetCombPadWithZeros sets field value
+func (o *Field) SetCombPadWithZeros(v bool) {
+	o.CombPadWithZeros = v
+}
+
+// GetPrintDigitsOnly returns the PrintDigitsOnly field value
+func (o *Field) GetPrintDigitsOnly() bool {
+	if o == nil {
+		var ret bool
+		return ret
+	}
+
+	return o.PrintDigitsOnly
+}
+
+// GetPrintDigitsOnlyOk returns a tuple with the PrintDigitsOnly field value
+// and a boolean to check if the value has been set.
+func (o *Field) GetPrintDigitsOnlyOk() (*bool, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.PrintDigitsOnly, true
+}
+
+// SetPrintDigitsOnly sets field value
+func (o *Field) SetPrintDigitsOnly(v bool) {
+	o.PrintDigitsOnly = v
 }
 
 // GetHidden returns the Hidden field value
@@ -2485,6 +2628,30 @@ func (o *Field) SetDecimalPlaces(v int32) {
 	o.DecimalPlaces.Set(&v)
 }
 
+// GetNumberPart returns the NumberPart field value
+func (o *Field) GetNumberPart() NumberPart {
+	if o == nil {
+		var ret NumberPart
+		return ret
+	}
+
+	return o.NumberPart
+}
+
+// GetNumberPartOk returns a tuple with the NumberPart field value
+// and a boolean to check if the value has been set.
+func (o *Field) GetNumberPartOk() (*NumberPart, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.NumberPart, true
+}
+
+// SetNumberPart sets field value
+func (o *Field) SetNumberPart(v NumberPart) {
+	o.NumberPart = v
+}
+
 // GetImageScaleType returns the ImageScaleType field value
 func (o *Field) GetImageScaleType() ImageScaleType {
 	if o == nil {
@@ -2531,6 +2698,32 @@ func (o *Field) GetImageGravityOk() (*ImageGravity, bool) {
 // SetImageGravity sets field value
 func (o *Field) SetImageGravity(v ImageGravity) {
 	o.ImageGravity = v
+}
+
+// GetSignerRole returns the SignerRole field value
+// If the value is explicit nil, the zero value for string will be returned
+func (o *Field) GetSignerRole() string {
+	if o == nil || o.SignerRole.Get() == nil {
+		var ret string
+		return ret
+	}
+
+	return *o.SignerRole.Get()
+}
+
+// GetSignerRoleOk returns a tuple with the SignerRole field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *Field) GetSignerRoleOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.SignerRole.Get(), o.SignerRole.IsSet()
+}
+
+// SetSignerRole sets field value
+func (o *Field) SetSignerRole(v string) {
+	o.SignerRole.Set(&v)
 }
 
 // GetDependencies returns the Dependencies field value
@@ -2583,6 +2776,10 @@ func (o Field) ToMap() (map[string]interface{}, error) {
 	toSerialize["metadata"] = o.Metadata
 	toSerialize["required"] = o.Required
 	toSerialize["option_list"] = o.OptionList.Get()
+	if o.OptionLabels != nil {
+		toSerialize["option_labels"] = o.OptionLabels
+	}
+	toSerialize["print_option_labels"] = o.PrintOptionLabels
 	toSerialize["combined_field_names"] = o.CombinedFieldNames
 	toSerialize["combined_field_type"] = o.CombinedFieldType
 	toSerialize["combined_field_separator"] = o.CombinedFieldSeparator
@@ -2596,6 +2793,9 @@ func (o Field) ToMap() (map[string]interface{}, error) {
 	toSerialize["signature_allow_draw"] = o.SignatureAllowDraw
 	toSerialize["signature_allow_type"] = o.SignatureAllowType
 	toSerialize["barcode_symbology"] = o.BarcodeSymbology
+	toSerialize["comb_fill_from_right"] = o.CombFillFromRight
+	toSerialize["comb_pad_with_zeros"] = o.CombPadWithZeros
+	toSerialize["print_digits_only"] = o.PrintDigitsOnly
 	toSerialize["hidden"] = o.Hidden
 	toSerialize["x"] = o.X
 	toSerialize["y"] = o.Y
@@ -2657,8 +2857,10 @@ func (o Field) ToMap() (map[string]interface{}, error) {
 	toSerialize["invert_boolean_condition"] = o.InvertBooleanCondition
 	toSerialize["currency"] = o.Currency
 	toSerialize["decimal_places"] = o.DecimalPlaces.Get()
+	toSerialize["number_part"] = o.NumberPart
 	toSerialize["image_scale_type"] = o.ImageScaleType
 	toSerialize["image_gravity"] = o.ImageGravity
+	toSerialize["signer_role"] = o.SignerRole.Get()
 	toSerialize["dependencies"] = o.Dependencies.Get()
 
 	for key, value := range o.AdditionalProperties {
@@ -2687,6 +2889,8 @@ func (o *Field) UnmarshalJSON(data []byte) (err error) {
 		"metadata",
 		"required",
 		"option_list",
+		"option_labels",
+		"print_option_labels",
 		"combined_field_names",
 		"combined_field_type",
 		"combined_field_separator",
@@ -2700,6 +2904,9 @@ func (o *Field) UnmarshalJSON(data []byte) (err error) {
 		"signature_allow_draw",
 		"signature_allow_type",
 		"barcode_symbology",
+		"comb_fill_from_right",
+		"comb_pad_with_zeros",
+		"print_digits_only",
 		"hidden",
 		"x",
 		"y",
@@ -2761,8 +2968,10 @@ func (o *Field) UnmarshalJSON(data []byte) (err error) {
 		"invert_boolean_condition",
 		"currency",
 		"decimal_places",
+		"number_part",
 		"image_scale_type",
 		"image_gravity",
+		"signer_role",
 		"dependencies",
 	}
 
@@ -2807,6 +3016,8 @@ func (o *Field) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "metadata")
 		delete(additionalProperties, "required")
 		delete(additionalProperties, "option_list")
+		delete(additionalProperties, "option_labels")
+		delete(additionalProperties, "print_option_labels")
 		delete(additionalProperties, "combined_field_names")
 		delete(additionalProperties, "combined_field_type")
 		delete(additionalProperties, "combined_field_separator")
@@ -2820,6 +3031,9 @@ func (o *Field) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "signature_allow_draw")
 		delete(additionalProperties, "signature_allow_type")
 		delete(additionalProperties, "barcode_symbology")
+		delete(additionalProperties, "comb_fill_from_right")
+		delete(additionalProperties, "comb_pad_with_zeros")
+		delete(additionalProperties, "print_digits_only")
 		delete(additionalProperties, "hidden")
 		delete(additionalProperties, "x")
 		delete(additionalProperties, "y")
@@ -2881,8 +3095,10 @@ func (o *Field) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "invert_boolean_condition")
 		delete(additionalProperties, "currency")
 		delete(additionalProperties, "decimal_places")
+		delete(additionalProperties, "number_part")
 		delete(additionalProperties, "image_scale_type")
 		delete(additionalProperties, "image_gravity")
+		delete(additionalProperties, "signer_role")
 		delete(additionalProperties, "dependencies")
 		o.AdditionalProperties = additionalProperties
 	}

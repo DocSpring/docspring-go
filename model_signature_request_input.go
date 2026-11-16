@@ -13,7 +13,6 @@ package docspring
 import (
 	"encoding/json"
 	"time"
-	"fmt"
 )
 
 // checks if the SignatureRequestInput type satisfies the MappedNullable interface at compile time
@@ -25,11 +24,11 @@ type SignatureRequestInput struct {
 	Name NullableString `json:"name,omitempty"`
 	// Their email address. Null when they have none.
 	Email NullableString `json:"email,omitempty"`
-	// The fields this person fills in. Each field can only be in one signature request, and a field that `data` fills in needs `prefilled_values_editable`.
-	Fields []string `json:"fields"`
+	// The fields this person fills in or signs, besides the ones the template gives their role. A submission's only signature request can leave it out: the person gets every field without a role that `data` doesn't fill in. With two or more signature requests, every required field that `data` doesn't fill in needs a signer, from its role in the template or from a signature request's `fields` (an optional one that nobody is given stays empty). Each field can only be in one signature request, can't be another role's or the sender's, and needs `prefilled_values_editable` when `data` fills it in. A field that the Liquid of an HTML template, a Word template or a page design uses outside its form fields (`{{ name }}`) can only be filled in by the signer who signs first (the only signer, or the only one in the first `signing_step`): their signing page asks them for it before the document is made.
+	Fields []string `json:"fields,omitempty"`
 	// Your own data about the signature request, such as an ID from your app.
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
-	// Which of the template's signers the person is: `Signer 1`, `Signer 2` and so on, up to `Signer 100`, until templates have roles of their own. Either every signature request has a `role` or none does, and each role can only have one.
+	// Which of the template's signers the person is: one of its roles, by key (`tenant`), or by place (`Signer 1` is the first role). A template without roles has `Signer 1`, `Signer 2` and so on, up to `Signer 100`. Either every signature request has a `role` or none does, and each role can only have one. Without any `role`, the first signature request is the template's first signer, the second its second, and so on. When the template gives its roles names of their own (`Tenant`, not `Signer 1`), two or more signature requests each need a `role`.
 	Role *string `json:"role,omitempty"`
 	// How your app authenticated the person before it showed them the signature request.
 	AuthType *SignatureRequestAuthType `json:"auth_type,omitempty"`
@@ -49,7 +48,7 @@ type SignatureRequestInput struct {
 	AuthPhoneNumberHash NullableString `json:"auth_phone_number_hash,omitempty"`
 	// Leave out names in `fields` that the template doesn't have, for one field list that you send with several templates. Without it, an unknown name makes the submission `invalid_data`.
 	IgnoreUnknownFields *bool `json:"ignore_unknown_fields,omitempty"`
-	// Let the person change the values that `data` already has for fields in `fields`. Without it, those fields are a 422.
+	// Let the person change the values that `data` already has for their fields. Without it, a field in `fields` that `data` fills in is a 422, and a field of their role that `data` fills in is the sender's.
 	PrefilledValuesEditable *bool `json:"prefilled_values_editable,omitempty"`
 	// Whether DocSpring emails this person their signing link. Default: the submission's `send_email`. Set it to false for someone who signs in your app (embedded signing) or whose link you send yourself. When DocSpring emails them, `email` is required and `auth_type` is `email_link` (the default). Otherwise `auth_type` is required.
 	SendEmail *bool `json:"send_email,omitempty"`
@@ -64,9 +63,8 @@ type _SignatureRequestInput SignatureRequestInput
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewSignatureRequestInput(fields []string) *SignatureRequestInput {
+func NewSignatureRequestInput() *SignatureRequestInput {
 	this := SignatureRequestInput{}
-	this.Fields = fields
 	return &this
 }
 
@@ -162,26 +160,34 @@ func (o *SignatureRequestInput) UnsetEmail() {
 	o.Email.Unset()
 }
 
-// GetFields returns the Fields field value
+// GetFields returns the Fields field value if set, zero value otherwise.
 func (o *SignatureRequestInput) GetFields() []string {
-	if o == nil {
+	if o == nil || IsNil(o.Fields) {
 		var ret []string
 		return ret
 	}
-
 	return o.Fields
 }
 
-// GetFieldsOk returns a tuple with the Fields field value
+// GetFieldsOk returns a tuple with the Fields field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SignatureRequestInput) GetFieldsOk() ([]string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Fields) {
 		return nil, false
 	}
 	return o.Fields, true
 }
 
-// SetFields sets field value
+// HasFields returns a boolean if a field has been set.
+func (o *SignatureRequestInput) HasFields() bool {
+	if o != nil && !IsNil(o.Fields) {
+		return true
+	}
+
+	return false
+}
+
+// SetFields gets a reference to the given []string and assigns it to the Fields field.
 func (o *SignatureRequestInput) SetFields(v []string) {
 	o.Fields = v
 }
@@ -710,7 +716,9 @@ func (o SignatureRequestInput) ToMap() (map[string]interface{}, error) {
 	if o.Email.IsSet() {
 		toSerialize["email"] = o.Email.Get()
 	}
-	toSerialize["fields"] = o.Fields
+	if !IsNil(o.Fields) {
+		toSerialize["fields"] = o.Fields
+	}
 	if !IsNil(o.Metadata) {
 		toSerialize["metadata"] = o.Metadata
 	}
@@ -762,27 +770,6 @@ func (o SignatureRequestInput) ToMap() (map[string]interface{}, error) {
 }
 
 func (o *SignatureRequestInput) UnmarshalJSON(data []byte) (err error) {
-	// This validates that all required properties are included in the JSON object
-	// by unmarshalling the object into a generic map with string keys and checking
-	// that every required field exists as a key in the generic map.
-	requiredProperties := []string{
-		"fields",
-	}
-
-	allProperties := make(map[string]interface{})
-
-	err = json.Unmarshal(data, &allProperties)
-
-	if err != nil {
-		return err;
-	}
-
-	for _, requiredProperty := range(requiredProperties) {
-		if _, exists := allProperties[requiredProperty]; !exists {
-			return fmt.Errorf("no value given for required property %v", requiredProperty)
-		}
-	}
-
 	varSignatureRequestInput := _SignatureRequestInput{}
 
 	err = json.Unmarshal(data, &varSignatureRequestInput)

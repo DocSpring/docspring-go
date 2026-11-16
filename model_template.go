@@ -59,13 +59,15 @@ type Template struct {
 	AiFieldNamingLanguage NullableAiFieldNamingLanguage `json:"ai_field_naming_language"`
 	// Accept submission data with properties that aren't fields of the template.
 	AllowAdditionalProperties bool `json:"allow_additional_properties"`
-	// Visual forms and signature request forms show the Continue button as soon as the required fields are filled in, without visiting each optional field. The `allowSkippingOptionalFields` embed option overrides it.
+	// Visual Forms JS 2.16.0 to 2.23.0 only: with it on, Continue takes the place of Next once the required fields are filled in. Later versions use `continue_before_optional_fields`.
 	AllowSkippingOptionalFields bool `json:"allow_skipping_optional_fields"`
+	// Visual forms and signature request forms show the Continue button next to Next as soon as the required fields are filled in, without visiting each optional field. Turned off, Continue shows in place of Next only once every field has a value or has been visited. The `allowSkippingOptionalFields` embed option overrides it.
+	ContinueBeforeOptionalFields bool `json:"continue_before_optional_fields"`
 	// The hosted form that /templates/{template_id}/form shows when its URL has no `mode` parameter: `web` (the web form), `visual` (the visual form, where fields are filled in on the PDF) or `dual` (both, in tabs). Only PDF templates have a visual form, so other templates accept only `web`.
 	DefaultFormMode TemplateFormMode `json:"default_form_mode"`
 	// Generate PDFs whose text and check fields stay fillable ("Generate Editable PDFs"). A submission's `editable` overrides it.
 	EditableSubmissions bool `json:"editable_submissions"`
-	// The sites that can embed the template's live signature requests and its embedded template editor: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work), without a path. Each one is stored in lowercase, without a trailing slash. Browsers open a live signature request in a frame only on these sites (and DocSpring's), so with an empty list it can't be embedded anywhere; a test signature request can be embedded on any site. The embedded template editor loads only for a page on one of these sites (by its Referer or Origin header), and on any site when the list is empty. Forms embedded on a page (Visual Forms JS and Web Forms JS) aren't restricted.
+	// The sites that can embed the template's live signature requests, its embedded template editor and its visual form: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work), without a path. Each one is stored in lowercase, without a trailing slash. Browsers open a live signature request in a frame only on these sites (and DocSpring's), so with an empty list it can't be embedded anywhere; a test signature request can be embedded on any site. The embedded template editor loads only for a page on one of these sites (by its Referer or Origin header), and on any site when the list is empty. A visual form embedded with Visual Forms JS loads only on these sites, and on any site when the list is empty. Web Forms JS isn't restricted.
 	EmbedDomains []string `json:"embed_domains"`
 	// Allow the embedded template editor to change sensitive template settings (webhooks, redirect URL, encryption, public access, expiration and so on).
 	EmbedEditAllowSettings bool `json:"embed_edit_allow_settings"`
@@ -77,9 +79,9 @@ type Template struct {
 	EncryptPdfs bool `json:"encrypt_pdfs"`
 	// Whether `encrypt_pdfs_password` is set.
 	HasEncryptPdfsPassword bool `json:"has_encrypt_pdfs_password"`
-	// Delete each submission's data and PDF after `expire_after` `expiration_interval`.
+	// Delete each submission's data and files after `expire_after` `expiration_interval`, when `override_account_expiry` is on.
 	ExpireSubmissions bool `json:"expire_submissions"`
-	// How many `expiration_interval`s a submission's data and PDF are kept for, when `expire_submissions` is on. At most 5256000 (10 years in minutes).
+	// How many `expiration_interval`s a submission's data and PDF are kept for, when `expire_submissions` and `override_account_expiry` are on. At most 5256000 (10 years in minutes).
 	ExpireAfter int32 `json:"expire_after"`
 	// The unit of `expire_after`.
 	ExpirationInterval ExpirationInterval `json:"expiration_interval"`
@@ -93,19 +95,19 @@ type Template struct {
 	PublicWebForm bool `json:"public_web_form"`
 	// Where the web form sends people after they submit it, instead of showing its success screen. After its `?` or `#`, it can have variables such as `{{ data.first_name }}`, which the form fills in with what they submitted.
 	RedirectUrl NullableString `json:"redirect_url"`
-	// How DocSpring's completed emails send the signed PDF to your signers and CCs: `attachment` (attached, or a download link when it's too big to attach) or `link` (a download link). Null uses your account's rule: a link if your account has signed a BAA, otherwise attached. PDF templates only. A signature request uses the value it had when the request was created.
+	// How DocSpring's completed emails send the signed PDF to your signers and CCs: `attachment` (attached, or a download link when it's too big to attach) or `link` (a download link). Null uses your account's rule: a link if your account has signed a BAA, otherwise attached. A signature request uses the value it had when the request was created.
 	SignatureRequestEmailAttachments NullableSignatureRequestEmailAttachments `json:"signature_request_email_attachments"`
-	// The address DocSpring's emails to your signers come from: an address at one of your verified email domains, on the Growth plan or higher. Null sends them from DocSpring's shared address, with "via DocSpring" after the sender name. PDF templates only.
+	// The address DocSpring's emails to your signers come from: an address at one of your verified email domains, on the Growth plan or higher. Null sends them from DocSpring's shared address, with "via DocSpring" after the sender name.
 	SignatureRequestFromAddress NullableString `json:"signature_request_from_address"`
-	// Puts a signing token in `signature_request_signing_url`, as `{{ token_id }}` and `{{ token_secret }}`, so your page can open the signing form without creating a token itself. The email then carries a credential: anyone who has it can open the form and sign. PDF templates only.
+	// Puts a signing token in `signature_request_signing_url`, as `{{ token_id }}` and `{{ token_secret }}`, so your page can open the signing form without creating a token itself. The email then carries a credential: anyone who has it can open the form and sign.
 	SignatureRequestIncludeSigningToken bool `json:"signature_request_include_signing_token"`
-	// The sender name on the emails DocSpring sends your signers, as in "Acme via DocSpring". It can't contain an email address, a website or quotes. Null uses your account's name. PDF templates only.
+	// The sender name on the emails DocSpring sends your signers, as in "Acme via DocSpring". It can't contain an email address, a website or quotes. Null uses your account's name.
 	SignatureRequestFromName NullableString `json:"signature_request_from_name"`
-	// Who DocSpring tells when a signature request's document is completed or declined, or an email bounces or can't be sent: members of your DocSpring team or addresses at your verified email domains. Empty means your account's owner. A submission's `notification_emails` replaces them. PDF templates only.
+	// Who DocSpring tells when a signature request's document is completed or declined, or an email bounces or can't be sent: members of your DocSpring team or addresses at your verified email domains. Empty means your account's owner. A submission's `notification_emails` replaces them.
 	SignatureRequestNotificationEmails []string `json:"signature_request_notification_emails"`
-	// Where your signers' replies to DocSpring's emails go: a member of your DocSpring team or an address at one of your verified email domains. Null means your account's owner. A submission's `reply_to` replaces it. PDF templates only.
+	// Where your signers' replies to DocSpring's emails go: a member of your DocSpring team or an address at one of your verified email domains. Null means your account's owner. A submission's `reply_to` replaces it.
 	SignatureRequestReplyTo NullableString `json:"signature_request_reply_to"`
-	// A page on your own site that the button in DocSpring's email to a signer opens, instead of DocSpring's signing page: an https URL on one of your verified email domains or a subdomain of one, on the Growth plan or higher. It must include `{{ signature_request_id }}`. Your page authenticates the signer, creates a token for the signature request, and opens the signing form with it. Null links to DocSpring's signing page. PDF templates only.
+	// A page on your own site that the button in DocSpring's email to a signer opens, instead of DocSpring's signing page: an https URL on one of your verified email domains or a subdomain of one, on the Growth plan or higher. It must include `{{ signature_request_id }}`. Your page authenticates the signer, creates a token for the signature request, and opens the signing form with it. Null links to DocSpring's signing page.
 	SignatureRequestSigningUrl NullableString `json:"signature_request_signing_url"`
 	// The title of the web form's success screen. When it's null or empty, the screen says "Thanks for filling out" and the template's name. It can have variables such as `{{ data.first_name }}`.
 	SuccessTitle NullableString `json:"success_title"`
@@ -113,6 +115,8 @@ type Template struct {
 	SuccessMessage NullableString `json:"success_message"`
 	// Whether the web form's success screen has a "Fill out again" button, which clears the form so someone can fill it in again.
 	ShowFillAgainButton bool `json:"show_fill_again_button"`
+	// Whether a web form with sections makes people fill them out in order. When true, a later section stays locked until they reach it with Next. When false, they can open any section from the list, and Next and Submit still check their answers.
+	FormSectionsInOrder bool `json:"form_sections_in_order"`
 	// Whether `slack_webhook_url` is set.
 	HasSlackWebhookUrl bool `json:"has_slack_webhook_url"`
 	// Who last changed the draft: a user in your account, an API token, or someone using the embedded template editor. Null if no change has been recorded.
@@ -124,6 +128,10 @@ type Template struct {
 	FieldGroups []FieldGroup `json:"field_groups"`
 	// The web form's sections, in order: Web Forms JS and the hosted web form show one section at a time. Empty when the template has none, and the web form shows all of its fields together, in the order the fields endpoint lists them. A field that no section lists (one added later) goes after the field before it in that order, in that field's section.
 	FormSections []TemplateFormSection `json:"form_sections"`
+	// The people who sign the template's submissions, in order. A field's `signer_role` says which signer fills it in or signs it, and a signature request's `role` says which signer it's for. Role N is also `Signer N`. Setting it replaces the whole list: a role left out is deleted, and its fields are left unassigned. Without roles (an empty list), a template's signers are Signer 1, Signer 2 and so on, and each signature request lists the fields its signer fills in or signs.
+	SignerRoles []TemplateSignerRole `json:"signer_roles"`
+	// Who gets a copy of the completed document when DocSpring emails a submission's signers, with the submission's `cc`: email addresses, or `{{ variables }}` that name an address in the submission's data, such as `{{ agent.email }}`. A value the data doesn't have prints nothing, and an address that comes out blank is left out. The data has to have the value, so it's one of the template's fields (one the sender fills in) or the template allows additional properties: setting a variable that isn't a field is a `422` otherwise. They don't sign. Setting it replaces the whole list.
+	SignatureRequestCc []string `json:"signature_request_cc"`
 	// The field names that people using the embedded template editor choose from, each with the data type and settings a field gets when it's given that name. Setting it replaces the whole list; an empty list turns them off.
 	PredefinedFields []PredefinedField `json:"predefined_fields"`
 	// Sample submission data that sets `predefined_fields`: each value becomes a predefined field, with a type that fits it (`string`, `number`, `boolean`, `date`, `email` or `url`) and `required_in_template` true. Nested objects and arrays become names with `/`, such as `customer/email`. Without `predefined_fields` in the same request, it replaces them; with them, it adds to them and sets the types of the ones it has values for.
@@ -146,6 +154,8 @@ type Template struct {
 	EmbedEditToken NullableString `json:"embed_edit_token"`
 	// The template's published versions, newest first (up to 100).
 	Versions []TemplateVersion `json:"versions"`
+	// Whether the template's own expiry (`expire_submissions`, `expire_after` and `expiration_interval`) decides when all its submissions are deleted, with or without signature requests, including keeping them until you delete them. When false, the account's expiry settings do. Turning `expire_submissions` on also turns this on, unless the same request sets it, and so does creating a template with `expire_submissions` on or off.
+	OverrideAccountExpiry bool `json:"override_account_expiry"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -155,7 +165,7 @@ type _Template Template
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewTemplate(id string, name NullableString, description NullableString, templateType TemplateType, outputFormat OutputFormat, ready bool, document NullableTemplateDocument, parentFolderId NullableString, path string, latestVersion NullableString, versionPublishedAt NullableTime, locked bool, lastChangedAt NullableTime, createdAt time.Time, updatedAt time.Time, version NullableString, addSignatureRequestSubmissionIdFooters bool, aiFieldNamingLanguage NullableAiFieldNamingLanguage, allowAdditionalProperties bool, allowSkippingOptionalFields bool, defaultFormMode TemplateFormMode, editableSubmissions bool, embedDomains []string, embedEditAllowSettings bool, embedEditAllowVersioning bool, embedEditAllowDocumentReplacement bool, encryptPdfs bool, hasEncryptPdfsPassword bool, expireSubmissions bool, expireAfter int32, expirationInterval ExpirationInterval, mergeAuditTrailPdf bool, parseDatesUsingTemplateDateFormat bool, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, signatureRequestEmailAttachments NullableSignatureRequestEmailAttachments, signatureRequestFromAddress NullableString, signatureRequestIncludeSigningToken bool, signatureRequestFromName NullableString, signatureRequestNotificationEmails []string, signatureRequestReplyTo NullableString, signatureRequestSigningUrl NullableString, successTitle NullableString, successMessage NullableString, showFillAgainButton bool, hasSlackWebhookUrl bool, lastChangedBy NullableTemplateActor, defaults TemplateDefaults, fieldDependencies []TemplateFieldDependency, fieldGroups []FieldGroup, formSections []TemplateFormSection, predefinedFields []PredefinedField, predefinedFieldsSampleData map[string]interface{}, html NullableString, scss NullableString, headerHtml NullableString, footerHtml NullableString, htmlEngineOptions NullableHtmlEngineOptions, htmlEscapeData NullableBool, layout map[string]interface{}, embedEditToken NullableString, versions []TemplateVersion) *Template {
+func NewTemplate(id string, name NullableString, description NullableString, templateType TemplateType, outputFormat OutputFormat, ready bool, document NullableTemplateDocument, parentFolderId NullableString, path string, latestVersion NullableString, versionPublishedAt NullableTime, locked bool, lastChangedAt NullableTime, createdAt time.Time, updatedAt time.Time, version NullableString, addSignatureRequestSubmissionIdFooters bool, aiFieldNamingLanguage NullableAiFieldNamingLanguage, allowAdditionalProperties bool, allowSkippingOptionalFields bool, continueBeforeOptionalFields bool, defaultFormMode TemplateFormMode, editableSubmissions bool, embedDomains []string, embedEditAllowSettings bool, embedEditAllowVersioning bool, embedEditAllowDocumentReplacement bool, encryptPdfs bool, hasEncryptPdfsPassword bool, expireSubmissions bool, expireAfter int32, expirationInterval ExpirationInterval, mergeAuditTrailPdf bool, parseDatesUsingTemplateDateFormat bool, publicSubmissions bool, publicWebForm bool, redirectUrl NullableString, signatureRequestEmailAttachments NullableSignatureRequestEmailAttachments, signatureRequestFromAddress NullableString, signatureRequestIncludeSigningToken bool, signatureRequestFromName NullableString, signatureRequestNotificationEmails []string, signatureRequestReplyTo NullableString, signatureRequestSigningUrl NullableString, successTitle NullableString, successMessage NullableString, showFillAgainButton bool, formSectionsInOrder bool, hasSlackWebhookUrl bool, lastChangedBy NullableTemplateActor, defaults TemplateDefaults, fieldDependencies []TemplateFieldDependency, fieldGroups []FieldGroup, formSections []TemplateFormSection, signerRoles []TemplateSignerRole, signatureRequestCc []string, predefinedFields []PredefinedField, predefinedFieldsSampleData map[string]interface{}, html NullableString, scss NullableString, headerHtml NullableString, footerHtml NullableString, htmlEngineOptions NullableHtmlEngineOptions, htmlEscapeData NullableBool, layout map[string]interface{}, embedEditToken NullableString, versions []TemplateVersion, overrideAccountExpiry bool) *Template {
 	this := Template{}
 	this.Id = id
 	this.Name = name
@@ -177,6 +187,7 @@ func NewTemplate(id string, name NullableString, description NullableString, tem
 	this.AiFieldNamingLanguage = aiFieldNamingLanguage
 	this.AllowAdditionalProperties = allowAdditionalProperties
 	this.AllowSkippingOptionalFields = allowSkippingOptionalFields
+	this.ContinueBeforeOptionalFields = continueBeforeOptionalFields
 	this.DefaultFormMode = defaultFormMode
 	this.EditableSubmissions = editableSubmissions
 	this.EmbedDomains = embedDomains
@@ -203,12 +214,15 @@ func NewTemplate(id string, name NullableString, description NullableString, tem
 	this.SuccessTitle = successTitle
 	this.SuccessMessage = successMessage
 	this.ShowFillAgainButton = showFillAgainButton
+	this.FormSectionsInOrder = formSectionsInOrder
 	this.HasSlackWebhookUrl = hasSlackWebhookUrl
 	this.LastChangedBy = lastChangedBy
 	this.Defaults = defaults
 	this.FieldDependencies = fieldDependencies
 	this.FieldGroups = fieldGroups
 	this.FormSections = formSections
+	this.SignerRoles = signerRoles
+	this.SignatureRequestCc = signatureRequestCc
 	this.PredefinedFields = predefinedFields
 	this.PredefinedFieldsSampleData = predefinedFieldsSampleData
 	this.Html = html
@@ -220,6 +234,7 @@ func NewTemplate(id string, name NullableString, description NullableString, tem
 	this.Layout = layout
 	this.EmbedEditToken = embedEditToken
 	this.Versions = versions
+	this.OverrideAccountExpiry = overrideAccountExpiry
 	return &this
 }
 
@@ -727,6 +742,30 @@ func (o *Template) GetAllowSkippingOptionalFieldsOk() (*bool, bool) {
 // SetAllowSkippingOptionalFields sets field value
 func (o *Template) SetAllowSkippingOptionalFields(v bool) {
 	o.AllowSkippingOptionalFields = v
+}
+
+// GetContinueBeforeOptionalFields returns the ContinueBeforeOptionalFields field value
+func (o *Template) GetContinueBeforeOptionalFields() bool {
+	if o == nil {
+		var ret bool
+		return ret
+	}
+
+	return o.ContinueBeforeOptionalFields
+}
+
+// GetContinueBeforeOptionalFieldsOk returns a tuple with the ContinueBeforeOptionalFields field value
+// and a boolean to check if the value has been set.
+func (o *Template) GetContinueBeforeOptionalFieldsOk() (*bool, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.ContinueBeforeOptionalFields, true
+}
+
+// SetContinueBeforeOptionalFields sets field value
+func (o *Template) SetContinueBeforeOptionalFields(v bool) {
+	o.ContinueBeforeOptionalFields = v
 }
 
 // GetDefaultFormMode returns the DefaultFormMode field value
@@ -1369,6 +1408,30 @@ func (o *Template) SetShowFillAgainButton(v bool) {
 	o.ShowFillAgainButton = v
 }
 
+// GetFormSectionsInOrder returns the FormSectionsInOrder field value
+func (o *Template) GetFormSectionsInOrder() bool {
+	if o == nil {
+		var ret bool
+		return ret
+	}
+
+	return o.FormSectionsInOrder
+}
+
+// GetFormSectionsInOrderOk returns a tuple with the FormSectionsInOrder field value
+// and a boolean to check if the value has been set.
+func (o *Template) GetFormSectionsInOrderOk() (*bool, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.FormSectionsInOrder, true
+}
+
+// SetFormSectionsInOrder sets field value
+func (o *Template) SetFormSectionsInOrder(v bool) {
+	o.FormSectionsInOrder = v
+}
+
 // GetHasSlackWebhookUrl returns the HasSlackWebhookUrl field value
 func (o *Template) GetHasSlackWebhookUrl() bool {
 	if o == nil {
@@ -1513,6 +1576,54 @@ func (o *Template) GetFormSectionsOk() ([]TemplateFormSection, bool) {
 // SetFormSections sets field value
 func (o *Template) SetFormSections(v []TemplateFormSection) {
 	o.FormSections = v
+}
+
+// GetSignerRoles returns the SignerRoles field value
+func (o *Template) GetSignerRoles() []TemplateSignerRole {
+	if o == nil {
+		var ret []TemplateSignerRole
+		return ret
+	}
+
+	return o.SignerRoles
+}
+
+// GetSignerRolesOk returns a tuple with the SignerRoles field value
+// and a boolean to check if the value has been set.
+func (o *Template) GetSignerRolesOk() ([]TemplateSignerRole, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.SignerRoles, true
+}
+
+// SetSignerRoles sets field value
+func (o *Template) SetSignerRoles(v []TemplateSignerRole) {
+	o.SignerRoles = v
+}
+
+// GetSignatureRequestCc returns the SignatureRequestCc field value
+func (o *Template) GetSignatureRequestCc() []string {
+	if o == nil {
+		var ret []string
+		return ret
+	}
+
+	return o.SignatureRequestCc
+}
+
+// GetSignatureRequestCcOk returns a tuple with the SignatureRequestCc field value
+// and a boolean to check if the value has been set.
+func (o *Template) GetSignatureRequestCcOk() ([]string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.SignatureRequestCc, true
+}
+
+// SetSignatureRequestCc sets field value
+func (o *Template) SetSignatureRequestCc(v []string) {
+	o.SignatureRequestCc = v
 }
 
 // GetPredefinedFields returns the PredefinedFields field value
@@ -1797,6 +1908,30 @@ func (o *Template) SetVersions(v []TemplateVersion) {
 	o.Versions = v
 }
 
+// GetOverrideAccountExpiry returns the OverrideAccountExpiry field value
+func (o *Template) GetOverrideAccountExpiry() bool {
+	if o == nil {
+		var ret bool
+		return ret
+	}
+
+	return o.OverrideAccountExpiry
+}
+
+// GetOverrideAccountExpiryOk returns a tuple with the OverrideAccountExpiry field value
+// and a boolean to check if the value has been set.
+func (o *Template) GetOverrideAccountExpiryOk() (*bool, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.OverrideAccountExpiry, true
+}
+
+// SetOverrideAccountExpiry sets field value
+func (o *Template) SetOverrideAccountExpiry(v bool) {
+	o.OverrideAccountExpiry = v
+}
+
 func (o Template) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -1827,6 +1962,7 @@ func (o Template) ToMap() (map[string]interface{}, error) {
 	toSerialize["ai_field_naming_language"] = o.AiFieldNamingLanguage.Get()
 	toSerialize["allow_additional_properties"] = o.AllowAdditionalProperties
 	toSerialize["allow_skipping_optional_fields"] = o.AllowSkippingOptionalFields
+	toSerialize["continue_before_optional_fields"] = o.ContinueBeforeOptionalFields
 	toSerialize["default_form_mode"] = o.DefaultFormMode
 	toSerialize["editable_submissions"] = o.EditableSubmissions
 	toSerialize["embed_domains"] = o.EmbedDomains
@@ -1853,12 +1989,15 @@ func (o Template) ToMap() (map[string]interface{}, error) {
 	toSerialize["success_title"] = o.SuccessTitle.Get()
 	toSerialize["success_message"] = o.SuccessMessage.Get()
 	toSerialize["show_fill_again_button"] = o.ShowFillAgainButton
+	toSerialize["form_sections_in_order"] = o.FormSectionsInOrder
 	toSerialize["has_slack_webhook_url"] = o.HasSlackWebhookUrl
 	toSerialize["last_changed_by"] = o.LastChangedBy.Get()
 	toSerialize["defaults"] = o.Defaults
 	toSerialize["field_dependencies"] = o.FieldDependencies
 	toSerialize["field_groups"] = o.FieldGroups
 	toSerialize["form_sections"] = o.FormSections
+	toSerialize["signer_roles"] = o.SignerRoles
+	toSerialize["signature_request_cc"] = o.SignatureRequestCc
 	toSerialize["predefined_fields"] = o.PredefinedFields
 	if o.PredefinedFieldsSampleData != nil {
 		toSerialize["predefined_fields_sample_data"] = o.PredefinedFieldsSampleData
@@ -1874,6 +2013,7 @@ func (o Template) ToMap() (map[string]interface{}, error) {
 	}
 	toSerialize["embed_edit_token"] = o.EmbedEditToken.Get()
 	toSerialize["versions"] = o.Versions
+	toSerialize["override_account_expiry"] = o.OverrideAccountExpiry
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -1907,6 +2047,7 @@ func (o *Template) UnmarshalJSON(data []byte) (err error) {
 		"ai_field_naming_language",
 		"allow_additional_properties",
 		"allow_skipping_optional_fields",
+		"continue_before_optional_fields",
 		"default_form_mode",
 		"editable_submissions",
 		"embed_domains",
@@ -1933,12 +2074,15 @@ func (o *Template) UnmarshalJSON(data []byte) (err error) {
 		"success_title",
 		"success_message",
 		"show_fill_again_button",
+		"form_sections_in_order",
 		"has_slack_webhook_url",
 		"last_changed_by",
 		"defaults",
 		"field_dependencies",
 		"field_groups",
 		"form_sections",
+		"signer_roles",
+		"signature_request_cc",
 		"predefined_fields",
 		"predefined_fields_sample_data",
 		"html",
@@ -1950,6 +2094,7 @@ func (o *Template) UnmarshalJSON(data []byte) (err error) {
 		"layout",
 		"embed_edit_token",
 		"versions",
+		"override_account_expiry",
 	}
 
 	allProperties := make(map[string]interface{})
@@ -1999,6 +2144,7 @@ func (o *Template) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "ai_field_naming_language")
 		delete(additionalProperties, "allow_additional_properties")
 		delete(additionalProperties, "allow_skipping_optional_fields")
+		delete(additionalProperties, "continue_before_optional_fields")
 		delete(additionalProperties, "default_form_mode")
 		delete(additionalProperties, "editable_submissions")
 		delete(additionalProperties, "embed_domains")
@@ -2025,12 +2171,15 @@ func (o *Template) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "success_title")
 		delete(additionalProperties, "success_message")
 		delete(additionalProperties, "show_fill_again_button")
+		delete(additionalProperties, "form_sections_in_order")
 		delete(additionalProperties, "has_slack_webhook_url")
 		delete(additionalProperties, "last_changed_by")
 		delete(additionalProperties, "defaults")
 		delete(additionalProperties, "field_dependencies")
 		delete(additionalProperties, "field_groups")
 		delete(additionalProperties, "form_sections")
+		delete(additionalProperties, "signer_roles")
+		delete(additionalProperties, "signature_request_cc")
 		delete(additionalProperties, "predefined_fields")
 		delete(additionalProperties, "predefined_fields_sample_data")
 		delete(additionalProperties, "html")
@@ -2042,6 +2191,7 @@ func (o *Template) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "layout")
 		delete(additionalProperties, "embed_edit_token")
 		delete(additionalProperties, "versions")
+		delete(additionalProperties, "override_account_expiry")
 		o.AdditionalProperties = additionalProperties
 	}
 

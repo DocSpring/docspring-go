@@ -41,7 +41,7 @@ type CombinedPdf struct {
 	Actions []SubmissionAction `json:"actions"`
 	// An expired combined PDF's PDF, metadata, password and source URLs have been deleted.
 	Expired bool `json:"expired"`
-	// When the combined PDF expires (`expires_in` after it's generated). Null if it's kept until you delete it.
+	// When the combined PDF expires (`expires_in`, or the account's expiry setting, after it's generated). Null if it's kept until you delete it.
 	ExpiresAt NullableTime `json:"expires_at"`
 	// When the PDF was generated. Null until then.
 	ProcessedAt NullableTime `json:"processed_at"`

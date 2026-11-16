@@ -23,6 +23,8 @@ type SubmissionFiles struct {
 	Pdf *GeneratedFile `json:"pdf,omitempty"`
 	// The audit trail of a submission with signature requests: who signed, when and how. It's also added to the end of the PDF when the template's `merge_audit_trail_pdf` is on.
 	AuditTrail *GeneratedFile `json:"audit_trail,omitempty"`
+	// The audit data behind the audit trail of a submission with signature requests, as JSON: the hashes of the document and the audit trail, and each signing event with the salt and hash that DocSpring's signing record holds for it. It has who signed, like the audit trail, and goes when the submission expires, so keep it with the PDF and the audit trail.
+	SigningManifest *GeneratedFile `json:"signing_manifest,omitempty"`
 	// The preview PDF from POST /submissions/{submission_id}/generate_preview, such as for a submission still waiting for its signature requests.
 	Preview *GeneratedFile `json:"preview,omitempty"`
 	// The Word document of a Word template's submission, when the submission makes one (`output_formats`).
@@ -114,6 +116,38 @@ func (o *SubmissionFiles) HasAuditTrail() bool {
 // SetAuditTrail gets a reference to the given GeneratedFile and assigns it to the AuditTrail field.
 func (o *SubmissionFiles) SetAuditTrail(v GeneratedFile) {
 	o.AuditTrail = &v
+}
+
+// GetSigningManifest returns the SigningManifest field value if set, zero value otherwise.
+func (o *SubmissionFiles) GetSigningManifest() GeneratedFile {
+	if o == nil || IsNil(o.SigningManifest) {
+		var ret GeneratedFile
+		return ret
+	}
+	return *o.SigningManifest
+}
+
+// GetSigningManifestOk returns a tuple with the SigningManifest field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SubmissionFiles) GetSigningManifestOk() (*GeneratedFile, bool) {
+	if o == nil || IsNil(o.SigningManifest) {
+		return nil, false
+	}
+	return o.SigningManifest, true
+}
+
+// HasSigningManifest returns a boolean if a field has been set.
+func (o *SubmissionFiles) HasSigningManifest() bool {
+	if o != nil && !IsNil(o.SigningManifest) {
+		return true
+	}
+
+	return false
+}
+
+// SetSigningManifest gets a reference to the given GeneratedFile and assigns it to the SigningManifest field.
+func (o *SubmissionFiles) SetSigningManifest(v GeneratedFile) {
+	o.SigningManifest = &v
 }
 
 // GetPreview returns the Preview field value if set, zero value otherwise.
@@ -260,6 +294,9 @@ func (o SubmissionFiles) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.AuditTrail) {
 		toSerialize["audit_trail"] = o.AuditTrail
 	}
+	if !IsNil(o.SigningManifest) {
+		toSerialize["signing_manifest"] = o.SigningManifest
+	}
 	if !IsNil(o.Preview) {
 		toSerialize["preview"] = o.Preview
 	}
@@ -296,6 +333,7 @@ func (o *SubmissionFiles) UnmarshalJSON(data []byte) (err error) {
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "pdf")
 		delete(additionalProperties, "audit_trail")
+		delete(additionalProperties, "signing_manifest")
 		delete(additionalProperties, "preview")
 		delete(additionalProperties, "docx")
 		delete(additionalProperties, "odt")

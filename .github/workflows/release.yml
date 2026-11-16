@@ -3,7 +3,8 @@
 #
 # Builds the module on every push and pull request. Go modules are released by their tags, so a v* tag (pushed by the
 # monorepo's api_clients/scripts/release) is the release: this workflow checks the tag and waits until the Go module
-# proxy serves it, which also caches it there.
+# proxy serves it, which also caches it there. The other SDKs' workflows check their package's files with shiplist; Go's
+# module zip is the whole repository at the tag, so there's nothing to check.
 name: Release
 
 on:

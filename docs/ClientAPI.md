@@ -5375,7 +5375,7 @@ Name | Type | Description  | Notes
 
 ## UploadTemplate
 
-> Template UploadTemplate(ctx).Document(document).Wait(wait).Name(name).Description(description).ParentFolderId(parentFolderId).AiFieldNamingLanguage(aiFieldNamingLanguage).DetectFields(detectFields).FieldSource(fieldSource).FieldNaming(fieldNaming).FieldLogic(fieldLogic).OutputFormat(outputFormat).IncludeOfficeUseFields(includeOfficeUseFields).IdempotencyKey(idempotencyKey).Execute()
+> Template UploadTemplate(ctx).Document(document).Wait(wait).Name(name).Description(description).ParentFolderId(parentFolderId).AiFieldNamingLanguage(aiFieldNamingLanguage).DetectFields(detectFields).FieldSource(fieldSource).FieldNaming(fieldNaming).FieldLogic(fieldLogic).OutputFormat(outputFormat).IncludeOfficeUseFields(includeOfficeUseFields).SyncFields(syncFields).IdempotencyKey(idempotencyKey).Execute()
 
 Create a template from an uploaded PDF or Word document
 
@@ -5406,11 +5406,12 @@ func main() {
 	fieldLogic := openapiclient.FieldSetupLogic("ai") // FieldSetupLogic | With `detect_fields`, whether AI reads the whole form once the fields are named and sets up conditional logic and required fields (`ai`) or not (`none`). Default: your account's template settings. (optional)
 	outputFormat := openapiclient.OutputFormat("pdf") // OutputFormat | What each submission of a Word template makes unless its request sets `output_formats`: `docx` (a Word document), `odt` (an OpenDocument file, converted from the Word document) or `pdf`. Required when `document` is a Word document. (optional)
 	includeOfficeUseFields := true // bool | With `detect_fields`, whether AI field setup keeps the fields that only the office receiving the form fills in, such as a "For office use only" box (`true`), or leaves them out (`false`). Default: your account's template settings. (optional)
+	syncFields := true // bool | Add a field for each value the template's code, Word document or layout reads for the first time, with a type worked out from how it's used. Existing fields keep their settings, and a field you deleted while the code still read the value stays deleted. Default true. Set it to false to manage the fields yourself with the fields endpoints: a form field whose field isn't on the template then fails its submissions and previews. Only for HTML templates, Word templates and page designs. (optional)
 	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.UploadTemplate(context.Background()).Document(document).Wait(wait).Name(name).Description(description).ParentFolderId(parentFolderId).AiFieldNamingLanguage(aiFieldNamingLanguage).DetectFields(detectFields).FieldSource(fieldSource).FieldNaming(fieldNaming).FieldLogic(fieldLogic).OutputFormat(outputFormat).IncludeOfficeUseFields(includeOfficeUseFields).IdempotencyKey(idempotencyKey).Execute()
+	resp, r, err := apiClient.ClientAPI.UploadTemplate(context.Background()).Document(document).Wait(wait).Name(name).Description(description).ParentFolderId(parentFolderId).AiFieldNamingLanguage(aiFieldNamingLanguage).DetectFields(detectFields).FieldSource(fieldSource).FieldNaming(fieldNaming).FieldLogic(fieldLogic).OutputFormat(outputFormat).IncludeOfficeUseFields(includeOfficeUseFields).SyncFields(syncFields).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.UploadTemplate``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -5443,6 +5444,7 @@ Name | Type | Description  | Notes
  **fieldLogic** | [**FieldSetupLogic**](FieldSetupLogic.md) | With `detect_fields`, whether AI reads the whole form once the fields are named and sets up conditional logic and required fields (`ai`) or not (`none`). Default: your account's template settings. | 
  **outputFormat** | [**OutputFormat**](OutputFormat.md) | What each submission of a Word template makes unless its request sets `output_formats`: `docx` (a Word document), `odt` (an OpenDocument file, converted from the Word document) or `pdf`. Required when `document` is a Word document. | 
  **includeOfficeUseFields** | **bool** | With `detect_fields`, whether AI field setup keeps the fields that only the office receiving the form fills in, such as a "For office use only" box (`true`), or leaves them out (`false`). Default: your account's template settings. | 
+ **syncFields** | **bool** | Add a field for each value the template's code, Word document or layout reads for the first time, with a type worked out from how it's used. Existing fields keep their settings, and a field you deleted while the code still read the value stays deleted. Default true. Set it to false to manage the fields yourself with the fields endpoints: a form field whose field isn't on the template then fails its submissions and previews. Only for HTML templates, Word templates and page designs. | 
  **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links. | 
 
 ### Return type
@@ -5465,7 +5467,7 @@ Name | Type | Description  | Notes
 
 ## UploadTemplateDocument
 
-> Template UploadTemplateDocument(ctx, templateId).Document(document).Wait(wait).ReimportFields(reimportFields).IdempotencyKey(idempotencyKey).Execute()
+> Template UploadTemplateDocument(ctx, templateId).Document(document).Wait(wait).ReimportFields(reimportFields).SyncFields(syncFields).IdempotencyKey(idempotencyKey).Execute()
 
 Replace a template's document with an uploaded file
 
@@ -5488,11 +5490,12 @@ func main() {
 	document := os.NewFile(1234, "some_file") // *os.File | The new PDF, or the new Word document (.docx or .odt) of a Word template.
 	wait := true // bool | Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts. (optional)
 	reimportFields := true // bool | Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. Only for PDF templates: a Word template adds a field for each new tag. (optional)
+	syncFields := true // bool | Add a field for each value the template's code, Word document or layout reads for the first time, with a type worked out from how it's used. Existing fields keep their settings, and a field you deleted while the code still read the value stays deleted. Default true. Set it to false to manage the fields yourself with the fields endpoints: a form field whose field isn't on the template then fails its submissions and previews. Only for HTML templates, Word templates and page designs. (optional)
 	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ClientAPI.UploadTemplateDocument(context.Background(), templateId).Document(document).Wait(wait).ReimportFields(reimportFields).IdempotencyKey(idempotencyKey).Execute()
+	resp, r, err := apiClient.ClientAPI.UploadTemplateDocument(context.Background(), templateId).Document(document).Wait(wait).ReimportFields(reimportFields).SyncFields(syncFields).IdempotencyKey(idempotencyKey).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.UploadTemplateDocument``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -5521,6 +5524,7 @@ Name | Type | Description  | Notes
  **document** | ***os.File** | The new PDF, or the new Word document (.docx or .odt) of a Word template. | 
  **wait** | **bool** | Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts. | 
  **reimportFields** | **bool** | Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. Only for PDF templates: a Word template adds a field for each new tag. | 
+ **syncFields** | **bool** | Add a field for each value the template's code, Word document or layout reads for the first time, with a type worked out from how it's used. Existing fields keep their settings, and a field you deleted while the code still read the value stays deleted. Default true. Set it to false to manage the fields yourself with the fields endpoints: a form field whose field isn't on the template then fails its submissions and previews. Only for HTML templates, Word templates and page designs. | 
  **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links. | 
 
 ### Return type

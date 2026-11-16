@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 **Files** | [**CombinedPdfFiles**](CombinedPdfFiles.md) | The generated files, by format. Empty until the PDF has been generated, and once it has expired. | 
 **Actions** | [**[]SubmissionAction**](SubmissionAction.md) | The uploads of the PDF to your storage (account integrations). | 
 **Expired** | **bool** | An expired combined PDF's PDF, metadata, password and source URLs have been deleted. | 
-**ExpiresAt** | **NullableTime** | When the combined PDF expires (`expires_in` after it's generated). Null if it's kept until you delete it. | 
+**ExpiresAt** | **NullableTime** | When the combined PDF expires (`expires_in`, or the account's expiry setting, after it's generated). Null if it's kept until you delete it. | 
 **ProcessedAt** | **NullableTime** | When the PDF was generated. Null until then. | 
 **CreatedAt** | **time.Time** | When the combined PDF was created. | 
 **UpdatedAt** | **time.Time** | When the combined PDF was last updated. | 

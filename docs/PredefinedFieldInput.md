@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **Title** | Pointer to **NullableString** | The Title setting a field gets when it's given this name. Null leaves the field's title as it is. | [optional] 
 **Type** | [**FieldType**](FieldType.md) | The data type a field gets when it's given this name, as a field's `type`. | 
 **OptionList** | Pointer to **NullableString** | String fields only: the values allowed, separated by commas, such as `Yes,No`. Null allows any value. | [optional] 
+**OptionLabels** | Pointer to **map[string]string** | The labels forms show for `option_list`'s values, by value, as a field's `option_labels`, such as `{"married_filing_jointly": "Married filing jointly"}`. Each key must be one of `option_list`'s values. A value without a label shows the value, or its sentence case when the values are lowercase words joined by underscores. Null gives no value a label of its own. | [optional] 
 **RequiredInTemplate** | Pointer to **bool** | Whether the template must have a field with this name. The embedded editor shows the names that are missing, and with `disableDoneButtonIfPredefinedFieldsMissing` keeps its Done button disabled until the template has them. Default false. | [optional] 
 **FieldRequired** | Pointer to **bool** | The Required setting a field gets when it's given this name. Default true. | [optional] 
 
@@ -176,6 +177,41 @@ HasOptionList returns a boolean if a field has been set.
 `func (o *PredefinedFieldInput) UnsetOptionList()`
 
 UnsetOptionList ensures that no value is present for OptionList, not even an explicit nil
+### GetOptionLabels
+
+`func (o *PredefinedFieldInput) GetOptionLabels() map[string]string`
+
+GetOptionLabels returns the OptionLabels field if non-nil, zero value otherwise.
+
+### GetOptionLabelsOk
+
+`func (o *PredefinedFieldInput) GetOptionLabelsOk() (*map[string]string, bool)`
+
+GetOptionLabelsOk returns a tuple with the OptionLabels field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetOptionLabels
+
+`func (o *PredefinedFieldInput) SetOptionLabels(v map[string]string)`
+
+SetOptionLabels sets OptionLabels field to given value.
+
+### HasOptionLabels
+
+`func (o *PredefinedFieldInput) HasOptionLabels() bool`
+
+HasOptionLabels returns a boolean if a field has been set.
+
+### SetOptionLabelsNil
+
+`func (o *PredefinedFieldInput) SetOptionLabelsNil(b bool)`
+
+ SetOptionLabelsNil sets the value for OptionLabels to be an explicit nil
+
+### UnsetOptionLabels
+`func (o *PredefinedFieldInput) UnsetOptionLabels()`
+
+UnsetOptionLabels ensures that no value is present for OptionLabels, not even an explicit nil
 ### GetRequiredInTemplate
 
 `func (o *PredefinedFieldInput) GetRequiredInTemplate() bool`

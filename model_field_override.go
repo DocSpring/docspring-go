@@ -31,6 +31,10 @@ type FieldOverride struct {
 	Required *bool `json:"required,omitempty"`
 	// The values the field can take, separated by commas, such as `Yes,No`. Null allows any value.
 	OptionList NullableString `json:"option_list,omitempty"`
+	// The label forms show for each option, keyed by its value, such as `{"no": "No, I don't"}`. Each key must be one of the options.
+	OptionLabels map[string]string `json:"option_labels,omitempty"`
+	// Print the chosen option's label instead of its value.
+	PrintOptionLabels *bool `json:"print_option_labels,omitempty"`
 	// The names of the fields a combined field joins, separated by commas.
 	CombinedFieldNames *string `json:"combined_field_names,omitempty"`
 	// How a combined field joins its fields' values.
@@ -49,6 +53,10 @@ type FieldOverride struct {
 	SignatureAllowType *bool `json:"signature_allow_type,omitempty"`
 	// The kind of barcode a field with display_type `barcode` prints.
 	BarcodeSymbology *BarcodeSymbology `json:"barcode_symbology,omitempty"`
+	// Fill the last boxes of the field's comb fields, padding the value on the left, as amounts are written on paper forms.
+	CombFillFromRight *bool `json:"comb_fill_from_right,omitempty"`
+	// With `comb_fill_from_right`, pad the value with zeros instead of spaces.
+	CombPadWithZeros *bool `json:"comb_pad_with_zeros,omitempty"`
 	// Leave the field off the PDF. Its value is still in the data, and combined fields can use it.
 	Hidden *bool `json:"hidden,omitempty"`
 	// The distance from the left edge of the page, in the template editor's page units.
@@ -101,7 +109,7 @@ type FieldOverride struct {
 	Comb *bool `json:"comb,omitempty"`
 	// The number of boxes in a comb field.
 	CombNumberOfCells *int32 `json:"comb_number_of_cells,omitempty"`
-	// The character of the value that the first box starts from, for a value split over several comb fields (such as the parts of a Social Security number).
+	// How many boxes of the value's row come before this field, for a value split over several comb fields (such as the parts of a Social Security number).
 	CombValueOffset *int32 `json:"comb_value_offset,omitempty"`
 	// The shape a field with display_type `shape` draws.
 	ShapeType *ShapeType `json:"shape_type,omitempty"`
@@ -141,6 +149,8 @@ type FieldOverride struct {
 	InvertBooleanCondition *bool `json:"invert_boolean_condition,omitempty"`
 	// The number of decimal places a number field prints. Null prints the value as it was sent.
 	DecimalPlaces NullableInt32 `json:"decimal_places,omitempty"`
+	// Which part of a number field's number this field prints: the whole number, only the part before the decimal point, or only the decimal places.
+	NumberPart *NumberPart `json:"number_part,omitempty"`
 	// How an image is resized to its field.
 	ImageScaleType *ImageScaleType `json:"image_scale_type,omitempty"`
 	// Where an image sits in its field when it doesn't fill it, or which part is kept when it's cropped.
@@ -374,6 +384,71 @@ func (o *FieldOverride) SetOptionListNil() {
 // UnsetOptionList ensures that no value is present for OptionList, not even an explicit nil
 func (o *FieldOverride) UnsetOptionList() {
 	o.OptionList.Unset()
+}
+
+// GetOptionLabels returns the OptionLabels field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *FieldOverride) GetOptionLabels() map[string]string {
+	if o == nil {
+		var ret map[string]string
+		return ret
+	}
+	return o.OptionLabels
+}
+
+// GetOptionLabelsOk returns a tuple with the OptionLabels field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *FieldOverride) GetOptionLabelsOk() (map[string]string, bool) {
+	if o == nil || IsNil(o.OptionLabels) {
+		return map[string]string{}, false
+	}
+	return o.OptionLabels, true
+}
+
+// HasOptionLabels returns a boolean if a field has been set.
+func (o *FieldOverride) HasOptionLabels() bool {
+	if o != nil && !IsNil(o.OptionLabels) {
+		return true
+	}
+
+	return false
+}
+
+// SetOptionLabels gets a reference to the given map[string]string and assigns it to the OptionLabels field.
+func (o *FieldOverride) SetOptionLabels(v map[string]string) {
+	o.OptionLabels = v
+}
+
+// GetPrintOptionLabels returns the PrintOptionLabels field value if set, zero value otherwise.
+func (o *FieldOverride) GetPrintOptionLabels() bool {
+	if o == nil || IsNil(o.PrintOptionLabels) {
+		var ret bool
+		return ret
+	}
+	return *o.PrintOptionLabels
+}
+
+// GetPrintOptionLabelsOk returns a tuple with the PrintOptionLabels field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FieldOverride) GetPrintOptionLabelsOk() (*bool, bool) {
+	if o == nil || IsNil(o.PrintOptionLabels) {
+		return nil, false
+	}
+	return o.PrintOptionLabels, true
+}
+
+// HasPrintOptionLabels returns a boolean if a field has been set.
+func (o *FieldOverride) HasPrintOptionLabels() bool {
+	if o != nil && !IsNil(o.PrintOptionLabels) {
+		return true
+	}
+
+	return false
+}
+
+// SetPrintOptionLabels gets a reference to the given bool and assigns it to the PrintOptionLabels field.
+func (o *FieldOverride) SetPrintOptionLabels(v bool) {
+	o.PrintOptionLabels = &v
 }
 
 // GetCombinedFieldNames returns the CombinedFieldNames field value if set, zero value otherwise.
@@ -672,6 +747,70 @@ func (o *FieldOverride) HasBarcodeSymbology() bool {
 // SetBarcodeSymbology gets a reference to the given BarcodeSymbology and assigns it to the BarcodeSymbology field.
 func (o *FieldOverride) SetBarcodeSymbology(v BarcodeSymbology) {
 	o.BarcodeSymbology = &v
+}
+
+// GetCombFillFromRight returns the CombFillFromRight field value if set, zero value otherwise.
+func (o *FieldOverride) GetCombFillFromRight() bool {
+	if o == nil || IsNil(o.CombFillFromRight) {
+		var ret bool
+		return ret
+	}
+	return *o.CombFillFromRight
+}
+
+// GetCombFillFromRightOk returns a tuple with the CombFillFromRight field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FieldOverride) GetCombFillFromRightOk() (*bool, bool) {
+	if o == nil || IsNil(o.CombFillFromRight) {
+		return nil, false
+	}
+	return o.CombFillFromRight, true
+}
+
+// HasCombFillFromRight returns a boolean if a field has been set.
+func (o *FieldOverride) HasCombFillFromRight() bool {
+	if o != nil && !IsNil(o.CombFillFromRight) {
+		return true
+	}
+
+	return false
+}
+
+// SetCombFillFromRight gets a reference to the given bool and assigns it to the CombFillFromRight field.
+func (o *FieldOverride) SetCombFillFromRight(v bool) {
+	o.CombFillFromRight = &v
+}
+
+// GetCombPadWithZeros returns the CombPadWithZeros field value if set, zero value otherwise.
+func (o *FieldOverride) GetCombPadWithZeros() bool {
+	if o == nil || IsNil(o.CombPadWithZeros) {
+		var ret bool
+		return ret
+	}
+	return *o.CombPadWithZeros
+}
+
+// GetCombPadWithZerosOk returns a tuple with the CombPadWithZeros field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FieldOverride) GetCombPadWithZerosOk() (*bool, bool) {
+	if o == nil || IsNil(o.CombPadWithZeros) {
+		return nil, false
+	}
+	return o.CombPadWithZeros, true
+}
+
+// HasCombPadWithZeros returns a boolean if a field has been set.
+func (o *FieldOverride) HasCombPadWithZeros() bool {
+	if o != nil && !IsNil(o.CombPadWithZeros) {
+		return true
+	}
+
+	return false
+}
+
+// SetCombPadWithZeros gets a reference to the given bool and assigns it to the CombPadWithZeros field.
+func (o *FieldOverride) SetCombPadWithZeros(v bool) {
+	o.CombPadWithZeros = &v
 }
 
 // GetHidden returns the Hidden field value if set, zero value otherwise.
@@ -2306,6 +2445,38 @@ func (o *FieldOverride) UnsetDecimalPlaces() {
 	o.DecimalPlaces.Unset()
 }
 
+// GetNumberPart returns the NumberPart field value if set, zero value otherwise.
+func (o *FieldOverride) GetNumberPart() NumberPart {
+	if o == nil || IsNil(o.NumberPart) {
+		var ret NumberPart
+		return ret
+	}
+	return *o.NumberPart
+}
+
+// GetNumberPartOk returns a tuple with the NumberPart field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FieldOverride) GetNumberPartOk() (*NumberPart, bool) {
+	if o == nil || IsNil(o.NumberPart) {
+		return nil, false
+	}
+	return o.NumberPart, true
+}
+
+// HasNumberPart returns a boolean if a field has been set.
+func (o *FieldOverride) HasNumberPart() bool {
+	if o != nil && !IsNil(o.NumberPart) {
+		return true
+	}
+
+	return false
+}
+
+// SetNumberPart gets a reference to the given NumberPart and assigns it to the NumberPart field.
+func (o *FieldOverride) SetNumberPart(v NumberPart) {
+	o.NumberPart = &v
+}
+
 // GetImageScaleType returns the ImageScaleType field value if set, zero value otherwise.
 func (o *FieldOverride) GetImageScaleType() ImageScaleType {
 	if o == nil || IsNil(o.ImageScaleType) {
@@ -2398,6 +2569,12 @@ func (o FieldOverride) ToMap() (map[string]interface{}, error) {
 	if o.OptionList.IsSet() {
 		toSerialize["option_list"] = o.OptionList.Get()
 	}
+	if o.OptionLabels != nil {
+		toSerialize["option_labels"] = o.OptionLabels
+	}
+	if !IsNil(o.PrintOptionLabels) {
+		toSerialize["print_option_labels"] = o.PrintOptionLabels
+	}
 	if !IsNil(o.CombinedFieldNames) {
 		toSerialize["combined_field_names"] = o.CombinedFieldNames
 	}
@@ -2424,6 +2601,12 @@ func (o FieldOverride) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.BarcodeSymbology) {
 		toSerialize["barcode_symbology"] = o.BarcodeSymbology
+	}
+	if !IsNil(o.CombFillFromRight) {
+		toSerialize["comb_fill_from_right"] = o.CombFillFromRight
+	}
+	if !IsNil(o.CombPadWithZeros) {
+		toSerialize["comb_pad_with_zeros"] = o.CombPadWithZeros
 	}
 	if !IsNil(o.Hidden) {
 		toSerialize["hidden"] = o.Hidden
@@ -2562,6 +2745,9 @@ func (o FieldOverride) ToMap() (map[string]interface{}, error) {
 	}
 	if o.DecimalPlaces.IsSet() {
 		toSerialize["decimal_places"] = o.DecimalPlaces.Get()
+	}
+	if !IsNil(o.NumberPart) {
+		toSerialize["number_part"] = o.NumberPart
 	}
 	if !IsNil(o.ImageScaleType) {
 		toSerialize["image_scale_type"] = o.ImageScaleType

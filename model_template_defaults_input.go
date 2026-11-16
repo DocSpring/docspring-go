@@ -39,7 +39,7 @@ type TemplateDefaultsInput struct {
 	Opacity *float32 `json:"opacity,omitempty"`
 	// How date fields are printed, as a strftime format such as `%m/%d/%Y`.
 	DateFormat NullableString `json:"date_format,omitempty"`
-	// How date-time fields are printed, as a strftime format such as `%m/%d/%Y %H:%M:%S`.
+	// How date-time fields are printed, as a strftime format such as `%m/%d/%Y %H:%M`.
 	DateTimeFormat NullableString `json:"date_time_format,omitempty"`
 	// The color of check marks, as 6 hex digits.
 	CheckColor NullableString `json:"check_color,omitempty"`
