@@ -38,6 +38,9 @@ const (
 	ERRORCODE_INVALID_DATA ErrorCode = "invalid_data"
 	ERRORCODE_RATE_LIMITED ErrorCode = "rate_limited"
 	ERRORCODE_DAILY_EMAIL_LIMIT_REACHED ErrorCode = "daily_email_limit_reached"
+	ERRORCODE_SUPPORT_FEEDBACK_LIMIT_REACHED ErrorCode = "support_feedback_limit_reached"
+	ERRORCODE_SUPPORT_HELP_LIMIT_REACHED ErrorCode = "support_help_limit_reached"
+	ERRORCODE_SUPPORT_TICKET_LIMIT_REACHED ErrorCode = "support_ticket_limit_reached"
 	ERRORCODE_INTERNAL_ERROR ErrorCode = "internal_error"
 	ERRORCODE_BAD_GATEWAY ErrorCode = "bad_gateway"
 	ERRORCODE_SERVICE_UNAVAILABLE ErrorCode = "service_unavailable"
@@ -67,6 +70,9 @@ var AllowedErrorCodeEnumValues = []ErrorCode{
 	"invalid_data",
 	"rate_limited",
 	"daily_email_limit_reached",
+	"support_feedback_limit_reached",
+	"support_help_limit_reached",
+	"support_ticket_limit_reached",
 	"internal_error",
 	"bad_gateway",
 	"service_unavailable",

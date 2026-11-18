@@ -36,6 +36,18 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
+	t.Run("Test ClientAPIService AskSupportHelp", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		resp, httpRes, err := apiClient.ClientAPI.AskSupportHelp(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
 	t.Run("Test ClientAPIService CopyTemplate", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
@@ -525,6 +537,34 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
+	t.Run("Test ClientAPIService GetSupportHelp", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var supportHelpId string
+
+		resp, httpRes, err := apiClient.ClientAPI.GetSupportHelp(context.Background(), supportHelpId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService GetSupportTicket", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var ticketId string
+
+		resp, httpRes, err := apiClient.ClientAPI.GetSupportTicket(context.Background(), ticketId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
 	t.Run("Test ClientAPIService GetTemplate", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
@@ -710,6 +750,18 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
+	t.Run("Test ClientAPIService ListSupportTickets", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		resp, httpRes, err := apiClient.ClientAPI.ListSupportTickets(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
 	t.Run("Test ClientAPIService ListTemplateFields", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
@@ -790,6 +842,18 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
+	t.Run("Test ClientAPIService OpenSupportTicket", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		resp, httpRes, err := apiClient.ClientAPI.OpenSupportTicket(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
 	t.Run("Test ClientAPIService PublishTemplateVersion", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
@@ -846,6 +910,20 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 
 	})
 
+	t.Run("Test ClientAPIService ReplyToSupportTicket", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var ticketId string
+
+		resp, httpRes, err := apiClient.ClientAPI.ReplyToSupportTicket(context.Background(), ticketId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
 	t.Run("Test ClientAPIService RestoreTemplateVersion", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
@@ -882,6 +960,18 @@ func Test_docspring_ClientAPIService(t *testing.T) {
 		var emailActionId string
 
 		resp, httpRes, err := apiClient.ClientAPI.SendEmailActionTestEmail(context.Background(), templateId, emailActionId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test ClientAPIService SendSupportFeedback", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		resp, httpRes, err := apiClient.ClientAPI.SendSupportFeedback(context.Background()).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)

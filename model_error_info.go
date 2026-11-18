@@ -20,7 +20,7 @@ var _ MappedNullable = &ErrorInfo{}
 
 // ErrorInfo What went wrong.
 type ErrorInfo struct {
-	// A machine-readable error code. Clients should handle codes they don't know: new codes can be added. `invalid_data`: a submission's data doesn't match its template's fields. The submission is still recorded. `insufficient_credits` (402): your credit balance can't cover a live PDF. The record was saved and waits for credits in the `insufficient_credits` state: its ID is in `submission_id`, `submission_batch_id` or `combined_pdf_id`. `insufficient_credits_to_send` (402): your credit balance can't cover a live signature request that DocSpring would email, so nothing was saved. Add credits and send the request again. `upgrade_required` (403): your plan doesn't include this, such as more templates, another active integration (webhooks count), the embedded template editor, email actions, or live signature requests before your account's first payment. `account_suspended` (403): the account is suspended, so it can't create submissions, or it's scheduled for deletion, so every request is refused until one of its users signs in to cancel that. `polling_timeout`: on a sync.api host, the files weren't ready in time. The record was created and is still being processed: its ID is in `submission_id`, `submission_batch_id`, `combined_pdf_id` or `template_id`. Without one of these IDs, the request itself got no answer in time, and the record may or may not have been created. `idempotency_key_in_use` (409): the first request with the same Idempotency-Key is still being processed, and the response has a `Retry-After` header: send the request again then. Without the header, the first request was processed but its response is no longer kept, or it failed after creating or changing a record, and the message says which. When the first request created a record, or changed a template's fields or published a version of it, the message names it, and its ID is in `submission_id`, `submission_batch_id`, `combined_pdf_id`, `template_id`, `folder_id`, `custom_file_id`, `webhook_id`, `email_action_id` or `email_domain_id` (a signature request's events and tokens have no member). `idempotency_key_reused` (422): the Idempotency-Key was already used for a different request. `rate_limited` (429): too many API requests. Wait for the `Retry-After` header's seconds. `daily_email_limit_reached` (429): a submission that DocSpring would email would take your account over its daily email limit, so nothing was saved. Send it again after the `Retry-After` header's seconds (midnight UTC), or send the signing links yourself (`send_email: false`).
+	// A machine-readable error code. Clients should handle codes they don't know: new codes can be added. `invalid_data`: a submission's data doesn't match its template's fields. The submission is still recorded. `insufficient_credits` (402): your credit balance can't cover a live PDF. The record was saved and waits for credits in the `insufficient_credits` state: its ID is in `submission_id`, `submission_batch_id` or `combined_pdf_id`. `insufficient_credits_to_send` (402): your credit balance can't cover a live signature request that DocSpring would email, so nothing was saved. Add credits and send the request again. `upgrade_required` (403): your plan doesn't include this, such as more templates, another active integration (webhooks count), the embedded template editor, email actions, or live signature requests before your account's first payment. `account_suspended` (403): the account is suspended, so it can't create submissions, or it's scheduled for deletion, so every request is refused until one of its users signs in to cancel that. `polling_timeout`: on a sync.api host, the files weren't ready in time. The record was created and is still being processed: its ID is in `submission_id`, `submission_batch_id`, `combined_pdf_id` or `template_id` (`support_help_id` for a question to the AI help that wasn't answered in time). Without one of these IDs, the request itself got no answer in time, and the record may or may not have been created. `idempotency_key_in_use` (409): the first request with the same Idempotency-Key is still being processed, and the response has a `Retry-After` header: send the request again then. Without the header, the first request was processed but its response is no longer kept, or it failed after creating or changing a record, and the message says which. When the first request created a record, or changed a template's fields or published a version of it, the message names it, and its ID is in `submission_id`, `submission_batch_id`, `combined_pdf_id`, `template_id`, `folder_id`, `custom_file_id`, `webhook_id`, `email_action_id` or `email_domain_id` (a signature request's events and tokens have no member). `idempotency_key_reused` (422): the Idempotency-Key was already used for a different request. `rate_limited` (429): too many API requests. Wait for the `Retry-After` header's seconds. `daily_email_limit_reached` (429): a submission that DocSpring would email would take your account over its daily email limit, so nothing was saved. Send it again after the `Retry-After` header's seconds (midnight UTC), or send the signing links yourself (`send_email: false`). `support_feedback_limit_reached` and `support_ticket_limit_reached` (429): the account has sent its 50 pieces of feedback or opened its 20 support tickets in 24 hours. Send it again after the `Retry-After` header's seconds. `support_help_limit_reached` (429): the caller has asked DocSpring's AI help its questions for 24 hours. The message says how to ask more.
 	Code ErrorCode `json:"code"`
 	// A human-readable explanation, safe to show to developers.
 	Message string `json:"message"`
@@ -34,6 +34,8 @@ type ErrorInfo struct {
 	SubmissionBatchId *string `json:"submission_batch_id,omitempty"`
 	// With `insufficient_credits`, the combined PDF that waits for credits. With `polling_timeout`, the combined PDF that's still being processed. With `idempotency_key_in_use`, the combined PDF the first request with the key created.
 	CombinedPdfId *string `json:"combined_pdf_id,omitempty"`
+	// With `polling_timeout`, the help request that's still waiting for its answer.
+	SupportHelpId *string `json:"support_help_id,omitempty"`
 	// With `polling_timeout`, the template whose PDF is still being processed. With `idempotency_key_in_use`, the template the first request with the key created, or whose fields it changed or whose version it published.
 	TemplateId *string `json:"template_id,omitempty"`
 	// With `idempotency_key_in_use`, the folder the first request with the key created.
@@ -266,6 +268,38 @@ func (o *ErrorInfo) SetCombinedPdfId(v string) {
 	o.CombinedPdfId = &v
 }
 
+// GetSupportHelpId returns the SupportHelpId field value if set, zero value otherwise.
+func (o *ErrorInfo) GetSupportHelpId() string {
+	if o == nil || IsNil(o.SupportHelpId) {
+		var ret string
+		return ret
+	}
+	return *o.SupportHelpId
+}
+
+// GetSupportHelpIdOk returns a tuple with the SupportHelpId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ErrorInfo) GetSupportHelpIdOk() (*string, bool) {
+	if o == nil || IsNil(o.SupportHelpId) {
+		return nil, false
+	}
+	return o.SupportHelpId, true
+}
+
+// HasSupportHelpId returns a boolean if a field has been set.
+func (o *ErrorInfo) HasSupportHelpId() bool {
+	if o != nil && !IsNil(o.SupportHelpId) {
+		return true
+	}
+
+	return false
+}
+
+// SetSupportHelpId gets a reference to the given string and assigns it to the SupportHelpId field.
+func (o *ErrorInfo) SetSupportHelpId(v string) {
+	o.SupportHelpId = &v
+}
+
 // GetTemplateId returns the TemplateId field value if set, zero value otherwise.
 func (o *ErrorInfo) GetTemplateId() string {
 	if o == nil || IsNil(o.TemplateId) {
@@ -481,6 +515,9 @@ func (o ErrorInfo) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.CombinedPdfId) {
 		toSerialize["combined_pdf_id"] = o.CombinedPdfId
 	}
+	if !IsNil(o.SupportHelpId) {
+		toSerialize["support_help_id"] = o.SupportHelpId
+	}
 	if !IsNil(o.TemplateId) {
 		toSerialize["template_id"] = o.TemplateId
 	}
@@ -552,6 +589,7 @@ func (o *ErrorInfo) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "submission_id")
 		delete(additionalProperties, "submission_batch_id")
 		delete(additionalProperties, "combined_pdf_id")
+		delete(additionalProperties, "support_help_id")
 		delete(additionalProperties, "template_id")
 		delete(additionalProperties, "folder_id")
 		delete(additionalProperties, "custom_file_id")

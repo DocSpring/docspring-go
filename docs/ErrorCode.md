@@ -39,6 +39,12 @@
 
 * `DAILY_EMAIL_LIMIT_REACHED` (value: `"daily_email_limit_reached"`)
 
+* `SUPPORT_FEEDBACK_LIMIT_REACHED` (value: `"support_feedback_limit_reached"`)
+
+* `SUPPORT_HELP_LIMIT_REACHED` (value: `"support_help_limit_reached"`)
+
+* `SUPPORT_TICKET_LIMIT_REACHED` (value: `"support_ticket_limit_reached"`)
+
 * `INTERNAL_ERROR` (value: `"internal_error"`)
 
 * `BAD_GATEWAY` (value: `"bad_gateway"`)

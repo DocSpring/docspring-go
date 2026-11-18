@@ -5,6 +5,7 @@ All URIs are relative to *https://sync.api.docspring.com/api/v2*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**AddTemplateFields**](ClientAPI.md#AddTemplateFields) | **Post** /templates/{template_id}/fields | Add fields to a template
+[**AskSupportHelp**](ClientAPI.md#AskSupportHelp) | **Post** /support/help | Ask for help
 [**CopyTemplate**](ClientAPI.md#CopyTemplate) | **Post** /templates/{template_id}/copy | Copy a template
 [**CreateAccountEmailAction**](ClientAPI.md#CreateAccountEmailAction) | **Post** /email_actions | Create an account email action
 [**CreateCombinedPdf**](ClientAPI.md#CreateCombinedPdf) | **Post** /combined_pdfs | Combine PDFs
@@ -41,6 +42,8 @@ Method | HTTP request | Description
 [**GetSignatureRequest**](ClientAPI.md#GetSignatureRequest) | **Get** /signature_requests/{signature_request_id} | Get a signature request
 [**GetSubmission**](ClientAPI.md#GetSubmission) | **Get** /submissions/{submission_id} | Get a submission
 [**GetSubmissionBatch**](ClientAPI.md#GetSubmissionBatch) | **Get** /submissions/batches/{submission_batch_id} | Get a batch
+[**GetSupportHelp**](ClientAPI.md#GetSupportHelp) | **Get** /support/help/{support_help_id} | Get a help request
+[**GetSupportTicket**](ClientAPI.md#GetSupportTicket) | **Get** /support/tickets/{ticket_id} | Get a support ticket
 [**GetTemplate**](ClientAPI.md#GetTemplate) | **Get** /templates/{template_id} | Get a template
 [**GetTemplateDiff**](ClientAPI.md#GetTemplateDiff) | **Get** /templates/{template_id}/diff | Compare a version of a template with the one before it
 [**GetTemplateModelCode**](ClientAPI.md#GetTemplateModelCode) | **Get** /templates/{template_id}/model_code | Generate typed code for a template's submission data
@@ -55,19 +58,23 @@ Method | HTTP request | Description
 [**ListEmailDomains**](ClientAPI.md#ListEmailDomains) | **Get** /email_domains | List email domains
 [**ListFolders**](ClientAPI.md#ListFolders) | **Get** /folders | List folders
 [**ListSubmissions**](ClientAPI.md#ListSubmissions) | **Get** /submissions | List submissions
+[**ListSupportTickets**](ClientAPI.md#ListSupportTickets) | **Get** /support/tickets | List support tickets
 [**ListTemplateFields**](ClientAPI.md#ListTemplateFields) | **Get** /templates/{template_id}/fields | List a template's fields
 [**ListTemplateSubmissions**](ClientAPI.md#ListTemplateSubmissions) | **Get** /templates/{template_id}/submissions | List a template's submissions
 [**ListTemplates**](ClientAPI.md#ListTemplates) | **Get** /templates | List templates
 [**ListWebhooks**](ClientAPI.md#ListWebhooks) | **Get** /webhooks | List webhooks
 [**MoveFolder**](ClientAPI.md#MoveFolder) | **Post** /folders/{folder_id}/move | Move a folder
 [**MoveTemplate**](ClientAPI.md#MoveTemplate) | **Post** /templates/{template_id}/move | Move a template to a folder
+[**OpenSupportTicket**](ClientAPI.md#OpenSupportTicket) | **Post** /support/tickets | Open a support ticket
 [**PublishTemplateVersion**](ClientAPI.md#PublishTemplateVersion) | **Post** /templates/{template_id}/publish_version | Publish a template version
 [**RemoveTemplateFields**](ClientAPI.md#RemoveTemplateFields) | **Post** /templates/{template_id}/fields/remove | Remove fields from a template
 [**RenameFolder**](ClientAPI.md#RenameFolder) | **Post** /folders/{folder_id}/rename | Rename a folder
 [**ReorderTemplateFields**](ClientAPI.md#ReorderTemplateFields) | **Post** /templates/{template_id}/fields/reorder | Reorder a template's fields
+[**ReplyToSupportTicket**](ClientAPI.md#ReplyToSupportTicket) | **Post** /support/tickets/{ticket_id}/replies | Reply to a support ticket
 [**RestoreTemplateVersion**](ClientAPI.md#RestoreTemplateVersion) | **Post** /templates/{template_id}/restore_version | Restore a template version
 [**SendAccountEmailActionTestEmail**](ClientAPI.md#SendAccountEmailActionTestEmail) | **Post** /email_actions/{email_action_id}/test_email | Send a test email for an account email action
 [**SendEmailActionTestEmail**](ClientAPI.md#SendEmailActionTestEmail) | **Post** /templates/{template_id}/email_actions/{email_action_id}/test_email | Send a test email
+[**SendSupportFeedback**](ClientAPI.md#SendSupportFeedback) | **Post** /support/feedback | Send feedback
 [**TestAuthentication**](ClientAPI.md#TestAuthentication) | **Get** /authentication | Test authentication
 [**UpdateAccountEmailAction**](ClientAPI.md#UpdateAccountEmailAction) | **Put** /email_actions/{email_action_id} | Update an account email action
 [**UpdateEmailAction**](ClientAPI.md#UpdateEmailAction) | **Put** /templates/{template_id}/email_actions/{email_action_id} | Update an email action
@@ -143,6 +150,76 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**TemplateFields**](TemplateFields.md)
+
+### Authorization
+
+[api_token_basic](../README.md#install-and-configure)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
+[[Back to README]](../README.md)
+
+
+## AskSupportHelp
+
+> SupportHelp AskSupportHelp(ctx).Body(body).Wait(wait).IdempotencyKey(idempotencyKey).Execute()
+
+Ask for help
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	body := *openapiclient.NewAskSupportHelpRequest("Question_example") // AskSupportHelpRequest | A question about DocSpring. Never include secrets, credentials or your users' data.
+	wait := true // bool | On a sync.api host, whether to wait for the answer (the default). With `false`, and on other hosts, the response is the pending help request: get it until its `state` isn't `pending`. (optional)
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.AskSupportHelp(context.Background()).Body(body).Wait(wait).IdempotencyKey(idempotencyKey).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.AskSupportHelp``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `AskSupportHelp`: SupportHelp
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.AskSupportHelp`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiAskSupportHelpRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**AskSupportHelpRequest**](AskSupportHelpRequest.md) | A question about DocSpring. Never include secrets, credentials or your users' data. | 
+ **wait** | **bool** | On a sync.api host, whether to wait for the answer (the default). With `false`, and on other hosts, the response is the pending help request: get it until its `state` isn't `pending`. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links. | 
+
+### Return type
+
+[**SupportHelp**](SupportHelp.md)
 
 ### Authorization
 
@@ -2730,6 +2807,148 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
+## GetSupportHelp
+
+> SupportHelp GetSupportHelp(ctx, supportHelpId).Execute()
+
+Get a help request
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	supportHelpId := "supportHelpId_example" // string | The help request's ID.
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.GetSupportHelp(context.Background(), supportHelpId).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetSupportHelp``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetSupportHelp`: SupportHelp
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetSupportHelp`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**supportHelpId** | **string** | The help request's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetSupportHelpRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+### Return type
+
+[**SupportHelp**](SupportHelp.md)
+
+### Authorization
+
+[api_token_basic](../README.md#install-and-configure)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
+[[Back to README]](../README.md)
+
+
+## GetSupportTicket
+
+> SupportTicket GetSupportTicket(ctx, ticketId).AfterMessageId(afterMessageId).Execute()
+
+Get a support ticket
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	ticketId := "ticketId_example" // string | The support ticket's ID.
+	afterMessageId := "smg_1234567890abcdef01" // string | Only return the messages after this one. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.GetSupportTicket(context.Background(), ticketId).AfterMessageId(afterMessageId).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.GetSupportTicket``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetSupportTicket`: SupportTicket
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.GetSupportTicket`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**ticketId** | **string** | The support ticket's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetSupportTicketRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **afterMessageId** | **string** | Only return the messages after this one. | 
+
+### Return type
+
+[**SupportTicket**](SupportTicket.md)
+
+### Authorization
+
+[api_token_basic](../README.md#install-and-configure)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
+[[Back to README]](../README.md)
+
+
 ## GetTemplate
 
 > Template GetTemplate(ctx, templateId).Version(version).Execute()
@@ -3736,6 +3955,81 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
+## ListSupportTickets
+
+> SupportTicketList ListSupportTickets(ctx).Status(status).Session(session).UpdatedSince(updatedSince).Limit(limit).Cursor(cursor).Execute()
+
+List support tickets
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+    "time"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	status := openapiclient.SupportTicketListStatus("open") // SupportTicketListStatus | `open` (the default): every ticket that isn't resolved or closed, plus any ticket with a reply from the DocSpring team that hasn't been read. `closed`: the rest. `all`: every ticket. (optional)
+	session := "rental-application" // string | Only list the tickets opened with this session label. (optional)
+	updatedSince := time.Now() // time.Time | Only list tickets updated after this time (RFC 3339, such as `2025-01-31T09:00:00Z`). (optional)
+	limit := int32(2) // int32 | How many items to return (1-100, default 50). (optional) (default to 50)
+	cursor := "tkt_1234567890abcdef03" // string | The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.ListSupportTickets(context.Background()).Status(status).Session(session).UpdatedSince(updatedSince).Limit(limit).Cursor(cursor).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ListSupportTickets``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ListSupportTickets`: SupportTicketList
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.ListSupportTickets`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiListSupportTicketsRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **status** | [**SupportTicketListStatus**](SupportTicketListStatus.md) | `open` (the default): every ticket that isn't resolved or closed, plus any ticket with a reply from the DocSpring team that hasn't been read. `closed`: the rest. `all`: every ticket. | 
+ **session** | **string** | Only list the tickets opened with this session label. | 
+ **updatedSince** | **time.Time** | Only list tickets updated after this time (RFC 3339, such as `2025-01-31T09:00:00Z`). | 
+ **limit** | **int32** | How many items to return (1-100, default 50). | [default to 50]
+ **cursor** | **string** | The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one. | 
+
+### Return type
+
+[**SupportTicketList**](SupportTicketList.md)
+
+### Authorization
+
+[api_token_basic](../README.md#install-and-configure)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
+[[Back to README]](../README.md)
+
+
 ## ListTemplateFields
 
 > TemplateFields ListTemplateFields(ctx, templateId).Version(version).Execute()
@@ -4193,6 +4487,74 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
+## OpenSupportTicket
+
+> SupportTicket OpenSupportTicket(ctx).Body(body).IdempotencyKey(idempotencyKey).Execute()
+
+Open a support ticket
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	body := *openapiclient.NewOpenSupportTicketRequest("Title_example", openapiclient.SupportReportKind("bug"), "Description_example") // OpenSupportTicketRequest | A problem that blocks the user, a wrong result or a question for the DocSpring team. Never include secrets, credentials or your users' data.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.OpenSupportTicket(context.Background()).Body(body).IdempotencyKey(idempotencyKey).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.OpenSupportTicket``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `OpenSupportTicket`: SupportTicket
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.OpenSupportTicket`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiOpenSupportTicketRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**OpenSupportTicketRequest**](OpenSupportTicketRequest.md) | A problem that blocks the user, a wrong result or a question for the DocSpring team. Never include secrets, credentials or your users' data. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links. | 
+
+### Return type
+
+[**SupportTicket**](SupportTicket.md)
+
+### Authorization
+
+[api_token_basic](../README.md#install-and-configure)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
+[[Back to README]](../README.md)
+
+
 ## PublishTemplateVersion
 
 > TemplateVersion PublishTemplateVersion(ctx, templateId).Body(body).IdempotencyKey(idempotencyKey).Execute()
@@ -4489,6 +4851,80 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
+## ReplyToSupportTicket
+
+> SupportTicketReply ReplyToSupportTicket(ctx, ticketId).Body(body).IdempotencyKey(idempotencyKey).Execute()
+
+Reply to a support ticket
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	ticketId := "ticketId_example" // string | The support ticket's ID.
+	body := *openapiclient.NewReplyToSupportTicketRequest("Body_example") // ReplyToSupportTicketRequest | A message to add to the ticket. Never include secrets, credentials or your users' data.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.ReplyToSupportTicket(context.Background(), ticketId).Body(body).IdempotencyKey(idempotencyKey).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.ReplyToSupportTicket``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ReplyToSupportTicket`: SupportTicketReply
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.ReplyToSupportTicket`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**ticketId** | **string** | The support ticket's ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiReplyToSupportTicketRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **body** | [**ReplyToSupportTicketRequest**](ReplyToSupportTicketRequest.md) | A message to add to the ticket. Never include secrets, credentials or your users' data. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links. | 
+
+### Return type
+
+[**SupportTicketReply**](SupportTicketReply.md)
+
+### Authorization
+
+[api_token_basic](../README.md#install-and-configure)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
+[[Back to README]](../README.md)
+
+
 ## RestoreTemplateVersion
 
 > Template RestoreTemplateVersion(ctx, templateId).Body(body).IdempotencyKey(idempotencyKey).Execute()
@@ -4705,6 +5141,74 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
 - **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#methods)
+[[Back to Model list]](../README.md#methods)
+[[Back to README]](../README.md)
+
+
+## SendSupportFeedback
+
+> SupportFeedback SendSupportFeedback(ctx).Body(body).IdempotencyKey(idempotencyKey).Execute()
+
+Send feedback
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/docspring/docspring-go/v4"
+)
+
+func main() {
+	body := *openapiclient.NewSendSupportFeedbackRequest("Title_example", openapiclient.SupportReportKind("bug"), "Description_example") // SendSupportFeedbackRequest | Something about DocSpring that got in the way while the work still got done. Never include secrets, credentials or your users' data.
+	idempotencyKey := "idempotencyKey_example" // string | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClientAPI.SendSupportFeedback(context.Background()).Body(body).IdempotencyKey(idempotencyKey).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClientAPI.SendSupportFeedback``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `SendSupportFeedback`: SupportFeedback
+	fmt.Fprintf(os.Stdout, "Response from `ClientAPI.SendSupportFeedback`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiSendSupportFeedbackRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**SendSupportFeedbackRequest**](SendSupportFeedbackRequest.md) | Something about DocSpring that got in the way while the work still got done. Never include secrets, credentials or your users' data. | 
+ **idempotencyKey** | **string** | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links. | 
+
+### Return type
+
+[**SupportFeedback**](SupportFeedback.md)
+
+### Authorization
+
+[api_token_basic](../README.md#install-and-configure)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#methods)

@@ -13,7 +13,7 @@ pull requests are welcome.
 Outside Go code, the [DocSpring CLI](https://docspring.com/docs/cli/) calls the same API from a terminal or a
 shell script, and the [MCP server](https://docspring.com/docs/mcp/) connects AI assistants to your account.
 
-Version 4.7.0. Requires Go 1.23 or later.
+Version 4.8.0. Requires Go 1.23 or later.
 
 ## Install and configure
 
@@ -89,6 +89,7 @@ Go code for every method.
 | Method | Description |
 | ------ | ----------- |
 | [`AddTemplateFields`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#addtemplatefields) | Add fields to a template |
+| [`AskSupportHelp`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#asksupporthelp) | Ask for help |
 | [`CopyTemplate`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#copytemplate) | Copy a template |
 | [`CreateAccountEmailAction`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#createaccountemailaction) | Create an account email action |
 | [`CreateCombinedPdf`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#createcombinedpdf) | Combine PDFs |
@@ -125,6 +126,8 @@ Go code for every method.
 | [`GetSignatureRequest`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#getsignaturerequest) | Get a signature request |
 | [`GetSubmission`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#getsubmission) | Get a submission |
 | [`GetSubmissionBatch`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#getsubmissionbatch) | Get a batch |
+| [`GetSupportHelp`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#getsupporthelp) | Get a help request |
+| [`GetSupportTicket`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#getsupportticket) | Get a support ticket |
 | [`GetTemplate`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#gettemplate) | Get a template |
 | [`GetTemplateDiff`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#gettemplatediff) | Compare a version of a template with the one before it |
 | [`GetTemplateModelCode`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#gettemplatemodelcode) | Generate typed code for a template's submission data |
@@ -139,19 +142,23 @@ Go code for every method.
 | [`ListEmailDomains`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#listemaildomains) | List email domains |
 | [`ListFolders`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#listfolders) | List folders |
 | [`ListSubmissions`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#listsubmissions) | List submissions |
+| [`ListSupportTickets`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#listsupporttickets) | List support tickets |
 | [`ListTemplateFields`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#listtemplatefields) | List a template's fields |
 | [`ListTemplates`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#listtemplates) | List templates |
 | [`ListTemplateSubmissions`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#listtemplatesubmissions) | List a template's submissions |
 | [`ListWebhooks`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#listwebhooks) | List webhooks |
 | [`MoveFolder`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#movefolder) | Move a folder |
 | [`MoveTemplate`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#movetemplate) | Move a template to a folder |
+| [`OpenSupportTicket`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#opensupportticket) | Open a support ticket |
 | [`PublishTemplateVersion`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#publishtemplateversion) | Publish a template version |
 | [`RemoveTemplateFields`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#removetemplatefields) | Remove fields from a template |
 | [`RenameFolder`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#renamefolder) | Rename a folder |
 | [`ReorderTemplateFields`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#reordertemplatefields) | Reorder a template's fields |
+| [`ReplyToSupportTicket`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#replytosupportticket) | Reply to a support ticket |
 | [`RestoreTemplateVersion`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#restoretemplateversion) | Restore a template version |
 | [`SendAccountEmailActionTestEmail`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#sendaccountemailactiontestemail) | Send a test email for an account email action |
 | [`SendEmailActionTestEmail`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#sendemailactiontestemail) | Send a test email |
+| [`SendSupportFeedback`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#sendsupportfeedback) | Send feedback |
 | [`TestAuthentication`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#testauthentication) | Test authentication |
 | [`UpdateAccountEmailAction`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#updateaccountemailaction) | Update an account email action |
 | [`UpdateEmailAction`](https://github.com/DocSpring/docspring-go/blob/main/docs/ClientAPI.md#updateemailaction) | Update an email action |
